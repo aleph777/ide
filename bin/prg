@@ -1,0 +1,667 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#              Copyright © 2015-2017 Tom Fontaine
+
+# Title:       prg
+# Author:      Tom Fontaine
+# Date:        13-Mar-2015
+# Time-stamp: <18-Jan-2017 18:26:43 EST, modified by Tom Fontaine>
+#
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:   Searches the specified files (via fileglob or recursive tree
+#            root(s)) for a matching regular expression.
+#
+# Arguments: $1 is the regular expression to match
+#            $2 is a path to search
+#            .
+#            .
+#            $N is a path to search
+#
+# Revision:  25-Mar-2015 Removed -tty and -no-tty
+#            31-Mar-2015 Removed pathname fix (moved to File::FindWrapper)
+#            21-Apr-2015 Updated usage detection
+#            18-Sep-2016 Default to '-r'
+#
+use File::FindWrapper;
+use File::IO;
+use Util::GetOpt;
+require 5.013006;
+use v5.10;
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:-(?:(?:-(?:h(?:elp)?|\?)|h(?:elp)?)$|\?)|\?$))/))
+{
+  print "\nUsage: ",_ME_," <perl_regexp> [switch [arg] ...] dir ...\n\n";
+  print "Switches:\n";
+
+  printf "%24s - display usage\n\n",'-help';
+  printf "%24s - find union of switch outcomes (default is intersection)\n\n",'-OR';
+  printf "%24s - execute shell command on found files\n\n",'-exec';
+  printf "%24s - print a count of matching lines for each input file\n\n",'-c';
+  printf "%24s - ignore case distinctions\n\n",'-i';
+  printf "%24s - print names of files with matches\n\n",'-l';
+  printf "%24s - prefix each line of output with the 1-based line number\n\n",'-n';
+  printf "%24s - invert the sense of matching, to select non-matching lines\n\n",'-v';
+  printf "%24s - begin matching at line number\n",'-b <line number>';
+  printf "%24s - end matching at line number\n\n",'-e <line number>';
+  printf "%24s - stop reading a file after NUM matching lines\n\n",'-m NUM';
+  printf "%24s - print NUM lines of trailing context after matching lines\n",'-A NUM';
+  printf "%24s - print NUM lines of leading context before matching lines\n",'-B NUM';
+  printf "%24s - print NUM lines of trailing and leading context\n\n",'-C NUM';
+  printf "%17s regexp,\n%17s regexp - find files with (not) names matching perl regular expression\n",'-name','-no-name';
+  printf "%17s regexp,\n%17s regexp - find files with (not) basenames matching perl regular expression\n\n",'-basename','-no-basename';
+  printf "%24s,\n%24s - find files (not) readable by effective uid\n",'-read-effective','-no-read-effective';
+  printf "%24s,\n%24s - find files (not) writable by effective uid\n",'-write-effective','-no-write-effective';
+  printf "%24s,\n%24s - find files (not) executable by effective uid\n",'-execute-effective','-no-execute-effective';
+  printf "%24s,\n%24s - find files (not) owned by effective uid\n\n",'-owned-effective','-no-owned-effective';
+  printf "%24s,\n%24s - find files (not) readable by real uid\n",'-read-real','-no-read-real';
+  printf "%24s,\n%24s - find files (not) writable by real uid\n",'-write-real','-no-write-real';
+  printf "%24s,\n%24s - find files (not) executable by real uid\n",'-execute-real','-no-execute-real';
+  printf "%24s,\n%24s - find files (not) owned by real uid\n\n",'-owned-real','-no-owned-real';
+  printf "%24s,\n%24s - find files (not) of size zero\n\n",'-zero-size','-no-zero-size';
+  printf "%17s nbytes - find files of size greater than nbytes\n",'-size-gt';
+  printf "%17s nbytes - find files of size greater than or equal nbytes\n",'-size-ge';
+  printf "%17s nbytes - find files of size less than nbytes\n",'-size-lt';
+  printf "%17s nbytes - find files of size less than or equal nbytes\n\n",'-size-le';
+  printf "%24s,\n%24s - find (not) plain files\n",'-file','-no-file';
+  printf "%24s,\n%24s - find (not) symbolic links\n",'-link','-no-link';
+  printf "%24s,\n%24s - find (not) pipes\n",'-pipe','-no-pipe';
+  printf "%24s,\n%24s - find (not) sockets\n",'-socket','-no-socket';
+  printf "%24s,\n%24s - find (not) block special file\n",'-block','-no-block';
+  printf "%24s,\n%24s - find (not) character special file\n",'-char','-no-char';
+  printf "%24s,\n%24s - find files with (not) setuid bit set\n",'-setuid','-no-setuid';
+  printf "%24s,\n%24s - find files with (not) setgid bit set\n",'-setgid','-no-setgid';
+  printf "%24s,\n%24s - find files with (not) sticky bit set\n\n",'-sticky','-no-sticky';
+  printf "%24s,\n%24s - find (not) text files\n",'-text','-no-text';
+  printf "%24s,\n%24s - find (not) binary files\n\n",'-bin','-no-bin';
+  printf "%17s days - find files of age greater than days\n",'-age-gt';
+  printf "%17s days - find files of age greater than or equal days\n",'-age-ge';
+  printf "%17s days - find files of age less than days\n",'-age-lt';
+  printf "%17s days - find files of age less than or equal days\n\n",'-age-le';
+  printf "%17s days - find files of access time greater than days\n",'-access-gt';
+  printf "%17s days - find files of access time greater than or equal days\n",'-access-ge';
+  printf "%17s days - find files of access time less than days\n",'-access-lt';
+  printf "%17s days - find files of access time less than or equal days\n\n",'-access-le';
+  printf "%17s days - find files of inode change time greater than days\n",'-inode-gt';
+  printf "%17s days - find files of inode change time greater than or equal days\n",'-inode-ge';
+  printf "%17s days - find files of inode change time less than days\n",'-inode-lt';
+  printf "%17s days - find files of inode change time less than or equal days\n\n",'-inode-le';
+  exit;
+}
+my %option;
+
+my $o = Util::GetOpt->new(args => \@ARGV,option => \%option);
+my $f = File::FindWrapper->new();
+#
+# Convert File::FindWrapper switches from old-style
+#
+my @switches    = map { join '','-',$_ } @{$f->switches};
+my @argSwitches = map { join '','-',$_ } @{$f->argSwitches},qw(b e m A B C);
+
+$o->get(switchesBare => \@switches,switchesArg => \@argSwitches,switchesGroup => 'cilnrv');
+
+my $regex = shift @ARGV;
+
+$option{'-r'} = 1;
+
+if(exists $option{'-r'})
+{
+  %{$f->option} = map { substr($_,1) => $option{$_} } keys %option; # re-map to old-style options
+
+  $f->option->{'no-dir'} = 1;
+
+  $f->get(root => \@ARGV);
+
+  @ARGV = grep { -e } @{$f->contents};
+}
+if(exists $option{'-l'})
+{
+  printFilesWithMatches();  # b e i v
+}
+elsif(exists $option{'-c'})
+{
+  countMatchingLines();     # b e i m v
+}
+else
+{
+  printLinesWithMatches();  # b e i m n v A B C
+}
+
+sub printFilesWithMatches
+{
+  my ($beg,$end);
+
+  my $io = File::IO->new();
+
+  if(exists $option{'-i'})
+  {
+    if(exists $option{'-v'})
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {print $file,"\n"; last;}}
+      }
+    }
+    else
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {print $file,"\n"; last;}}
+      }
+    }
+  }
+  else
+  {
+    if(exists $option{'-v'})
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {print $file,"\n"; last;}}
+      }
+    }
+    else
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {print $file,"\n"; last;}}
+      }
+    }
+  }
+}
+
+sub countMatchingLines
+{
+  my ($beg,$end);
+
+  my $io = File::IO->new();
+
+  if(exists $option{'-i'})
+  {
+    if(exists $option{'-v'})
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        my $count = 0;
+
+        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {++$count;last if exists $option{'-m'} && $count >= $option{'-m'};}}
+
+        print "$count: $file\n" if $count;
+      }
+    }
+    else
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        my $count = 0;
+
+        for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {++$count;last if exists $option{'-m'} && $count >= $option{'-m'};}}
+
+        print "$count: $file\n" if $count;
+      }
+    }
+  }
+  else
+  {
+    if(exists $option{'-v'})
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        my $count = 0;
+
+        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {++$count;last if exists $option{'-m'} && $count >= $option{'-m'};}}
+
+        print "$count: $file\n" if $count;
+      }
+    }
+    else
+    {
+      foreach my $file (@ARGV)
+      {
+        $io->get(path => $file);
+
+        ($beg,$end) = getBegEnd($#{$io->contents});
+
+        next unless defined $beg;
+
+        my $count = 0;
+
+        for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {++$count;last if exists $option{'-m'} && $count >= $option{'-m'};}}
+
+        print "$count: $file\n" if $count;
+      }
+    }
+  }
+}
+
+sub printLinesWithMatches
+{
+  my $io     = File::IO->new();
+  my $single = @ARGV == 1;
+
+  my ($beg,$end);
+
+  if(exists $option{'-i'})
+  {
+    if(exists $option{'-v'})
+    {
+      if(exists $option{'-C'} || exists $option{'-A'} || exists $option{'-B'})
+      {
+        my ($bef,$aft);
+
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i     = $beg >= 0 ? $beg : $beg + @{$io->contents};
+          my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            unless(/$regex/oi)
+            {
+              ($bef,$aft) = getContext($i,$#{$io->contents});
+
+              my $n = $bef;
+
+              if($single)
+              {
+                print map { join ':',(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              else
+              {
+                print map { join ':',$file,(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              say '--';
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+      else
+      {
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i = my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            unless(/$regex/oi)
+            {
+              if($single)
+              {
+                print join ':',(exists $option{'-n'} ? $i+1 : ()),$_;
+              }
+              else
+              {
+                print join ':',$file,(exists $option{'-n'} ? $i+1 : ()),$_;
+              }
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+    }
+    else
+    {
+      if(exists $option{'-C'} || exists $option{'-A'} || exists $option{'-B'})
+      {
+        my ($bef,$aft);
+
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i     = $beg >= 0 ? $beg : $beg + @{$io->contents};
+          my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            if(/$regex/oi)
+            {
+              ($bef,$aft) = getContext($i,$#{$io->contents});
+
+              my $n = $bef;
+
+              if($single)
+              {
+                print map { join ':',(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              else
+              {
+                print map { join ':',$file,(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              say '--';
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+      else
+      {
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i = my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            if(/$regex/oi)
+            {
+              print join ':',$file,(exists $option{'-n'} ? $i+1 : ()),$_;
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+    }
+  }
+  else
+  {
+    if(exists $option{'-v'})
+    {
+      if(exists $option{'-C'} || exists $option{'-A'} || exists $option{'-B'})
+      {
+        my ($bef,$aft);
+
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i     = $beg >= 0 ? $beg : $beg + @{$io->contents};
+          my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            unless(/$regex/o)
+            {
+              ($bef,$aft) = getContext($i,$#{$io->contents});
+
+              my $n = $bef;
+
+              if($single)
+              {
+                print map { join ':',(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              else
+              {
+                print map { join ':',$file,(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              say '--';
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+      else
+      {
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i = my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            unless(/$regex/o)
+            {
+              print join ':',$file,(exists $option{'-n'} ? $i+1 : ()),$_;
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+    }
+    else
+    {
+      if(exists $option{'-C'} || exists $option{'-A'} || exists $option{'-B'})
+      {
+        my ($bef,$aft);
+
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i     = $beg >= 0 ? $beg : $beg + @{$io->contents};
+          my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            if(/$regex/o)
+            {
+              ($bef,$aft) = getContext($i,$#{$io->contents});
+
+              my $n = $bef;
+
+              if($single)
+              {
+                print map { join ':',(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              else
+              {
+                print map { join ':',$file,(exists $option{'-n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              }
+              say '--';
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+      else
+      {
+        foreach my $file (@ARGV)
+        {
+          $io->get(path => $file);
+
+          ($beg,$end) = getBegEnd($#{$io->contents});
+
+          next unless defined $beg;
+
+          my $i = my $count = 0;
+
+          for(@{$io->contents}[$beg .. $end])
+          {
+            if(/$regex/o)
+            {
+              print join ':',$file,(exists $option{'-n'} ? $i+1 : ()),$_;
+
+              last if exists $option{'-m'} && ++$count >= $option{'-m'};
+            }
+            ++$i;
+          }
+        }
+      }
+    }
+  }
+}
+
+# sub printLines
+# {
+  
+# }
+
+sub getBegEnd
+{
+  my ($max) = @_;
+
+  return (0,$max) unless exists $option{'-b'} || exists $option{'-e'}; # no bounds, search entire file
+
+  my $beg = exists $option{'-b'} ? ($option{'-b'} > 0 ? $option{'-b'} - 1 : $option{'-b'}) : undef;
+  my $end = exists $option{'-e'} ? ($option{'-e'} > 0 ? $option{'-e'} - 1 : $option{'-e'}) : undef;
+
+  if(defined $beg && defined $end)
+  {
+    die _ME_,": invalid bounds specified in -b and -e!!!\n" if ($beg >= 0 && $end < 0) || ($beg < 0 && $end >= 0);
+
+    if(($beg > $max)           ||
+       ($end < -($max + 1))    ||
+       ($beg > $end))
+    {
+      return (undef,undef);     # bounds don't make sense
+    }
+    else
+    {
+      return ($beg,$end);       # begin at -b, end at -e (both positive or both negative)
+    }
+  }
+  elsif(defined $beg)
+  {
+    if($beg <= $max)
+    {
+      if($beg >= 0)
+      {
+        return ($beg,$max);     # begin at -b (positive from beginning of file)
+      }
+      else
+      {
+        return ($beg,-1);       # begin at -b (negative from end of file)
+      }
+    }
+    else
+    {
+      return (undef,undef);     # begin line after EOF
+    }
+  }
+  elsif(defined $end)
+  {
+    if ($end >= -($max + 1))
+    {
+      if($end >= 0)
+      {
+        return (0,$end);        # end at -e (positive from beginning of file)
+      }
+      else
+      {
+        return (0,$max+$end+1); # end at -e (negative from end of file) - i.e. $# + (-7 + 1)
+      }
+    }
+    return (undef,undef) if $end < -($max + 1); # end line before BOF
+  }
+}
+
+sub getContext
+{
+  my ($index,$size) = @_;
+
+  my $bef = exists $option{'-B'} ? $option{'-B'} : (exists $option{'-C'} ? $option{'-C'} : 0);
+  my $aft = exists $option{'-A'} ? $option{'-A'} : (exists $option{'-C'} ? $option{'-C'} : 0);
+
+  my $befContext = $index - $bef;
+  my $aftContext = $index + $aft;
+
+  $befContext  = 0    if $befContext  < 0;
+  $aftContext = $size if $aftContext > $size;
+
+  return ($befContext,$aftContext);
+}

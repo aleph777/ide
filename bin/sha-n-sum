@@ -1,0 +1,92 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#              Copyright © 2013-2017 Tom Fontaine
+
+# Title:       sha-n-sum
+# Author:      Tom Fontaine
+# Date:        04-Jun-2013
+# Time-stamp: <25-Jan-2017 12:30:19 EST, modified by Tom Fontaine>
+#
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:   Prints a SHA -N checksum (default is SHA256) for each input file
+#
+# Arguments: [-n] [-no-name] [-1|-224|-256|-384|-512|-512224|-512256] file1 [file2 … fileN]
+#
+# Revision:  03-Apr-2015 Added Usage
+#            13-Apr-2015 use Regexp::Assemble
+#
+use Digest::SHA;
+use File::Basename;
+use Regexp::Assemble;
+use Text::HexString;
+use Util::GetOpt;
+use strict;
+use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:--?h(?:elp)?|-?-?\?)$)/))
+{
+  say "\nUsage: ",_ME_," [-n] [-no-name] [-1|-224|-256|-384|-512|-512224|-512256] file1 [file2 … fileN]\n";
+
+  say "\t-n       - print checksum as a number";
+  say "\t-no-name - do not print file name after checksum";
+  say "\t-1       - calculate SHA1 checksum";
+  say "\t-224     - calculate SHA224 checksum";
+  say "\t-256     - calculate SHA256 checksum (DEFAULT)";
+  say "\t-384     - calculate SHA384 checksum";
+  say "\t-512     - calculate SHA512 checksum";
+  say "\t-512224  - calculate SHA512224 checksum";
+  say "\t-512256  - calculate SHA512256 checksum\n";
+  exit;
+}
+my $ra = Regexp::Assemble->new;
+
+$ra->add(map { join '','^--?(?:sha-?)?',$_,'$' } qw(1 224 256 256 384 384 512 512224 512256));
+
+my $alg = $ra->re;
+
+my $opt = Util::GetOpt->new(switchesBare => [$alg,'-no-name','-n']);
+
+$opt->get(args => \@ARGV);
+
+my ($algorithm) = grep /$alg/o,keys %{$opt->option};
+
+$algorithm = 256 unless defined $algorithm;
+
+die "Usage: ",_ME_," [-1|-224|-256|-384|-512|-512224|-512256] file1 [file2 ... fileN]\r\n\tDefaults to SHA-256\r\n" unless @ARGV;
+
+my $sha = Digest::SHA->new($algorithm);
+my $hxs = Text::HexString->new(delimiter => '-');
+
+for(grep { -e && !-d } @ARGV)
+{
+  $sha->addfile($_,'b');
+
+  my $checksum = exists $opt->{'-n'} ? uc $sha->hexdigest : $hxs->get(number => $sha->hexdigest);
+
+  CORE::say exists $opt->{'-no-name'} ? $checksum : join ' ',$checksum,$_;
+}

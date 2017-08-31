@@ -1,0 +1,59 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#              Copyright © 2000-2017 Tom Fontaine
+
+# Title:       clean-path
+# Author:      Tom Fontaine
+# Date:        26-Jun-2000
+# Time-stamp: <19-Jan-2017 11:31:51 EST, modified by Tom Fontaine>
+#
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:   Prints a path specification based on the input directories
+#            and the current path.  The input directories are kept in
+#            order and precede the current path.  Duplicate entries
+#            are removed.
+#
+# Arguments: $1 .. $n path directories or path specification
+#
+# Revision:  06-Jul-2000 Updated version switch
+#                        Added -help switch
+#            23-May-2006 Added check for directory existence
+#            12-May-2008 use strict
+#            13-Apr-2015 use List::MoreUtils
+#                        Updated Usage
+#            27-May-2015 Changed over to ‘say’
+#
+#
+use List::MoreUtils qw(uniq);
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+if(@ARGV && ($ARGV[0] =~ /^(?:-{0,2}\?|-{1,2}help)$/))
+{
+  CORE::say "\nUsage: ",_ME_,"\n";exit;
+}
+CORE::say join ':',uniq grep { -d } map { split ':' } @ARGV;

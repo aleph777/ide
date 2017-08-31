@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+#
+# Time-stamp: <27-May-2015 09:54:19 EDT, modified by Tom Fontaine>
+#
+# Title:       check-minimum-version
+# Author:      Tom Fontaine
+# Date:        25-Mar-2015
+#
+# Purpose:     Takes Perl source code and calculates the minimum version
+#              of perl required to be able to run it.
+#
+# Arguments:   $1 is file 1 to check
+#              .
+#              .
+#              .
+#              $N is file N to check
+#
+# Revision:
+#
+use File::IO;
+use Perl::MinimumVersion;
+use strict;
+
+for(grep { -e } @ARGV)
+{
+  my $mv = Perl::MinimumVersion->new($_);
+  my $io = File::IO->new(path => $_);
+
+  $io->get();
+
+  for(grep /^require 5/,@{$io->contents})
+  {
+    my ($version) = /^require (.+);/;
+
+    unless($version eq $mv->minimum_version)
+    {
+      CORE::say join '',$io->path,': ',substr($_,8,5),' => ',$mv->minimum_version;
+
+      $_ = join '','require ',$mv->minimum_version,";\n";
+
+      $io->put();
+    }
+    last;
+  }
+}

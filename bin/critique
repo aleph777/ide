@@ -1,0 +1,60 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#              Copyright © 2015-2017 Tom Fontaine
+
+# Title:       critique
+# Author:      Tom Fontaine
+# Date:        25-Mar-2015
+# Time-stamp: <18-Jan-2017 15:10:29 EST, modified by Tom Fontaine>
+#
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:   Critiques Perl source code for best-practices.
+#
+# Arguments: $1 is file 1 to analyze
+#            .
+#            .
+#            .
+#            $N is file N to analyze
+#
+# Revision:  27-May-2015 Changed over to ‘say’
+#
+use Perl::Critic;
+use strict;
+use v5.10;
+
+foreach my $file (@ARGV)
+{
+  my $critic = Perl::Critic->new();
+
+  say '==>',$file if @ARGV > 1;
+
+  for($critic->critique($file))
+  {
+    # Bareword file handle opened at line 101, column 1.
+    s/^(.+) at line (\d+), column (\d+)/$file:$2:$3: $1/;
+    print $_;
+  }
+}
