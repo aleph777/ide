@@ -1,0 +1,15 @@
+CPAN
+Archive-Tar
+Digest::SHA
+File::Which (bin/wh*)
+Gtk2
+IO::Compress::Xz (File::IO)
+IO::Uncompress::UnXz (File::IO)
+List::MoreUtils (any, all, none, not_all, apply, uniq, etc.)
+Log::Log4Perl
+Math::Random::Secure
+Perl::Critic         (bin/critque)
+Perl::MinimumVersion (bin/check-minimum-version)
+Regexp::Assemble
+Scalar::Util (looks_like_number)
+Text::Balanced (embedded C-Style comments regexp)
