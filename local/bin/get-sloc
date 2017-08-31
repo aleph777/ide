@@ -1,0 +1,50 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use List::Util qw(sum);
+use strict;
+
+# my $dir = shift @ARGV;
+
+# $dir = '.' unless defined $dir;
+
+my @code = qx/grepfind ';' @ARGV -name '\.cs\$' -no-name Test/;
+my @test = qx/grepfind ';' @ARGV -name Test -basename '\.cs\$'/;
+
+chomp @code;
+chomp @test;
+
+my %code;
+my %test;
+
+for(@code)
+{
+  my ($path,$code) = split /:/;
+
+  next if $code =~ m=^\s+//=;
+
+  $code{basename($path)} = 0 unless exists $code{basename($path)};
+  $code{basename($path)}++;
+}
+for(@test)
+{
+  my ($path,$code) = split /:/;
+
+  next if $code =~ m=^\s+//=;
+
+  $test{basename($path)} = 0 unless exists $test{basename($path)};
+  $test{basename($path)}++;
+}
+print map { "$_\t$code{$_}\n" } sort keys %code;
+print "\n";
+print map { "$_\t$test{$_}\n" } sort keys %test;
+print "\n";
+
+my $sum1 = sum(values %code);
+my $sum2 = sum(values %test);
+
+print "Code:\t",$sum1,"\n";
+print "Test:\t",$sum2,"\n";
+printf "Ratio:\t%4.3f\n",$sum2/$sum1;
+
+

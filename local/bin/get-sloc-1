@@ -1,0 +1,46 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#use File::Basename;
+use File::IO;
+use List::Util qw(sum);
+use strict;
+
+my $io = File::IO->new();
+
+my @files = qx/pfind @ARGV/;
+
+chomp @files;
+
+my @code = grep /\.cs$/ && !/[Tt]est/,@files;
+my @test = grep /\.cs$/ &&  /[Tt]est/,@files;
+
+my %code;
+my %test;
+
+for(@code)
+{
+  $io->get(path => $_);
+
+  $code{$_}  = 0 unless exists $code{$_};
+  $code{$_} += grep !/^\s*(?:\/\/.+)?$/ && !/^((?!.*\/\*).*\*\/|\s*\*)/,@{$io->contents};
+}
+for(@test)
+{
+  $io->get(path => $_);
+
+  $test{$_}  = 0 unless exists $test{$_};
+  $test{$_} += grep !/^\s*(?:\/\/.+)?$/ && !/^((?!.*\/\*).*\*\/|\s*\*)/,@{$io->contents};
+}
+print map { "$_\t$code{$_}\n" } sort keys %code;
+print "\n";
+print map { "$_\t$test{$_}\n" } sort keys %test;
+print "\n";
+
+my $sum1 = sum(values %code);
+my $sum2 = sum(values %test);
+
+print "Files:\t",@code+@test,"\n";
+print "Code:\t",$sum1,"\n";
+print "Test:\t",$sum2,"\n";
+print "Total:\t",$sum1+$sum2,"\n";
+printf "Ratio:\t%4.3f\n",$sum2/$sum1;

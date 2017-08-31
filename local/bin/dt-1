@@ -1,0 +1,8 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use DateTime;
+use strict;
+
+my $dt = DateTime->now(time_zone => 'local');
+
+CORE::say $dt->strftime('%Y%m%d_%H%M%S');

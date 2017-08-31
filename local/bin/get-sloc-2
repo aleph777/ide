@@ -1,0 +1,80 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+use File::IO;
+use List::Util qw(sum);
+use strict;
+
+my $io = File::IO->new();
+
+my @files = qx/pfind @ARGV/;
+
+chomp @files;
+
+my @code = grep /\.cs$/ && !/[Tt]est/,@files;
+my @test = grep /\.cs$/ &&  /[Tt]est/,@files;
+
+my %code;
+my %test;
+
+CountLines(\@code,\%code);
+CountLines(\@test,\%test);
+
+print "SLOC\tFile\n";
+print map { "$code{$_}\t$_\n" } sort keys %code;
+print "\n";
+print map { "$test{$_}\t$_\n" } sort keys %test;
+print "\n";
+
+my $sum1 = sum(values %code);
+my $sum2 = sum(values %test);
+
+$sum1 = 0 unless defined $sum1;
+$sum2 = 0 unless defined $sum2;
+
+print "Files:\t",@code+@test,"\n";
+print "Code:\t",$sum1,"\n";
+print "Test:\t",$sum2,"\n";
+print "Total:\t",$sum1+$sum2,"\n";
+printf "Ratio:\t%4.3f\n",$sum2/$sum1 if $sum1 != 0;
+
+sub CountLines
+{
+  my ($files,$count) = @_;
+
+  foreach my $file (@{$files})
+  {
+    $io->get(path => $file);
+
+    $count->{$file} = 0 unless exists $count->{$file};
+
+    my $cc = 0;
+
+    for(@{$io->contents})
+    {
+      next if /^\s*(?:\/\/.+)?$/;
+
+      if(m=/\*=)
+      {
+        if(m=\*/=)
+        {
+          next;
+        }
+        else
+        {
+          $cc++;
+
+          print STDERR "====> Nested C-style comment in $file\n" if $cc > 1;
+        }
+      }
+      elsif(m=\*/=)
+      {
+        $cc--;
+
+        print STDERR "====> C-style comment underflow in $file\n" if $cc < 0;
+      }
+      elsif($cc == 0)
+      {
+        $count->{$file}++ unless /^\s*(?:\/\/.+)?$/;
+      }
+    }
+  }
+}

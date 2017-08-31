@@ -1,0 +1,10 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use strict;
+
+while(<>)
+{
+  chomp;
+
+  print q("),$_,q("),"\n";
+}

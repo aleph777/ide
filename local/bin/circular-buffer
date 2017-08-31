@@ -1,0 +1,62 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+use strict;
+use v5.10;
+
+use constant MAX_SLOTS => 5;
+
+my $tail  = 0;
+my $head  = 0;
+my $total = 0;
+
+my @slots;
+
+while(<>)
+{
+  chomp;
+  add($_);
+  show();
+}
+
+sub show
+{
+  say "SHOW: @slots ",scalar @slots;
+
+  my $idx = $tail;
+
+  for(1 .. @slots)
+  {
+    print $slots[$idx],' ';
+
+    $idx = 0 if ++$idx == MAX_SLOTS;
+  }
+  print "\n";
+}
+
+sub add
+{
+  my $i = shift;
+
+  if($total == MAX_SLOTS)
+  {
+    say "ADD(WRAP): $tail-$head $i";
+
+    $slots[$head] = $i;
+
+    $head = 0 if ++$head == MAX_SLOTS;
+    $tail = 0 if ++$tail == MAX_SLOTS;
+  }
+  else
+  {
+    say "ADD(FILL): $total $i";
+
+    $slots[$total++] = $i;
+
+    $head = $total;
+
+    if($total == MAX_SLOTS)
+    {
+      $head = 0;
+      $tail = 1;
+    }
+  }
+}

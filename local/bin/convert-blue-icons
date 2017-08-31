@@ -1,0 +1,59 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+#
+# Time-stamp: <>
+#
+# Title:       convert-blue-icons
+# Author:      Tom Fontaine
+# Date:        04-Aug-2016
+#
+# Purpose:
+#
+# Arguments:
+#
+# Revision:
+#
+use File::IO;
+use List::Util qw(min);
+use strict;
+use v5.10;
+
+use constant RED_ORIGINAL   => 0x1D;
+use constant GREEN_ORIGINAL => 0x60;
+use constant BLUE_ORIGINAL  => 0xAD;
+
+use constant RED_NEW   => 0x40;
+use constant GREEN_NEW => 0xBF;
+use constant BLUE_NEW  => 0xFF;
+
+use constant RED_RATIO   => RED_NEW/RED_ORIGINAL;
+use constant GREEN_RATIO => GREEN_NEW/GREEN_ORIGINAL;
+use constant BLUE_RATIO  => BLUE_NEW/BLUE_ORIGINAL;
+
+
+use constant RATIO => 0x40BFFF/0x1D60AD;
+
+my $color;
+
+my $io = File::IO->new(chomp => 1,newline => 1);
+
+$io->get(path => $ARGV[0]);
+
+for(@{$io->contents})
+{
+  if(my ($red,$green,$blue) = /^".\s+c #([[:xdigit:]]{2})([[:xdigit:]]{2})([[:xdigit:]]{2})/)
+  {
+    my ($xred,$xgreen,$xblue) = map { hex $_ } ($red,$green,$blue);
+
+    if($xblue >= $xred && $xblue >= $xgreen)
+    {
+      $color  = (min(int($xred   * RED_RATIO + 0.5),255)) << 16;
+      $color += (min(int($xgreen * GREEN_RATIO + 0.5),255)) << 8;
+      $color += (min(int($xblue  * BLUE_RATIO + 0.5),255));
+
+      s/[[:xdigit:]]{2}[[:xdigit:]]{2}[[:xdigit:]]{2}",/sprintf '%0X",',$color/e;
+
+      #say $_;
+    }
+  }
+}
+$io->put(path => $ARGV[0]);

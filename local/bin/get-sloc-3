@@ -1,0 +1,24 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::CSharp;
+use strict;
+
+my $cs = File::CSharp->new();
+
+my @files = qx/pfind @ARGV -suffix '(?:cs|cpp|h)'/;
+
+chomp @files;
+
+print "File\tSLOC\n";
+
+my $sum = 0;
+
+foreach my $file (@files)
+{
+  $cs->get(path => $file);
+
+  printf "$file\t%5d\t\n",scalar @{$cs->contents};
+
+  $sum += @{$cs->contents};
+}
+print "\t$sum\n";

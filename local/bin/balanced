@@ -1,0 +1,42 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use strict;
+
+my $reBalancedParens = qr/(\((?:[^()]++|(?-1))*+\))/;
+
+my %hash;
+
+for(grep !/^(?:\s*$|#)/,<>)
+{
+  my @text = Parse(grep { defined } /(\w+)$reBalancedParens?/g);
+}
+
+sub Parse
+{
+  my @tmp = @_;
+
+  my @text;
+
+  while(@tmp)
+  {
+    my $token = shift;
+
+    my ($key,$value);
+
+    if($token =~ /^define$/)
+    {
+      $key   = shift @tmp;
+      $value = [Parse(@tmp)];
+
+      $hash{$key} = $value;
+
+      return ();
+    }
+    elsif($token =~ /^DELAY$/)
+    {
+      $value = shift @tmp;
+
+      push @text,join ' ','delay:',100
+    }
+  }
+}
