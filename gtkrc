@@ -1,0 +1,5 @@
+style "menufont"
+{
+  font_name = "Nimbus Sans L 11.5"  # Pango font name
+}
+widget "*emacs-menuitem*" style "menufont"
