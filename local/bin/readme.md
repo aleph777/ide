@@ -1,1 +1,1 @@
-This directory contains (likely outdated but still intersting) experimental code.
+This directory contains (likely outdated but still interesting) experimental code.
