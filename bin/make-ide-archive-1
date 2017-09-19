@@ -5,7 +5,7 @@
 # Title:       make-ide-archive-1
 # Author:      Tom Fontaine
 # Date:        15-May-2008
-# Time-stamp: <18-Jan-2017 18:19:39 EST, modified by Tom Fontaine>
+# Time-stamp: <19-Sep-2017 12:53:36 EDT, modified by Tom Fontaine>
 #
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -39,6 +39,7 @@
 #            03-Apr-2015 Major overhaul
 #            01-Jun-2015 "use DateTime"
 #            01-Mar-2016 Changed elisp package handling to filter git data and obsolete dirs
+#            19-Sep-2017 Added .stardict to DIRS
 #
 use DateTime;
 use Archive::Tar;
@@ -54,7 +55,7 @@ use v5.10;
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 use constant FILES => qw(.bashrc .emacs .emacs.d/gtkrc .gitconfig);
-use constant DIRS  => qw(bin lib local elisp);
+use constant DIRS  => qw(bin lib local elisp .stardict);
 
 if(@ARGV && $ARGV[0] eq '-help')
 {
