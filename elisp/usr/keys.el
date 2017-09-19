@@ -5,7 +5,7 @@
 ;;
 ;; Author:      Tom Fontaine
 ;; Date:        15-Dec-1999
-;; Time-stamp: <07-Mar-2017 11:16:07 EST, modified by Tom Fontaine>
+;; Time-stamp: <19-Sep-2017 12:31:46 EDT, modified by Tom Fontaine>
 ;;
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
@@ -105,6 +105,7 @@
 ;;                       Added ‘C-f2’ as ‘insert-che’
 ;;           19-Jan-2017 Changed ‘C-N’ to ‘narrow-or-widen-dwim’
 ;;                       Added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
+;;           19-Sep-2017 Added ‘M-pause’ as ‘sdcv-search’
 ;;
 
 ;;; Code:
@@ -275,6 +276,7 @@
 (global-set-key [(control kp-subtract)] 'shift-number-down)
 
 (global-set-key [(meta kp-enter)] 'insert-newline-before)
+(global-set-key [(meta pause)]    'sdcv-search)
 
 ;;
 ;; control-"Middle" keys

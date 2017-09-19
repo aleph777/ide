@@ -5,7 +5,7 @@
 ;;
 ;; Author:      Tom Fontaine
 ;; Date:        19-Sep-2000
-;; Time-stamp: <24-Aug-2017 09:10:29 EDT, modified by Tom Fontaine>
+;; Time-stamp: <19-Sep-2017 12:30:37 EDT, modified by Tom Fontaine>
 ;;
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
@@ -147,6 +147,7 @@
 ;;                       Added ‘flycheck-emacs-lisp-load-path’ to flycheck
 ;;           21-Jan-2017 Added ‘ssh’
 ;;           29-Jun-2017 Added ‘ycmd’, ‘company-ycmd’, and ‘flycheck-ycmd’
+;;           19-Sep-2017 Added ‘sdcv’
 ;;
 
 ;;; Code:
@@ -609,9 +610,6 @@ is already narrowed."
 (use-package python
   :defer t)
 
-(use-package s
-  :defer t)
-
 (use-package rainbow-delimiters
   :config (hook-into-modes #'rainbow-delimiters-mode
                            'c++-mode-hook
@@ -629,6 +627,13 @@ is already narrowed."
                            'python-mode-hook
                            'sh-mode-hook
                            'yaml-mode-hook))
+
+(use-package s
+  :defer t)
+
+(use-package sdcv
+  :defer t
+  :commands sdcv-search)
 
 (use-package shift-number
   :defer t
