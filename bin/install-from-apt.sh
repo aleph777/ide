@@ -32,6 +32,7 @@ apt install perl-doc
 #apt install plsense
 apt install python-dev
 apt install ruby
+apt install sdcv
 apt install SLOCCount
 apt install yasm
 apt install zlib1g-dev
