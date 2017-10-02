@@ -35,6 +35,7 @@ export COLUMNS=108
 
 # RED="\[\033[0;31m\]"
 # LIGHT_RED="\[\033[1;31m\]"
+# ORANGE='\033[0;33m'
 # YELLOW="\[\033[1;33m\]"
 # GREEN="\[\033[0;32m\]"
 # LIGHT_GREEN="\[\033[1;32m\]"
