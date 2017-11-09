@@ -32,7 +32,7 @@
 
 ;;; Commentary:
 
-;; Revision:
+;; Revision: 09-Nov-2017 added ‘bm-save’ to ‘u-bookmarks-menu’
 ;;
 
 ;;; Code:
@@ -44,6 +44,7 @@
 
 (defvar u-bookmarks-menu
   '("Bookmarks"
+    ["Save Bookmarks"    bm-save t]
     ["Toggle Bookmark"   bm-toggle            :enable (is-not-shell?)]
     ["Bookmark Function" bm-bookmark-defun    :enable (is-not-shell?)]
     ["Annotate Bookmark" bm-bookmark-annotate :enable (is-bookmark?)]
