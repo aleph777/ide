@@ -14,10 +14,17 @@ export HISTIGNORE="ls:[bf]g:exit"
 export HISTCONTROL=ignoredups
 export PAGER='/usr/bin/less -ins'
 
-export PATH=$($HOME/bin/clean-path $HOME/bin $HOME/local/bin $HOME/local/homebin /bin /usr/local/go/bin /usr/gnu/bin:/usr/local/bin:/usr/bin:/usr/X11/bin:/usr/sbin:/sbin:. $PATH)
-export MANPATH=$($HOME/bin/clean-path /usr/gnu/share/man:/usr/share/man:/usr/X11/share/man /opt/csw/man /usr/local/man $MANPATH)
 export PERLLIB="$HOME/lib:$HOME/local/lib"
-export LISP='/usr/local/share/emacs/25.1.90/lisp'
+
+export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
+export PATH=$($HOME/bin/clean-path $HOME/local/bin $HOME/local/homebin $HOME/bin $DEFAULTPATH $PATH $EXTRAPATH)
+
+export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
+
+export EMACSVERSION=$(perl -e '$x=qx(emacs --version);$v=($x=~/(\d{2}(?:\.\d{1,2}){1,2})/)[0];say $v')
+export LISP="/usr/local/share/emacs/${EMACSVERSION}/lisp"
+
 export PS1='\# [\h] \W> '
 
 #
