@@ -1,0 +1,50 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use Util::Shuffle;
+use strict;
+use v5.10;
+
+die "No directory specified!!!\n"      unless @ARGV;
+die "$ARGV[0] does not exist!!\n"      unless -e $ARGV[0];
+die "$ARGV[0] is not a directory!!!\n" unless -d $ARGV[0];
+
+my $dir = shift @ARGV; # /media/fontaine/3936-61B1
+
+$dir =~ s=/(?:\d{2}/?)?$==;
+
+my $shuffle = Util::Shuffle->new();
+my $globdir = join '/',$dir,'[01][0-9]';
+
+my @dirs  = glob $globdir;
+my @files = glob "$globdir/*.mp3";
+
+$shuffle->get(contents => \@files);
+
+my $n = 1;
+my $d = 0;
+my $f = 0;
+
+for(@files)
+{
+  die "Undefined directory!!!" unless defined $dirs[$d];
+
+  my $destination = $dirs[$d];
+  my $to = join '/',$destination,basename($_);
+
+  my $dispFrom = join '/',basename(dirname($_)),basename($_);
+  my $dispTo   = join '/',basename(dirname($to)),basename($to);
+
+  say $n++,': ',$dispFrom,' => ',$dispTo;
+
+  rename $_,$to unless $_ eq $to;
+  system 'touch',$to;
+
+  if(++$f == 100)
+  {
+    $f = 0;
+
+    $d++;
+  }
+  #sleep 2 unless $n%10;
+}
