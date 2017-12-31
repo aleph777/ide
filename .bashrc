@@ -14,11 +14,13 @@ export HISTIGNORE="ls:[bf]g:exit"
 export HISTCONTROL=ignoredups
 export PAGER='/usr/bin/less -ins'
 
-export PERLLIB="$HOME/lib:$HOME/local/lib"
+export IDE="$HOME/ide"
+
+export PERLLIB="$IDE/lib:$IDE/local/lib"
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export PATH=$($HOME/bin/clean-path $HOME/local/bin $HOME/local/homebin $HOME/bin $DEFAULTPATH $PATH $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $DEFAULTPATH $PATH $EXTRAPATH)
 
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 

@@ -20,9 +20,9 @@
 
 (setq gc-cons-threshold (* 16 1024 1024))
 
-(let ((elisp (concat user-dir-home "elisp/")))
-  (pushnew (concat elisp "packages/tiny-tools/lisp/tiny")  load-path :test 'string=)
-  (pushnew (concat elisp "packages/tiny-tools/lisp/other") load-path :test 'string=)
+(let ((elisp (concat user-dir-home "ide/elisp/")))
+  (pushnew (concat elisp "packages/project--emacs-tiny-tools/lisp/tiny")  load-path :test 'string=)
+  (pushnew (concat elisp "packages/project--emacs-tiny-tools/lisp/other") load-path :test 'string=)
 
   (pushnew (concat elisp "ext") load-path :test 'string=)
   (pushnew (concat elisp "usr") load-path :test 'string=)
