@@ -1,12 +1,9 @@
 ;;; u-bookmarks.el --- Bookmark menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2017-2017 Tom Fontaine
+;;         Copyright © 2017-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        14-Jan-2017
-;; Time-stamp: <18-Jan-2017 12:02:33 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   14-Jan-2017
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

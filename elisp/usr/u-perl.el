@@ -1,12 +1,9 @@
 ;;; u-perl.el --- cperl-mode support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 1999-2017 Tom Fontaine
+;;         Copyright © 1999-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        15-Dec-1999
-;; Time-stamp: <03-Jul-2017 09:39:30 EDT, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   15-Dec-1999
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

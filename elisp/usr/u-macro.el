@@ -1,12 +1,9 @@
 ;;; u-macro.el --- Global macro definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2016-2017 Tom Fontaine
+;;         Copyright © 2016-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        10-Jun-2016
-;; Time-stamp: <28-Apr-2017 11:54:32 EDT, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   10-Jun-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

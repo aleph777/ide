@@ -1,12 +1,9 @@
 ;;; colors.el --- [description] -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2017-2017 Tom Fontaine
+;;         Copyright © 2017-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        25-Jan-2017
-;; Time-stamp: <26-Jan-2017 11:32:20 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   25-Jan-2017
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

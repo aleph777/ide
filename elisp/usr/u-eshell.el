@@ -1,10 +1,10 @@
 ;; -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
-;;
-;; Time-stamp: <30-Dec-2016 12:59:30 EST, modified by Tom Fontaine>
-;;
-;; Author:    Tom Fontaine
-;; Date:      26-Dec-2012
-;;
+
+;;         Copyright © 2012-2018 Tom Fontaine
+
+;; Author: Tom Fontaine
+;; Date:   26-Dec-2012
+
 ;; Revision:  29-Feb-2016 Changed from `usr-' to `u-'
 ;;                        Removed deprecated key bindings in u-eshell-setup
 ;;

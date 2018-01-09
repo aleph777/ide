@@ -1,12 +1,9 @@
 ;;; u-python.el --- Python mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2016-2017 Tom Fontaine
+;;         Copyright © 2016-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        19-Apr-2016
-;; Time-stamp: <18-Jan-2017 13:30:50 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   19-Apr-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

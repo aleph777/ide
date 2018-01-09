@@ -1,12 +1,9 @@
 ;;; u-sort.el --- Sort submenu definition and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 1999-2017 Tom Fontaine
+;;         Copyright © 1999-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Time-stamp: <18-Jan-2017 13:52:53 EST, modified by Tom Fontaine>
-;; Date:        15-Dec-1999
-;;
+;; Author: Tom Fontaine
+;; Date:   15-Dec-1999
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

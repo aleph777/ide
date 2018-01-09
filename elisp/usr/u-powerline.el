@@ -1,12 +1,9 @@
 ;;; u-powerline.el --- Powerline setup -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2016-2017 by Tom Fontaine
+;;         Copyright © 2016-2018 by Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        30-Mar-2016
-;; Time-stamp: <23-May-2017 07:35:19 EDT, modified by Thomas Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   30-Mar-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

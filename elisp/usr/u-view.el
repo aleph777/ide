@@ -1,13 +1,9 @@
 ;;; u-view.el --- View menu defintion and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
  
-;;              Copyright © 2016-2017 Tom Fontaine
-;;; Commentary:
+;;         Copyright © 2016-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        28-Feb-2016
-;; Time-stamp: <17-Jan-2017 19:12:51 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   28-Feb-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

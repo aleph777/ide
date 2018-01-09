@@ -1,12 +1,9 @@
 ;;; pquery.el --- Perl query-replace -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2001-2017 Tom Fontaine
+;;         Copyright © 2001-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        06-Dec-2001
-;; Time-stamp: <18-Jan-2017 12:02:10 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   06-Dec-2001
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

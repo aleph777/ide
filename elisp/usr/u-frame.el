@@ -1,12 +1,9 @@
 ;;; u-frame.el --- Functions that control frame appearance -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 1999-2017 Tom Fontaine
+;;         Copyright © 1999-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        15-Dec-1999
-;; Time-stamp: <31-Jan-2017 10:54:41 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   15-Dec-1999
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

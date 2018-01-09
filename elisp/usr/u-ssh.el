@@ -1,12 +1,9 @@
 ;;; u-ssh.el --- SSH support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2006-2017 Tom Fontaine
+;;         Copyright © 2006-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        10-May-2006
-;; Time-stamp: <01-Feb-2017 09:13:04 EST, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   10-May-2006
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

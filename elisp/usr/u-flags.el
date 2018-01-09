@@ -1,12 +1,9 @@
 ;;; u-flags.el --- Defintion of boolean flags used in menus and toolbars -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2016-2017 Tom Fontaine
+;;          Copyright © 2016-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        26-Jan-2016
-;; Time-stamp: <18-Jan-2017 12:30:21 EST, modified by Tom Fontaine>
-;;
+;; Author:  Tom Fontaine
+;; Date:    26-Jan-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

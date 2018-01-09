@@ -1,12 +1,9 @@
 ;;; u-variables.el --- Local overrides for global variables -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2016-2017 Tom Fontaine
+;;         Copyright © 2016-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        15-Apr-2016
-;; Time-stamp: <24-Aug-2017 09:17:53 EDT, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   15-Apr-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

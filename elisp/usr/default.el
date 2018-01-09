@@ -1,12 +1,9 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2000-2017 Tom Fontaine
+;;         Copyright © 2000-2018 Tom Fontaine
 
-;;
-;; Author:      Tom Fontaine
-;; Date:        19-Sep-2000
-;; Time-stamp: <19-Sep-2017 12:30:37 EDT, modified by Tom Fontaine>
-;;
+;; Author: Tom Fontaine
+;; Date:   19-Sep-2000
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",
@@ -148,6 +145,7 @@
 ;;           21-Jan-2017 Added ‘ssh’
 ;;           29-Jun-2017 Added ‘ycmd’, ‘company-ycmd’, and ‘flycheck-ycmd’
 ;;           19-Sep-2017 Added ‘sdcv’
+;;           09-Jan-2018 Removed ‘timestamp’
 ;;
 
 ;;; Code:
@@ -296,6 +294,7 @@
 (on-gnu/linux
  (use-package company
    :defer 10
+   :diminish company-mode
    :init
    (hook-into-modes #'company-mode
                     'c++-mode-hook
@@ -316,6 +315,7 @@
 
  (use-package ycmd
    :after company
+   :diminish ycmd-mode
    :init (progn
            (set-variable 'ycmd-server-command (list "python" (substitute-in-file-name "$HOME/elisp/packages/ycmd/ycmd/__main__.py")))
            (set-variable 'ycmd-global-config (substitute-in-file-name "$HOME/elisp/packages/ycmd/.ycm_extra_conf.py"))
@@ -685,12 +685,6 @@ is already narrowed."
 (use-package tetris
   :defer t
   :config (setq tetris-score-file "/dev/null"))
-
-(use-package time-stamp
-  :ensure nil
-  :config (progn
-            (add-hook 'write-file-functions 'time-stamp)
-            (setq time-stamp-format (concat "%02d-%3b-%:4y %02H:%02M:%02S %Z, modified by " user-full-name))))
 
 (use-package tinyeat
   :ensure nil
