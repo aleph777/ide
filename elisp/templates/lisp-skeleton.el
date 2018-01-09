@@ -1,12 +1,10 @@
 ;;; <<<NAME>>>.el --- [description] -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © <<<YEAR>>> <<<AUTHOR>>>
+;;         Copyright © <<<YEAR>>> <<<AUTHOR>>>
 
-;;
-;; Author:      <<<AUTHOR>>>
-;; Date:        <<<DATE>>>
-;; Time-stamp: <18-Jan-2017 12:05:04 EST, modified by Tom Fontaine>
-;;
+;; Author: <<<AUTHOR>>>
+;; Date:   <<<DATE>>>
+;; Time-stamp: <09-Jan-2018 11:48:38 EST, modified by Tom Fontaine>
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
 ;; copy of this software and associated documentation files (the "Software",

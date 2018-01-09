@@ -1,11 +1,9 @@
 
-#              Copyright © <<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © <<<YEAR>>> <<<AUTHOR>>>
 
-# Title:       <<<TITLE>>>
-# Author:      <<<AUTHOR>>>
-# Date:        <<<DATE>>>
-# Time-stamp: <01-Feb-2017 09:40:56 EST, modified by Tom Fontaine>
-#
+# Title:  <<<TITLE>>>
+# Author: <<<AUTHOR>>>
+# Date:   <<<DATE>>>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

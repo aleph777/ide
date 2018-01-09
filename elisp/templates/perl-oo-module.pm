@@ -1,12 +1,9 @@
 # <<<PACKAGE>>> --- [description] -*-Perl-*-
 
-#              Copyright © <<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © <<<YEAR>>> <<<AUTHOR>>>
 
-#
-# Author:      <<<AUTHOR>>>
-# Date:        <<<DATE>>>
-# Time-stamp: <18-Jan-2017 17:37:03 EST, modified by Tom Fontaine>
-#
+# Author: <<<AUTHOR>>>
+# Date:   <<<DATE>>>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
