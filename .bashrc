@@ -8,6 +8,7 @@ alias ls='TERM=ansi ls --color=always'
 alias avg='perl -e '\''use List::Util qw(sum);CORE::say sum(@ARGV)/@ARGV;'\'''
 alias perl='perl -Mv5.10'
 alias psfind='ps u -C'
+alias pgrep='grep -P'
 
 # Ignore these commands
 export HISTIGNORE="ls:[bf]g:exit"
