@@ -1,12 +1,9 @@
 # File::Log --- Provides a log-file object -*-Perl-*-
 
-#              Copyright © 2007-2017 Tom Fontaine
+#         Copyright © 2007-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        31-Jan-2007
-# Time-stamp: <18-Jan-2017 16:24:46 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   31-Jan-2007
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

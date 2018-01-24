@@ -1,12 +1,9 @@
 # File::SLOC --- Provides a SLOC object based on sloccount -*-Perl-*-
 
-#              Copyright © 2015-2017 Tom Fontaine
+#         Copyright © 2015-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        17-Apr-2015
-# Time-stamp: <19-Jan-2017 11:25:30 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   17-Apr-2015
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

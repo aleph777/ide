@@ -1,12 +1,9 @@
 # File::FindWrapper --- Provides a ‘find’ object -*-Perl-*-
 
-#              Copyright © 2000-2017 Tom Fontaine
+#         Copyright © 2000-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        28-Jun-2000
-# Time-stamp: <19-Jan-2017 10:21:53 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   28-Jun-2000
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
