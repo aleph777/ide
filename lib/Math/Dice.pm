@@ -1,12 +1,9 @@
 # Math::Dice --- Throws N dice of X number of sides -*-Perl-*-
 
-#              Copyright © 2008-2017 Tom Fontaine
+#         Copyright © 2008-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        18-May-2008
-# Time-stamp: <19-Jan-2017 11:19:32 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   18-May-2008
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

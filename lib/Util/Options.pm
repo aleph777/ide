@@ -1,12 +1,9 @@
 # Util::Options --- Provides heavy-duty (legacy) command line option handling -*-Perl-*-
 
-#              Copyright © 2000-2017 Tom Fontaine
+#         Copyright © 2000-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        24-Feb-2000
-# Time-stamp: <25-Jan-2017 12:24:07 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   24-Feb-2000
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

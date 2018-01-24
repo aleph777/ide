@@ -1,12 +1,9 @@
 # Util::Shuffle --- Shuffles the contents of specified array -*-Perl-*-
 
-#              Copyright © 2015-2017 Tom Fontaine
+#         Copyright © 2015-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        25-Mar-2015
-# Time-stamp: <18-Jan-2017 18:33:36 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   25-Mar-2015
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

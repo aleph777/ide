@@ -1,12 +1,9 @@
 # Util::Color --- [description] -*-Perl-*-
 
-#              Copyright © 2017-2017 altran_tfontaine
+#         Copyright © 2017-2018 Tom Fontaine
 
-#
-# Author:      altran_tfontaine
-# Date:        07-Dec-2017
-# Time-stamp: <08-Dec-2017 12:59:05 EST, modified by altran_tfontaine>
-#
+# Author: Tom Fontaine
+# Date:   07-Dec-2017
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

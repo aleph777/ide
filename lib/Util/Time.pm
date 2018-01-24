@@ -1,4 +1,4 @@
-# -*-Perl-*-
+# Util::Time --- DEPRECATED -*-Perl-*-
 #
 # Time-stamp:  <18-Jan-2017 18:32:41 EST, modified by Tom Fontaine>
 #
@@ -10,6 +10,7 @@
 #
 # Revision:     09-Feb-2012 removed colons from HHMMSS and LOG (windows incompatible)
 #               25-Mar-2015 require 5.008
+#               24-Jan-2018 DEPRECATED (use Util::DateTime)
 #
 package Util::Time;
 
@@ -17,8 +18,6 @@ require 5.008;
 use Carp;
 use strict;
 
-use File::IO;
-use Text::Hash;
 use Time::Local;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;

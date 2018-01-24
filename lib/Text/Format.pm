@@ -1,12 +1,9 @@
 # Text::Format --- Generates a column-aligned minimally-spaced format string -*-Perl-*-
 
-#              Copyright © 1999-2017 Tom Fontaine
+#         Copyright © 1999-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        22-Mar-1999
-# Time-stamp: <18-Jan-2017 16:52:57 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   22-Mar-1999
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

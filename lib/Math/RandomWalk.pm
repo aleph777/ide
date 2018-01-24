@@ -1,12 +1,9 @@
 # Math::RandomWalk --- Implements a random walk object -*-Perl-*-
 
-#              Copyright © 2017-2017 Tom Fontaine
+#         Copyright © 2017-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        14-Aug-2015
-# Time-stamp: <19-Jan-2017 10:54:31 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   14-Aug-2015
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

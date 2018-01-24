@@ -1,12 +1,9 @@
 # Math::Statistics --- [description] -*-Perl-*-
 
-#              Copyright © 2008-2017 Tom Fontaine
+#         Copyright © 2008-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        07-Feb-2008
-# Time-stamp: <18-Jan-2017 16:47:40 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   07-Feb-2008
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",

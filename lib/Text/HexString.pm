@@ -1,12 +1,9 @@
 # Text::HexString --- Stringifies a hex number in chunks of 4 bytes using a delimiter -*-Perl-*-
 
-#              Copyright © 2012-2017 Tom Fontaine
+#         Copyright © 2012-2018 Tom Fontaine
 
-#
-# Author:      Tom Fontaine
-# Date:        26-Sep-2012
-# Time-stamp: <18-Jan-2017 16:56:20 EST, modified by Tom Fontaine>
-#
+# Author: Tom Fontaine
+# Date:   26-Sep-2012
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
