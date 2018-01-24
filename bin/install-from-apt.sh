@@ -11,6 +11,7 @@ apt install indent
 apt install libffi-dev
 apt install libgdbm-dev
 apt install libgif-dev
+apt install libgnutls-dev
 apt install libgpm-dev
 apt install libgtk-3-dev
 apt install libjpeg-dev
