@@ -20,6 +20,8 @@
 (deftheme fontaine
   "Shit-stained theme.")
 
+(add-to-list 'default-frame-alist '(alpha . (92 . 90)))
+
 ;; Windows fonts
 ;;   Consolas
 ;;   Office Code Pro

@@ -34,7 +34,7 @@ apt install perl-doc
 apt install python-dev
 apt install ruby
 apt install sdcv
-apt install SLOCCount
+apt install sloccount
 apt install yasm
 apt install zlib1g-dev
 

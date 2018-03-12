@@ -45,8 +45,6 @@ use constant PERL_STYLES        => qw(PERL Perl perl PL pl);
 
 our $AUTOLOAD;
 
-our $AUTOLOAD;
-
 my @AREF = qw(contents);
 my @HREF = qw();
 
