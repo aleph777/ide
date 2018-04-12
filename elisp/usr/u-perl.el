@@ -71,7 +71,6 @@
 (require 'u-frame)
 (require 'u-date)
 (require 'u-variables)
-;; (require 'plsense)
 
 (defvar perl-which       "/usr/bin/perl")
 (defvar perl-shebang     (concat "#!" perl-which " -w    # -*-Perl-*-\n"))
@@ -677,9 +676,6 @@
 
 (cperl-define-key "\t" 'indent-for-tab-command)
 (perl-init-faces)
-
-;; (plsense-config-default)
-;; (plsense-server-start)
 
 (add-hook 'cperl-mode-hook 'perl-setup)
 ;;
