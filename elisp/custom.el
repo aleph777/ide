@@ -29,7 +29,7 @@
  '(msb-max-menu-items nil)
  '(package-selected-packages
    (quote
-    (treemacs-evil treemacs clang-format ergoemacs-functions u-clips u-cc company-ycmd flycheck-ycmd ycmd window-purpose windows-purpose e2wm ssh web-mode langtool bm loccur fancy-narrow nlinum nlinum-relative paradox linum-relative melancholy-theme ac-dabbrev async origami-mode origami plsense ereader clips-log-mode ac-clang afternoon-theme nxml-mode log-mode comint yaml-mode volatile-highlights use-package undo-tree tabbar sr-speedbar spu smooth-scrolling smartparens shift-number rainbow-delimiters powerline popwin php-mode perl6-mode org-cua-dwim neotree modern-cpp-font-lock minimap mic-paren matlab-mode lua-mode json-mode jedi highlight-operators highlight-escape-sequences folding flycheck-pos-tip f es-windows ergoemacs-mode delight cursor-in-brackets cuda-mode csharp-mode color-theme-solarized clips-mode autopair anzu ac-python)))
+    (company-plsense company-jedi treemacs-evil treemacs clang-format ergoemacs-functions u-clips u-cc company-ycmd flycheck-ycmd ycmd window-purpose windows-purpose e2wm ssh web-mode langtool bm loccur fancy-narrow nlinum nlinum-relative paradox linum-relative melancholy-theme ac-dabbrev async origami-mode origami plsense ereader clips-log-mode ac-clang afternoon-theme nxml-mode log-mode comint yaml-mode volatile-highlights use-package undo-tree tabbar sr-speedbar spu smooth-scrolling smartparens shift-number rainbow-delimiters powerline popwin php-mode perl6-mode org-cua-dwim neotree modern-cpp-font-lock minimap mic-paren matlab-mode lua-mode json-mode jedi highlight-operators highlight-escape-sequences folding flycheck-pos-tip f es-windows ergoemacs-mode delight cursor-in-brackets cuda-mode csharp-mode color-theme-solarized clips-mode autopair anzu ac-python)))
  '(paradox-github-token t)
  '(recentf-max-menu-items 25)
  '(recentf-menu-before "Open in New Window...")
@@ -58,6 +58,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(line-number-current-line ((t (:background "white")))))
 
 ;;; custom.el ends here
