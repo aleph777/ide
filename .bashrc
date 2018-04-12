@@ -4,11 +4,12 @@
 shopt -s histappend
 
 alias lsf='ls -F'
-alias ls='TERM=ansi ls --color=always'
+alias lsc='TERM=ansi ls --color=always'
 alias avg='perl -e '\''use List::Util qw(sum);CORE::say sum(@ARGV)/@ARGV;'\'''
 alias perl='perl -Mv5.10'
 alias psfind='ps u -C'
 alias pgrep='grep -P'
+alias up='sudo apt update && sudo apt upgrade'
 
 # Ignore these commands
 export HISTIGNORE="ls:[bf]g:exit"
@@ -18,6 +19,7 @@ export PAGER='/usr/bin/less -ins'
 export IDE="$HOME/ide"
 
 export PERLLIB="$IDE/lib:$IDE/local/lib"
+export PERL5LIB="$PERLLIB"
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
