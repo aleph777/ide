@@ -38,65 +38,60 @@
 ;;           16-Dec-2016 Added ‘linum-relative-mode’ and supporting functions
 ;;           12-Jan-2017 Changed ‘is-linum?’ to buffer local
 ;;                       Fixed toggle functions
+;;           02-Apr-2018 Changed line-number functions to use ‘display-line-numbers’
 ;;
 
 ;;; Code:
 
 (message "Loading u-view...")
+(require 'display-line-numbers)
 (require 'u-flags)
 (require 'u-clipboard)
 (require 'u-frame)
 ;;
-(defvar is-linum? nil)
-(make-variable-buffer-local 'is-linum?)
+(defvar line-numbers 'off)
+(make-variable-buffer-local 'line-numbers)
 
-(defsubst is-linum-absolute? ()
-  "Return boolean t if Linum absolute mode is chosen."
-  (eq is-linum? 'absolute))
+(defsubst is-line-numbers-absolute? ()
+  "Return boolean t if ‘display-line-numbers’ absolute mode is chosen."
+  (eq line-numbers 'absolute))
 
-(defsubst is-linum-relative? ()
-  "Return boolean t if Linum relative mode is chosen."
-  (eq is-linum? 'relative))
+(defsubst is-line-numbers-relative? ()
+  "Return boolean t if ‘display-line-numbers’ relative mode is chosen."
+  (eq line-numbers 'relative))
 
-(defun ln-absolute-toggle ()
-  "Toggle Linum absolute mode state."
+(defun display-line-numbers-set (mode)
+  "Set line numbers display according to MODE."
   (interactive)
-  (if (is-linum-absolute?)
-      (linum-off)
-    (linum-absolute-on)))
+  (setq line-numbers mode)
+  (if display-line-numbers-mode
+      (display-line-numbers-mode 'toggle))
+  (unless (eq mode 'off)
+    (progn
+      (setq display-line-numbers-type (or (eq line-numbers 'absolute) 'relative)) ;; t or relative
+      (display-line-numbers-mode))))
 
-(defun ln-relative-toggle ()
-  "Toggle Linum relative mode state."
+(defun display-line-numbers-absolute-toggle ()
+  "Toggle ‘display-line-numbers’ absolute mode state."
   (interactive)
-  (require 'nlinum-relative)
-  (if (is-linum-relative?)
-      (linum-off)
-    (linum-relative-on)))
+  (if (is-line-numbers-absolute?)
+      (display-line-numbers-set 'off)
+    (display-line-numbers-set 'absolute)))
 
-(defun linum-off ()
-  "Turn off line numbering."
-  (setq is-linum? nil)
-  (nlinum-mode -1))
-
-(defun linum-absolute-on ()
-  "Turn on absolute line numbering."
-  (setq is-linum? 'absolute)
-  (nlinum-relative-off)
-  (nlinum-mode 1))
-
-(defun linum-relative-on ()
-  "Turn on relative line numbering."
-  (setq is-linum? 'relative)
-  (nlinum-relative-on)
-  (nlinum-mode 1))
+(defun display-line-numbers-relative-toggle ()
+  "Toggle ‘display-line-numbers’ relative mode state."
+  (interactive)
+  (if (is-line-numbers-relative?)
+      (display-line-numbers-set 'off)
+    (display-line-numbers-set 'relative)))
 
 (defvar u-view-menu
   '("View"
-    ["Absolute Line Numbers" ln-absolute-toggle  :style toggle :selected (is-linum-absolute?)]
-    ["Relative Line Numbers" ln-relative-toggle  :style toggle :selected (is-linum-relative?)]
-    ["Which Function"        which-function-mode :style toggle :selected which-function-mode]
-    ["Whitespace"            whitespace-mode     :style toggle :selected whitespace-mode]
-    ["Line Wrap"             visual-line-mode    :style toggle :selected word-wrap]
+    ["Absolute Line Numbers" display-line-numbers-absolute-toggle :style toggle :selected (is-line-numbers-absolute?)]
+    ["Relative Line Numbers" display-line-numbers-relative-toggle :style toggle :selected (is-line-numbers-relative?)]
+    ["Which Function"        which-function-mode                  :style toggle :selected which-function-mode]
+    ["Whitespace"            whitespace-mode                      :style toggle :selected whitespace-mode]
+    ["Line Wrap"             visual-line-mode                     :style toggle :selected word-wrap]
     "---"
     ["Local Clipboard" u-view-clipboard :enable (get-buffer u-clipboard-buffer-name)]
     "---"
