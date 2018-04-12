@@ -147,6 +147,11 @@
 ;;           19-Sep-2017 Added ‘sdcv’
 ;;           09-Jan-2018 Removed ‘timestamp’
 ;;           09-Feb-2018 Added ‘treemacs’
+;;           16-Mar-2018 Removed ‘jedi’
+;;                       Fixed ‘cperl-mode’/‘smartparens’ conflict
+;;           02-Apr-2018 Disabled ‘nlinum’ and ‘nlinum-relative’
+;;                       Added ‘display-line-numbers’
+;;           12-Apr-2018 Added ‘helpful’
 ;;
 
 ;;; Code:
@@ -176,12 +181,9 @@
 ;;
 (message "Loading packages...")
 
-(use-package ac-python :disabled
-  :defer t
-  :init (with-eval-after-load 'python '(require 'ac-python)))
-
 (use-package anzu
   :diminish anzu-mode
+  :functions global-anzu-mode
   :config (progn
             (defun anzu--update-mode-line-local (here total)
               (when anzu--state
@@ -202,41 +204,6 @@
 (use-package atim-unscroll
   :ensure nil
   :config (atim-unscroll-global-mode 1))
-
-(progn
-  (use-package auto-complete :disabled
-    :diminish auto-complete-mode
-    :config (ac-config-default))
-
-  (use-package ac-clang :disabled
-    :defer t
-    :config (when (ac-clang-initialize)
-              (add-hook 'c-mode-common-hook '(lambda ()
-                                               ;;(setq ac-clang-cflags CFLAGS)
-                                               (ac-clang-activate-after-modify)))))
-
-  (use-package ac-dabbrev :disabled
-    :config (add-to-list 'ac-sources 'ac-source-dabbrev)))
-
-(use-package autopair :disabled
-  :ensure nil
-  :diminish autopair-mode
-  :config (hook-into-modes #'autopair-mode
-                           'c++-mode-hook
-                           'c-mode-hook
-                           'clips-mode-hook
-                           'cperl-mode-hook
-                           'csharp-mode-hook
-                           'emacs-lisp-mode-hook
-                           'java-mode-hook
-                           'json-mode-hook
-                           'lisp-interaction-mode-hook
-                           'matlab-mode-hook
-                           'perl6-mode
-                           'php-mode-hook
-                           'python-mode-hook
-                           'sh-mode-hook
-                           'yaml-mode-hook))
 
 (use-package bm
   :init
@@ -283,15 +250,17 @@
 
 (use-package cc-mode
   :ensure nil
-  :mode "\\.\\(proto\\|tpp\\)\\'"
-  :init (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'" . c-mode)))
+  :defer t
+  :init (progn
+          (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
+          (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode))))
 
-(use-package clips-log-mode
+(use-package clips-log-mode :disabled
   :ensure nil
   :mode "\\.log\\'")
 
 (use-package clips-mode
-  :mode "\\.clp\\'")
+  :defer t)
 
 (on-gnu/linux
  (use-package company
@@ -315,49 +284,63 @@
                    company-tooltip-align-annotations t)
              (add-to-list 'company-transformers #'company-sort-by-backend-importance)))
 
+ (use-package company-jedi
+   :after company
+   :config (add-to-list 'company-backends '(company-jedi company-files)))
+
+ (use-package company-plsense :disabled
+   :after plsense
+   :config (add-to-list 'company-backends 'company-plsense))
+ 
+ (use-package company-ycmd
+   :after ycmd
+   :config (progn
+             (company-ycmd-setup)
+             (push '(company-ycmd :with company-yasnippet company-dabbrev-code) company-backends)))
+ 
+ (use-package flycheck-ycmd
+   :after ycmd
+   :init (flycheck-ycmd-setup))
+
+ (use-package plsense :disabled
+   :after cperl-mode
+   :config (progn
+             (plsense-config-default)
+             (plsense-server-start)))
+
  (use-package ycmd
    :after company
    :diminish ycmd-mode
    :init (progn
            (set-variable 'ycmd-server-command (list "python" (substitute-in-file-name "$HOME/elisp/packages/ycmd/ycmd/__main__.py")))
            (set-variable 'ycmd-global-config (substitute-in-file-name "$HOME/elisp/packages/ycmd/.ycm_extra_conf.py"))
-           (add-hook 'after-init-hook #'global-ycmd-mode))
-   )
-
- (use-package company-ycmd
-   :after ycmd
-   :config (progn
-             (company-ycmd-setup)
-             (push '(company-ycmd :with company-yasnippet company-dabbrev-code) company-backends))
-   )
-
- (use-package flycheck-ycmd
-   :after ycmd
-   :init (flycheck-ycmd-setup)
-   )
-)
+           (add-hook 'after-init-hook #'global-ycmd-mode)))
 ;; (setq url-show-status nil)              ; make ycmd more quiet
+
+ )
 
 (use-package cperl-mode
   :ensure nil
   :defer t
   :commands (convert-to-perl)
   :init (defalias 'perl-mode 'cperl-mode)
-  ;; :config (progn
+  :config (progn
+            (define-key cperl-mode-map "{" nil)
+            (define-key cperl-mode-map "(" nil)
+            (define-key cperl-mode-map "[" nil))
   ;;           (plsense-server-start)
-  ;;           (require 'u-perl))
   )
 
 (use-package csharp-mode
-  :mode "\\.cs\\'")
+  :defer t)
 
-(use-package cuda-mode :disabled
-  :mode "\\.cu\\'")
+(use-package cuda-mode
+  :defer t)
 
-(use-package diffview :disabled
-  :commands (diffview-current diffview-region diffview-message))
+(use-package display-line-numbers
+  :ensure nil)
 
-(use-package eldoc :disabled
+(use-package eldoc
   :ensure nil
   :diminish eldoc-mode
   :init (with-eval-after-load 'lisp-mode
@@ -368,6 +351,7 @@
 
 (use-package ergoemacs-functions
   :defer t
+  :no-require t
   :commands (ergoemacs-backward-open-bracket
              ergoemacs-forward-open-bracket
              ergoemacs-move-text-down
@@ -383,37 +367,6 @@
   :defer t
   :commands (buffer-face-mode
              text-scale-mode))
-
-(use-package fancy-narrow :disabled
-  :ensure nil
-  :defer t
-  :commands (fancy-narrow-to-defun
-             fancy-narrow-to-region
-             fancy-widen)
-  :preface
-  (defun fancy-narrow-or-widen-dwim (p)
-    "Widen if buffer is narrowed, narrow-dwim otherwise.
-Dwim means: region, org-src-block, org-subtree, or
-defun, whichever applies first.  Narrowing to
-org-src-block actually calls `org-edit-src-code'.
-
-With prefix P, don't widen, just narrow even if buffer
-is already narrowed."
-    (interactive "P")
-    (declare (interactive-only))
-    (cond ((and fancy-narrow--beginning fancy-narrow--end (not p)) (fancy-widen))
-          ((region-active-p)
-           (fancy-narrow-to-region (region-beginning) (region-end)))
-          ((derived-mode-p 'org-mode)
-           ;; `org-edit-src-code' is not a real narrowing
-           ;; command. Remove this first conditional if
-           ;; you don't want it.
-           (cond ((ignore-errors (org-edit-src-code) t)
-                  (delete-other-windows))
-                 ((ignore-errors (org-fancy-narrow-to-block) t))
-                 (t (org-fancy-narrow-to-subtree))))
-          (t (fancy-narrow-to-defun))))
-  )
 
 (use-package flycheck
   :init (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -442,6 +395,14 @@ is already narrowed."
   :init (with-eval-after-load 'flycheck
           (flycheck-pos-tip-mode)))
 
+(use-package helpful
+  :defer t
+  :config (progn
+            (global-set-key (kbd "C-h f") #'helpful-callable)
+
+            (global-set-key (kbd "C-h v") #'helpful-variable)
+            (global-set-key (kbd "C-h k") #'helpful-key)))
+
 (use-package hideshow
   :ensure nil
   :diminish hs-minor-mode
@@ -463,7 +424,7 @@ is already narrowed."
                            'sh-mode-hook
                            'yaml-mode-hook))
 
-(use-package highlight-escape-sequences :disabled
+(use-package highlight-escape-sequences
   :config (progn
             (put 'hes-escape-backslash-face 'face-alias 'hes-escape-face)
             (put 'hes-escape-sequence-face  'face-alias 'hes-escape-face)
@@ -484,7 +445,7 @@ is already narrowed."
                              'sh-mode-hook
                              'yaml-mode-hook)))
 
-(use-package highlight-operators :disabled
+(use-package highlight-operators
   :diminish highlight-operators-mode
   :config (hook-into-modes #'highlight-operators-mode
                            'c++-mode-hook
@@ -501,18 +462,8 @@ is already narrowed."
                            'sh-mode-hook
                            'yaml-mode-hook))
 
-(use-package jedi
-  :defer t
-  :init (with-eval-after-load 'python
-          '(progn
-             (add-hook 'python-mode-hook 'jedi:setup)
-             ;; (add-hook 'python-mode-hook 'jedi:ac-setup)
-             ))
-  :config
-  (setq jedi:complete-on-dot t))
-
 (use-package json-mode
-  :mode "\\.json\\'")
+  :defer t)
 
 (use-package langtool
   :defer t
@@ -528,14 +479,10 @@ is already narrowed."
   :commands (loccur-current))
 
 (use-package lua-mode
-  :mode "\\.lua\\'")
-
-(use-package manage-minor-mode :disabled)
+  :defer t)
 
 (use-package matlab-mode
-  :mode "\\.m\\'"
-  ;; :init (with-eval-after-load 'matlab '(require 'u-matlab))
-  )
+  :defer t)
 
 (use-package modern-cpp-font-lock
   :defer t
@@ -552,45 +499,15 @@ is already narrowed."
   :functions (neo-buffer--unlock-width
               neo-buffer--lock-width))
 
-(use-package nlinum
-  :config (make-variable-buffer-local 'nlinum-mode))
-
-(use-package nlinum-relative
-  :config (progn
-            (setq nlinum-relative--format-function
-                  (lambda (line width)
-                    (let* ((line-display (- line nlinum-relative--current-line) )
-                           (is-current-line? (eq line-display 0))
-                           (line-display (if is-current-line?
-                                             nlinum-relative--current-line
-                                           (+ nlinum-relative-offset line-display)))
-                           (str (if (and (not (string-equal nlinum-relative-current-symbol "")) is-current-line?)
-                                    nlinum-relative-current-symbol (format nlinum-format line-display)))
-                           )
-                      (when (< (length str) width)
-                        (setq str (concat (make-string (- width (length str)) ?\ ) str)))
-                      (if is-current-line?
-                          (put-text-property 0 width 'face 'nlinum-relative-current-face str)
-                        (put-text-property 0 width 'face 'linum str))
-                      str)))
-            (make-variable-buffer-local 'nlinum-relative-mode)))
-
 (use-package nxml-mode :disabled
-  :mode "\\.xaml\\'")
+  :defer t)
 
-(use-package org-cua-dwim
+(use-package org-cua-dwim :disabled
   :defer t
   :init (with-eval-after-load 'org-mode '(org-cua-dwim-activate)))
 
-(use-package origami :disabled
-  :ensure nil
-  :config (global-origami-mode))
-
 (use-package perl6-mode
-  :mode "\\.p[lm]?6\\'")
-
-(use-package php-mode :disabled
-  :mode "\\.php[s345t]?\\'")
+  :defer t)
 
 (use-package plsense :disabled
   :defer t)
@@ -598,9 +515,7 @@ is already narrowed."
 (use-package popwin
   :config (popwin-mode))
 
-(use-package powerline
-  ;; :config (require 'u-powerline)
-  )
+(use-package powerline)
 
 (use-package pretty-column
   :ensure nil
@@ -651,6 +566,7 @@ is already narrowed."
                              'c++-mode-hook
                              'c-mode-hook
                              'clips-mode-hook
+                             'cperl-mode-hook
                              'csharp-mode-hook
                              'emacs-lisp-mode-hook
                              'java-mode-hook
@@ -666,13 +582,6 @@ is already narrowed."
                              'yaml-mode-hook)))
 
 (use-package smooth-scrolling)
-
-(use-package spu :disabled
-  :defer 5
-  :config (spu-package-upgrade-daily))
-
-(use-package sr-speedbar :disabled
-  :defer t)
 
 (use-package ssh
   :defer t
@@ -800,7 +709,7 @@ is already narrowed."
   :config (volatile-highlights-mode t))
 
 (use-package web-mode
-  :mode "\\.\\(p?html?\\|php\\|[agj]sp\\|as[cp]x\\)\\'")
+  :defer t)
 
 (use-package whitespace
   :ensure nil
@@ -816,7 +725,7 @@ is already narrowed."
 (use-package writegood-mode :disabled)
 
 (use-package yaml-mode
-  :mode "\\.e?ya?ml\\'")
+  :defer t)
 
 ;;
 (cua-mode)
@@ -871,5 +780,9 @@ is already narrowed."
   (delete-other-windows))
 ;;
 (message "default.el ...done")
-
+(let ((str
+       (format "%.1f seconds"
+               (float-time
+                (time-subtract (current-time) before-init-time)))))
+        (message "%s" str))
 ;;; default.el ends here
