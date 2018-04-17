@@ -33,6 +33,7 @@
 ;;           16-Jan-2017 Added "Check Language" to Tools menu
 ;;           17-Jan-2017 Added ‘*-unicode-name-at-point’
 ;;                       Added ‘copyright-update’
+;;           17-Apr-2018 Added ‘magit-status’
 ;;
 
 ;;; Code:
@@ -313,7 +314,9 @@
       ["§	Section Sign"                  (insert "§") :enable (is-rw?)]
       ["¨	Spacing Diaresis"              (insert "¨") :enable (is-rw?)]
       ))
-    ["Show Unicode Name"       show-unicode-name-at-point t]
+    ["Show Unicode Name" show-unicode-name-at-point t]
+    "---"
+    ["Git Status" magit-status]
     "---"
     ["Insert ‘Cut Here’ Start" insert-chs       :enable (is-rw?)]
     ["Insert ‘Cut Here’ End"   insert-che       :enable (is-rw?)]
