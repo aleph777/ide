@@ -152,6 +152,7 @@
 ;;           02-Apr-2018 Disabled ‘nlinum’ and ‘nlinum-relative’
 ;;                       Added ‘display-line-numbers’
 ;;           12-Apr-2018 Added ‘helpful’
+;;           17-Apr-2018 Changed ‘lisp-mode’ to ‘elisp-mode’
 ;;
 
 ;;; Code:
@@ -349,6 +350,9 @@
                            'emacs-lisp-mode-hook
                            'lisp-interaction-mode-hook))
 
+(use-package elisp-mode
+  :ensure nil)
+
 (use-package ergoemacs-functions
   :defer t
   :no-require t
@@ -469,10 +473,6 @@
   :defer t
   :config (setq langtool-language-tool-jar "~/Documents/LanguageTool-3.6/languagetool-commandline.jar")
   :commands (langtool-check))
-
-(use-package lisp-mode
-  :ensure nil
-  :config (require 'u-lisp))
 
 (use-package loccur
   :defer t
@@ -678,6 +678,10 @@
 (use-package u-csharp
   :ensure nil
   :after csharp-mode)
+
+(use-package u-lisp
+  :ensure nil
+  :after elisp-mode)
 
 (use-package u-matlab
   :ensure nil
