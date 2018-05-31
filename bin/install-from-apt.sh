@@ -23,6 +23,7 @@ apt install librsvg2-dev
 apt install libssl-dev
 apt install libtiff5-dev
 apt install libtinfo-dev
+apt install libxml2-dev
 apt install libxpm-dev
 apt install libyaml-dev
 apt install m4
