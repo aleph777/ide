@@ -37,6 +37,7 @@
 ;;           29-Jun-2017 Removed unnecessary variables
 ;;           03-Jul-2017 Moved ‘user-dir-home’ to .emacs
 ;;           24-Aug-2017 Moved ‘gc-cons-threshold’ to .emacs
+;;           19-Apr-2018 Removed ‘u-initial-major-mode’
 ;;
 
 ;;; Code:
@@ -46,9 +47,6 @@
 (require 'u-macro)
 
 (defvar user-dir-bin (concat user-dir-home "bin/"))
-
-(defvar u-initial-major-mode 'text-mode)
-
 (defvar user-copyright-holder user-full-name)
 
 (let ((autosave-dir (concat user-dir-home ".autosave/")))

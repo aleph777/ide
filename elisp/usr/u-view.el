@@ -39,6 +39,10 @@
 ;;           12-Jan-2017 Changed ‘is-linum?’ to buffer local
 ;;                       Fixed toggle functions
 ;;           02-Apr-2018 Changed line-number functions to use ‘display-line-numbers’
+;;           17-Apr-2018 Added ‘diminish-minor-modes' and added to ‘u-view-menu’
+;;                       Fixed byte compile warnings
+;;           31-May-2018 Added ‘get-os-version’ and ‘get-desktop’
+;;                       Updated ‘display-properties’
 ;;
 
 ;;; Code:
@@ -48,6 +52,10 @@
 (require 'u-flags)
 (require 'u-clipboard)
 (require 'u-frame)
+
+(eval-when-compile
+  (require 'org-src)
+  (require 'latex))
 ;;
 (defvar line-numbers 'off)
 (make-variable-buffer-local 'line-numbers)
@@ -124,6 +132,8 @@
     "---"
     ["Properties"  display-properties :active t]
     "---"
+    ["Diminish Minor Modes" diminish-minor-modes :active t]
+    "---"
     ["Recenter Window"   recenter          :active t]
     ["Reposition Window" reposition-window :active t]
     "---"
@@ -171,6 +181,19 @@
   (text-scale-mode 0)
   (buffer-face-mode 0))
 
+(defun get-os-version ()
+  "Call ‘lsb_release’ to retrieve OS version."
+  (replace-regexp-in-string
+   "Description:\\|[\t\n\r]+" ""
+   (shell-command-to-string "lsb_release -d")))
+
+(defun get-desktop ()
+  "Call ‘cinnamon’ or ‘gnome-shell’ to retrieve GNOME version."
+  (let ((cin (shell-command-to-string "which cinnamon")))
+    (if cin
+        (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "cinnamon --version"))
+      (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "gnome-shell --version")))))
+
 (defun display-properties ()
   "Display the Properties of the current buffer."
   (interactive)
@@ -185,10 +208,11 @@
     (princ (query-frame-size   'properties))
     (princ (query-frame-font   'properties))
     (princ (query-frame-colors 'properties))
-    (princ (format "Printer:     %s\n" printer-name))
+    ;; (princ (format "Printer:     %s\n" printer-name))
     (princ (format "Host ID:     %s\n" (system-name)))
     (princ (format "User ID:     %s (%s)\n\n" (user-login-name) (user-full-name)))
     (princ (format "System Type: %s\n" system-type))
+    (princ (format "OS/Desktop:  %s/%s\n" (get-os-version) (get-desktop)))
     (princ (format "Version:     %s\n" (emacs-version)))))
 
 (defun reset-window-min-height ()
@@ -252,6 +276,23 @@ is already narrowed."
         ((derived-mode-p 'latex-mode)
          (LaTeX-narrow-to-environment))
         (t (narrow-to-defun))))
+
+(defun diminish-minor-modes ()
+  "Clear minor mode lighters from modeline."
+  (interactive)
+  (diminish-mode-list #'""
+                      'anzu-mode
+                      'auto-revert-mode
+                      'company-mode
+                      'eldoc-mode
+                      'highlight-operators-mode
+                      'hs-minor-mode
+                      'modern-c++-font-lock-mode
+                      'smartparens-mode
+                      'undo-tree-mode
+                      'volatile-highlights-mode
+                      'whitespace-mode
+                      'ycmd-mode))
 
 ;;
 (message "Loading u-view...done")

@@ -184,7 +184,7 @@
 
 (use-package anzu
   :diminish anzu-mode
-  :functions global-anzu-mode
+  :functions (global-anzu-mode)
   :config (progn
             (defun anzu--update-mode-line-local (here total)
               (when anzu--state
@@ -199,12 +199,17 @@
             (setq anzu-cons-mode-line-p nil)
             (global-anzu-mode +1)))
 
-(use-package async
-  :defer t)
-
 (use-package atim-unscroll
   :ensure nil
+  :functions atim-unscroll-global-mode
   :config (atim-unscroll-global-mode 1))
+
+(use-package autorevert
+  :ensure nil
+  :defer 10
+  :diminish auto-revert-mode
+  :functions global-auto-revert-mode
+  :config (global-auto-revert-mode))
 
 (use-package bm
   :init
@@ -249,7 +254,7 @@
 
   (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark-1))
 
-(use-package cc-mode
+(use-package cc-mode :disabled
   :ensure nil
   :defer t
   :init (progn
@@ -267,13 +272,14 @@
  (use-package company
    :defer 10
    :diminish company-mode
-   :init
-   (hook-into-modes #'company-mode
-                    'c++-mode-hook
-                    'c-mode-hook
-                    'csharp-mode-hook
-                    'python-mode-hook
-                    'emacs-lisp-mode-hook)
+   :init (hook-into-modes #'company-mode
+                          'c++-mode-hook
+                          'c-mode-hook
+                          'cperl-mode
+                          'csharp-mode-hook
+                          'python-mode-hook
+                          'emacs-lisp-mode-hook
+                          'lisp-interaction-mode)
    :config (progn
              (define-key company-active-map [return] 'company-complete-common)
              (define-key company-active-map (kbd "RET") 'company-complete-common)
@@ -315,7 +321,9 @@
    :init (progn
            (set-variable 'ycmd-server-command (list "python" (substitute-in-file-name "$HOME/elisp/packages/ycmd/ycmd/__main__.py")))
            (set-variable 'ycmd-global-config (substitute-in-file-name "$HOME/elisp/packages/ycmd/.ycm_extra_conf.py"))
-           (add-hook 'after-init-hook #'global-ycmd-mode)))
+           ;; (add-hook 'after-init-hook #'global-ycmd-mode)
+           )
+   :hook (after-init . global-ycmd-mode))
 ;; (setq url-show-status nil)              ; make ycmd more quiet
 
  )
@@ -335,14 +343,16 @@
 (use-package csharp-mode
   :defer t)
 
-(use-package cuda-mode
+(use-package cuda-mode :disabled
   :defer t)
 
 (use-package display-line-numbers
-  :ensure nil)
+  :ensure nil
+  :defer t)
 
 (use-package eldoc
   :ensure nil
+  :defer t
   :diminish eldoc-mode
   :init (with-eval-after-load 'lisp-mode
           (eldoc-mode))
@@ -354,6 +364,7 @@
   :ensure nil)
 
 (use-package ergoemacs-functions
+  :ensure nil
   :defer t
   :no-require t
   :commands (ergoemacs-backward-open-bracket
@@ -409,6 +420,7 @@
 
 (use-package hideshow
   :ensure nil
+  :defer t
   :diminish hs-minor-mode
   :commands hs-minor-mode
   :config (hook-into-modes #'hs-minor-mode
@@ -478,7 +490,7 @@
   :defer t
   :commands (loccur-current))
 
-(use-package lua-mode
+(use-package lua-mode :disabled
   :defer t)
 
 (use-package matlab-mode
@@ -487,26 +499,18 @@
 (use-package modern-cpp-font-lock
   :defer t
   :diminish modern-c++-font-lock-mode
-  :init (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
+  :hook (c++-mode . modern-c++-font-lock-mode))
+  ;; :init (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
 
 (use-package mic-paren
   :config (paren-activate))
-
-(use-package name-this-color :disabled)
 
 (use-package neotree
   :defer t
   :functions (neo-buffer--unlock-width
               neo-buffer--lock-width))
 
-(use-package nxml-mode :disabled
-  :defer t)
-
-(use-package org-cua-dwim :disabled
-  :defer t
-  :init (with-eval-after-load 'org-mode '(org-cua-dwim-activate)))
-
-(use-package perl6-mode
+(use-package perl6-mode :disabled
   :defer t)
 
 (use-package plsense :disabled
@@ -516,6 +520,9 @@
   :config (popwin-mode))
 
 (use-package powerline)
+
+(use-package powerthesaurus
+  :defer t)
 
 (use-package pretty-column
   :ensure nil
@@ -753,6 +760,9 @@
 (require 'u-toolbar)
 )
 ;;
+(add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode))
+;;
 (autoload 'live-mode      "live-mode" nil t)
 (autoload 'pquery-replace "pquery"    nil t)
 ;;
@@ -766,10 +776,9 @@
 (diminish 'auto-fill-function)
 (diminish 'isearch-mode)
 ;;
-(eval-after-load "semantic" '(define-key semantic-mode-map [menu-bar] nil))
-(eval-after-load "semantic/db-file" '(abbrev-mode 0))
+(with-eval-after-load "semantic" '(define-key semantic-mode-map [menu-bar] nil))
+(with-eval-after-load "semantic/db-file" '(abbrev-mode 0))
 (semantic-mode)
-(global-auto-revert-mode)
 ;;
 (random t)
 (set-mouse-color (cdr (assoc 'mouse-color (frame-parameters))))

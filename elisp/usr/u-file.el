@@ -30,6 +30,7 @@
 ;;; Commentary:
 
 ;; Revision: 02-Sep-2016 Changed `usr-exit-buffer-frame' to `exit-buffer-and-frame'
+;;           19-Apr-2018 Removed ‘u-initial-major-mode’ from ‘new-empty-buffer’
 ;;
 
 ;;; Code:
@@ -42,7 +43,7 @@
   (interactive)
   (let ((buf (generate-new-buffer "new")))
     (switch-to-buffer buf)
-    (funcall (and u-initial-major-mode))
+    (funcall 'text-mode)
     (setq buffer-offer-save t)))
 
 (defvar u-file-menu
@@ -51,7 +52,6 @@
     "---"
     ["View..."               view-file             :enable (menu-bar-non-minibuffer-window-p)]
     ["Open..."               find-file             :enable (menu-bar-non-minibuffer-window-p)]
-;;    ["Open Recent..."        recentf-open-most-recent-file   :enable (menu-bar-non-minibuffer-window-p)]
     ["Open in New Window..." find-file-other-frame :enable (menu-bar-non-minibuffer-window-p)]
     "---"
     ["Reload" revert-buffer :enable (enable-revert?)]

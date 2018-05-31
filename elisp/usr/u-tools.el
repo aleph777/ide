@@ -34,6 +34,7 @@
 ;;           17-Jan-2017 Added ‘*-unicode-name-at-point’
 ;;                       Added ‘copyright-update’
 ;;           17-Apr-2018 Added ‘magit-status’
+;;           31-May-2018 Added ‘powerthesaurus-lookup-word’
 ;;
 
 ;;; Code:
@@ -325,6 +326,7 @@
     ["Complete Symbol"        completion-at-point                :enable (is-rw?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (is-rw?)]
     ["Complete Word Spelling" ispell-complete-word               :enable (is-rw?)]
+    ["Insert Synonym..."      powerthesaurus-lookup-word         :enable (is-rw?)]
     "---"
     ["Initialize Perl Mode"   convert-to-perl :visible (visible-convert-to-perl?) :key-sequence nil]
     "---"

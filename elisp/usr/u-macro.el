@@ -35,6 +35,7 @@
 ;;              17-Jan-2017 Fixed ‘with-word-or-region’
 ;;                          Added ‘paragraph-beginning-position’, ‘paragraph-end-position’, and ‘with-paragraph-or-region’
 ;;              28-Apr-2017 Added ‘basename*’ and ‘dirname’
+;;              17-Apr-2018 Added ‘diminish-modelist’
 ;;
 
 ;;; Code:
@@ -42,6 +43,8 @@
 ;;
 (message "Loading u-macro...")
 ;;
+(require 'diminish)
+
 ;; (on-osx
 ;;  (setq mac-control-modifier 'control)
 ;;  (setq mac-command-modifier 'meta)
@@ -139,6 +142,10 @@ when there is no mark set.
 (defsubst hook-into-modes (func &rest modes)
   "Add FUNC to each one of MODES."
   (dolist (mode-hook modes) (add-hook mode-hook func)))
+
+(defsubst diminish-mode-list (lighter &rest modes)
+  "Set LIGHTER for  each one of MODES."
+  (dolist (mode modes) (diminish mode lighter)))
 
 (defsubst word-beginning-position ()
   "Return the character position of the first character of the current word."
