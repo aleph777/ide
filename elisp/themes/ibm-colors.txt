@@ -1,0 +1,18 @@
+Qualitative
+-----------
+Blue 40    | RGB  83, 146, 255 | HEX #5392ff
+Aqua 20    | RGB 113, 205, 221 | HEX #71cddd
+Green 30   | RGB  52, 188, 110 | HEX #34bc6e
+Lime 20    | RGB 149, 209,  60 | HEX #95d13c
+Gold 20    | RGB 255, 176,   0 | HEX #ffb000
+Peach 30   | RGB 254, 133,   0 | HEX #fe8500
+Magenta 40 | RGB 255,  80, 158 | HEX #ff509e
+Indigo 40  | RGB 155, 130, 243 | HEX #9b82f3
+
+Color-blind Safe
+----------------
+Ultramarine 40 | RGB 100, 143, 255 | HEX #648fff
+Indigo 50      | RGB 120,  94, 240 | HEX #785ef0
+Magenta 50     | RGB 220,  38, 127 | HEX #dc267f
+Orange 40      | RGB 254,  97,   0 | HEX #fe6100
+Gold 20        | RGB 255, 176,   0 | HEX #ffb000

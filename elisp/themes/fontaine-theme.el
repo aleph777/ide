@@ -77,6 +77,21 @@
        (fontaine/blue-01  "#40bfff")
        (fontaine/blue-02  "#4f9ce4")
 
+       (qualitative/blue-40    "#5392ff")
+       (qualitative/aqua-20    "#71cddd")
+       (qualitative/green-30   "#34bc6e")
+       (qualitative/lime-20    "#95d13c")
+       (qualitative/gold-20    "#ffb000")
+       (qualitative/peach-30   "#fe8500")
+       (qualitative/magenta-40 "#ff509e")
+       (qualitative/indigo-40  "#9b82f3")
+
+       (color-blind/ultramarine-40 "#648fff")
+       (color-blind/indigo-50      "#785ef0")
+       (color-blind/magenta-50     "#dc267f")
+       (color-blind/orange-40      "#fe6100")
+       (color-blind/gold-20        "#ffb000")
+
        (material/bg-amber-050  "#fff8e1")
        (material/bg-amber-100  "#ffecb3")
        (material/bg-amber-200  "#ffe082")
