@@ -48,14 +48,17 @@
 ;;; Code:
 
 (message "Loading u-view...")
-(require 'display-line-numbers)
+
 (require 'u-flags)
 (require 'u-clipboard)
 (require 'u-frame)
 
 (eval-when-compile
+  (require 'display-line-numbers)
+  (require 'face-remap)
+  (require 'org)
   (require 'org-src)
-  (require 'latex))
+  (require 'u-macro))
 ;;
 (defvar line-numbers 'off)
 (make-variable-buffer-local 'line-numbers)
@@ -273,8 +276,6 @@ is already narrowed."
                 (delete-other-windows))
                ((ignore-errors (org-narrow-to-block) t))
                (t (org-narrow-to-subtree))))
-        ((derived-mode-p 'latex-mode)
-         (LaTeX-narrow-to-environment))
         (t (narrow-to-defun))))
 
 (defun diminish-minor-modes ()

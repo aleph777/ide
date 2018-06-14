@@ -1,0 +1,102 @@
+* VM Settings
+  a. General
+        i. Shared Clipboard - Bidirectional
+       ii. Drag 'n Drop - Bidirectional
+  b. System
+        i. Base Memory - 3200 MB
+       ii. 3 Processors
+  c. Display
+        i. Video Memory - 128 MB
+       ii. Enable 3D Accleration
+  d. Shared Folders
+        i. Add C: drive as auto-mounted permanent shared folder
+  e. User Interface
+        i. Show at Top of Screen
+
+* Install Guest Additions
+
+* Set root password (to use update manager)
+  https://mintguide.org/system/248-reset-the-password-for-root-or-any-user-in-linux-mint.html
+
+* Set up user account
+** su (root password!!!)
+** usermod -G vboxsf fontaine
+** echo "fontaine ALL=(ALL) ALL" > /etc/sudoers.d/users
+
+* RESTART
+
+* Set up local /home environment
+** rmdir Documents
+** ln -s /media/sf_C_DRIVE/Users/tfontaine/Doucments/
+** rmdir Downloads                                   
+** ln -s /media/sf_C_DRIVE/Users/tfontaine/Downloads/
+** rmdir Music                                       
+** ln -s /media/sf_C_DRIVE/Users/tfontaine/Music/    
+** rmdir Pictures                                    
+** ln -s /media/sf_C_DRIVE/Users/tfontaine/Pictures/ 
+** rmdir Videos                                      
+** ln -s /media/sf_C_DRIVE/Users/tfontaine/Videos 
+
+!!! OBSOLETE !!! tar xJvf Documents/ide/ide.20161221_122949.tar.xz
+
+* Set up IDE
+** sudo apt install git
+** git clone https://github.com/aleph777/ide
+** Pre-use IDE
+*** rm .bashrc
+*** ln -s ide/.bashrc
+*** ln -s ide/.emacs
+*** ln -s ide/bin
+*** ln -s ide/elisp
+*** ln -s ide/lib
+*** ln -s ide/local
+*** source .bashrc
+*** cd ide
+*** git config --global user.email "tomfontaine@[some tag].fastmail.fm"
+*** cd elisp
+*** mkdir packages
+*** cd packages
+*** git clone https://github.com/jaalto/project--emacs-tiny-tools
+*** git clone https://github.com/Valloric/ycmd
+*** cd ycmd
+*** git submodule update --init --recursive
+*** ./build.py --cs-completer
+*** ./build.py --clang-completer
+
+* sudo bash
+** source bin/install-from-apt.sh
+** source bin/install-from-cpan.sh
+** exit
+
+* Settings
+** Theme
+** Date & Time
+** Panel Applets (adjust and remove)
+** Emacs launcher (add Launcher from desktop and add to Menu. Restart Cinnamon)
+   emacs --no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources
+** Disable screensaver lock
+
+* Emacs
+** cd elisp
+** ln -s ~/.emacs.d/elpa/
+** cd /tmp
+** tar xJf ~/Downloads/emacs-[LATEST REV].tar.xz
+** cd emacs-[LATEST REV]
+** ./configure
+** make
+** sudo make install
+** cd
+** mkdir .autosave
+** mkdir .backup
+
+** M-x package-install ergoemacs-mode
+** emacs -q .emacs and eval-buffer
+** Open elisp/usr/default.el and eval-buffer
+
+** mkdir .stardict
+** cd .stardict
+** mkdir dic
+** tar xjf ~/Downloads/stardict-dictd-web1913-2.4.2.tar.bz2
+** mv stardict-dictd-web1913-2.4.2 Webster1913
+
+

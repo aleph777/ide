@@ -36,6 +36,9 @@
 ;;; Code:
 
 (message "Loading u-sort...")
+
+(eval-when-compile
+  (require 'sort))
 ;;
 (defvar u-xpd-order-list (list  '"Sort in which order?"
                                 '("Ascending" . nil)

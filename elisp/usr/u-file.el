@@ -31,12 +31,15 @@
 
 ;; Revision: 02-Sep-2016 Changed `usr-exit-buffer-frame' to `exit-buffer-and-frame'
 ;;           19-Apr-2018 Removed ‘u-initial-major-mode’ from ‘new-empty-buffer’
+;;           13-Jun-2018 Updated ‘require’ list
 ;;
 
 ;;; Code:
 
 (message "Loading u-file...")
 (require 'u-frame)
+(require 'u-flags)
+
 ;;
 (defun new-empty-buffer ()
   "Open a new empty buffer."

@@ -31,12 +31,16 @@
 
 ;; Revision: 03-Mar-2016 Added ‘u-forward-symbol’ and ‘backward-symbol’
 ;;           16-Jan-2017 Added ‘search-word-forward’ and ‘search-word-backward’
+;;           13-Jun-2018 Changed ‘atim-unscroll’ requirement to use ‘eval-when-compile’
 ;;
 
 ;;; Code:
 
 (message "Loading u-navigate...")
-(require 'atim-unscroll)
+
+(eval-when-compile
+  (require 'atim-unscroll))
+
 ;;
 (defun u-navigate-menu ()
   "Top portion of ‘Navigate’ menu."
@@ -113,27 +117,6 @@ go to actual bol."
 (defalias 'search-word-forward  'tinysearch-search-word-forward)
 (defalias 'search-word-backward 'tinysearch-search-word-backward)
 
-;; (defun search-word-forward ()
-;;   "Search word at point forward."
-;;   (interactive)
-;;   (if (symbol-at-point)
-;;       (let* ((s (format "%s"(symbol-at-point)))
-;;              (m (concat "Searching for: '" s "' ")))
-;;         (if (search-forward s (point-max) t)
-;;             (message m)
-;;           (message (concat m "-- not found"))))
-;;     (message "Word not grabbed.")))
-
-;; (defun search-word-backward ()
-;;   "Search word at point backward."
-;;   (interactive)
-;;   (if (symbol-at-point)
-;;       (let* ((s (format "%s"(symbol-at-point)))
-;;              (m (concat "Searching for: '" s "' ")))
-;;         (if (search-backward s (point-min) t)
-;;             (message m)
-;;           (message (concat m "-- not found"))))
-;;     (message "Word not grabbed.")))
 ;;
 (message "Loading u-navigate...done")
 (provide 'u-navigate)

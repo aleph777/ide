@@ -66,13 +66,19 @@
 ;;           16-Jan-2017 Added ‘insert-chs’ and ‘insert-che’
 ;;           17-Jan-2017 Removed ‘*-whole-word’
 ;;           22-Mar-2017 Added ‘cleanse-whitespace’
+;;           13-Jun-2018 Added ‘require’ for ‘u-navigate’
+;;                       Fixed ‘*-word-or-region’ definitions
 ;;
 
 ;;; Code:
 
 (message "Loading u-edit...")
 (require 'u-flags)
+(require 'u-navigate)
 (require 'xah)
+
+(eval-when-compile
+  (require 'u-macro))
 
 ;;
 (defvar u-edit-menu
@@ -254,26 +260,27 @@
   (goto-char start)
   (comment-kill (count-lines start end)))
 
-(defun capitalize-word-or-region ()
+(defun capitalize-word-or-region (beg end)
   "Convert the word at current point or the selected region to first caps."
-  (interactive "*")
+  (interactive "*r")
   (with-word-or-region (beg end)
     (capitalize-region beg end)))
 
-(defun downcase-word-or-region ()
+(defun downcase-word-or-region (beg end)
   "Convert the word at current point or the selected region to lowercase."
-  (interactive "*")
+  (interactive "*r")
   (with-word-or-region (beg end)
     (downcase-region beg end)))
 
-(defun upcase-word-or-region ()
+(defun upcase-word-or-region (beg end)
   "Convert the word at current point or the selected region to uppercase."
-  (interactive "*")
+  (interactive "*r")
   (with-word-or-region (beg end)
      (upcase-region beg end)))
 
-(defun upcase-initials-word-or-region ()
+(defun upcase-initials-word-or-region (beg end)
   "Convert the word at current point or the selected region to uppercase initials."
+  (interactive "*r")
   (with-word-or-region (beg end)
     (upcase-initials-region beg end)))
 

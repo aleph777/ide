@@ -44,9 +44,10 @@
 
 (message "Loading u-variables...")
 ;;
-(require 'u-macro)
+(eval-when-compile
+ (require 'u-macro))
 
-(defvar user-dir-bin (concat user-dir-home "bin/"))
+(defvar user-dir-bin (concat user-dir-home "bin/")) ;; this should be evaluated at run time
 (defvar user-copyright-holder user-full-name)
 
 (let ((autosave-dir (concat user-dir-home ".autosave/")))

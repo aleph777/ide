@@ -35,6 +35,7 @@
 ;;                       Added ‘copyright-update’
 ;;           17-Apr-2018 Added ‘magit-status’
 ;;           31-May-2018 Added ‘powerthesaurus-lookup-word’
+;;           14-Jun-2018 Added ‘declutter’
 ;;
 
 ;;; Code:
@@ -319,14 +320,19 @@
     "---"
     ["Git Status" magit-status]
     "---"
+    ["Check Language"             langtool-check             :enable (is-rw?)]
+    ["Insert Synonym..."          powerthesaurus-lookup-word :enable (is-rw?)]
+    ["Look up word definition..." sdcv-search                :active t]
+    "---"
     ["Insert ‘Cut Here’ Start" insert-chs       :enable (is-rw?)]
     ["Insert ‘Cut Here’ End"   insert-che       :enable (is-rw?)]
     ["Update Copyright"        copyright-update :enable (is-rw?)]
     "---"
+    ["Read from URL..." declutter :active t]
+    "---"
     ["Complete Symbol"        completion-at-point                :enable (is-rw?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (is-rw?)]
     ["Complete Word Spelling" ispell-complete-word               :enable (is-rw?)]
-    ["Insert Synonym..."      powerthesaurus-lookup-word         :enable (is-rw?)]
     "---"
     ["Initialize Perl Mode"   convert-to-perl :visible (visible-convert-to-perl?) :key-sequence nil]
     "---"
@@ -335,8 +341,6 @@
     "---"
     ["Auto-update This File" auto-revert-mode      :style toggle :selected auto-revert-mode]
     ["Tail Update This File" auto-revert-tail-mode :style toggle :selected auto-revert-tail-mode]
-    "---"
-    ["Check Language" langtool-check :enable (is-rw?)]
     ("Spelling"
      ["Flyspell Mode" flyspell-mode :style toggle :selected flyspell-mode :enable (is-rw?)]
      "---"

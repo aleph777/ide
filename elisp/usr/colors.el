@@ -29,12 +29,37 @@
 
 ;;; Commentary:
 
-;; Revision:
+;; Revision: 11-Jun-2018 Added functions from ‘u-frame.el’
 
 ;;; Code:
 
-(message "Configuring from colors...")
+(message "Loading colors...")
 ;;
+(defsubst random-value (min max step)
+  "Return a random number between MIN and MAX by STEP."
+  (let ((scale (/ (- max min) step)))
+    (+ (* step (random scale)) min)
+    ))
+
+(defun random-background-color ()
+  "Return a random background color."
+  ;; (let* ((min   170)
+  ;;        (max   245)
+  ;;        (step    5)
+  ;;        (red   (random-value min max step))
+  (let* ((min   160)
+         (max   248)
+         (step    4)
+         (red   (random-value min max step))
+         (green (random-value min max step))
+         (blue  (random-value min max step)))
+    (format "#%x%x%x" red green blue)))
+
+(defun set-random-background-color ()
+  "Set a random background color."
+  (interactive)
+  (if window-system (set-background-color (random-background-color))))
+
 (defun color-bg/red ()
   "Return a red background color value."
   (let* ((red   (random-value 228 255 1))

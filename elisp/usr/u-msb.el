@@ -30,6 +30,7 @@
 ;;; Commentary:
 
 ;; Revision: 26-Sep-2016 Added `clips-log-mode'
+;;           13-Jun-2018 Added ‘helpful-mode’ to ‘Help’ entry
 ;;
 
 ;;; Code:
@@ -67,7 +68,7 @@
                          ((memq major-mode '(fortran-mode f90-mode)) 2050 "Fortran Files (%d)")
                          ;; G 2060
                          ;; H 2070
-                         ((eq major-mode 'help-mode) 2070 "Help Files (%d)")
+                         ((memq major-mode '(help-mode helpful-mode)) 2070 "Help Files (%d)")
                          ((is-html-mode?)            2071 "HTML Files (%d)")
                          ;; I 2080
                          ((eq major-mode 'icon-mode)  2080 "Icon Files (%d)")

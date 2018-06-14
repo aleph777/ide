@@ -15,14 +15,20 @@
 
 (require 'cl)
 
-(defvar user-windows-id "tfontaine")
-(defvar user-dir-home (concat (getenv "HOME") "/"))
+(defconst user-windows-id "tfontaine")
+(defconst user-dir-home (concat (getenv "HOME") "/"))
 
 (setq gc-cons-threshold (* 16 1024 1024))
 
-(let ((elisp (concat user-dir-home "ide/elisp/")))
-  (pushnew (concat elisp "packages/project--emacs-tiny-tools/lisp/tiny")  load-path :test 'string=)
-  (pushnew (concat elisp "packages/project--emacs-tiny-tools/lisp/other") load-path :test 'string=)
+(let* ((elisp    (concat user-dir-home "elisp/"))
+       (packages (concat elisp "packages/"))
+       (tiny     (concat packages "project--emacs-tiny-tools/lisp/")))
+
+  (pushnew (concat tiny "tiny")  load-path :test 'string=)
+  (pushnew (concat tiny "other") load-path :test 'string=)
+
+  (pushnew (concat packages "ycmd")      load-path :test 'string=)
+  (pushnew (concat packages "declutter") load-path :test 'string=)
 
   (pushnew (concat elisp "ext") load-path :test 'string=)
   (pushnew (concat elisp "usr") load-path :test 'string=)

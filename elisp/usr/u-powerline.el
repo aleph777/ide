@@ -34,6 +34,7 @@
 ;;           14-Sep-2016 Fixed `mode-line-inactive'
 ;;           18-Sep-2016 Moved `alias-face' to `u-macro'
 ;;           23-May-2017 Changed ‘powerline-red-face’ to ‘error’
+;;           13-Jun-2018 Added ‘require’ for ‘u-flags’
 ;;
 
 ;;; Code:
@@ -41,6 +42,7 @@
 (message "Loading u-powerline...")
 ;;
 (require 'powerline)
+(require 'u-flags)
 (require 'u-macro)
 
 (defface powerline-active3 '((t (:foreground "orange")))

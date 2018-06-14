@@ -50,12 +50,16 @@
 ;;           13-Sep-2016 Changed ‘default-frame-width’ to 120
 ;;                       Changed ‘alt-frame-width’ to 96
 ;;           31-Jan-2017 Added ‘json-mode’
+;;           11-Jun-2018 Moved color functions to ‘colors.el’
+;;           14-Jun-2018 Changed ‘alt-frame-width’ to 112 to accomodate toolbar
+;;                       Added new major modes to ‘frame-mode-size-alist’
 ;;
 
 ;;; Code:
 
 (message "Loading u-frame...")
 (require 'u-flags)
+(require 'colors)
 ;;
 (defvar format-frame-colors-modeline   "Background: %s, Cursor: %s, Mouse: %s")
 (defvar format-frame-colors-properties "Background:  %s\nCursor:      %s\nMouse:       %s\n\n")
@@ -69,7 +73,7 @@
 (defvar default-frame-width  120)
 (defvar default-frame-height  40)
 
-(defvar alt-frame-width  96)
+(defvar alt-frame-width  112)
 (defvar alt-frame-height 40)
 
 (defvar default-frame-size (list (cons 'width default-frame-width) (cons 'height default-frame-height)))
@@ -86,9 +90,11 @@
                                     (cons 'csharp-mode            default-frame-size)
                                     (cons 'c++-mode               default-frame-size)
                                     (cons 'clips-mode             default-frame-size)
+                                    (cons 'clips-log-mode         default-frame-size)
                                     (cons 'comint-mode-map        default-frame-size)
                                     (cons 'cperl-mode             default-frame-size)
                                     (cons 'css-mode               alt-frame-size)
+                                    (cons 'cuda-mode              alt-frame-size)
                                     (cons 'Custom-mode            alt-frame-size)
                                     (cons 'doctex-mode            alt-frame-size)
                                     (cons 'emacs-lisp-mode        default-frame-size)
@@ -111,6 +117,7 @@
                                     (cons 'lisp-mode              default-frame-size)
                                     (cons 'lisp-interaction-mode  default-frame-size)
                                     (cons 'log-mode               default-frame-size)
+                                    (cons 'lua-mode               default-frame-size)
                                     (cons 'makefile-automake-mode default-frame-size)
                                     (cons 'makefile-bsdmake-mode  default-frame-size)
                                     (cons 'makefile-gmake-mode    default-frame-size)
@@ -123,6 +130,7 @@
                                     (cons 'org-mode               alt-frame-size)
                                     (cons 'pascal-mode            alt-frame-size)
                                     (cons 'perl-mode              alt-frame-size)
+                                    (cons 'perl6-mode             alt-frame-size)
                                     (cons 'ps-mode                alt-frame-size)
                                     (cons 'python-mode            default-frame-size)
                                     (cons 'ruby-mode              alt-frame-size)
@@ -157,31 +165,6 @@
                                                 )))))
 
 (defalias 'current-frame 'selected-frame)
-
-(defsubst random-value (min max step)
-  "Return a random number between MIN and MAX by STEP."
-  (let ((scale (/ (- max min) step)))
-    (+ (* step (random scale)) min)
-    ))
-
-(defun random-background-color ()
-  "Return a random background color."
-  ;; (let* ((min   170)
-  ;;        (max   245)
-  ;;        (step    5)
-  ;;        (red   (random-value min max step))
-  (let* ((min   160)
-         (max   248)
-         (step    4)
-         (red   (random-value min max step))
-         (green (random-value min max step))
-         (blue  (random-value min max step)))
-    (format "#%x%x%x" red green blue)))
-
-(defun set-random-background-color ()
-  "Set a random background color."
-  (interactive)
-  (if window-system (set-background-color (random-background-color))))
 
 (defun make-new-frame ()
   "Make a new frame for the current buffer."
