@@ -43,6 +43,9 @@
 ;;                       Fixed byte compile warnings
 ;;           31-May-2018 Added ‘get-os-version’ and ‘get-desktop’
 ;;                       Updated ‘display-properties’
+;;           20-Jun-2018 Fixed ‘display-line-numbers-set’ with ‘bound-and-true-p’ check
+;;                       of ‘display-line-numbers-mode’
+;;           02-Jul-2018 Changed menu text to eliminate reference to frame
 ;;
 
 ;;; Code:
@@ -52,6 +55,7 @@
 (require 'u-flags)
 (require 'u-clipboard)
 (require 'u-frame)
+(require 'colors)
 
 (eval-when-compile
   (require 'display-line-numbers)
@@ -75,7 +79,7 @@
   "Set line numbers display according to MODE."
   (interactive)
   (setq line-numbers mode)
-  (if display-line-numbers-mode
+  (if (bound-and-true-p display-line-numbers-mode)
       (display-line-numbers-mode 'toggle))
   (unless (eq mode 'off)
     (progn
@@ -145,12 +149,22 @@
      ["Make Window Invisible" make-frame-invisible :enable (delete-frame-enabled-p)]
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
      "---"
-     ["Reset Frame Size"     reset-frame-size             :enable (is-not-fullscreen?)]
-     ["Set Background Color" set-random-background-color  :active t]
+     ["Reset Window Size"     reset-frame-size             :enable (is-not-fullscreen?)]
+     ["Set Background Color"  set-random-background-color  :active t]
+
+     ["Set Red Background Color"     (set-background-color (color-bg/red))     :active t]
+     ["Set Green Background Color"   (set-background-color (color-bg/green))   :active t]
+     ["Set Blue Background Color"    (set-background-color (color-bg/blue))    :active t]
+     ["Set Cyan Background Color"    (set-background-color (color-bg/cyan))    :active t]
+     ["Set Magenta Background Color" (set-background-color (color-bg/magenta)) :active t]
+     ["Set Yellow Background Color"  (set-background-color (color-bg/yellow))  :active t]
+     ["Set Pink Background Color"    (set-background-color (color-bg/pink))    :active t]
+     ["Set Indigo Background Color"  (set-background-color (color-bg/indigo))  :active t]
+     ["Set Gray Background Color"    (set-background-color (color-bg/gray))    :active t]
      "---"
-     ["Query Frame Font "   (message (query-frame-font   'modeline)) :active t]
-     ["Query Frame Size "   (message (query-frame-size   'modeline)) :active t]
-     ["Query Frame Colors " (message (query-frame-colors 'modeline)) :active t])
+     ["Query Window Font "   (message (query-frame-font   'modeline)) :active t]
+     ["Query Window Size "   (message (query-frame-size   'modeline)) :active t]
+     ["Query Window Colors " (message (query-frame-colors 'modeline)) :active t])
     ("Pane"
      ["Split Pane Vertically"   split-window-vertically   :active t]
      ["Split Pane Horizontally" split-window-horizontally :active t]
