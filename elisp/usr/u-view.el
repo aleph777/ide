@@ -150,17 +150,18 @@
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
      "---"
      ["Reset Window Size"     reset-frame-size             :enable (is-not-fullscreen?)]
-     ["Set Background Color"  set-random-background-color  :active t]
+     ("Background Color"
+      ["Set Background Color"  set-random-background-color  :active t]
 
-     ["Set Red Background Color"     (set-background-color (color-bg/red))     :active t]
-     ["Set Green Background Color"   (set-background-color (color-bg/green))   :active t]
-     ["Set Blue Background Color"    (set-background-color (color-bg/blue))    :active t]
-     ["Set Cyan Background Color"    (set-background-color (color-bg/cyan))    :active t]
-     ["Set Magenta Background Color" (set-background-color (color-bg/magenta)) :active t]
-     ["Set Yellow Background Color"  (set-background-color (color-bg/yellow))  :active t]
-     ["Set Pink Background Color"    (set-background-color (color-bg/pink))    :active t]
-     ["Set Indigo Background Color"  (set-background-color (color-bg/indigo))  :active t]
-     ["Set Gray Background Color"    (set-background-color (color-bg/gray))    :active t]
+      ["Set Red Background Color"     (set-background-color (color-bg/red))     :active t]
+      ["Set Green Background Color"   (set-background-color (color-bg/green))   :active t]
+      ["Set Blue Background Color"    (set-background-color (color-bg/blue))    :active t]
+      ["Set Cyan Background Color"    (set-background-color (color-bg/cyan))    :active t]
+      ["Set Magenta Background Color" (set-background-color (color-bg/magenta)) :active t]
+      ["Set Yellow Background Color"  (set-background-color (color-bg/yellow))  :active t]
+      ["Set Pink Background Color"    (set-background-color (color-bg/pink))    :active t]
+      ["Set Indigo Background Color"  (set-background-color (color-bg/indigo))  :active t]
+      ["Set Gray Background Color"    (set-background-color (color-bg/gray))    :active t])
      "---"
      ["Query Window Font "   (message (query-frame-font   'modeline)) :active t]
      ["Query Window Size "   (message (query-frame-size   'modeline)) :active t]
