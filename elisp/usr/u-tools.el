@@ -36,6 +36,7 @@
 ;;           17-Apr-2018 Added ‘magit-status’
 ;;           31-May-2018 Added ‘powerthesaurus-lookup-word’
 ;;           14-Jun-2018 Added ‘declutter’
+;;           06-Jul-2018 Added ‘paradox-list-packages’
 ;;
 
 ;;; Code:
@@ -329,6 +330,8 @@
     ["Update Copyright"        copyright-update :enable (is-rw?)]
     "---"
     ["Read from URL..." declutter :active t]
+    "---"
+    ["List Packages"    paradox-list-packages :active t]
     "---"
     ["Complete Symbol"        completion-at-point                :enable (is-rw?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (is-rw?)]

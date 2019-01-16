@@ -35,6 +35,7 @@
 ;;           18-Sep-2016 Moved `alias-face' to `u-macro'
 ;;           23-May-2017 Changed ‘powerline-red-face’ to ‘error’
 ;;           13-Jun-2018 Added ‘require’ for ‘u-flags’
+;;           03-Jul-2018 Moved ‘powerline-vc’ to rhs face2
 ;;
 
 ;;; Code:
@@ -44,6 +45,7 @@
 (require 'powerline)
 (require 'u-flags)
 (require 'u-macro)
+(require 'u-view)
 
 (defface powerline-active3 '((t (:foreground "orange")))
   "Powerline face."
@@ -131,10 +133,10 @@
                 '("  "
                   (:eval
                    (let* ((active (powerline-selected-window-active))
-                          (mode-line (if active 'mode-line 'mode-line-inactive))
-                          (face1 (if active 'powerline-active3 'powerline-inactive3))
-                          (face2 (if active 'powerline-active2 'powerline-inactive2))
-                          (face3 (if active 'powerline-active1 'powerline-inactive1))
+                          (mode-line (if active 'mode-line         'mode-line-inactive))  ;; mode-line > face1 > face2 > face3 > face2 > face1 > mode-line
+                          (face1     (if active 'powerline-active3 'powerline-inactive3)) ;; face1 > face2 > face3 > face2 > face1
+                          (face2     (if active 'powerline-active2 'powerline-inactive2)) ;; face2 > face3 > face2
+                          (face3     (if active 'powerline-active1 'powerline-inactive1)) ;; center
                           (separator-left (intern (format "powerline-%s-%s"
 							  (powerline-current-separator)
                                                           (car powerline-default-separator-dir))))
@@ -142,8 +144,10 @@
                                                            (powerline-current-separator)
                                                            (cdr powerline-default-separator-dir))))
                           (lhs (list
-                                (powerline-raw mode-line-mule-info nil 'l)
+                                ;; (powerline-raw mode-line-mule-info nil 'l)
                                 ;;(powerline-raw mode-line-modified nil 'l)
+                                (when (and (boundp 'global-anzu-mode) global-anzu-mode)
+                                  (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
                                 (powerline-raw '(:eval
                                                  (if (and buffer-read-only (buffer-modified-p))
                                                      (propertize "RO/MOD" 'face 'powerline-red-face
@@ -159,8 +163,8 @@
                                                                      'mouse-face 'mode-line-highlight)
                                                        (propertize "―" 'help-echo "Buffer is unmodified."
                                                                    'mouse-face 'mode-line-highlight))))))
-                                (when (and (boundp 'global-anzu-mode) global-anzu-mode)
-                                  (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
+                                ;; (when (and (boundp 'global-anzu-mode) global-anzu-mode)
+                                ;;   (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
 
                                 ;; (:eval (cond (buffer-read-only
                                 ;;               (propertize "%%%%" 'face 'my-yellow-face
@@ -175,25 +179,28 @@
                                 ;;)
                                 (funcall separator-left mode-line face1)
                                 (powerline-buffer-id face1 'l)
-                                (when (and (boundp 'which-function-mode) which-function-mode)
+                                (when (and (boundp 'which-function-mode) (eq u-which-function-mode 'on))
                                   (powerline-raw which-func-format face1 'l))
-                                (powerline-raw " " face1)
+                                ;; (powerline-raw " " face1)
+                                (powerline-vc face1) ;; !!!!
                                 (funcall separator-left face1 face2)
                                 (powerline-major-mode face2 'l)
                                 (powerline-process face2)
                                 (powerline-minor-modes face2 'l)
-                                (powerline-raw (if (is-caps-lock-on? (x-led-mask)) " CAPS-LOCK" "") face2 'l)
                                 (powerline-narrow face2 'l)
                                 (powerline-raw " " face2)
                                 (funcall separator-left face2 face3)
-                                (powerline-vc face3 'r)))
+                                (powerline-raw (if (is-caps-lock-on? (x-led-mask)) " CAPS-LOCK" "") face3 'l)
+                                ;; (powerline-vc face3 'r)
+                                ))
                           (rhs (list (powerline-raw global-mode-string face3 'r)
                                      (funcall separator-right face3 face2)
 				     (powerline-raw mode-line-row-column-format face2 'r)
 				     (funcall separator-right face2 face1)
 				     (powerline-raw mode-line-wc-format face1 'r)
 				     (funcall separator-right face1 mode-line)
-                                     (powerline-raw mode-line-encoding-format nil 'r)
+                                     ;; (powerline-raw mode-line-mule-info nil 'l)
+                                     (powerline-raw mode-line-encoding-format nil 'l)
                                      )))
 		     (concat (powerline-render lhs)
 			     (powerline-fill face3 (powerline-width rhs))

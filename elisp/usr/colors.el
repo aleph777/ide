@@ -43,16 +43,16 @@
 
 (defun random-background-color ()
   "Return a random background color."
-  ;; (let* ((min   170)
-  ;;        (max   245)
-  ;;        (step    5)
-  ;;        (red   (random-value min max step))
-  (let* ((min   160)
-         (max   248)
-         (step    4)
-         (red   (random-value min max step))
-         (green (random-value min max step))
-         (blue  (random-value min max step)))
+  (let ((min   160)
+        (max   248)
+        (step    4)
+        (red     0)
+        (green   0)
+        (blue    0))
+    (while (and (<= red 192) (<= green 192) (<= blue 192))
+      (setq red   (random-value min max step)
+            green (random-value min max step)
+            blue  (random-value min max step)))
     (format "#%x%x%x" red green blue)))
 
 (defun set-random-background-color ()
@@ -62,41 +62,70 @@
 
 (defun color-bg/red ()
   "Return a red background color value."
-  (let* ((red   (random-value 228 255 1))
-         (green (random-value (round (* 0.58 red)) (round (* 0.95 red))  1))
-         (blue  (random-value (round (* 0.98 green)) green 1))
-         (color (format "#%x%x%x" red green blue)))
-    color))
-
-(defun color-bg/pink ()
-  "Return a pink background color value."
-  (let* ((red   (random-value 240 255 1))
-         (blue  (random-value (round (* 0.67 red))  (round (* 0.94 red)) 1))
-         (green (random-value (round (* 0.75 blue)) (round (* 0.97 blue))  1))
+  (let* ((red   (random-value 192 248 4))
+         (green (random-value 160 188 4))
+         (blue  (random-value 128 188 4))
          (color (format "#%x%x%x" red green blue)))
     color))
 
 (defun color-bg/green ()
   "Return a green background color value."
-  (let* ((green (random-value 190 255 1))
-         (blue  (random-value (round (* 0.66 green)) (round (* 0.95 green)) 1))
-         (red   (random-value (round (* 0.98 blue)) blue  1))
+  (let* ((red   (random-value 128 188 4))
+         (green (random-value 192 248 4))
+         (blue  (random-value 128 188 4))
          (color (format "#%x%x%x" red green blue)))
     color))
 
 (defun color-bg/blue ()
   "Return a blue background color value."
-  (let* ((blue  (random-value 240 255 1))
-         (green (random-value (round (* 0.67 blue)) (round (* 0.95 blue)) 1))
-         (red   (random-value (round (* 0.5 green)) (round (* 0.9 green)) 1))
+  (let* ((red   (random-value 128 188 4))
+         (green (random-value 128 188 4))
+         (blue  (random-value 192 248 4))
+         (color (format "#%x%x%x" red green blue)))
+    color))
+
+(defun color-bg/cyan ()
+  "Return a cyan background color value."
+  (let* ((red  (random-value 128 188 4))
+         (cyan (random-value 192 248 4))
+         (color (format "#%x%x%x" red cyan cyan)))
+    color))
+
+(defun color-bg/magenta ()
+  "Return a magenta background color value."
+  (let* ((magenta (random-value 192 248 4))
+         (green   (random-value 128 188 4))
+         (color (format "#%x%x%x" magenta green magenta)))
+    color))
+
+(defun color-bg/yellow ()
+  "Return a yellow background color value."
+  (let* ((yellow (random-value 192 248 4))
+         (blue   (random-value 128 188 4))
+         (color (format "#%x%x%x" yellow yellow blue)))
+    color))
+
+(defun color-bg/pink ()
+  "Return a pink background color value."
+  (let* ((red   (random-value 192 248 4))
+         (green (random-value 128 156 4))
+         (blue  (random-value 160 188 4))
          (color (format "#%x%x%x" red green blue)))
     color))
 
 (defun color-bg/indigo ()
   "Return an indigo background color value."
-  (let* ((blue  (random-value 218 255 1))
-         (red   (random-value (round (* 0.73 blue)) (round (* 0.95 blue)) 1))
-         (green (round (* .91 red)))
+  (let* ((red   (random-value 160 188 4))
+         (green (random-value 128 156 4))
+         (blue  (random-value 192 248 4))
+         (color (format "#%x%x%x" red green blue)))
+    color))
+
+(defun color-bg/gray ()
+  "Return an gray background color value."
+  (let* ((red   (random-value 192 248 4))
+         (green (random-value (round (* 0.975 red)) (round (* 1.025 red)) 4))
+         (blue  (random-value (round (* 0.975 red)) (round (* 1.025 red)) 4))
          (color (format "#%x%x%x" red green blue)))
     color))
 ;;

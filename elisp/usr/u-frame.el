@@ -158,7 +158,7 @@
                 (height    (if mode-size
                                (or (cdr (assq 'height mode-size)) alt-frame-height)
                              alt-frame-height)))
-           (fringe-mode (cons 4 4))
+           (fringe-mode (cons 8 4))
            (modify-frame-parameters frame (list (cons 'background-color (random-background-color))
                                                 (cons 'width width)
                                                 (cons 'height height)

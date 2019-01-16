@@ -154,6 +154,7 @@
 ;;           12-Apr-2018 Added ‘helpful’
 ;;           17-Apr-2018 Changed ‘lisp-mode’ to ‘elisp-mode’
 ;;           13-Jun-2018 Updated for performance
+;;           20-Jun-2018 Changed some minor-modes to use :hook
 ;;
 
 ;;; Code:
@@ -191,7 +192,7 @@
   ;;
   (message "Loading packages...")
 
-  (use-package anzu :defer
+  (use-package anzu
     :diminish anzu-mode
     :config (progn
               (defun anzu--update-mode-line-local (here total)
@@ -277,14 +278,7 @@
   (on-gnu/linux
    (use-package company :defer
      :diminish company-mode
-     :init (hook-into-modes #'company-mode
-                            'c++-mode-hook
-                            'c-mode-hook
-                            'cperl-mode
-                            'csharp-mode-hook
-                            'python-mode-hook
-                            'emacs-lisp-mode-hook
-                            'lisp-interaction-mode)
+     :hook (prog-mode . company-mode)
      :config (progn
                (define-key company-active-map [return] 'company-complete-common)
                (define-key company-active-map (kbd "RET") 'company-complete-common)
@@ -350,17 +344,10 @@
 
   (use-package diminish) ;; :defer nil
 
-  (use-package display-line-numbers :defer
-    :ensure nil)
-
   (use-package eldoc :defer
     :ensure nil
     :diminish eldoc-mode
-    :init (with-eval-after-load 'lisp-mode
-            (eldoc-mode))
-    :config (hook-into-modes #'eldoc-mode
-                             'emacs-lisp-mode-hook
-                             'lisp-interaction-mode-hook))
+    :hook (emacs-lisp-mode-hook . eldoc-mode))
 
   (use-package ergoemacs-functions :commands (ergoemacs-backward-open-bracket
                                               ergoemacs-forward-open-bracket
@@ -413,43 +400,13 @@
   (use-package hideshow :commands hs-minor-mode
     :ensure nil
     :diminish hs-minor-mode
-    :config (hook-into-modes #'hs-minor-mode
-                             'c++-mode-hook
-                             'c-mode-hook
-                             'clips-mode-hook
-                             'cperl-mode-hook
-                             'csharp-mode-hook
-                             'emacs-lisp-mode-hook
-                             'java-mode-hook
-                             'json-mode-hook
-                             'lisp-interaction-mode-hook
-                             'matlab-mode-hook
-                             'perl6-mode
-                             'php-mode-hook
-                             'python-mode-hook
-                             'sh-mode-hook
-                             'yaml-mode-hook))
+    :hook (prog-mode . hs-minor-mode))
 
   (use-package highlight-escape-sequences :defer
+    :hook (prog-mode . hes-mode)
     :config (progn
               (put 'hes-escape-backslash-face 'face-alias 'hes-escape-face)
-              (put 'hes-escape-sequence-face  'face-alias 'hes-escape-face)
-              (hook-into-modes #'hes-mode
-                               'c++-mode-hook
-                               'c-mode-hook
-                               'clips-mode-hook
-                               'cperl-mode-hook
-                               'csharp-mode-hook
-                               'emacs-lisp-mode-hook
-                               'java-mode-hook
-                               'json-mode-hook
-                               'lisp-interaction-mode-hook
-                               'matlab-mode-hook
-                               'perl6-mode
-                               'php-mode-hook
-                               'python-mode-hook
-                               'sh-mode-hook
-                               'yaml-mode-hook)))
+              (put 'hes-escape-sequence-face  'face-alias 'hes-escape-face)))
 
   (use-package highlight-operators :defer
     :diminish highlight-operators-mode
@@ -485,7 +442,7 @@
     :diminish modern-c++-font-lock-mode
     :hook (c++-mode . modern-c++-font-lock-mode))
 
-  (use-package mic-paren :defer
+  (use-package mic-paren ;; :defer nil
     :config (paren-activate))
 
   (use-package msb ;; :defer nil
@@ -520,22 +477,7 @@
   (use-package python :commands python-mode)
 
   (use-package rainbow-delimiters :defer
-    :config (hook-into-modes #'rainbow-delimiters-mode
-                             'c++-mode-hook
-                             'c-mode-hook
-                             'clips-mode-hook
-                             'cperl-mode-hook
-                             'csharp-mode-hook
-                             'emacs-lisp-mode-hook
-                             'java-mode-hook
-                             'json-mode-hook
-                             'lisp-interaction-mode-hook
-                             'matlab-mode-hook
-                             'perl6-mode
-                             'php-mode-hook
-                             'python-mode-hook
-                             'sh-mode-hook
-                             'yaml-mode-hook))
+    :hook (prog-mode . rainbow-delimiters-mode))
 
   (use-package s) ;; :defer nil
 
@@ -546,27 +488,10 @@
 
   (use-package smartparens :defer
     :diminish smartparens-mode
+    :hook ((prog-mode shell-mode) . smartparens-mode)
     :config (progn
               (sp-local-pair sp-lisp-modes "'" nil :actions nil)
-              (sp-local-pair sp-lisp-modes "`" nil :actions nil)
-              (hook-into-modes #'smartparens-mode
-                               'c++-mode-hook
-                               'c-mode-hook
-                               'clips-mode-hook
-                               'cperl-mode-hook
-                               'csharp-mode-hook
-                               'emacs-lisp-mode-hook
-                               'java-mode-hook
-                               'json-mode-hook
-                               'lisp-interaction-mode-hook
-                               'matlab-mode-hook
-                               'perl6-mode
-                               'php-mode-hook
-                               'python-mode-hook
-                               'sh-mode-hook
-                               'shell-mode-hook
-                               'text-mode-hook
-                               'yaml-mode-hook)))
+              (sp-local-pair sp-lisp-modes "`" nil :actions nil)))
 
   (use-package smooth-scrolling :defer)
 
@@ -671,8 +596,7 @@
     :ensure nil)
 
   (use-package u-python :after python
-    :ensure nil
-    )
+    :ensure nil)
 
   (use-package undo-tree
     :diminish undo-tree-mode
@@ -683,7 +607,7 @@
   (use-package uniquify :defer
     :ensure nil)
 
-  (use-package volatile-highlights :defer
+  (use-package volatile-highlights
     :diminish volatile-highlights-mode
     :config (volatile-highlights-mode t))
 

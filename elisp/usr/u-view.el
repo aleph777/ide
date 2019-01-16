@@ -46,6 +46,8 @@
 ;;           20-Jun-2018 Fixed ‘display-line-numbers-set’ with ‘bound-and-true-p’ check
 ;;                       of ‘display-line-numbers-mode’
 ;;           02-Jul-2018 Changed menu text to eliminate reference to frame
+;;           06-Jul-2018 Added ‘list-faces-display’
+;;                       Moved randon background colors to submenu
 ;;
 
 ;;; Code:
@@ -67,6 +69,9 @@
 (defvar line-numbers 'off)
 (make-variable-buffer-local 'line-numbers)
 
+(defvar u-which-function-mode 'off)
+(make-variable-buffer-local 'u-which-function-mode)
+
 (defsubst is-line-numbers-absolute? ()
   "Return boolean t if ‘display-line-numbers’ absolute mode is chosen."
   (eq line-numbers 'absolute))
@@ -74,6 +79,12 @@
 (defsubst is-line-numbers-relative? ()
   "Return boolean t if ‘display-line-numbers’ relative mode is chosen."
   (eq line-numbers 'relative))
+
+(defun u-which-function-mode ()
+  "Toggle function ‘which-function-mode’ and keep local setting for modeline."
+  (interactive)
+  (setq u-which-function-mode (if (eq u-which-function-mode 'off) 'on 'off))
+  (which-function-mode))
 
 (defun display-line-numbers-set (mode)
   "Set line numbers display according to MODE."
@@ -104,7 +115,7 @@
   '("View"
     ["Absolute Line Numbers" display-line-numbers-absolute-toggle :style toggle :selected (is-line-numbers-absolute?)]
     ["Relative Line Numbers" display-line-numbers-relative-toggle :style toggle :selected (is-line-numbers-relative?)]
-    ["Which Function"        which-function-mode                  :style toggle :selected which-function-mode]
+    ["Which Function"        u-which-function-mode                :style toggle :selected which-function-mode]
     ["Whitespace"            whitespace-mode                      :style toggle :selected whitespace-mode]
     ["Line Wrap"             visual-line-mode                     :style toggle :selected word-wrap]
     "---"
@@ -141,6 +152,8 @@
     "---"
     ["Diminish Minor Modes" diminish-minor-modes :active t]
     "---"
+    ["List Faces" list-faces-display :active t]
+    "---"
     ["Recenter Window"   recenter          :active t]
     ["Reposition Window" reposition-window :active t]
     "---"
@@ -150,6 +163,7 @@
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
      "---"
      ["Reset Window Size"     reset-frame-size             :enable (is-not-fullscreen?)]
+     ("Background Color"
      ["Set Background Color"  set-random-background-color  :active t]
 
      ["Set Red Background Color"     (set-background-color (color-bg/red))     :active t]
@@ -160,7 +174,7 @@
      ["Set Yellow Background Color"  (set-background-color (color-bg/yellow))  :active t]
      ["Set Pink Background Color"    (set-background-color (color-bg/pink))    :active t]
      ["Set Indigo Background Color"  (set-background-color (color-bg/indigo))  :active t]
-     ["Set Gray Background Color"    (set-background-color (color-bg/gray))    :active t]
+     ["Set Gray Background Color"    (set-background-color (color-bg/gray))    :active t])
      "---"
      ["Query Window Font "   (message (query-frame-font   'modeline)) :active t]
      ["Query Window Size "   (message (query-frame-size   'modeline)) :active t]
