@@ -65,6 +65,7 @@
 ;;                       Updated ‘u-cc-mode-menu-text’
 ;;           24-Jan-2019 Added ‘Go to Definition’ to ‘u-cc-mode-menu-text’
 ;;                       Added ‘Format File’ to ‘u-cc-mode-menu-text’
+;;                       Removed ‘u-cc-reformat-buffer’ in favor of ‘eglot-format’
 ;;
 
 ;;; Code:
@@ -72,6 +73,7 @@
 (message "Loading u-cc...")
 (require 'cc-mode)
 (require 'flycheck)
+(require 'eglot)
 (require 'u-macro)
 ;; (require 'ac-clang)
 
@@ -139,13 +141,6 @@
 
 (defvar u-cc-makeflags "")
 (make-variable-buffer-local 'u-cc-makeflags)
-
-(defun u-cc-reformat-buffer ()
-  "Pretty print the buffer."
-  (interactive "*")
-  (mark-whole-buffer)
-  (universal-argument)
-  (shell-command-on-region (point-min) (point-max) u-cc-indent-command (buffer-name) t))
 
 (defun u-c-setup()
   "C-mode setup function"
