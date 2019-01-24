@@ -44,3 +44,5 @@ echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | tee /etc/a
 apt-get update
 apt-get install mono-devel
 apt-get install referenceassemblies-pcl
+
+wget -c https://releases.llvm.org/7.0.1/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz
