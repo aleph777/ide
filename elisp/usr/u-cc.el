@@ -63,6 +63,8 @@
 ;;                       Updated ‘u-cc-mode-menu-text’
 ;;           02-May-2017 Added ‘u-cc-insert-summary’
 ;;                       Updated ‘u-cc-mode-menu-text’
+;;           24-Jan-2019 Added ‘Go to Definition’ to ‘u-cc-mode-menu-text’
+;;                       Added ‘Format File’ to ‘u-cc-mode-menu-text’
 ;;
 
 ;;; Code:
@@ -76,9 +78,9 @@
 (defvar u-cc-indent-program "indent ")
 
 (defvar u-cc-indent-options (concat
-                             "-i2 "   ; set indentation level to 2 spaces
-                             "-cli2 " ; case label indent of 2 spaces
-                             "-ci2 "  ; Continuation indent of 2 spaces
+                             "-i4 "   ; set indentation level to 2 spaces
+                             "-cli4 " ; case label indent of 2 spaces
+                             "-ci4 "  ; Continuation indent of 2 spaces
                              "-st "   ; write to STDOUT
                              "-bad "  ; blank lines after declarations
                              "-bap "  ; blank lines after procedures
@@ -105,7 +107,10 @@
     ["Insert Source File Skeleton" u-cc-insert-source-skeleton   :active (is-rw?)]
     ["Insert Boilerplate"          u-cc-insert-boilerplate       :active (is-rw?)]
     ["Insert Summary"              u-cc-insert-summary           :active (is-rw?)]
-    ["Flush Region Pragmas"       (flush-lines "pragma.+region") :active (is-rw?)]
+    ["Format File"                 eglot-format                  :active (is-rw?)]
+    ["Flush Region Pragmas"       (flush-lines "pragma.+region") :active (is-rw?)] ;; what was this for?
+    "---"
+    ["Go to Definition" xref-find-definitions]
     "---"
     ["Beginning Of Function" beginning-of-defun :active t]
     ["End Of Function"       end-of-defun       :active t]

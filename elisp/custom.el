@@ -29,7 +29,7 @@
  '(msb-max-menu-items nil)
  '(package-selected-packages
    (quote
-    (declutter org-mode treemacs-projectile tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar treemacs undo-tree use-package volatile-highlights web-mode yaml-mode ycmd)))
+    (company-lsp lsp-ui eglot declutter org-mode treemacs-projectile tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar treemacs undo-tree use-package volatile-highlights web-mode yaml-mode ycmd)))
  '(paradox-github-token t)
  '(powerline-gui-use-vcs-glyph t)
  '(recentf-max-menu-items 25)

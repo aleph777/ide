@@ -155,6 +155,8 @@
 ;;           17-Apr-2018 Changed ‘lisp-mode’ to ‘elisp-mode’
 ;;           13-Jun-2018 Updated for performance
 ;;           20-Jun-2018 Changed some minor-modes to use :hook
+;;           16-Jan-2019 Added ‘clang-format’
+;;           24-Jan-2019 Changed from ‘ycmd’ to ‘eglot’ (still need omnisharp server for C#?)
 ;;
 
 ;;; Code:
@@ -269,6 +271,8 @@
             (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
             (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode))))
 
+  (use-package clang-format :disabled)
+
   (use-package clips-log-mode :commands clips-log-mode
     :ensure nil
     :mode "\\.log\\'")
@@ -284,10 +288,13 @@
                (define-key company-active-map (kbd "RET") 'company-complete-common)
                (define-key company-active-map [tab] 'company-complete-selection)
                (define-key company-active-map (kbd "TAB") 'company-complete-selection)
-               (setq company-minimum-prefix-length 2
+               (setq ccls-executable "/usr/local/bin/ccls"
+                     company-minimum-prefix-length 2
                      company-idle-delay 0.2
                      company-show-numbers t
-                     company-tooltip-align-annotations t)
+                     company-tooltip-align-annotations t
+                     ;; company-clang-executable "/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04/bin/clang"
+                     )
                (add-to-list 'company-transformers #'company-sort-by-backend-importance)))
 
    (use-package company-jedi :after company
@@ -297,15 +304,19 @@
      :after plsense
      :config (add-to-list 'company-backends 'company-plsense))
 
-   (use-package company-ycmd :after ycmd
+   (use-package company-ycmd :after ycmd :disabled
      :config (progn
                (company-ycmd-setup)
                (push '(company-ycmd :with company-yasnippet company-dabbrev-code) company-backends)))
 
-   (use-package declutter :commands declutter
-     :ensure nil)
+   (use-package declutter :commands declutter :disabled
+                :ensure nil)
 
-   (use-package flycheck-ycmd :after ycmd
+   (use-package eglot :after company
+     :hook ((c++-mode . eglot-ensure)
+            (c++-mode . flycheck-mode)))
+
+   (use-package flycheck-ycmd :after ycmd :disabled
      :init (flycheck-ycmd-setup))
 
    (use-package plsense :disabled
@@ -314,7 +325,7 @@
                (plsense-config-default)
                (plsense-server-start)))
 
-   (use-package ycmd :after company
+   (use-package ycmd :after company :disabled
      :diminish ycmd-mode
      :init (progn
              (set-variable 'ycmd-server-command (list "python" (substitute-in-file-name "$HOME/elisp/packages/ycmd/ycmd/__main__.py")))
@@ -322,7 +333,7 @@
              ;; (add-hook 'after-init-hook #'global-ycmd-mode)
              )
      :hook (after-init . global-ycmd-mode))
-   ;; (setq url-show-status nil)              ; make ycmd more quiet
+   (setq url-show-status nil)              ; make ycmd more quiet
 
    )
 
