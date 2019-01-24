@@ -103,6 +103,7 @@
 ;;           19-Jan-2017 Changed ‘C-N’ to ‘narrow-or-widen-dwim’
 ;;                       Added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
 ;;           19-Sep-2017 Added ‘M-pause’ as ‘sdcv-search’
+;;           16-Jan-2019 Added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
 ;;
 
 ;;; Code:
@@ -174,6 +175,7 @@
 (global-set-key [(super \')] 'xah-insert-single-quote)
 (global-set-key [(super \")] 'xah-insert-double-quote)
 (global-set-key [(super \`)] 'xah-insert-emacs-quote)
+(global-set-key [(control \`)] 'xah-insert-emacs-quote)
 (global-set-key [(super \<)] 'xah-insert-lt)
 (global-set-key [(super \>)] 'xah-insert-tag)
 
