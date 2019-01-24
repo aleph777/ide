@@ -21,9 +21,11 @@ export IDE="$HOME/ide"
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
 
+export CLANGPATH="/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04/bin"
+
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $DEFAULTPATH $PATH $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $CLANGPATH $DEFAULTPATH $PATH $EXTRAPATH)
 
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
