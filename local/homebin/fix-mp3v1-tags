@@ -1,0 +1,38 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use MP3::Tag;
+use MP3::Info;
+use strict;
+use v5.18;
+
+for(@ARGV)
+{
+  my $mp3 = MP3::Tag->new($_);
+  my $r   = $mp3->autoinfo();
+  my $fn  = basename($_,'.mp3');
+
+  $mp3->get_tags;
+
+  if(exists $mp3->{ID3v1})
+  {
+    # say $fn,': V1 TAG';
+
+    #ProcessV1($mp3->{ID3v1},$fn);
+  }
+  else
+  {
+    say $fn,': NO TAG';
+
+    $mp3->delete_tag('ID3v2') if exists $mp3->{ID3v2};
+
+    my $tag = $mp3->new_tag('ID3v1');
+
+    $mp3->artist_set($r->{artist});
+    $mp3->title_set($r->{title});
+    $mp3->update_tags();
+    # say $r->{artist};
+    # say $r->{title};
+  }
+  $mp3->close();
+}
