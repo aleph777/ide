@@ -89,14 +89,36 @@
 ** mkdir .autosave
 ** mkdir .backup
 
-** M-x package-install ergoemacs-mode
 ** emacs -q .emacs and eval-buffer
 ** Open elisp/usr/default.el and eval-buffer
+** M-x package-install ergoemacs-mode
+** cd elisp
+** mkdir packages
+** cd packages
+** git clone https://github.com/jaalto/project--emacs-tiny-tools
+
+
+** If not a Foliage VM
+** cd ~/Downloads
+** wget https://s3.amazonaws.com/jsomers/dictionary.zip
+** cd /tmp
+** unzip ~/Downloads/dictionary.zip
+** mv dictionary/stardict-dictd-web1913-2.4.2.tar.bz2 ~/Downloads
+** cd
+** End if
 
 ** mkdir .stardict
 ** cd .stardict
 ** mkdir dic
 ** tar xjf ~/Downloads/stardict-dictd-web1913-2.4.2.tar.bz2
-** mv stardict-dictd-web1913-2.4.2 Webster1913
+** mv stardict-dictd-web1913-2.4.2 Webster1913 # .stardict or .stardict/dic???
 
-
+** cd ~/Downloads
+** wget http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+** cd /usr/local
+** sudo tar xJf ~/Downloads/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+** cd ~/elisp/packages
+** git clone --depth=1 --recursive https://github.com/MaskRay/ccls
+** cd ccls
+** cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/ -DCMAKE_CXX_COMPILER=clang++
+** cmake --build Release
