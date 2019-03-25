@@ -90,7 +90,8 @@
 ** mkdir .backup
 
 ** M-x package-install ergoemacs-mode
-** emacs -q .emacs and eval-buffer
+** emacs -q .emacs 
+** M-x eval-buffer
 ** Open elisp/usr/default.el and eval-buffer
 
 ** mkdir .stardict

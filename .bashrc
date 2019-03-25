@@ -21,12 +21,17 @@ export IDE="$HOME/ide"
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
 
-export CLANGPATH="/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04/bin"
+export CLANG=/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04
+export CMAKE=/usr/local/cmake-3.13.4-Linux-x86_64
+
+export CLANGPATH=$CLANG/bin
+export CMAKEPATH=$CMAKE/bin
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $CLANGPATH $DEFAULTPATH $PATH $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $CLANGPATH $CMAKEPATH $DEFAULTPATH $PATH $EXTRAPATH)
 
+export LD_LIBRARY_PATH=/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04/lib
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
 export EMACSVERSION=$(perl -e '$x=qx(emacs --version);$v=($x=~/(\d{2}(?:\.\d{1,2}){1,2})/)[0];say $v')
