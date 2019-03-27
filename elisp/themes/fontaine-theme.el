@@ -35,7 +35,10 @@
 (defface fontaine/mode-line-base '((t (:family "DejaVu Sans" :box (:line-width 1 :color "gray50")))) "Temp face." :group 'font-lock-faces)
 (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
 
-(let* ((font-family (if (eq system-type 'windows-nt) "Consolas" "DejaVu Sans Mono"))
+(let* ((consolas (car (member "Consolas"         (font-family-list))))
+       (deja-vu  (car (member "DejaVu Sans Mono" (font-family-list))))
+       (courier  (car (member "Courier 10 Pitch" (font-family-list))))
+       (font-family (or deja-vu consolas courier))
 
        ;; named color definitions
 

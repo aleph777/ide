@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use File::Copy;
+use strict;
+
+die "No directory specified!!!\n"      unless @ARGV;
+die "$ARGV[0] does not exist!!\n"      unless -e $ARGV[0];
+die "$ARGV[0] is not a directory!!!\n" unless -d $ARGV[0];
+
+my $dir = shift @ARGV;
+
+$dir =~ s=/$==;
+
+chdir $dir;
+
+my @files = glob "*.mp3";
+
+foreach my $srcfile (@files)
+{
+  my $base = basename($srcfile);
+
+  $base =~ s/^\d{4}-//;
+
+  my $dstfile = join '','/MyBook/Audio/Soundfly/',$base;
+
+  next if -e $dstfile;
+
+  print "$srcfile => $dstfile\n";
+
+  copy($srcfile,$dstfile) or die "Copy failed: $!";
+}

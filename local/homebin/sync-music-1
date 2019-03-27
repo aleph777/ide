@@ -1,0 +1,57 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use File::Copy;
+use strict;
+use v5.18;
+
+use constant ARCHIVE   => '/media/fontaine/easystore/audio/rav4';
+use constant REMOVABLE => '/media/fontaine/3936-61B1';
+
+my $dir = @ARGV ? shift @ARGV : REMOVABLE;
+
+die "$dir does not exist!!\n"      unless -e $dir;
+die "$dir is not a directory!!!\n" unless -d $dir;
+
+$dir =~ s=/$==;
+
+# chdir $dir;
+
+my %archive   = map { basename($_) => $_ } glob join '/',ARCHIVE,'*.mp3';
+my %removable = map { basename($_) => $_ } glob join '/',$dir,'*/*.mp3';
+
+for(sort keys %archive)
+{
+  next if exists $removable{$_};
+
+  say "$_ is not on thumb drive";
+
+  copy($archive{$_},"$dir/00");
+}
+for(sort keys %removable)
+{
+  next if exists $archive{$_};
+
+  say "$_ is not in archive";
+
+  copy($removable{$_},ARCHIVE);
+}
+
+# for(glob "*.mp3")
+# {
+#   my $old = $_;
+
+#   s/^(?:\d{4}-)?//;
+
+#   rename $old,$_;
+# }
+# for(glob "/MyBook/Audio/Soundfly/*.mp3")
+# {
+#   my $base = basename($_);
+
+#   next if -e $base;
+
+#   print "$_ => $base\n";
+
+#   copy($_,$base) or die "Copy failed: $!";
+# }
