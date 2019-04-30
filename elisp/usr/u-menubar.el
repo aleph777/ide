@@ -116,6 +116,7 @@
     ))
 
 (easy-menu-define view-menu   global-map "View"   u-view-menu)
+(easy-menu-define blah-menu   global-map "lllllllllllll"     u-view-menu)
 (easy-menu-define search-menu global-map "Search" u-search-menu)
 
 (easy-menu-define edit-menu global-map "Edit" u-edit-menu)

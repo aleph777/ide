@@ -43,6 +43,7 @@
 #
 use File::FindWrapper;
 use Util::Options;
+use v5.10;
 use strict;
 
 my $f = File::FindWrapper->new();
@@ -113,5 +114,5 @@ if(exists $option{'exec'})
 }
 else
 {
-  print map { $_,"\n" } @{$f->contents};
+  say $_ for @{$f->contents};
 }

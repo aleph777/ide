@@ -3,6 +3,9 @@
 # Append to the history file, don't overwrite it.
 shopt -s histappend
 
+# Don't know why this is needed
+enable kill
+
 alias lsf='ls -F'
 alias lsc='TERM=ansi ls --color=always'
 alias avg='perl -e '\''use List::Util qw(sum);CORE::say sum(@ARGV)/@ARGV;'\'''
@@ -21,17 +24,18 @@ export IDE="$HOME/ide"
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
 
-export CLANG=/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04
+export CLANG=/usr/local/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04
 export CMAKE=/usr/local/cmake-3.13.4-Linux-x86_64
 
-export CLANGPATH=$CLANG/bin
-export CMAKEPATH=$CMAKE/bin
+export CLANGBIN=$CLANG/bin
+export CLANGLIB=$CLANG/lib
+export CMAKEBIN=$CMAKE/bin
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $CLANGPATH $CMAKEPATH $DEFAULTPATH $PATH $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $CLANGBIN $CMAKEBIN $DEFAULTPATH $PATH $EXTRAPATH)
 
-export LD_LIBRARY_PATH=/usr/local/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-16.04/lib
+export LD_LIBRARY_PATH=$CLANGLIB
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
 export EMACSVERSION=$(perl -e '$x=qx(emacs --version);$v=($x=~/(\d{2}(?:\.\d{1,2}){1,2})/)[0];say $v')
@@ -44,6 +48,14 @@ export PS1='\# [\h] \W> '
 #
 export EDITOR='emacsclient -n -c'
 export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
+
+#
+# git
+#
+#alias "git-reset-from-remote='git checkout origin/develop -- '"
+
+
+alias say='perl -e "say $_ for @ARGV"'
 
 alias emacs="emacs $EMACSARGS"
 alias emacsclient='/usr/local/bin/emacsclient -n -c'
@@ -60,8 +72,9 @@ export COLUMNS=108
 # SIGFPE	8	Issued if an illegal mathematical operation is attempted
 # SIGKILL	9	If a process gets this signal it must quit immediately and will not perform any clean-up operations
 # SIGALRM	14	Alarm clock signal (used for timers)
-# SIGTERM	15	Software termination signal (sent by kill by default)alias kdrp-quit='kill -3'
+# SIGTERM	15	Software termination signal (sent by kill by default)
 
+alias kdrp-quit='kill -3'
 alias kdrp-bit='kill -1'
 alias kdrp-interrupt='kill -2'
 alias kdrp-abnormal='kill -15'

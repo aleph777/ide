@@ -4,7 +4,7 @@
 
 ;; Time-stamp: <25-Apr-2017 07:23:35 EDT, modified by Tom Fontaine>
 ;;
-;; Author:      Tom Fontaine -- Copyright © 2016
+;; Author:      Tom Fontaine -- Copyright © 2016-2019
 ;; Date:        19-Aug-2016
 ;;
 ;; Revision:    16-Nov-2016 Added vhl/default-face
@@ -12,6 +12,12 @@
 ;;              05-Jan-2017 Converting from blue to Mint
 ;;              25-Apr-2017 Added flat  colors
 ;;              19-Jun-2018 Added multiple palettes
+;;              02-Apr-2019 Changed font-family selection method
+;;                          Added Hack and made it the default font
+;;                          Added Source Code Pro
+;;              04-Apr-2019 Added Cousine
+;;                          Added CamingoCode
+;;                          Added Fantasque
 ;;
 
 ;;; Code:
@@ -35,10 +41,18 @@
 (defface fontaine/mode-line-base '((t (:family "DejaVu Sans" :box (:line-width 1 :color "gray50")))) "Temp face." :group 'font-lock-faces)
 (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
 
-(let* ((consolas (car (member "Consolas"         (font-family-list))))
-       (deja-vu  (car (member "DejaVu Sans Mono" (font-family-list))))
-       (courier  (car (member "Courier 10 Pitch" (font-family-list))))
-       (font-family (or deja-vu consolas courier))
+(let* ((font-family-list (font-family-list))
+
+       (camingo         (car (member "CamingoCode"      font-family-list)))
+       (consolas        (car (member "Consolas"         font-family-list)))
+       (courier         (car (member "Courier 10 Pitch" font-family-list)))
+       (cousine         (car (member "Cousine"          font-family-list)))
+       (deja-vu         (car (member "DejaVu Sans Mono" font-family-list)))
+       (fantasque       (car (member "Fantasque"        font-family-list)))
+       (hack            (car (member "Hack"             font-family-list)))
+       (source-code-pro (car (member "Source Code Pro"  font-family-list)))
+
+       (font-family (or hack deja-vu consolas source-code-pro cousine camingo fantasque courier))
 
        ;; named color definitions
 

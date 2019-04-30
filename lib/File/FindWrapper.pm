@@ -71,6 +71,8 @@ my @switches = qw(read-effective    no-read-effective
                   text              no-text
                   bin               no-bin
 
+                  sort
+
                   OR
                  );
 
@@ -392,6 +394,8 @@ sub get
       @{$contents} = grep { -C $_ <  $option->{'inode-lt'} } @{$contents} if exists $option->{'inode-lt'};
       @{$contents} = grep { -C $_ >= $option->{'inode-ge'} } @{$contents} if exists $option->{'inode-ge'};
       @{$contents} = grep { -C $_ <= $option->{'inode-le'} } @{$contents} if exists $option->{'inode-le'};
+
+      @{$contents} = sort @{$contents} if exists $option->{'sort'};
     }
   }
 }

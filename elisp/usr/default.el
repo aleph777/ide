@@ -485,6 +485,9 @@
     :ensure nil
     :config (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
+  (use-package projectile :defer
+    :hook (prog-mode . projectile-mode))
+
   (use-package python :commands python-mode)
 
   (use-package rainbow-delimiters :defer
@@ -580,7 +583,7 @@
     ;;       ("M-m f M-t"  . treemacs-find-tag))
     )
 
-  (use-package treemacs-projectile :commands treemacs-projectile)
+  (use-package treemacs-projectile :after treemacs)
 
   (use-package u-cc :after cc-mode
     :ensure nil)
