@@ -1,0 +1,47 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+#
+#              Copyright © 1998-2017 Tom Fontaine
+#
+# Time-stamp: <27-May-2015 09:54:19 EDT, modified by Tom Fontaine>
+#
+# Title:       check-minimum-version
+# Author:      Tom Fontaine
+# Date:        05-May-2019
+#
+# Purpose:     Takes Perl source code and calculates the minimum version
+#              of perl required to be able to run it.
+#
+# Arguments:   $1 is file 1 to check
+#              .
+#              .
+#              .
+#              $N is file N to check
+#
+# Revision:
+#
+use File::IO;
+use DateTime;
+use strict;
+use v5.10;
+
+my $dt = DateTime->now;
+
+my $year = $dt->year;
+
+for(grep { -e } @ARGV)
+{
+  my $io = File::IO->new(path => $_);
+
+  $io->get();
+
+  say '===== ',$_;
+
+  for(grep /^(?:;;|#) +Copyright .+ (?:\d{4}-)?(\d{4}) /,@{$io->contents})
+  {
+    s/^((?:;;|#) +Copyright .+ (?:\d{4}-)?)(\d{4}) /$1$year /o;
+
+    say $_;
+    last;
+  }
+  # $io->put();
+}
