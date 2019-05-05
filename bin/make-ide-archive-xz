@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2008-2017 Tom Fontaine
+#         Copyright © 2008-2019 Tom Fontaine
 
-# Title:       make-ide-archive-1
-# Author:      Tom Fontaine
-# Date:        15-May-2008
-# Time-stamp: <19-Sep-2017 12:53:36 EDT, modified by Tom Fontaine>
-#
+# Title:  make-ide-archive-xz
+# Author: Tom Fontaine
+# Date:   15-May-2008
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Creates an xz-compressed tar archive of the ide
 #
 # Arguments: None
