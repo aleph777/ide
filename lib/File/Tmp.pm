@@ -1,6 +1,6 @@
 # File::Tmp --- Provides a /tmp file object with a random name -*-Perl-*-
 
-#         Copyright © 2015-2018 Tom Fontaine
+#         Copyright © 2015-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   16-Apr-2015

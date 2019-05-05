@@ -1,6 +1,6 @@
 ;;; u-powerline.el --- Powerline setup -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2018 by Tom Fontaine
+;;         Copyright © 2016-2019 by Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   30-Mar-2016

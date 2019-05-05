@@ -1,6 +1,6 @@
 # Text::HexString --- Stringifies a hex number in chunks of 4 bytes using a delimiter -*-Perl-*-
 
-#         Copyright © 2012-2018 Tom Fontaine
+#         Copyright © 2012-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   26-Sep-2012

@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2000-2017 Tom Fontaine
+#         Copyright © 2000-2019 Tom Fontaine
 
-# Title:       clean-path
-# Author:      Tom Fontaine
-# Date:        26-Jun-2000
-# Time-stamp: <19-Jan-2017 11:31:51 EST, modified by Tom Fontaine>
-#
+# Title:  clean-path
+# Author: Tom Fontaine
+# Date:   26-Jun-2000
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Prints a path specification based on the input directories
 #            and the current path.  The input directories are kept in
 #            order and precede the current path.  Duplicate entries

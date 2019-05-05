@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2015-2017 Tom Fontaine
+#         Copyright © 2015-2019 Tom Fontaine
 
-# Title:       search-path
-# Author:      Tom Fontaine
-# Date:        20-Apr-2015
-# Time-stamp: <18-Jan-2017 15:35:09 EST, modified by Tom Fontaine>
-#
+# Title:  search-path
+# Author: Tom Fontaine
+# Date:   20-Apr-2015
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Searches directories in PATH for input regular expression.
 #
 # Arguments: $1 is the regex to search for

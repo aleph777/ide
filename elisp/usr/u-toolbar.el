@@ -1,6 +1,6 @@
 ;;; u-toolbar.el --- Emacs toolbar revision -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2001-2018 Tom Fontaine
+;;              Copyright © 2001-2019 Tom Fontaine
 
 ;;
 ;; Author:      Tom Fontaine

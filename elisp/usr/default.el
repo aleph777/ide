@@ -1,6 +1,6 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2000-2018 Tom Fontaine
+;;         Copyright © 2000-2019 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Sep-2000

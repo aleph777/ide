@@ -1,6 +1,6 @@
 # Util::DateTime --- Date/Time object -*-Perl-*-
 
-#         Copyright © 2015-2018 Tom Fontaine
+#         Copyright © 2015-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   01-Jun-2015
@@ -223,6 +223,8 @@ sub now
   $this->{minute}     = $dt->minute;
   $this->{second}     = $dt->second;
   $this->{nanosecond} = $dt->nanosecond;
+
+  return $dt->strftime($this->{format});
 }
 
 sub set

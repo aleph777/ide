@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2017-2017 Tom Fontaine
+#         Copyright © 2017-2019 Tom Fontaine
 
-# Title:       plocate
-# Author:      Tom Fontaine
-# Date:        16-Jan-2017
-# Time-stamp: <18-Jan-2017 15:24:42 EST, modified by Tom Fontaine>
-#
+# Title:  plocate
+# Author: Tom Fontaine
+# Date:   16-Jan-2017
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Perl wrapper for ‘locate’
 #
 # Arguments: [switch [arg] ...] dir1 [dir2 ... dirN]

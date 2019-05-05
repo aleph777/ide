@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2017-2017 altran_tfontaine
+#         Copyright © 2017-2019 altran_tfontaine
 
-# Title:       get-rnd-bg
-# Author:      altran_tfontaine
-# Date:        17-Oct-2017
-# Time-stamp: <08-Dec-2017 12:58:29 EST, modified by altran_tfontaine>
-#
+# Title:  get-rnd-bg
+# Author: Tom Fontaine
+# Date:   17-Oct-2017
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,8 +28,7 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
-# Purpose:
+# Purpose: prints a random dark background color
 #
 # Arguments:
 #

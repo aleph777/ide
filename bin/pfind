@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2000-2017 Tom Fontaine
+#         Copyright © 2000-2019 Tom Fontaine
 
-# Title:       pfind
-# Author:      Tom Fontaine
-# Date:        28-Jun-2000
-# Time-stamp: <18-Jan-2017 15:22:35 EST, modified by Tom Fontaine>
-#
+# Title:  pfind
+# Author: Tom Fontaine
+# Date:   28-Jun-2000
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Recursively list files that meet query criteria.
 #
 # Arguments: [switch [arg] ...] dir1 [dir2 ... dirN]

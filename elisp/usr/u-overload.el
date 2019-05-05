@@ -1,6 +1,6 @@
 ;;; u-overload.el --- [insert description here] -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2018 Tom Fontaine
+;;         Copyright © 1999-2019 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999

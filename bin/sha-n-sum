@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2013-2017 Tom Fontaine
+#         Copyright © 2013-2019 Tom Fontaine
 
-# Title:       sha-n-sum
-# Author:      Tom Fontaine
-# Date:        04-Jun-2013
-# Time-stamp: <25-Jan-2017 12:30:19 EST, modified by Tom Fontaine>
-#
+# Title:  sha-n-sum
+# Author: Tom Fontaine
+# Date:   04-Jun-2013
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Prints a SHA -N checksum (default is SHA256) for each input file
 #
 # Arguments: [-n] [-no-name] [-1|-224|-256|-384|-512|-512224|-512256] file1 [file2 … fileN]

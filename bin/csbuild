@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2017-2017 Tom Fontaine
+#         Copyright © 2017-2019 Tom Fontaine
 
-# Title:       csbuild
-# Author:      Tom Fontaine
-# Date:        30-Jun-2017
-# Time-stamp: <30-Jun-2017 12:52:23 EDT, modified by Tom Fontaine>
-#
+# Title:  csbuild
+# Author: Tom Fontaine
+# Date:   30-Jun-2017
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,7 +28,6 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   xbuild wrapper for Emacs Flycheck C# syntax checker
 #
 # Arguments: $1 is the Flycheck temp file
