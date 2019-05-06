@@ -51,6 +51,7 @@
 *** ln -s ide/lib
 *** ln -s ide/local
 *** source .bashrc
+*** tar xJvf ide/fonts.tar.xz
 *** cd ide
 *** git config --global user.email "tomfontaine@[some tag].fastmail.fm"
 *** cd elisp
@@ -64,6 +65,7 @@
 *** ./build.py --clang-completer
 
 * sudo bash
+** fc-cache -f -v
 ** source bin/install-from-apt.sh
 ** source bin/install-from-cpan.sh
 ** exit
