@@ -46,6 +46,7 @@
 ;;           13-Jan-2017 Added `bm-show-extract-bookmarks'
 ;;           14-Jan-2017 Added `bm-show-display-lines'
 ;;           13-Jun-2018 Changed to use ‘with-eval-after-load’
+;;           08-May-2019 Stopped using ‘handle-delete-frame’
 ;;
 
 ;;; Code:
@@ -116,19 +117,19 @@ documentation for additional customization information."
 ;;         (read-only (if buffer-read-only "%" " ")))
 ;;     (format "%s%s %s" modified read-only name)))
 
-(defun handle-delete-frame (event)
-  (interactive "e")
-  (let ((frame (posn-window (event-start event)))
-        (i 0)
-        (tail (frame-list)))
-    (while tail
-      (and (frame-visible-p (car tail))
-           (not (eq (car tail) frame))
-           (setq i (1+ i)))
-      (setq tail (cdr tail)))
-    (if (> i 0)
-        (exit-buffer-and-frame)     ;;; tjf
-      (save-buffers-kill-emacs))))
+;; (defun handle-delete-frame (event)
+;;   (interactive "e")
+;;   (let ((frame (posn-window (event-start event)))
+;;         (i 0)
+;;         (tail (frame-list)))
+;;     (while tail
+;;       (and (frame-visible-p (car tail))
+;;            (not (eq (car tail) frame))
+;;            (setq i (1+ i)))
+;;       (setq tail (cdr tail)))
+;;     (if (> i 0)
+;;         (exit-buffer-and-frame)     ;;; tjf
+;;       (save-buffers-kill-emacs))))
 
 (eval-after-load "man"
   '(defun Man-notify-when-ready (man-buffer)
