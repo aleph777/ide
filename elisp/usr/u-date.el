@@ -1,8 +1,8 @@
 ;;; u-date.el --- Date support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2018 Tom Fontaine
+;;         Copyright © 2016-2019 Tom Fontaine
 
-;; Author: Tom Fontaine — Copyright © 2016
+;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a

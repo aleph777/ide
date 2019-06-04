@@ -1,0 +1,32 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use strict;
+use v5.10;
+
+use constant REMOVABLE => '/media/fontaine/3936-61B1';
+
+my $dir = @ARGV ? shift @ARGV : REMOVABLE;
+
+die "$dir does not exist!!\n"      unless -e $dir;
+die "$dir is not a directory!!!\n" unless -d $dir;
+
+$dir =~ s=/(?:\d{2}/?)?$==;
+
+my %h;
+
+for(glob "$dir/*/*.mp3")
+{
+  my $f = basename $_;
+
+  if(exists $h{$f})
+  {
+    say $_;
+
+    unlink $_;
+  }
+  else
+  {
+    $h{$f} = $_;
+  }
+}

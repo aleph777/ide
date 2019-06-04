@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#              Copyright © 2006-2017 Tom Fontaine
+#         Copyright © 2006-2019 Tom Fontaine
 
-# Title:       align-columns
-# Author:      Thomas J Fontaine { 1055864}
-# Date:        22-Jun-2006
-# Time-stamp: <18-Jan-2017 14:38:15 EST, modified by Tom Fontaine>
-#
+# Title:  align-columns
+# Author: Thomas J Fontaine
+# Date:   22-Jun-2006
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,11 +28,9 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:   Used as an emacs call-process-region by u-align-columns
 #
 # Arguments: None
-#
 #
 # Revision:  12-May-2008 use strict;
 #            06-Sep-2012 Changed to allow blank lines in region

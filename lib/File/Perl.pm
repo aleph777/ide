@@ -1,6 +1,6 @@
 # File::Perl --- Provides a Perl source code file object -*-Perl-*-
 
-#         Copyright © 2015-2018 Tom Fontaine
+#         Copyright © 2015-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   17-Apr-2015

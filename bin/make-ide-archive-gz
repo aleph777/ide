@@ -2,9 +2,9 @@
 
 #         Copyright © 2008-2019 Tom Fontaine
 
-# Title:  trim
+# Title:  make-ide-archive-gz
 # Author: Tom Fontaine
-# Date:   11-May-2008
+# Date:   15-May-2008
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,55 +28,41 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Trim excess whitespace from text files
+# Purpose:   Creates a gz-compressed tar archive of the ide.
 #
-# Arguments: filespec1 [filespec2 ... filespecN]
+# Arguments: None
 #
-# Revision:  03-Apr-2015 Changed inner for loop to statement
-#            21-Apr-2015 Check that files needs to be written
+# Revision:  25-Mar-2015 "use strict"
+#            03-Apr-2015 Major overhaul
+#            01-Jun-2015 "use DateTime"
+#            01-Mar-2016 Changed elisp package handling to filter git data and obsolete dirs
 #
-use Digest::SHA;
-use File::IO;
+use DateTime;
+use File::Path qw(make_path);
 use strict;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-my @files = grep { -T } @ARGV;
-
-die "Usage: ",_ME_," file1 [file2 ... fileN]\n" unless @files;
-
-my $file = File::IO->new(chomp => 1,newline => 1);
-
-for(@files)
+if(@ARGV && $ARGV[0] eq '-help')
 {
-  $file->get(path => $_);
-
-  if($file->contents->[-1] =~ /^\s*$/)
-  {
-    # file definitely needs to be trimmed - don't bother with checksum
-    #
-    s/\s+$// for @{$file->contents};
-
-    pop @{$file->contents} while $file->contents->[-1] eq '';
-
-    $file->put(path => $_);
-  }
-  else
-  {
-    # file might need to be trimmed, but there are no blank lines at EOF
-    #
-    my $sha  = Digest::SHA->new(1);
-
-    $sha->add(@{$file->contents});
-
-    my $checksumOld = $sha->hexdigest;
-
-    s/\s+$// for @{$file->contents};
-
-    $sha->add(@{$file->contents});
-
-    my $checksumNew = $sha->hexdigest;
-
-    $file->put(path => $_) if $checksumOld ne $checksumNew;
-  }
+  print "\nUsage: ",_ME_," [-gz]\n\n";
+  exit;
 }
+my @files = qw(.bashrc .emacs .emacs.d/gtkrc .gitconfig);
+my @dirs  = qw(bin lib local);
+my @elisp = qx(pfind elisp/* -no-dir -no-name '(git|obsolete)');
+
+chomp @elisp;
+
+my ($suffix,$switches) = @ARGV && $ARGV[0] eq '-gz' ? ('tar.gz','czvf') : ('tar.xz','cJvf');
+
+my $dir = "$ENV{HOME}/Documents/ide";
+
+make_path($dir) unless -d $dir;
+
+die _ME_,": $dir does not exist!!!\n"     unless -e $dir;
+die _ME_,": $dir is not a directory!!!\n" unless -d $dir;
+
+my $file = join '.',"$dir/ide",DateTime->now(time_zone => 'local')->strftime('%Y%m%d_%H%M%S'),$suffix;
+
+system "purge @dirs;tar $switches $file @files @dirs @elisp";

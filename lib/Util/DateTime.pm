@@ -1,6 +1,6 @@
 # Util::DateTime --- Date/Time object -*-Perl-*-
 
-#         Copyright © 2015-2018 Tom Fontaine
+#         Copyright © 2015-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   01-Jun-2015
@@ -28,7 +28,7 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 05-May-2019 Fixed usage of DateTime
 #
 
 # The following patterns are allowed in the format string given to the $dt->strftime() method:
@@ -95,6 +95,7 @@ package Util::DateTime;
 require 5.008;
 use Carp;
 use strict;
+use v5.10;
 
 use DateTime;
 
@@ -120,13 +121,26 @@ my %fields = (format   => undef,
               LOG      => "%Y%m%d_%H%M%S",
               DATE     => "%B%e, %Y",
               DAY_DATE => "%A, %B%e, %Y",
+
+              year     => undef,
+              month    => undef,
+              day      => undef,
+              hour     => undef,
+              minute   => undef,
+              second   => undef,
+
+              nanosecond => 0,
              );
 
 my $dt;
 
-# BEGIN
-# {
-# }
+my @ltkeys = qw(second minute hour day month year wday yday isdst);
+my @dtkeys = qw(year month day hour minute second nanosecond);
+
+BEGIN
+{
+  $dt = DateTime->now;
+}
 
 # END
 # {
@@ -146,6 +160,16 @@ sub new
   my %parm = @_;
 
   @{$this}{keys %parm} = values %parm;
+
+  $dt->set_time_zone($this->{timezone});
+
+  $this->{year}       = $dt->year;
+  $this->{month}      = $dt->month;
+  $this->{day}        = $dt->day;
+  $this->{hour}       = $dt->hour;
+  $this->{minute}     = $dt->minute;
+  $this->{second}     = $dt->second;
+  $this->{nanosecond} = $dt->nanosecond;
 
   return $this;
 }
@@ -181,7 +205,57 @@ sub get
   my $format   = exists $parm{format}   ? $parm{format}   : $this->{format};
   my $timezone = exists $parm{timezone} ? $parm{timezone} : $this->{timezone};
 
-  return $dt->strftime($format);
+  return $dt->strftime($this->{$format});
+}
+
+sub now
+{
+  my $this = shift;
+
+  $dt = DateTime->now;
+
+  $dt->set_time_zone($this->{timezone});
+
+  $this->{year}       = $dt->year;
+  $this->{month}      = $dt->month;
+  $this->{day}        = $dt->day;
+  $this->{hour}       = $dt->hour;
+  $this->{minute}     = $dt->minute;
+  $this->{second}     = $dt->second;
+  $this->{nanosecond} = $dt->nanosecond;
+
+  return $dt->strftime($this->{format});
+}
+
+sub set
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $timezone   = exists $parm{timezone}   ? $parm{timezone}   : $this->{timezone};
+  my $year       = exists $parm{year}       ? $parm{year}       : $this->{year};
+  my $month      = exists $parm{month}      ? $parm{month}      : $this->{month};
+  my $day        = exists $parm{day}        ? $parm{day}        : $this->{day};
+  my $hour       = exists $parm{hour}       ? $parm{hour}       : $this->{hour};
+  my $minute     = exists $parm{minute}     ? $parm{minute}     : $this->{minute};
+  my $second     = exists $parm{second}     ? $parm{second}     : $this->{second};
+  my $nanosecond = exists $parm{nanosecond} ? $parm{nanosecond} : $this->{nanosecond};
+
+  my %dt;
+
+  $this->{year}       = $year;
+  $this->{month}      = $month;
+  $this->{day}        = $day;
+  $this->{hour}       = $hour;
+  $this->{minute}     = $minute;
+  $this->{second}     = $second;
+  $this->{nanosecond} = $nanosecond;
+  $this->{timezone}   = $timezone;
+
+  @dt{@dtkeys} = @{$this}{@dtkeys};
+
+  $dt->set($_ => $dt{$_}) for @dtkeys;
+  $dt->set_time_zone($timezone);
 }
 
 1;

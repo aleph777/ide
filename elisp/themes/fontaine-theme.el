@@ -1,17 +1,45 @@
 ;;; fontaine-theme.el --- Dark on light theme -*-Emacs-Lisp-*-
 
+;;         Copyright © 2016-2019  Tom Fontaine
+
+;; Author: Tom Fontaine
+;; Date:   19-Aug-2016
+
+;; Permission is hereby granted, free of charge, to any person obtaining a
+;; copy of this software and associated documentation files (the "Software",
+;; to deal in the Software without restriction, including without limitation
+;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
+;; and/or sell copies of the Software, and to permit persons to whom the
+;; Software is furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice shall be included in
+;; all copies or substantial portions of the Software.
+
+;; Except as contained in this notice, the name(s of the above copyright
+;; holders shall not be used in advertising or otherwise to promote the sale,
+;; use or other dealings in this Software without prior written authorization.
+
+;; The software is provided "As Is", without warranty of any kind, express or
+;; implied, including but not limited to the warranties of merchantability,
+;; fitness for a particular purpose and noninfringement. In no event shall
+;; the authors or copyright holders be liable for any claim, damages or other
+;; liability, whether in an action of contract, tort or otherwise, arising
+;; from, out of or in connection with the software or the use or other
+;; dealings in the software.
+
 ;;; Commentary:
 
-;; Time-stamp: <25-Apr-2017 07:23:35 EDT, modified by Tom Fontaine>
-;;
-;; Author:      Tom Fontaine -- Copyright © 2016
-;; Date:        19-Aug-2016
-;;
 ;; Revision:    16-Nov-2016 Added vhl/default-face
 ;;              04-Jan-2017 Added material colors
 ;;              05-Jan-2017 Converting from blue to Mint
 ;;              25-Apr-2017 Added flat  colors
 ;;              19-Jun-2018 Added multiple palettes
+;;              02-Apr-2019 Changed font-family selection method
+;;                          Added Hack and made it the default font
+;;                          Added Source Code Pro
+;;              04-Apr-2019 Added Cousine
+;;                          Added CamingoCode
+;;                          Added Fantasque
 ;;
 
 ;;; Code:
@@ -35,7 +63,18 @@
 (defface fontaine/mode-line-base '((t (:family "DejaVu Sans" :box (:line-width 1 :color "gray50")))) "Temp face." :group 'font-lock-faces)
 (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
 
-(let* ((font-family (if (eq system-type 'windows-nt) "Consolas" "DejaVu Sans Mono"))
+(let* ((font-family-list (font-family-list))
+
+       (camingo         (car (member "CamingoCode"      font-family-list)))
+       (consolas        (car (member "Consolas"         font-family-list)))
+       (courier         (car (member "Courier 10 Pitch" font-family-list)))
+       (cousine         (car (member "Cousine"          font-family-list)))
+       (deja-vu         (car (member "DejaVu Sans Mono" font-family-list)))
+       (fantasque       (car (member "Fantasque"        font-family-list)))
+       (hack            (car (member "Hack"             font-family-list)))
+       (source-code-pro (car (member "Source Code Pro"  font-family-list)))
+
+       (font-family (or hack deja-vu consolas source-code-pro cousine camingo fantasque courier))
 
        ;; named color definitions
 

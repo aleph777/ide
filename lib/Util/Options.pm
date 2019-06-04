@@ -1,6 +1,6 @@
 # Util::Options --- Provides heavy-duty (legacy) command line option handling -*-Perl-*-
 
-#         Copyright © 2000-2018 Tom Fontaine
+#         Copyright © 2000-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   24-Feb-2000

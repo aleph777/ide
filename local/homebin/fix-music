@@ -1,0 +1,531 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use MP3::Tag;
+use MP3::Info;
+use strict;
+use v5.18;
+
+use constant LATIN_SMALL_LETTER_E_WITH_ACUTE => chr(233);
+use constant ACUTE_ACCENT                    => chr(180);
+
+use constant MICHAEL_BUBLE => join '','Michael Bubl',LATIN_SMALL_LETTER_E_WITH_ACUTE;
+
+use constant N_EXISTE_PAS_KEY   => join '','N',ACUTE_ACCENT,'existe pas';
+use constant N_EXISTE_PAS_VALUE => join '','N',ACUTE_ACCENT,'existe Pas';
+
+my $nep_key = N_EXISTE_PAS_KEY;
+
+my %artist2 = ('Dr Demento'               => {'I Want To Kiss Her But She Wont Let Me' => 'Tim Cavanagh'},
+               'Eric Burden'              => {'Spill The Wine'         => 'War',},
+               'John Lee Hooker'          => {'Suzie Q'                => 'John Lee Hooker with Johnny Winter',
+                                              'Chill Out'              => 'John Lee Hooker with Carlos Santana',
+                                              'Boom Boom'              => 'John Lee Hooker with Jimmy Vaughan',},
+               'Sly & The Family Stone'   => {'Walking On The Sun'     => 'Smashmouth'},
+               'Soundtracks'              => {'Mary Had A Little Lamb (Extended)' => 'Stevie Ray Vaughan And Double Trouble'},
+               'Stevie Ray Vaughan'       => {'Superstition'           => 'Stevie Ray Vaughan & Stevie Wonder'},
+               'The Allman Brothers Band' => {q(I'm No Angel)          => 'Greg Allman',},
+               'The Allman Animals'       => {'Gloria'                 => 'Them',},
+               'The Specials'             => {'Mirror In The Bathroom' => 'The English Beat',},
+              );
+
+my %artist = (q/Albert King, John Lee Hooker/        => q/BB King & John Lee Hooker/,
+              q/Allman Brothers Band/                => q/The Allman Brothers Band/,
+              q/Angel City/                          => q/The Angels/,
+              q/Animals/                             => q/The Animals/,
+              q/Apollo Four Fourty/                  => q/Apollo 440/,
+              q/B-52's/                              => q/The B-52's/,
+              q/BTO/                                 => q/Bachman–Turner Overdrive/,
+              q/Bachman Turner Overdrive/            => q/Bachman–Turner Overdrive/,
+              q/Band, The Jim Carroll/               => q/The Jim Carroll Band/,
+              q/Beatles/                             => q/The Beatles/,
+              q/beatles/                             => q/The Beatles/,
+              q/Blues Brothers/                      => q/John Lee Hooker/,
+              q/Brian Setzer/                        => q/Brian Setzer Orchestra/,
+              q/Bryan Ferry And Roxy Music/          => q/Roxy Music/,
+              q/CCR/                                 => q/Creedence Clearwater Revival/,
+              q/Call/                                => q/The Call/,
+              q/Cars/                                => q/The Cars/,
+              q/Ccr/                                 => q/Creedence Clearwater Revival/,
+              q/Champion [Resistance]/               => q/Champion/,
+              q/Chris Issak/                         => q/Chris Isaak/,
+              q/Crosby, Stills, & Nash/              => q/Crosby, Stills & Nash/,
+              q/DIO/                                 => q/Dio/,
+              q/Derek and the Dominos/               => q/Derek And The Dominos/,
+              q/Dire Straights/                      => q/Dire Straits/,
+              q/Dire Straits, Eric Clapton/          => q/Dire Straits & Eric Clapton/,
+              q/Doobie Brothers/                     => q/The Doobie Brothers/,
+              q/Doors/                               => q/The Doors/,
+              q/Edgar Winter/                        => q/The Edgar Winter Group/,
+              q/Edgar Winter Group/                  => q/The Edgar Winter Group/,
+              q/Elton John /                         => q/Elton John/,
+              q/Emerson Lake and Palmer/             => q/Emerson, Lake & Palmer/,
+              q/Emerson Lake And Palmer/             => q/Emerson, Lake & Palmer/,
+              q/Emerson Lake, And Palmer/            => q/Emerson, Lake & Palmer/,
+              q/Emerson, Lake, and Palmer/           => q/Emerson, Lake & Palmer/,
+              q/Emerson, Lake, And Palmer/           => q/Emerson, Lake & Palmer/,
+              q/English Beat/                        => q/The English Beat/,
+              q/Eric Burden & The Animals/           => q/The Animals/,
+              q/Eric Burden & War/                   => q/War/,
+              q/Eric Burdon and The Animals/         => q/The Animals/,
+              q/Eric Burdon & War/                   => q/War/,
+              q/Eric Clapton and Steve Winwood/      => q/Eric Clapton & Steve Winwood/,
+              q/Flock Of Seagulls/                   => q/A Flock Of Seagulls/,
+              q/Foreigner-/                          => q/Foreigner/,
+              q/George Thoroughgood/                 => q/George Thorogood/,
+              q/Golden Earing/                       => q/Golden Earring/,
+              q/Greatful Dead/                       => q/Grateful Dead/,
+              q/greatful dead/                       => q/Grateful Dead/,
+              q/Greg Kihn Band/                      => q/The Greg Kihn Band/,
+              q/Guns N Roses/                        => q/Guns N' Roses/,
+              q/Headboys/                            => q/The Headboys/,
+              q/Hooters/                             => q/The Hooters/,
+              q/J Geils Band/                        => q/The J. Geils Band/,
+              q/J. Geils Band/                       => q/The J. Geils Band/,
+              q/Jane Pow/                            => q/Johnathan Richman And The Modern Lovers/,
+              q/Jeff Healy Band/                     => q/The Jeff Healey Band/,
+              q(Jefferson Airplane/Starship)         => q/Jefferson Starship/,
+              q/Jim Carroll Band/                    => q/The Jim Carroll Band/,
+              q/John Lee Hooker & Jim Morrison/      => q/Jim Morrison & John Lee Hooker/,
+              q/John Lee Hooker & Stevie Ray Vaughn/ => q/John Lee Hooker with Jimmy Vaughn/,
+              q/ Kansas-/                            => q/Kansas/,
+              q/Led Zepplin/                         => q/Led Zeppelin/,
+              q/Lemonheads/                          => q/The Lemonheads/,
+              q/Living Color/                        => q/Living Colour/,
+              q/Lynyrd Skynyrd-/                     => q/Lynyrd Skynyrd/,
+              q/Marianne Faithful/                   => q/Marianne Faithfull/,
+              q/Marshall Tucker Band/                => q/The Marshall Tucker Band/,
+              q/meat loaf/                           => q/Meat Loaf/,
+              q/Men at work/                         => q/Men At Work/,
+              q/Michael Buble/                       => MICHAEL_BUBLE,
+              q/Moody Blues/                         => q/The Moody Blues/,
+              q/Moody Blues - Ride My See-Saw/       => q/The Moody Blues/,
+              q/Mumford And Sons/                    => q/Mumford & Sons/,
+              q/Neil Young Greatest Hits/            => q/Neil Young/,
+              q/Peter Gabriel (1982)/                => q/Peter Gabriel/,
+              q/REM/                                 => q/R.E.M./,
+              q/Rembrandts/                          => q/The Rembrandts/,
+              q/Rolling Stones/                      => q/The Rolling Stones/,
+              q/Ronnie James Dio/                    => q/Dio/,
+              q/Siouxsie And The Banshees/           => q/Siouxie & The Banshees/,
+              q/Sly and the Family Stone/            => q/Sly & The Family Stone/,
+              q/Sly And The Family Stone/            => q/Sly & The Family Stone/,
+              q/Smithereens/                         => q/The Smithereens/,
+              q/Steve Winwood and Eric Clapton/      => q/Steve Winwood & Eric Clapton/,
+              q/Stevens and Grdnic/                  => q/Stevens & Grdnic/,
+              q/Stevie Ray Vaughan/                  => q/Stevie Ray Vaughan And Double Trouble/,
+              q/Stevie Ray Vaughan & Double Tr/      => q/Stevie Ray Vaughan And Double Trouble/,
+              q/Stevie Ray Vaughan & Double ../      => q/Stevie Ray Vaughan And Double Trouble/,
+              q/Stevie Ray Vaughan and Double/       => q/Stevie Ray Vaughan And Double Trouble/,
+              q/Stevie Ray Vaughan and Doubl../      => q/Stevie Ray Vaughan And Double Trouble/,
+              q/Temptations/                         => q/The Temptations/,
+              q/The Builders and the Butchers/       => q/The Builders & The Butchers/,
+              q/the who/                             => q/The Who/,
+              q/Undisputed Truth/                    => q/The Undisputed Truth/,
+              q/Wall of Voodoo/                      => q/Wall Of Voodoo/,
+              q/Walter Egan and Stevie Nicks/        => q/Walter Egan & Stevie Nicks/,
+              q/Yardbirds/                           => q/The Yardbirds/,
+              q/Zombies/                             => q/The Zombies/,
+             );
+
+my %title = (q/1 Bourbon, 1 Scotch, 1 Beer/                         => q/One Bourbon, One Scotch, One Beer/,
+             q/1. The Magnificent Seven/                            => q/The Magnificent Seven/,
+             q/867-5309/                                            => q/867-5309 (Jenny)/,
+             q/After midnight/                                      => q/After Midnight/,
+             q/Ah Leah/                                             => q/Ah! Leah!/,
+             q/All Along The Watchtower_/                           => q/All Along The Watchtower/,
+             q/All Along The Watchtower (live/                      => q/All Along The Watchtower/,
+             q/All Along The Watch Tower/                           => q/All Along The Watchtower/,
+             q/America - Horse With No Name/                        => q/Horse With No Name/,
+             q/Any World/                                           => q/Any World (That I'm Welcome To)/,
+             q/Any World ( That I'm Welcome T/                      => q/Any World (That I'm Welcome To)/,
+             q/Are We A Rock Band Or What/                          => q/Are We a Rock Band or What.../,
+             q/Are we a rock band or what..?/                       => q/Are We a Rock Band or What...?/,
+             q/Back Door Man/                                       => q/Backdoor Man/,
+             q/Battle Of Evermore/                                  => q/The Battle Of Evermore/,
+             q/Behind Blue Eyes (acoustic)/                         => q/Behind Blue Eyes (Acoustic)/,
+             q/Boom Boom - With Jimmie Vaugha/                      => q/Boom Boom/,
+             q/Bungalow Bill/                                       => q/The Continuing Story of Bungalow Bill/,
+             q/Can_t Find My Way Home/                              => q/Can't Find My Way Home/,
+             q/Cant You See/                                        => q/Can't You See/,
+             q/Cat People/                                          => q/Cat People (Putting Out Fire)/,
+             q/Catch Me Now I'm Falling (Extended)/                 => q/Catch Me Now I'm Falling (Original)/,
+             q/Chill Out - With Carlos Santan/                      => q/Chill Out/,
+             q/Clash - London Calling/                              => q/London Calling/,
+             q/ Cold As Ice/                                        => q/Cold As Ice/,
+             q/Daddy Don't Live In That/                            => q/Daddy Don't Live in That New York City No More/,
+             q/Dady Don't Live In That/                             => q/Daddy Don't Live in That New York City No More/,
+             q/Dr. Demento - I Want To Kiss H/                      => q/I Want To Kiss Her But She Wont Let Me/,
+             q/East St Louis Toodle-oo/                             => q/East St. Louis Toodle-oo/,
+             q/End, The/                                            => q/The End/,
+             q/Eric Clapton - Badge/                                => q/Badge/,
+             q/Escape to beyond the planet of/                      => q/Escape To Beyond The Planet Of The Super Ape/,
+             q/Film Me And Finish Me Off/                           => q/Film Me & Finish Me Off/,
+             q/For What Its Worth/                                  => q/For What It's Worth/,
+             q/Funeral For A Friend Love Lies Bleeding/             => q/Funeral For A Friend-Love Lies Bleeding/,
+             q/Get Started Start A Fire/                            => q/Get Started. Start A Fire/,
+             q/Good Morning, Good Morning/                          => q/Good Morning Good Morning/,
+             q/Gods Gonna Cut You Down/                             => q/God's Gonna Cut You Down/,
+             q/Gloria G-L-O-R-I-A/                                  => q/Gloria/,
+             q/Green Grass and High Tides/                          => q/Green Grass & High Tides/,
+             q/Have You Ever Seen The Rain/                         => q/Have You Ever Seen The Rain?/,
+             q/I'm Just A Singer/                                   => q/I'm Just A Singer (In A Rock And Roll Band)/,
+             q/I_ll Be There For You/                               => q/I'll Be There For You/,
+             q/Intro/                                               => q/Houseparty/,
+             q/Its Not A Toomah/                                    => q/It's Not A Toomah/,
+             q/Ive Seen all Good People/                            => q/I've Seen all Good People/,
+             q/Joes Garage/                                         => q/Joe's Garage/,
+             q/Let The bodies hit the floor!/                       => q/Bodies/,
+             q/Let The Bodies Hit The Floor/                        => q/Bodies/,
+             q/Little By Little (extended)/                         => q/Little By Little (Extended)/,
+             q/London's Calling/                                    => q/London Calling/,
+             q/Love Reign Over Me/                                  => q/Love, Reign O'er Me/,
+             q/Low Spark of High Heeled Boys/                       => q/The Low Spark of High Heeled Boys/,
+             q/Low Spark of The High-Heeled B/                      => q/The Low Spark of High Heeled Boys/,
+             q/Low Spark Of The High-Heeled Boys/                   => q/The Low Spark of High Heeled Boys/,
+             q/Magical Mystery Tour - Strawbe/                      => q/Strawberry Fields Forever/,
+             q/Mama Told Me/                                        => q/Mama Told Me Not to Come/,
+             q/N Existe Pas/                                        => N_EXISTE_PAS_VALUE,
+             $nep_key                                               => N_EXISTE_PAS_VALUE,
+             q/One Bourbon, One Scotch,.../                         => q/One Bourbon, One Scotch, One Beer/,
+             q/One Bourbon, One Scotch, One Bee/                    => q/One Bourbon, One Scotch, One Beer/,
+             q/Paint It Black (Live, 1970) HD/                      => q/Paint It Black (Live)/,
+             q/Poke Salad Annie/                                    => q/Polk Salad Annie/,
+             q/Road House Blues/                                    => q/Roadhouse Blues/,
+             q/Roadhouse Blues (Live)/                              => q/Roadhouse Blues (Live - Rare)/,
+             q/Rock And Roll Hoochie Koo/                           => q/Rock and Roll, Hoochie Koo/,
+             q/Rocket Man (I Think Its Going/                       => q/Rocket Man/,
+             q/Rollin On A River/                                   => q/Proud Mary/,
+             q=Rumble / Spirit Of America=                          => q/Rumble - Spirit Of America/,
+             q/Santana - Europa/                                    => q/Europa/,
+             q/Santana - No One to Depend On/                       => q/No One to Depend On/,
+             q/Sgt Pepper`s Lonely Hearts Club Band/                => q/Sgt. Pepper's Lonely Hearts Club Band/,
+             q/Shelter form the Storm/                              => q/Shelter From The Storm/,
+             q/Skating Away/                                        => q/Skating Away on the Thin Ice of the New Day/,
+             q/Skating Away .../                                    => q/Skating Away on the Thin Ice of the New Day/,
+             q/Slipping Into Darkness/                              => q/Slippin' Into Darkness/,
+             q/Smash Mouth - Do It Again ( St/                      => q/Do It Again/,
+             q/Smiling Faces/                                       => q/Smiling Faces Sometimes/,
+             q/Smiling Faces Sometimes (Futur/                      => q/Smiling Faces Sometimes/,
+             q/Soul Sacrifice 1969 _Woodstock_ Live Video HQ/       => q/Soul Sacrifice (Woodstock Live)/,
+             q/Stevie Ray Vaughan - Mary Had/                       => q/Mary Had A Little Lamb/,
+             q/Still You Turn Me On/                                => q/Still...You Turn Me On/,
+             q/Stuck In the Middle With You/                        => q/Stuck In The Middle With You/,
+             q/Stuck in the Middle With You/                        => q/Stuck In The Middle With You/,
+             q/Stuck in the Middle with You [/                      => q/Stuck In The Middle With You/,
+             q=Superstition w/ Stevie Wonder=                       => q/Superstition/,
+             q/Susie Q (Johnny Winter)/                             => q/Suzie Q/,
+             q/Take Me To The River (Remastered LP Version )/       => q/Take Me To The River (Remastered LP Version)/,
+             q/Take The Red Pill, Take The Blue Pill (Techno Remix/ => q/Take The Red Pill, Take The Blue Pill/,
+             q/The Beatles (1967) - Sgt. Pepp/                      => q/Good Morning Good Morning/,
+             q/The Cult - Here Comes The Rain/                      => q/Here Comes The Rain/,
+             q/The Regulator HQ (The Walking Dead OST)/             => q/The Regulator (The Walking Dead OST)/,
+             q/Thick as a Brick/                                    => q/Thick As A Brick/,
+             q/This Is The Picture (Exellent/                       => q/This Is The Picture (Excellent/,
+             q/This Is The Picture (Exellent Birds)/                => q/This Is The Picture (Excellent Birds)/,
+             q/Tin Pan Alley/                                       => q/Tin Pan Alley (aka Roughest Place in Town)/,
+             q/Tin Pan Alley (aka Roughest ../                      => q/Tin Pan Alley (aka Roughest Place in Town)/,
+             q/to the one i love/                                   => q/The One I Love/,
+             q/Tomorrows Girls/                                     => q/Tomorrow's Girls/,
+             q/Traffic - Feelin' Alright/                           => q/Feelin' Alright/,
+             q/Traffic - Glad/                                      => q/Glad/,
+             q/US Blues/                                            => q/U.S. Blues/,
+             q/Voodoo Child (Slight Return)../                      => q/Voodoo Child (Slight Return)/,
+             q/War - All Day Music/                                 => q/All Day Music/,
+             q/War - Gypsy Man/                                     => q/Gypsy Man/,
+             q/Welcome Back My Friends/                             => q/Karn Evil 9/,
+             q/Won&amp;apos;t Get Fooled Agai/                      => q/Won't Get Fooled Again/,
+             q/Who Do You Love/                                     => q/Who Do You Love?/,
+            );
+
+my %title2 = (q/I Wanna Fall in Love/ => {'Chris Isaak'                             => q/Wicked Game/,},
+              'Track 9'               => {'Johnathan Richman And The Modern Lovers' => 'Roadrunner',},
+             );
+
+my %title3 = (q/5:15/                                   => 1,
+              q/Ain't Nobody's Business But My/         => 1,
+              q/After Midnight (Extended)/              => 1,
+              q/All Day Music (Long)/                   => 1,
+              q/Altamont Super-Highway Revisit/         => q/Altamont Super-Highway Revisited/,
+              q/Beautiful Day (Live)/                   => 1,
+              q/Brooklyn (Owes the Charmer Und/         => 1,
+              q/Carrera Rapida (Theme From Rap/         => q/Carrera Rapida (Theme From Rapid Racer)/,
+              q/Catch Me Now I'm Falling [Orig/         => 1,
+              q/Does Anybody Really Know What/          => 1,
+              q/Don't Worry About The Governme/         => 1,
+              q/Everybody's Got Something to H/         => 1,
+              q/Europa (Earth's Cry Heavens Sm/         => q/Europa (Earth's Cry Heavens Smile)/,
+              q/Gypsy Man (Live)/                       => 1,
+              q/I Heard It Through The Grapevi/         => 1,
+              q/I Still Haven't Found What I'm/         => 1,
+              q/I'm Just A Singer (In A Rock A/         => q/I'm Just A Singer (In A Rock And Roll Band)/,
+              q/In Memory Of Elizabeth Reed (Extended)/ => 1,
+              q/In Memory Of Elizabeth Reed (Live)/     => 1,
+              q/In The Court of The Crimson Ki/         => 1,
+              q/Is She Really Going Out With H/         => 1,
+              q/Lily, Rosemary And The Jack Of/         => q/Lily, Rosemary And The Jack Of Hearts/,
+              q/Living Loving Maid (She's Just/         => 1,
+              q/Mary Had A Little Lamb (Extended)/      => 1,
+              q/Midnight Rider (Extended)/              => 1,
+              q/No One To Depend On (1998)/             => 1,
+              q/One Way Out (Fillmore)/                 => 1,
+              q/paradise by the dashboard ligh/         => q/Paradise By The Dashboard Lig/,
+              q/Psycho Killer (Live)/                   => 1,
+              q/Rio (Extended)/                         => 1,
+              q/Saturday Night's Alright For F/         => 1,
+              q/She Sells Sanctuary (Long Version)/     => 1,
+              q/Solsbury Hill (Live)/                   => 1,
+              q/Soul Makossa (Original long Ve/         => q/Soul Makossa (Original Long Ve/,
+              q/Take Me To The River (Remaster/         => 1,
+              q/The Continuing Story of Bungal/         => 1,
+              q/The Future's What It Used To B/         => 1,
+              q/Thick As A Brick (Extended)/            => 1,
+              q/Time Out Of Mind (With Steely/          => 1,
+              q/Uncle Albert-Admiral Halsey/            => 1,
+              q/We Do What We're Told (Milgram/         => 1,
+              q/What Is And What Should Never/          => 1,
+              q/With A Little Help From My Fri/         => 1,
+              q/Won't Get Fooled Again (Solo Acoustic)/ => 1,
+              q/You Can't Get What You Want (T/         => 1,
+              q=Funeral for a Friend/Love Lies=         => 1,
+             );
+
+for(@ARGV)
+{
+  my $mp3 = MP3::Tag->new($_);
+  my $r   = $mp3->autoinfo();
+  my $fn  = basename($_,'.mp3');
+
+  $mp3->get_tags;
+
+  if(exists $mp3->{ID3v1})
+  {
+    say $fn,': V1 TAG';
+
+    ProcessV1($mp3->{ID3v1},$fn);
+  }
+  else
+  {
+    say $fn,': NO TAG';
+    say $r->{artist};
+    say $r->{title};
+  }
+  $mp3->close();
+}
+
+sub ProcessV1Artist
+{
+  my ($fn,$tagArtist,$tagTitle,$artist,$title) = @_;
+
+  say "\t",'ARTIST:',join '|',
+    $tagArtist,exists $artist{$tagArtist} ? $artist{$tagArtist} : '---',
+    $artist,   exists $artist{$artist}    ? $artist{$artist}    : '---';
+
+  if(exists $artist{$tagArtist} && exists $artist{$artist})
+  {
+    if($artist{$tagArtist} eq $artist{$artist})
+    {
+      say "\t",'BOTH: FN ARTIST  => ',$artist{$artist};
+      say "\t",'BOTH: TAG ARTIST => ',$artist{$artist};
+    }
+    else
+    {
+      say STDERR 'TAG > 30';
+      say STDERR $fn;
+      say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$tagArtist;
+      say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$artist;
+      die join '|',
+        $tagArtist,exists $artist{$tagArtist} ? $artist{$tagArtist} : '---',
+        $artist,     exists $artist{$artist}      ? $artist{$artist}      : '---';
+    }
+  }
+  elsif(exists $artist{$artist} && $tagArtist eq $artist{$artist})
+  {
+    say "\t",'FROM TAG: FN ARTIST => ',$tagArtist;
+  }
+  elsif(exists $artist{$tagArtist} && $artist eq $artist{$tagArtist})
+  {
+    say "\t",'FROM FN: TAG ARTIST => ',$artist;
+  }
+  elsif($tagArtist eq '')
+  {
+    say "\t",'NO TAG: TAG ARTIST => ',exists $artist{$artist} ? $artist{$artist} : $artist;
+  }
+  elsif($tagArtist eq 'Various Artists')
+  {
+    say "\t",'VARIOUS: TAG ARTIST => ',exists $artist{$artist} ? $artist{$artist} : $artist;
+  }
+  elsif(exists $artist2{$tagArtist}{$title})
+  {
+    say "\t",'OVERRIDE: TAG ARTIST => ',$artist2{$tagArtist}{$title};
+  }
+  elsif($artist eq getClean($tagArtist))
+  {
+    say "\t",'CLEAN: TAG ARTIST => ',$artist;
+  }
+  elsif($tagArtist eq getClean($artist))
+  {
+    say "\t",'CLEAN: FN ARTIST => ',$tagArtist;
+  }
+  else
+  {
+    say STDERR $fn;
+    say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$tagArtist;
+    say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$artist;
+    die join '|',
+      $tagArtist,exists $artist{$tagArtist} ? $artist{$tagArtist} : '---',
+      $artist,     exists $artist{$artist}      ? $artist{$artist}      : '---';
+  }
+}
+
+sub ProcessV1Title
+{
+  my ($fn,$tagArtist,$tagTitle,$artist,$title) = @_;
+
+  say "\t",'TITLE:',join '|',
+    $tagTitle,exists $title{$tagTitle} ? $title{$tagTitle} : '---',
+    $title,   exists $title{$title}    ? $title{$title}    : '---';
+
+  if(exists $title{$tagTitle} && exists $title{$title})
+  {
+    if($title{$tagTitle} eq $title{$title})
+    {
+      say "\t",'BOTH: FN TITLE  => ',$title{$title};
+      say "\t",'BOTH: TAG TITLE => ',$title{$title};
+    }
+    elsif(eqsub($title{$tagTitle},$title{$title}))
+    {
+      say "\t",'BOTH (TAG > 30): FN TITLE  => ',$title{$title};
+      say "\t",'BOTH (TAG > 30): TAG TITLE => ',$title{$tagTitle};
+    }
+    elsif(substr($title{$tagTitle},-1) eq '?' && substr($title{$tagTitle},0,length($title{$tagTitle})-1) eq $title{$title})
+    {
+      say "\t",q/BOTH (TAG[-1] eq '?'): FN TITLE  => /,$title{$title};
+      say "\t",q/BOTH (TAG[-1] eq '?'): TAG TITLE => /,$title{$tagTitle};
+    }
+    else
+    {
+      say STDERR 'TAG > 30';
+      say STDERR $fn;
+      #say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$tagTitle;
+      #say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$title;
+      die join '|',
+        $tagTitle,exists $title{$tagTitle} ? $title{$tagTitle} : '---',
+        $title,   exists $title{$title}    ? $title{$title}    : '---';
+    }
+  }
+  elsif(exists $title{$title} && $tagTitle eq $title{$title})
+  {
+    say "\t",'FROM TAG: FN TITLE => ',$tagTitle;
+  }
+  elsif(exists $title{$tagTitle} && $title eq $title{$tagTitle})
+  {
+    say "\t",'FROM FN: TAG TITLE => ',$title;
+  }
+  elsif($tagTitle eq '')
+  {
+    say "\t",'NO TAG: TAG TITLE => ',exists $title{$title} ? $title{$title} : $title;
+  }
+  elsif(exists $title3{$title} && exists $title{$tagTitle})
+  {
+    say "\t",'IGNORE FN, USE CORRECTED TAG: TAG TITLE => ',$title{$tagTitle};
+  }
+  # elsif(exists $title{$title} && exists $title3{$tagTitle} && ($title3{$tagTitle} eq $title{$title}))
+  # {
+  #   say "\t",'6: FN TITLE => ',$title{$title};
+  # }
+  elsif(exists $title3{$title} || exists $title3{$tagTitle})
+  {
+    say "\t",'IGNORE: NO CHANGE';
+  }
+  elsif(exists $title2{$tagTitle}{$artist})
+  {
+    say 'OVERRIDE INCORRECT DATA: TAG TITLE => ',$title2{$tagTitle}{$artist};
+  }
+  elsif($tagTitle =~ /\d{3} - /)
+  {
+    say 'NUMBERED TAG: TAG TITLE => ',exists $title{$title} ? $title{$title} : $title;
+  }
+  elsif($title eq getClean($tagTitle))
+  {
+    say "\t",'CLEAN: TAG TITLE => ',$title;
+  }
+  elsif($tagTitle eq getClean($title))
+  {
+    say "\t",'CLEAN: FN TITLE => ',$tagTitle;
+  }
+  else
+  {
+    say STDERR $fn;say getClean($tagTitle);
+    #say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$tagTitle;
+    #say STDERR join '|',map { join ',',$_, sprintf '%X',ord $_ } split //,$title;
+    die join '|',
+      $tagTitle,exists $title{$tagTitle} ? $title{$tagTitle} : '---',
+      $title,     exists $title{$title}      ? $title{$title}      : '---';
+  }
+}
+
+sub ProcessV1
+{
+  my ($tag,$fn) = @_;
+
+  my ($artist,$title) = split / - /,$fn,2;
+
+  ProcessV1Artist($fn,$tag->artist,$tag->title,$artist,$title) if $tag->artist ne $artist;
+  ProcessV1Title($fn,$tag->artist,$tag->title,$artist,$title)  if $tag->title  ne $title;
+}
+
+sub eqsub
+{
+  my ($tag,$string) = @_;
+
+  return length $tag == 30 ? $tag eq substr($string,0,30) : $tag eq substr($string,0,29);
+}
+
+sub getClean
+{
+  my $text = shift;
+
+  return join ' ',map { ucfirst(lc $_) } split " +",$text;
+}
+
+#sub Show
+# {
+#   my $mp3 = shift;
+#   # get a list of frames as a hash reference
+#   my $frames = $mp3->{ID3v2}->get_frame_ids();
+
+#   # iterate over the hash
+#   # process each frame
+#   foreach my $frame (keys %$frames)
+#   {
+#     # for each frame
+#     # get a key-value pair of content-description
+#     my ($value, $desc) = $mp3->{ID3v2}->get_frame($frame);
+#     print "$frame $desc: ";
+#     # sometimes the value is itself a hash reference containing more values
+#     # deal with that here
+#     if (ref $value)
+#     {
+#       while (my ($k, $v) = each (%$value))
+#       {
+#         print "\n     - $k: $v";
+#       }
+#       print "\n";
+#     }
+#     else
+#     {
+#       print "$value\n";
+#     }
+#   }
+# }
+
+# if (exists $mp3->{ID3v1})
+# {
+#   print "Filename: $filename\n";
+#   print "Artist: " . $mp3->{ID3v1}->artist . "\n";
+#   print "Title: " . $mp3->{ID3v1}->title . "\n";
+#   print "Album: " . $mp3->{ID3v1}->album . "\n";
+#   print "Year: " . $mp3->{ID3v1}->year . "\n";
+#   print "Genre: " . $mp3->{ID3v1}->genre . "\n";
+# }

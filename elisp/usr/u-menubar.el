@@ -1,6 +1,6 @@
 ;;; u-menubar.el --- Custom menubar support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2018 Tom Fontaine
+;;         Copyright © 1999-2019 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -116,6 +116,7 @@
     ))
 
 (easy-menu-define view-menu   global-map "View"   u-view-menu)
+(easy-menu-define blah-menu   global-map "lllllllllllll"     u-view-menu)
 (easy-menu-define search-menu global-map "Search" u-search-menu)
 
 (easy-menu-define edit-menu global-map "Edit" u-edit-menu)

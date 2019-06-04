@@ -1,12 +1,10 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
-
-#              Copyright © 2008-2017 Tom Fontaine
-
-# Title:       make-ide-archive
-# Author:      Tom Fontaine
-# Date:        15-May-2008
-# Time-stamp: <18-Jan-2017 18:17:26 EST, modified by Tom Fontaine>
 #
+#         Copyright © 2019 Tom Fontaine
+#
+# Title:  check-minimum-version
+# Author: Tom Fontaine
+# Date:   05-May-2019
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -30,42 +28,46 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
+# Purpose:   Takes Perl source code and calculates the minimum version
+#            of perl required to be able to run it.
 #
-# Purpose:   Creates a gz-compressed tar archive of the ide.
+# Arguments: $1 is file 1 to check
+#            .
+#            .
+#            .
+#            $N is file N to check
 #
-# Arguments: None
+# Revision:
 #
-# Revision:  25-Mar-2015 "use strict"
-#            03-Apr-2015 Major overhaul
-#            01-Jun-2015 "use DateTime"
-#            01-Mar-2016 Changed elisp package handling to filter git data and obsolete dirs
-#
+use File::IO;
 use DateTime;
-use File::Path qw(make_path);
 use strict;
+use v5.10;
 
-use constant _ME_ => $0 =~ m=([^/]+)$=;
+my $dt = DateTime->now;
 
-if(@ARGV && $ARGV[0] eq '-help')
+my $year = $dt->year;
+
+for(grep { -e } @ARGV)
 {
-  print "\nUsage: ",_ME_," [-gz]\n\n";
-  exit;
+  my $io = File::IO->new(path => $_);
+
+  $io->get();
+
+  say '===== ',$_;
+
+  for(grep /^(?:;;|#) +Copyright /,@{$io->contents})
+  {
+    if(/^((?:;;|#) +Copyright .+ (?:\d{4}-))(\d{4}) /)
+    {
+      s/$2/$year/o;
+    }
+    elsif(my ($c) = /^(?:;;|#) +Copyright .+ (\d{4}) /)
+    {
+      s/$c/$c-$year/;
+    }
+    say $_;
+    last;
+  }
+  $io->put();
 }
-my @files = qw(.bashrc .emacs .emacs.d/gtkrc .gitconfig);
-my @dirs  = qw(bin lib local);
-my @elisp = qx(pfind elisp/* -no-dir -no-name '(git|obsolete)');
-
-chomp @elisp;
-
-my ($suffix,$switches) = @ARGV && $ARGV[0] eq '-gz' ? ('tar.gz','czvf') : ('tar.xz','cJvf');
-
-my $dir = "$ENV{HOME}/Documents/ide";
-
-make_path($dir) unless -d $dir;
-
-die _ME_,": $dir does not exist!!!\n"     unless -e $dir;
-die _ME_,": $dir is not a directory!!!\n" unless -d $dir;
-
-my $file = join '.',"$dir/ide",DateTime->now(time_zone => 'local')->strftime('%Y%m%d_%H%M%S'),$suffix;
-
-system "purge @dirs;tar $switches $file @files @dirs @elisp";

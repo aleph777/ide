@@ -1,6 +1,6 @@
 ;;; u-bookmarks.el --- Bookmark menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2017-2018 Tom Fontaine
+;;         Copyright © 2017-2019 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   14-Jan-2017
@@ -30,6 +30,7 @@
 ;;; Commentary:
 
 ;; Revision: 09-Nov-2017 added ‘bm-save’ to ‘u-bookmarks-menu’
+;;           06-May-2019 replaced ‘bm-save’ with ‘bm-buffer-save’
 ;;
 
 ;;; Code:
@@ -41,7 +42,7 @@
 
 (defvar u-bookmarks-menu
   '("Bookmarks"
-    ["Save Bookmarks"    bm-save t]
+    ["Save Bookmarks"    bm-buffer-savebm-save t]
     ["Toggle Bookmark"   bm-toggle            :enable (is-not-shell?)]
     ["Bookmark Function" bm-bookmark-defun    :enable (is-not-shell?)]
     ["Annotate Bookmark" bm-bookmark-annotate :enable (is-bookmark?)]

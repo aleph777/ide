@@ -1,6 +1,6 @@
 # Math::Cards --- Implements a deck of playing cards object -*-Perl-*-
 
-#         Copyright © 2008-2018 Tom Fontaine
+#         Copyright © 2008-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   18-May-2008

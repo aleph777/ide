@@ -1,0 +1,34 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use File::Basename;
+use File::Copy;
+use strict;
+
+die "No directory specified!!!\n"      unless @ARGV;
+die "$ARGV[0] does not exist!!\n"      unless -e $ARGV[0];
+die "$ARGV[0] is not a directory!!!\n" unless -d $ARGV[0];
+
+my $dir = shift @ARGV;
+
+$dir =~ s=/$==;
+
+chdir $dir;
+
+for(glob "*.mp3")
+{
+  my $old = $_;
+
+  s/^(?:\d{4}-)?//;
+
+  rename $old,$_;
+}
+for(glob "/MyBook/Audio/Soundfly/*.mp3")
+{
+  my $base = basename($_);
+
+  next if -e $base;
+
+  print "$_ => $base\n";
+
+  copy($_,$base) or die "Copy failed: $!";
+}

@@ -1,6 +1,6 @@
 # File::FindWrapper --- Provides a ‘find’ object -*-Perl-*-
 
-#         Copyright © 2000-2018 Tom Fontaine
+#         Copyright © 2000-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   28-Jun-2000
@@ -70,6 +70,8 @@ my @switches = qw(read-effective    no-read-effective
                   sticky            no-sticky
                   text              no-text
                   bin               no-bin
+
+                  sort
 
                   OR
                  );
@@ -392,6 +394,8 @@ sub get
       @{$contents} = grep { -C $_ <  $option->{'inode-lt'} } @{$contents} if exists $option->{'inode-lt'};
       @{$contents} = grep { -C $_ >= $option->{'inode-ge'} } @{$contents} if exists $option->{'inode-ge'};
       @{$contents} = grep { -C $_ <= $option->{'inode-le'} } @{$contents} if exists $option->{'inode-le'};
+
+      @{$contents} = sort @{$contents} if exists $option->{'sort'};
     }
   }
 }

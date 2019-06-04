@@ -1,6 +1,6 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2000-2018 Tom Fontaine
+;;         Copyright © 2000-2019 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Sep-2000
@@ -157,6 +157,7 @@
 ;;           20-Jun-2018 Changed some minor-modes to use :hook
 ;;           16-Jan-2019 Added ‘clang-format’
 ;;           24-Jan-2019 Changed from ‘ycmd’ to ‘eglot’ (still need omnisharp server for C#?)
+;;           30-Apr-2019 Added ‘treemacs-magit’
 ;;
 
 ;;; Code:
@@ -485,6 +486,9 @@
     :ensure nil
     :config (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
+  (use-package projectile :defer defer-1
+    :hook (prog-mode . projectile-mode))
+
   (use-package python :commands python-mode)
 
   (use-package rainbow-delimiters :defer
@@ -580,7 +584,9 @@
     ;;       ("M-m f M-t"  . treemacs-find-tag))
     )
 
-  (use-package treemacs-projectile :commands treemacs-projectile)
+  (use-package treemacs-magit :after treemacs)
+
+  (use-package treemacs-projectile :after treemacs)
 
   (use-package u-cc :after cc-mode
     :ensure nil)
