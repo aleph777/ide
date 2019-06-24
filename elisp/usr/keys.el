@@ -104,6 +104,7 @@
 ;;                       Added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
 ;;           19-Sep-2017 Added ‘M-pause’ as ‘sdcv-search’
 ;;           16-Jan-2019 Added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
+;;           24-Jun-2019 Added ‘C-M-insert’ to insert user-full-name
 ;;
 
 ;;; Code:
@@ -188,8 +189,9 @@
 
 (global-set-key [insert]           'u-paste-clipboard)
 (global-set-key [(control insert)] 'overwrite-mode)
-(global-set-key [(meta insert)]    'insert-dd-mon-yyyy)
+(global-set-key [(meta  insert)]   'insert-dd-mon-yyyy)
 (global-set-key [(super insert)]   'insert-month-day-year)
+(global-set-key [(control super insert)] '(lambda () (interactive) (insert user-full-name)))
 
 (global-set-key [(meta \;)] 'xah-comment-dwim)
 
@@ -266,13 +268,15 @@
 
 (global-set-key [kp-divide]   'toggle-fill-paragraph-or-region)
 (global-set-key [kp-multiply] 'dabbrev-expand)
-(global-set-key [kp-subtract] 'search-word-backward)
 (global-set-key [kp-add]      'search-word-forward)
 (global-set-key [kp-enter]    'duplicate-previous)
 (global-set-key [kp-decimal]  'delete-horizontal-space)
 
-(global-set-key [(control kp-add)]      'shift-number-up)
+(global-set-key [kp-subtract]           'search-word-backward)
 (global-set-key [(control kp-subtract)] 'shift-number-down)
+(global-set-key [(super   kp-subtract)] 'toggle-char-case-at-point)
+
+(global-set-key [(control kp-add)]      'shift-number-up)
 
 (global-set-key [(meta kp-enter)] 'insert-newline-before)
 (global-set-key [(meta pause)]    'sdcv-search)
