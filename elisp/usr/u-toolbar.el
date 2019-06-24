@@ -57,6 +57,7 @@
 ;;           16-Jan-2017 Removed ‘tinysearch-search-word-*’
 ;;           26-Apr-2017 Added ‘previous-input’ and ‘next-input’
 ;;           06-May-2019 Added ‘treemacs’
+;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
 ;;
 
 ;;; Code:
@@ -98,7 +99,9 @@
 
 (tool-bar-add-item "mi-copy"  'kill-ring-save 'copy  :enable 'mark-active             :label "" :help "Copy/Copy Rectangle")
 (tool-bar-add-item "mi-paste" 'yank           'paste :enable '(enable-paste?)         :label "" :help "Paste/Paste Rectangle")
-(define-key-after (default-value 'tool-bar-map) [separator-4] menu-bar-separator)
+;; (define-key-after (default-value 'tool-bar-map) [separator-4] menu-bar-separator)
+
+(tool-bar-add-item "mi-case"  'toggle-char-case-at-point 'blancmange :label "" :help "Toggle case")
 ;;
 ;; Cursor movement
 ;;
@@ -124,7 +127,7 @@
 
 (tool-bar-add-item "mi-zoom-in"  'text-scale-increase 'zoom-in  :label "")
 (tool-bar-add-item "mi-zoom-out" 'text-scale-decrease 'zoom-out :label "")
-(tool-bar-add-item "mi-tree-1"     'treemacs             'tree      :label "" :help "Toggle treemacs")
+(tool-bar-add-item "mi-tree"     'treemacs             'tree      :label "" :help "Toggle treemacs")
 ;; (tool-bar-add-item "00-expand" 'dabbrev-expand 'expand :label "" :help  "Expand abbrev/Complete Symbol" :visible '(is-rw?))
 ;;
 ;; Comint functions

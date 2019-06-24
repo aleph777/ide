@@ -68,6 +68,7 @@
 ;;           22-Mar-2017 Added ‘cleanse-whitespace’
 ;;           13-Jun-2018 Added ‘require’ for ‘u-navigate’
 ;;                       Fixed ‘*-word-or-region’ definitions
+;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
 ;;
 
 ;;; Code:
@@ -261,25 +262,25 @@
   (comment-kill (count-lines start end)))
 
 (defun capitalize-word-or-region (beg end)
-  "Convert the word at current point or the selected region to first caps."
+  "Convert the word at current point or the selected region (BEG END) to first caps."
   (interactive "*r")
   (with-word-or-region (beg end)
     (capitalize-region beg end)))
 
 (defun downcase-word-or-region (beg end)
-  "Convert the word at current point or the selected region to lowercase."
+  "Convert the word at current point or the selected region (BEG END) to lowercase."
   (interactive "*r")
   (with-word-or-region (beg end)
     (downcase-region beg end)))
 
 (defun upcase-word-or-region (beg end)
-  "Convert the word at current point or the selected region to uppercase."
+  "Convert the word at current point or the selected region (BEG END) to uppercase."
   (interactive "*r")
   (with-word-or-region (beg end)
      (upcase-region beg end)))
 
 (defun upcase-initials-word-or-region (beg end)
-  "Convert the word at current point or the selected region to uppercase initials."
+  "Convert the word at current point or the selected region (BEG END) to uppercase initials."
   (interactive "*r")
   (with-word-or-region (beg end)
     (upcase-initials-region beg end)))
@@ -389,6 +390,19 @@
   "Insert closing \"cut here end\" snippet."
   (interactive "*")
   (insert "--8<---------------cut here---------------end--------------->8---\n"))
+
+(defun toggle-char-case-at-point ()
+  "Toggle the case of the character at point."
+  (interactive)
+  (let* ((case-fold-search nil)
+         (char-at-point    (char-after))
+         (tmp-string       (char-to-string char-at-point)))
+      (cond
+       ((string-match "^[[:lower:]]" tmp-string)
+        (upcase-region (point) (+ 1 (point))))
+       ((string-match "^[[:upper:]]" tmp-string)
+        (downcase-region (point) (+ 1(point)))))))
+
 
 ;;
 (message "Loading u-edit...done")
