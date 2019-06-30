@@ -157,6 +157,7 @@
 ;;           20-Jun-2018 Changed some minor-modes to use :hook
 ;;           16-Jan-2019 Added ‘clang-format’
 ;;           24-Jan-2019 Changed from ‘ycmd’ to ‘eglot’ (still need omnisharp server for C#?)
+;;           30-Apr-2019 Added ‘treemacs-magit’
 ;;
 
 ;;; Code:
@@ -485,7 +486,7 @@
     :ensure nil
     :config (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
-  (use-package projectile :defer
+  (use-package projectile :defer defer-1
     :hook (prog-mode . projectile-mode))
 
   (use-package python :commands python-mode)
@@ -582,6 +583,8 @@
     ;;       ("M-m f C-t"  . treemacs-find-file)
     ;;       ("M-m f M-t"  . treemacs-find-tag))
     )
+
+  (use-package treemacs-magit :after treemacs)
 
   (use-package treemacs-projectile :after treemacs)
 

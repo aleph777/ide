@@ -40,6 +40,8 @@
 ;;              04-Apr-2019 Added Cousine
 ;;                          Added CamingoCode
 ;;                          Added Fantasque
+;;              09-Jun-2019 Added Nord colors
+;;                          Added Srcsery colors
 ;;
 
 ;;; Code:
@@ -792,6 +794,23 @@
        (materialuicolors/grey        "#9e9e9e")
        (materialuicolors/blue-grey   "#607d8b")
 
+       (nord/polar-night-nord-0 "#2e3440")
+       (nord/polar-night-nord-1 "#3b4252")
+       (nord/polar-night-nord-2 "#434c5e")
+       (nord/polar-night-nord-3 "#4c566a")
+       (nord/snow-storm-nord-4  "#d8dee9")
+       (nord/snow-storm-nord-5  "#d8dee9")
+       (nord/snow-storm-nord-6  "#eceff4")
+       (nord/frost-nord-7       "#8fbcbb")
+       (nord/frost-nord-8       "#88c0d0")
+       (nord/frost-nord-9       "#81a1c1")
+       (nord/frost-nord-10      "#5e81ac")
+       (nord/aurora-nord-11     "#bf616a")
+       (nord/aurora-nord-12     "#d08770")
+       (nord/aurora-nord-13     "#ebcb8b")
+       (nord/aurora-nord-14     "#a3be8c")
+       (nord/aurora-nord-15     "#b48ead")
+
        (qualitative/blue-40    "#5392ff")
        (qualitative/aqua-20    "#71cddd")
        (qualitative/green-30   "#34bc6e")
@@ -859,6 +878,24 @@
        (solar/fg-red      "#dc322f")
        (solar/fg-violet   "#6c71c4")
        (solar/fg-yellow   "#b58900")
+
+       (srcsery/black          "#1C1B19")
+       (srcsery/red            "#EF2F27")
+       (srcsery/green          "#519F50")
+       (srcsery/yellow         "#FBB829")
+       (srcsery/blue           "#2C78BF")
+       (srcsery/magenta        "#E02C6D")
+       (srcsery/cyan           "#0AAEB3")
+       (srcsery/white          "#918175")
+       (srcsery/bright-black   "#2D2C29")
+       (srcsery/bright-red     "#F75341")
+       (srcsery/bright-green   "#98BC37")
+       (srcsery/bright-yellow  "#FED06E")
+       (srcsery/bright-blue    "#68A8E4")
+       (srcsery/bright-magenta "#FF5C8F")
+       (srcsery/bright-cyan    "#53FDE9")
+       (srcsery/bright-white   "#FCE8C3")
+
 
        (swedish/highlighter-pink     "#ef5777")
        (swedish/dark-periwinkle      "#575fcf")
