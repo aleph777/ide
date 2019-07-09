@@ -35,21 +35,21 @@
 ;;              25-Apr-2017 Added flat  colors
 ;;              19-Jun-2018 Added multiple palettes
 ;;              02-Apr-2019 Changed font-family selection method
-;;                          Added Hack and made it the default font
-;;                          Added Source Code Pro
-;;              04-Apr-2019 Added Cousine
-;;                          Added CamingoCode
-;;                          Added Fantasque
-;;              09-Jun-2019 Added Nord colors
-;;                          Added Srcsery colors
+;;                          Added ‘Hack’ and made it the default font
+;;                          Added ‘Source Code Pro’
+;;              04-Apr-2019 Added ‘Cousine’
+;;                          Added ‘CamingoCode’
+;;                          Added ‘Fantasque’
+;;              09-Jun-2019 Added ‘Nord’ colors
+;;                          Added ‘Srcsery’ colors
+;;              09-Jul-2019 Added ‘Victor’ font
 ;;
 
 ;;; Code:
 
 (message "Loading fontaine-theme...")
 
-(deftheme fontaine
-  "Shit-stained theme.")
+(deftheme fontaine)
 
 (add-to-list 'default-frame-alist '(alpha . (92 . 90)))
 
@@ -73,10 +73,11 @@
        (cousine         (car (member "Cousine"          font-family-list)))
        (deja-vu         (car (member "DejaVu Sans Mono" font-family-list)))
        (fantasque       (car (member "Fantasque"        font-family-list)))
+       (victor          (car (member "Victor"           font-family-list)))
        (hack            (car (member "Hack"             font-family-list)))
        (source-code-pro (car (member "Source Code Pro"  font-family-list)))
 
-       (font-family (or hack deja-vu consolas source-code-pro cousine camingo fantasque courier))
+       (font-family (or hack victor deja-vu consolas source-code-pro cousine camingo fantasque courier))
 
        ;; named color definitions
 
