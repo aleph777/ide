@@ -10,30 +10,40 @@ use File::IO;
 use strict;
 use v5.10;
 
-use constant POPULATION_SIZE  => 100;
+use constant POPULATION_SIZE  => 50;
 use constant MAX_ELITE        => 10;
-use constant MAX_ITERATIONS   => 2000;
+use constant MAX_ITERATIONS   => 9999999;
 use constant ENOUGH_IS_ENOUGH => 5;
 
-use constant EVAPORATION_RATE   => 0.75;
+use constant EVAPORATION_RATE   => 0.975;
+use constant INITIAL_EXPONENT   => 1;
 use constant PHEREMONE_EXPONENT => 2;
 use constant HEURISTIC_EXPONENT => 2;
 
-use constant STALE_THRESHOLD => 500;
-
-use constant MINMAX_PDF_MAX => 950;
-use constant MINMAX_DELTA   =>   5;
-use constant MINMAX_PDF_MIN =>   9;
+use constant STALE_THRESHOLD => 250;
+use constant STALE_PARTIAL   => STALE_THRESHOLD/10;
 
 use constant NEW_BEST_NO  => '  ';
 use constant NEW_BEST_YES => '😎';
-use constant WORKING_HARD => '😰 ';
 use constant CLOWN_FACE   => '🤡';
+use constant MONOCLE      => '🧐';
+use constant NEUTRAL      => '😐';
+use constant WORKING_HARD => '😰';
+use constant UNAMUSED     => '😒';
+use constant ANGUISHED    => '😧';
+use constant BANDAGES     => '🤕';
+use constant HOT          => '🥵 ';
+use constant ANGRY        => '😠';
+use constant DEAD         => '💀';
+use constant OOPS         => '🤪';
+use constant THINKING     => '🤔 ';  # NOT USED
 
 use constant TEXT_BOLD   => "\e[1m";
 use constant TEXT_NORMAL => "\e[0m";
-use constant TEXT_YELLOW => "\e[33m";
+use constant TEXT_RED    => "\e[31m";
+use constant TEXT_YELLOW => TEXT_BOLD."\e[33m";
 use constant TEXT_GREEN  => "\e[32m";
+use constant TEXT_CYAN   => "\e[36m";
 
 local $| = 1;
 
@@ -44,6 +54,7 @@ my %pheremone;
 my %heuristic;
 my %probabilityDistribution;
 my %elite;
+my %stale;
 
 my @cities;
 my @ants;
@@ -51,37 +62,57 @@ my @elite;
 my @cityIdx;
 my @nearestNeighbor;
 my @displayRoutes;
+my @metadata;
+my @stale;
 
 my $spacer;
 my $goal;
 my $newBest;
 my $elite;
-my $elitePheremoneMax;
-my $minmaxEnabled;
-my $minmaxMin;
-my $minmaxMax;
-my $enoughIsEnough;
 my $printFlag;
 my $bestLength;
+my $baseTime;
+my $iter_max;
 my $done;
 my $stale;
+my $bored;
+my $oops;
+my $metGoalIteration;
 
-my $dataFile = defined $ARGV[0] ? $ARGV[0] : 'citys1.csv';
+my $mapFile  = defined $ARGV[0] ? $ARGV[0] : 'map4';
+my $dataFile = "$mapFile.distances.csv";
 
 die "Can't find data file!!!"     unless -e $dataFile;
 die "$dataFile is a directory!!!" if     -d $dataFile;
 
-my @outKeys = (qw(TIMESTAMP LOCALTIME ELITE MINMAX MINMAX_UPPER MINMAX_LOWER ITERATION),(map { "LENGTH$_" } 0 .. 9),map { "ROUTE$_" } 0 .. 9);
+my @outKeys  = (qw(ITERATION),(map { "L$_" } 0 .. 9),map { "R$_" } 0 .. 9);
+my @metaKeys = qw(TIMESTAMP GOAL ITERATIONS POPULATION ELITE EVAPORATION_RATE INITIAL_EXPONENT HEURISTIC_EXPONENT PHEREMONE_EXPONENT STALE_THRESHOLD);
+
+@stale = ('',
+          join(': ',CLOWN_FACE,q(I was told there would be cake.)),
+          join(': ',MONOCLE,q(Nothing to see here...)),
+          join(': ',UNAMUSED,q(Been there, done that.)),
+          join(': ',NEUTRAL,q(Boring...)),
+          join(': ',ANGUISHED,q(Are we there yet?)),
+          join(': ',WORKING_HARD,q(Aww, c'mon already!)),
+          join(': ',BANDAGES,q(My feet hurt!)),
+          join(': ',ANGRY,q(Seriously?)),
+          join(': ',HOT,q(Aaargh!)),
+          join(': ',DEAD,q(Enough is enough.)),
+         );
+
+push @metadata,join ',',@metaKeys;
 
 my @lt = localtime;
 my $dt = strftime "%Y%m%d%H%M%S",@lt;
 
-my $outFile = $dataFile;
+my $outFile  = "$mapFile.$dt.output.csv";
+my $metaFile = "$mapFile.$dt.metadata.csv";
 
-$outFile =~ s/(?:\.distances)?\.csv//;
-$outFile .= ".$dt.output.csv";
+$baseTime = timelocal(@lt);
 
-my $of = File::IO->new(path => $outFile,newline  => 1,append => 1);
+my $of = File::IO->new(path => $outFile, newline  => 1,append => 1);
+my $mf = File::IO->new(path => $metaFile,newline  => 1);
 
 $of->put(contents => [join ',',@outKeys]);
 
@@ -94,22 +125,21 @@ GetDistanceData($dataFile);
 
 $newBest = NEW_BEST_NO;
 
-$printFlag  = 0;
-$done       = 0;
+$printFlag = 0;
+$spacer    = '';
+$elite     = '';
 
-$enoughIsEnough    = 0;
-
-$stale  = 0;
-$spacer = '';
+$done  = 0;
+$stale = 0;
+$bored = 0;
+$oops  = 0;
 
 $goal = CheckNearestNeighbor($dataFile);
 
-SetAlgorithmVariants(MAX_ELITE-1,1);
 InitializeHeuristic();
 InitializePheremone();
 ConstructAntSolutions(0);
 
-$elite    = '';
 $bestLength = 9999999;
 
 ProcessSolutions(0);
@@ -117,14 +147,6 @@ PrintCurrentIteration($ants[0],0);
 
 for my $iter (1 .. MAX_ITERATIONS)
 {
-  if($iter % 1000 == 0)
-  {
-    say WORKING_HARD,$iter,':    ',join ' ',map { sprintf '%4d',$_->{LENGTH} } @ants[-26 .. -1];
-
-    $spacer = "\n";
-
-    last if ++$enoughIsEnough >= ENOUGH_IS_ENOUGH;
-  }
   UpdatePheremones();
   ConstructAntSolutions($iter);
   ProcessSolutions($iter);
@@ -134,48 +156,54 @@ for my $iter (1 .. MAX_ITERATIONS)
 }
 $done = 1;
 
+push @metadata,join ',',$dt,$goal,$iter_max,POPULATION_SIZE,MAX_ELITE,EVAPORATION_RATE,INITIAL_EXPONENT,HEURISTIC_EXPONENT,PHEREMONE_EXPONENT,STALE_THRESHOLD;
+
+$mf->put(contents => \@metadata);
+
 say "\n",'=' x 40,' Finished ','=' x 40,"\n";
 
 for(reverse @elite)
 {
   PrintCurrentIteration($_,$_->{ITERATION});
 }
-printf "$elite[0]{LENGTH}/$goal = %4.2f\n",$elite[0]{LENGTH}/$goal;
-say 'POPULATION_SIZE    => ',POPULATION_SIZE;
-say 'MAX_ELITE          => ',MAX_ELITE;
-say 'EVAPORATION_RATE   => ',EVAPORATION_RATE;
-say 'PHEREMONE_EXPONENT => ',PHEREMONE_EXPONENT;
-say 'HEURISTIC_EXPONENT => ',HEURISTIC_EXPONENT;
+CompareResults($elite[0]{ROUTE});
 
-sub SetAlgorithmVariants
+say 'Population Size       => ',POPULATION_SIZE;
+say 'Number of Elite       => ',MAX_ELITE;
+say 'Evaporation Rate      => ',EVAPORATION_RATE;
+say 'Initial Exponent      => ',INITIAL_EXPONENT;
+say 'Pheremone Exponent    => ',PHEREMONE_EXPONENT;
+say 'Heuristic Exponent    => ',HEURISTIC_EXPONENT;
+say 'Number of Interations => ',$iter_max;
+say 'Met goal at Iteration => ',$metGoalIteration;
+say TEXT_YELLOW,sprintf("$elite[0]{LENGTH}/$goal = %4.2f",$elite[0]{LENGTH}/$goal),TEXT_NORMAL;
+
+sub CompareResults
 {
-  my $epm = shift;
-  my $mme = shift;
+  my $route = shift;
 
-  say 'SetAlgorithmVariants :(',$epm,',',$mme,')';
-  say 'Number of Elite pheremone dropping ants changed to: ',$epm if defined $elitePheremoneMax && $elitePheremoneMax != $epm;
+  say '-' x 10,' vs. ','-' x 10,"\n";
+  say $nearestNeighbor[$_] for 0 .. 2;
 
-  $elitePheremoneMax = $epm;
+  my @d;
 
-  if(defined $minmaxEnabled && $minmaxEnabled != $mme)
+  my $d = 0;
+
+  for(@cityIdx)
   {
-    if($mme)
-    {
-      say 'Minmax enabled to (',$minmaxMax,', ',$minmaxMin,')';
-    }
-    else
-    {
-      say 'Minmax disabled'
-    }
+    $d += $distance{$route->[$_]}{$route->[$_+1]};
+
+    push @d,$d;
   }
-  $minmaxEnabled = $mme;
-  $minmaxMax = defined $minmaxMax && $mme ? max($minmaxMax - 5,500) : MINMAX_PDF_MAX;
-  $minmaxMin = MINMAX_PDF_MIN;
+  my @nn = (split / +/,$nearestNeighbor[2])[-@{$route} .. -1];
 
-  say 'minmax: ',$minmaxMax;
+  my @diff = map { sprintf ' %4d',$d[$_] - $nn[$_] } 0 .. $#{$route};
 
-  print $spacer;
-  say '';
+  @diff = map { $_ > 0 ? TEXT_RED.$_ : TEXT_GREEN.$_ } @diff;
+
+  s/-/length $_ < 11 ? ' ' : ''/e for @diff;
+
+  print '           ',TEXT_BOLD,@diff,TEXT_NORMAL,"\n\n";
 }
 
 sub CopyAnt
@@ -196,8 +224,21 @@ sub ProcessSolutions
 {
   my $iter = shift;
 
-  my @tmpAnts = grep { !exists $elite{$_->{TEXT}} } @ants;
+  my %tmpAnts;
+  my @tmpAnts;
 
+  # Don't allow ants from this iteration to have the same route or
+  # one of the already discovered elite routes
+  #
+  for(@ants)
+  {
+    if(!exists $tmpAnts{$_->{TEXT}})
+    {
+      push @tmpAnts,$_ unless exists $elite{$_->{TEXT}};
+
+      $tmpAnts{$_->{TEXT}} = 1;
+    }
+  }
   @elite = sort { $a->{LENGTH} <=> $b->{LENGTH} } @elite,@tmpAnts;
 
   splice @elite,MAX_ELITE;
@@ -208,17 +249,15 @@ sub ProcessSolutions
 
   my $newElite = join ',',map { $_->{LENGTH} } @elite;
 
-  # $formatElite = join ' ',map { sprintf '%4d',$_->{LENGTH} } @elite;
-
   if($newElite ne $elite)
   {
+    $metGoalIteration = $iter if !defined $metGoalIteration && $e->{LENGTH} < $goal;
+
     if($e->{LENGTH} < $bestLength)
     {
       $newBest  = NEW_BEST_YES;
 
       $bestLength = $e->{LENGTH};
-
-      SetAlgorithmVariants(MAX_ELITE-1,0) if $minmaxEnabled;
     }
     else
     {
@@ -233,30 +272,38 @@ sub ProcessSolutions
 
       next if exists $elite{$text};
 
-      # $formatElite =~ s/$length/join('',TEXT_BOLD,TEXT_GREEN,$length,TEXT_NORMAL)/e;
-
       $el->{NEW}    = 1;
       $elite{$text} = $length;
     }
-    # $formatElite =~ s/$e->{LENGTH}/join('',TEXT_BOLD,TEXT_YELLOW,$e->{LENGTH},TEXT_NORMAL)/e unless $bestLength == $e->{LENGTH};
-
     $printFlag = 1;
     $elite     = $newElite;
 
-    $enoughIsEnough = $stale = 0;
+    $stale = 0;
+    $bored = 0;
   }
   else
   {
     $printFlag = 0;
     $newBest   = NEW_BEST_NO;
 
-    if(++$stale >= STALE_THRESHOLD)
+    if(++$stale % STALE_PARTIAL == 0)
     {
-      SetAlgorithmVariants(MAX_ELITE-1,1);
-      $stale = 0;
+      my $staleIdx    = $stale/STALE_PARTIAL;
+      my @formatStale = split ': ',$stale[$staleIdx];
+      my $formatStale = sprintf '%2s%8d',$formatStale[0],$iter;
+
+      $bored = 1 if $formatStale[0] eq NEUTRAL;
+
+      say sprintf '%s: %s',$formatStale,$formatStale[1];
+
+      $spacer = "\n";
+    }
+    if($stale >= STALE_THRESHOLD)
+    {
+      $iter_max = $iter;
+      $done     = 1;
     }
   }
-  $done = 1 if $elite[0]{LENGTH} == $elite[-1]{LENGTH};
 }
 
 sub UpdatePheremones
@@ -265,10 +312,10 @@ sub UpdatePheremones
 
   # sum the contributions for each elite ant — τ(ij) = 𝜮(1/L)
   #
-  foreach my $ant (@elite[0 .. $elitePheremoneMax-1])
+  foreach my $ant (@elite[0 .. MAX_ELITE-1])
   {
     my $route = $ant->{ROUTE};
-    my $tau   = 1 + 1/$ant->{LENGTH};
+    my $tau   = 10000/$ant->{LENGTH};
 
     for(@cityIdx)
     {
@@ -301,29 +348,32 @@ sub PrintCurrentIteration
 
   my @newElite = grep { exists $_->{NEW} } @elite;
 
+  my $ratio = sprintf '%4.2f',$elite[0]{LENGTH}/$goal;
+
+  my $formatRatio = $ratio < 1 ?  join '',TEXT_BOLD,TEXT_GREEN,$ratio,TEXT_NORMAL : join '',TEXT_BOLD,TEXT_RED,$ratio,TEXT_NORMAL;
+
   $formatElite =~ s/$_->{LENGTH}/join('',TEXT_BOLD,TEXT_GREEN,$_->{LENGTH},TEXT_NORMAL)/e for @newElite;
-  $formatElite =~ s/$elite[0]{LENGTH}/join('',TEXT_BOLD,TEXT_YELLOW,$elite[0]{LENGTH},TEXT_NORMAL)/e unless exists $elite[0]{NEW};
+  $formatElite =~ s/$elite[0]{LENGTH}/join('',TEXT_YELLOW,$elite[0]{LENGTH},TEXT_NORMAL)/e unless exists $elite[0]{NEW};
 
-  print $spacer if $spacer;
+  $formatElite = join ' ',$formatRatio,$formatElite;
 
+  if($spacer)
+  {
+    print $spacer;
+
+    $spacer = '';
+  }
   unless($done)
   {
-    printf "%s\t %d: %s %4s %s\n",
+    printf "%2s%8s: Used uniform PDF %d times...\n\n",OOPS,' ',$oops if $oops;
+    printf "%2s%8d: %s %4s %s\n",
       $newBest,
-      $itr,
+      $itr+1,
       $formatElite,
       '....',
       join(' ',map { sprintf '%4d',$ants[$_]{LENGTH} } -10 .. -1);
 
-    my @lt = localtime;
-
     my $out = join ',',
-      strftime("%Y%m%d %H:%M:%S",@lt),
-      timelocal(@lt),
-      $elitePheremoneMax,
-      $minmaxEnabled,
-      $minmaxMax,
-      $minmaxMin,
       $itr,
       (map { $elite[$_]{LENGTH} } 0 .. MAX_ELITE-1),
       (map { join '',@{$elite[$_]{ROUTE}} } 0 .. MAX_ELITE-1);
@@ -333,7 +383,7 @@ sub PrintCurrentIteration
   }
   else
   {
-    say sprintf '%11d: %d',$itr,$ant->{LENGTH};
+    say sprintf '%10d: %d',$itr,$ant->{LENGTH};
 
     PrintRoutes([$ant]);
   }
@@ -365,6 +415,19 @@ sub PrintRoutes
   $newBest = '  ';
 }
 
+# τ′ = φ⋅(1 - ⍴)/L + ⍴⋅τ(ij);
+#
+sub DoLocalPheremoneUpdate
+{
+  my $route = shift;
+  my $L     = shift;
+
+  for(@cityIdx)
+  {
+    $pheremone{$route->[$_]}{$route->[$_+1]} = 1000*(1 - EVAPORATION_RATE)/$L + EVAPORATION_RATE*$pheremone{$route->[$_]}{$route->[$_+1]};
+  }
+}
+
 # Get a solution for one ant
 #
 sub ConstructAntSolution
@@ -383,25 +446,12 @@ sub ConstructAntSolution
 
   for(1 .. $#cities)
   {
-    my $pheremone = $pheremone{$city};
-    my $heuristic = $heuristic{$city};
-
-    my $probabilityDistribution = $probabilityDistribution{$city};
-
-    # find all the cities we haven't been too already
-    #
+    my $pheremone    = $pheremone{$city};
     my @destinations = grep { !exists $route{$_} } keys %{$pheremone};
 
-    # P(ij) = τ(ij)**α⋅η(ij)**β/𝜮(τ**α⋅η**β)
+    # check if only one possible destination
     #
-    my %tau_x_beta     = map { $_ => $pheremone->{$_}**PHEREMONE_EXPONENT*$heuristic->{$_}**HEURISTIC_EXPONENT } @destinations;
-    my $sum_tau_x_beta = sum @tau_x_beta{@destinations};
-
-    my @normalization  = map { max(int(1000*($tau_x_beta{$_}/$sum_tau_x_beta) + 0.5),1) } @destinations;
-
-    # only one possible destination
-    #
-    if(@normalization == 1)
+    if(@destinations == 1)
     {
       $city = $destinations[0];
 
@@ -411,37 +461,32 @@ sub ConstructAntSolution
 
       next;
     }
-    # flatten normalized distribution if we're minmaxing
-    #
-    if($minmaxEnabled)
+    my $probabilityDistribution;
+
+    unless($bored && irand @cities == 0)
     {
-      my $idx = firstidx { $_ > $minmaxMax } @normalization;
+      my $heuristic = $heuristic{$city};
 
-      # if there's a destination above the threshold
+      $probabilityDistribution = $probabilityDistribution{$city};
+
+      # find all the cities we haven't been too already
       #
-      if($idx != -1)
-      {
-        # calculate how much is it over the threshold
-        #
-        my $diff  = $normalization[$idx] - $minmaxMax;
 
-        # find all of the others
-        #
-        my @nidx  = grep { $_ != $idx } 0 .. $#normalization;
+      # P(ij) = τ(ij)**α⋅η(ij)**β/𝜮(τ**α⋅η**β)
+      #
+      my %tau_x_beta     = map { $_ => $pheremone->{$_}**PHEREMONE_EXPONENT*$heuristic->{$_}**HEURISTIC_EXPONENT } @destinations;
+      my $sum_tau_x_beta = sum @tau_x_beta{@destinations};
 
-        # divide evenly among the rest
-        #
-        my $divvy = $diff/@nidx;
+      my @normalization  = map { max(int(1000*($tau_x_beta{$_}/$sum_tau_x_beta) + 0.5),1) } @destinations;
 
-        # round and set a floor
-        #
-        $normalization[$_]   = max(int($normalization[$_] + $divvy + 0.5),$minmaxMin) for @nidx;
-        $normalization[$idx] = $minmaxMax;
-      }
+      @{$probabilityDistribution} = map { ($destinations[$_]) x $normalization[$_] } 0 .. $#destinations;
     }
-    die "@normalization -- @destinations" if grep { $normalization[$_] < 0 } 0 .. $#destinations;
-    @{$probabilityDistribution} = map { ($destinations[$_]) x $normalization[$_] } 0 .. $#destinations;
+    else
+    {
+      @{$probabilityDistribution} = @destinations[0 .. $#destinations];
 
+      $oops++;
+    }
     my $idx = irand @{$probabilityDistribution};
 
     $city = $probabilityDistribution->[$idx];
@@ -452,6 +497,8 @@ sub ConstructAntSolution
   }
   $ant->{LENGTH} = sum map { $distance{$route->[$_]}{$route->[$_+1]} } @cityIdx;
   $ant->{TEXT}   = join '',@{$route};
+
+  DoLocalPheremoneUpdate($ant->{ROUTE},$ant->{LENGTH});
 }
 
 # Construct a Solution (route and length) for ants from startIndex to POPULATION_SIZE
@@ -459,6 +506,8 @@ sub ConstructAntSolution
 sub ConstructAntSolutions
 {
   my $iteration  = shift;
+
+  $oops = 0;
 
   for(0 .. $#ants)
   {
@@ -480,15 +529,14 @@ sub InitializePheremone
   }
 }
 
-# Heuristic between A and B = (1/distance{A}{B}**2)/sum(distance{A}{B}, distance{A}{C}, ...)
+# Heuristic between A and B = (1/distance{A}{B}**INITIAL_EXPONENT)/sum(distance{A}{B}, distance{A}{C}, ...)
 #
 sub InitializeHeuristic
 {
   foreach my $t (@cities)
   {
     my @keys = keys %{$distance{$t}};
-    # my @rcp2 = map { 1/$distance{$t}{$_}**2 } @keys;
-    my @rcp2 = map { 1/$distance{$t}{$_} } @keys;
+    my @rcp2 = map { 1/$distance{$t}{$_}**INITIAL_EXPONENT } @keys;
     my $s    = sum @rcp2;
     my $r    = {$t => 0,map { $keys[$_] => $rcp2[$_]/$s } 0 .. $#keys};
 
@@ -524,8 +572,7 @@ sub CheckNearestNeighbor
 
   say $nearestNeighbor[$_] for 0 .. 2;
 
-  say "\n",'GOAL is: ',TEXT_BOLD,TEXT_YELLOW,$nearestNeighbor[3],TEXT_NORMAL,"\n";
+  say "\n",'GOAL is: ',TEXT_YELLOW,$nearestNeighbor[3],TEXT_NORMAL,"\n";
 
   return $nearestNeighbor[3];
 }
-
