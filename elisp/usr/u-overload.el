@@ -47,6 +47,7 @@
 ;;           14-Jan-2017 Added `bm-show-display-lines'
 ;;           13-Jun-2018 Changed to use ‘with-eval-after-load’
 ;;           08-May-2019 Stopped using ‘handle-delete-frame’
+;;           10-Jul-2019 Added ‘undo-tree-update-menu-bar’
 ;;
 
 ;;; Code:
@@ -343,14 +344,34 @@ users by the likes of `bm-show' and `bm-show-all'."
           "")))))
   )
 
-(with-eval-after-load 'neotree
-  '(defun neo-buffer--get-nodes (path)
-     (let* ((nodes (neo-util--walk-dir path))
-            (comp  #'(lambda (x y)
-                       (string< (upcase x) (upcase y))))
-            (nodes (neo-util--filter 'neo-util--hidden-path-filter nodes)))
-       (cons (sort (neo-util--filter 'file-directory-p nodes) comp)
-             (sort (neo-util--filter #'(lambda (f) (not (file-directory-p f))) nodes) comp)))))
+(defun undo-tree-update-menu-bar ()
+  "Update `undo-tree-mode' Edit menu items."
+  (if undo-tree-mode
+      (progn
+	;; save old undo menu item, and install undo/redo menu items
+	(setq undo-tree-old-undo-menu-item
+	      (cdr (assq 'undo (lookup-key global-map [menu-bar Edit]))))
+	(define-key (lookup-key global-map [menu-bar Edit])
+	  [Undo] '(menu-item "Undo" undo-tree-undo
+			     :enable (and undo-tree-mode
+					  (not buffer-read-only)
+					  (not (eq t buffer-undo-list))
+					  (undo-tree-node-previous
+					   (undo-tree-current buffer-undo-tree)))
+			     :help "Undo last operation"))
+	(define-key-after (lookup-key global-map [menu-bar Edit])
+	  [Redo] '(menu-item "Redo" undo-tree-redo
+			     :enable (and undo-tree-mode
+					  (not buffer-read-only)
+					  (not (eq t buffer-undo-list))
+					  (undo-tree-node-next
+					   (undo-tree-current buffer-undo-tree)))
+			     :help "Redo last operation")
+	  'Undo))
+    ;; uninstall undo/redo menu items
+    (define-key (lookup-key global-map [menu-bar Edit]) [Undo] undo-tree-old-undo-menu-item)
+    (define-key (lookup-key global-map [menu-bar Edit]) [Redo] nil)))
+
 ;;
 (message "Loading u-overload...done")
 (provide 'u-overload)

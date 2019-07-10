@@ -69,6 +69,7 @@
 ;;           13-Jun-2018 Added ‘require’ for ‘u-navigate’
 ;;                       Fixed ‘*-word-or-region’ definitions
 ;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
+;;           10-Jul-2019 Added ‘u/transpose-lines’
 ;;
 
 ;;; Code:
@@ -261,27 +262,27 @@
   (goto-char start)
   (comment-kill (count-lines start end)))
 
-(defun capitalize-word-or-region (beg end)
-  "Convert the word at current point or the selected region (BEG END) to first caps."
-  (interactive "*r")
+(defun capitalize-word-or-region ()
+  "Convert the word at current point or the selected region to first caps."
+  (interactive "*")
   (with-word-or-region (beg end)
     (capitalize-region beg end)))
 
-(defun downcase-word-or-region (beg end)
-  "Convert the word at current point or the selected region (BEG END) to lowercase."
-  (interactive "*r")
+(defun downcase-word-or-region ()
+  "Convert the word at current point or the selected region to lowercase."
+  (interactive "*")
   (with-word-or-region (beg end)
     (downcase-region beg end)))
 
-(defun upcase-word-or-region (beg end)
-  "Convert the word at current point or the selected region (BEG END) to uppercase."
-  (interactive "*r")
+(defun upcase-word-or-region ()
+  "Convert the word at current point or the selected region to uppercase."
+  (interactive "*")
   (with-word-or-region (beg end)
      (upcase-region beg end)))
 
-(defun upcase-initials-word-or-region (beg end)
-  "Convert the word at current point or the selected region (BEG END) to uppercase initials."
-  (interactive "*r")
+(defun upcase-initials-word-or-region ()
+  "Convert the word at current point or the selected region to uppercase initials."
+  (interactive "*")
   (with-word-or-region (beg end)
     (upcase-initials-region beg end)))
 
@@ -402,6 +403,13 @@
         (upcase-region (point) (+ 1 (point))))
        ((string-match "^[[:upper:]]" tmp-string)
         (downcase-region (point) (+ 1(point)))))))
+
+(defun u/transpose-lines ()
+  "Transpose current line with previous line."
+  (interactive "*")
+  (beginning-of-line)
+  (save-excursion
+    (transpose-lines 1)))
 
 
 ;;

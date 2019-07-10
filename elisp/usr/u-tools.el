@@ -37,6 +37,7 @@
 ;;           31-May-2018 Added ‘powerthesaurus-lookup-word’
 ;;           14-Jun-2018 Added ‘declutter’
 ;;           06-Jul-2018 Added ‘paradox-list-packages’
+;;           10-Jul-2019 Completed Greek alphabet
 ;;
 
 ;;; Code:
@@ -118,27 +119,57 @@
       ["₩	Won Sign"                               (insert "₩") :enable (is-rw?)]
       ["¥	Yen Sign"                               (insert "¥") :enable (is-rw?)])
      ("Greek Symbols"
-      ["Δ	Greek Capital Letter Delta" (insert "Δ") :enable (is-rw?)]
-      ["Γ	Greek Capital Letter Gamma" (insert "Γ") :enable (is-rw?)]
-      ["Ω	Greek Capital Letter Omega" (insert "Ω") :enable (is-rw?)]
-      ["Φ	Greek Capital Letter Phi"   (insert "Φ") :enable (is-rw?)]
-      ["Π	Greek Capital Letter Pi"    (insert "Π") :enable (is-rw?)]
-      ["Ψ	Greek Capital Letter Psi"   (insert "Ψ") :enable (is-rw?)]
-      ["Σ	Greek Capital Letter Sigma" (insert "∑") :enable (is-rw?)]
-      ["Θ	Greek Capital Letter Theta" (insert "Θ") :enable (is-rw?)]
+      ["Α Greek Capital Letter Alpha"   (insert "Α") :enable (is-rw?)]
+      ["Β Greek Capital Letter Beta"    (insert "Β") :enable (is-rw?)]
+      ["Γ Greek Capital Letter Gamma"   (insert "Γ") :enable (is-rw?)]
+      ["Δ Greek Capital Letter Delta"   (insert "Δ") :enable (is-rw?)]
+      ["Γ Greek Capital Letter Gamma"   (insert "Γ") :enable (is-rw?)]
+      ["Ε Greek Capital Letter Epsilon" (insert "Ε") :enable (is-rw?)]
+      ["Ζ Greek Capital Letter Zeta"    (insert "Ζ") :enable (is-rw?)]
+      ["Η Greek Capital Letter Eta"     (insert "Η") :enable (is-rw?)]
+      ["Θ Greek Capital Letter Theta"   (insert "Θ") :enable (is-rw?)]
+      ["Ι Greek Capital Letter Iota"    (insert "Ι") :enable (is-rw?)]
+      ["Κ Greek Capital Letter Kappa"   (insert "Κ") :enable (is-rw?)]
+      ["Λ Greek Capital Letter Lambda"  (insert "Λ") :enable (is-rw?)]
+      ["Μ Greek Capital Letter Mu"      (insert "Μ") :enable (is-rw?)]
+      ["Ν Greek Capital Letter Nu"      (insert "Ν") :enable (is-rw?)]
+      ["Ξ Greek Capital Letter Xi"      (insert "Ξ") :enable (is-rw?)]
+      ["Ο Greek Capital Letter Omicron" (insert "Ο") :enable (is-rw?)]
+      ["Π Greek Capital Letter Pi"      (insert "Π") :enable (is-rw?)]
+      ["Σ Greek Capital Letter Sigma"   (insert "∑") :enable (is-rw?)]
+      ["Ρ Greek Capital Letter Rho"     (insert "Ρ") :enable (is-rw?)]
+      ["Σ Greek Capital Letter Sigma"   (insert "Σ") :enable (is-rw?)]
+      ["Τ Greek Capital Letter Tau"     (insert "Τ") :enable (is-rw?)]
+      ["Υ Greek Capital Letter Upsilon" (insert "Υ") :enable (is-rw?)]
+      ["Φ Greek Capital Letter Phi"     (insert "Φ") :enable (is-rw?)]
+      ["Χ Greek Capital Letter Chi"     (insert "Χ") :enable (is-rw?)]
+      ["Ψ Greek Capital Letter Psi"     (insert "Ψ") :enable (is-rw?)]
+      ["Ω Greek Capital Letter Omega"   (insert "Ω") :enable (is-rw?)]
       "---"
       ["α	Greek Small Letter Alpha"   (insert "α") :enable (is-rw?)]
       ["β	Greek Small Letter Beta"    (insert "β") :enable (is-rw?)]
       ["γ	Greek Small Letter Gamma"   (insert "γ") :enable (is-rw?)]
+      ["δ       Greek Small Letter Delta"   (insert "δ") :enable (is-rw?)]
+      ["ε       Greek Small Letter Epsilon" (insert "ε") :enable (is-rw?)]
+      ["ζ       Greek Small Letter Zeta"    (insert "ζ") :enable (is-rw?)]
+      ["η       Greek Small Letter Eta"     (insert "η") :enable (is-rw?)]
+      ["θ	Greek Small Letter Theta"   (insert "θ") :enable (is-rw?)]
+      ["ι       Greek Small Letter Iota"    (insert "ι") :enable (is-rw?)]
+      ["κ       Greek Small Letter Kappa"   (insert "κ") :enable (is-rw?)]
       ["λ	Greek Small Letter Lambda"  (insert "λ") :enable (is-rw?)]
       ["μ	Greek Small Letter Mu"      (insert "μ") :enable (is-rw?)]
-      ["ω	Greek Small Letter Omega"   (insert "ω") :enable (is-rw?)]
-      ["φ	Greek Small Letter Phi"     (insert "φ") :enable (is-rw?)]
+      ["ν       Greek Small Letter Nu"      (insert "ν") :enable (is-rw?)]
+      ["ξ       Greek Small Letter Xi"      (insert "ξ") :enable (is-rw?)]
+      ["ο       Greek Small Letter Omicron" (insert "ο") :enable (is-rw?)]
       ["π	Greek Small Letter Pi"      (insert "π") :enable (is-rw?)]
-      ["ψ	Greek Small Letter Psi"     (insert "ψ") :enable (is-rw?)]
+      ["ρ       Greek Small Letter Rho"     (insert "ρ") :enable (is-rw?)]
       ["σ	Greek Small Letter Sigma"   (insert "σ") :enable (is-rw?)]
       ["τ	Greek Small Letter Tau"     (insert "τ") :enable (is-rw?)]
-      ["θ	Greek Small Letter Theta"   (insert "θ") :enable (is-rw?)]
+      ["υ       Greek Small Letter Upsilon" (insert "υ") :enable (is-rw?)]
+      ["φ	Greek Small Letter Phi"     (insert "φ") :enable (is-rw?)]
+      ["χ       Greek Small Letter Chi"     (insert "χ") :enable (is-rw?)]
+      ["ψ	Greek Small Letter Psi"     (insert "ψ") :enable (is-rw?)]
+      ["ω	Greek Small Letter Omega"   (insert "ω") :enable (is-rw?)]
       )
      ("Intellectual Property"
       ["ⓟ	Circled Latin Small Letter P (Sound)" (insert "ⓟ") :enable (is-rw?)]
@@ -360,9 +391,7 @@
     (setq list (cdr list))))
 
 (defun current-line ()
-  "Return the vertical position of point
-in the selected window.  Top line is 0.
-Counts each text line only once, even if it wraps."
+  "Return the line number of the current line in the selected window."
   (+ (count-lines (window-start) (point))
      (if (= (current-column) 0) 1 0)
      -1))
