@@ -1,5 +1,6 @@
 ;;; keys.el --- Global key definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
+
 ;;         Copyright © 1999-2019 Tom Fontaine
 
 ;; Author: Tom Fontaine
@@ -104,13 +105,14 @@
 ;;                       Added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
 ;;           19-Sep-2017 Added ‘M-pause’ as ‘sdcv-search’
 ;;           16-Jan-2019 Added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
-;;           24-Jun-2019 Added ‘C-M-insert’ to insert user-full-name
+;;           16-Jun-2019 Reformatted/reorganized
 ;;
 
 ;;; Code:
 
 (message "Loading keys...")
 (require 'bm)
+(require 'clipboard)
 (require 'duplicate)
 (require 'u-search)
 (require 'u-edit)
@@ -118,189 +120,1195 @@
 (require 'undo-tree)
 (require 'u-navigate)
 (require 'xah)
-;;
-;; Standardization keys
-;;
-(global-set-key [(control a)] 'mark-whole-buffer)
-(global-set-key [(control b)] 'bm-toggle)
-;;lobal-set-key [(control c)] 'COPY
-(global-set-key [(control d)] 'duplicate-line-or-region)
-(global-set-key [(control e)] '(lambda () (interactive) (ergoemacs-extend-selection 1 1)))
-(global-set-key [(control f)] 'xah-search-current-word)
-(global-set-key [(control g)] 'goto-line)
-;;lobal-set-key [(control h)] HELP...
-(global-set-key [(control i)] '(lambda () (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
-;;lobal-set-key [(control j)] '
-(global-set-key [(control k)] 'comment-line)
-;;lobal-set-key [(control l)] '
-;;lobal-set-key [(control m)] '
-(global-set-key [(control n)] 'new-empty-buffer)
-(global-set-key [(control o)] 'find-file)
-(global-set-key [(control p)] 'pop-to-mark-command)
-(global-set-key [(control q)] 'keyboard-quit)
-;;(global-set-key [(control r)] ')  # isearch
-;;(global-set-key [(control s)] ')  # isearch
-;;lobal-set-key [(control t)] '
-;;lobal-set-key [(control u)] 'usr-upcase-word)
-;;lobal-set-key [(control v)] 'PASTE)
-;;lobal-set-key [(control x)] 'CUT)
-(global-set-key [(control w)] 'kill-this-buffer)
-(global-set-key [(control y)] 'undo-tree-redo)
-;;lobal-set-key [(control z)] 'UNDO)
 
-(global-set-key [(control +)] 'text-scale-increase)
-(global-set-key [(control -)] 'text-scale-decrease)
+;; ==================== a ====================
+;; 
+(global-set-key [(control a)]            'mark-whole-buffer)
+;;lobal-set-key [(meta a)]               'backward-sentence)
+;;lobal-set-key [(super a)]              '
+;;lobal-set-key [(control meta  a)]      '
+;;lobal-set-key [(control shift a)]      '
+;;lobal-set-key [(control super a)]      '
+;;lobal-set-key [(meta    super a)]      '
+;;lobal-set-key [(control meta super a)] '
 
-(global-set-key [(control shift d)] 'duplicate-as-comment)
-(global-set-key [(control shift f)] 'u-search-buffer)
-(global-set-key [(control shift h)] 'query-replace)
-(global-set-key [(control shift l)] 'loccur-current)
-(global-set-key [(control shift n)] 'narrow-or-widen-dwim)
-(global-set-key [(control shift q)] 'quoted-insert)
-(global-set-key [(control shift s)] 'save-buffer)
-;;(global-set-key [(control shift z)] 'undo-tree-redo)
+;; ==================== b ====================
+;; 
+(global-set-key [(control b)]            'bm-toggle)
+;;lobal-set-key [(meta    b)]            'backward-word)
+;;lobal-set-key [(super   b)]            '
+;;lobal-set-key [(control meta  b)]      '
+;;lobal-set-key [(control shift b)]      '
+;;lobal-set-key [(control super b)]      '
+;;lobal-set-key [(meta    super b)]      '
+;;lobal-set-key [(control meta super b)] '
 
-(global-set-key [(control shift up)]    'ergoemacs-move-text-up)
-(global-set-key [(control shift down)]  'ergoemacs-move-text-down)
-(global-set-key [(control shift right)] 'ergoemacs-forward-open-bracket)
-(global-set-key [(control shift left)]  'ergoemacs-backward-open-bracket) ;; autoloaded
+;; ==================== c ====================
+;; 
+;;lobal-set-key [(control c)]            'COPY
+;;lobal-set-key [(meta    c)]            'capitalize-word)
+;;lobal-set-key [(super   c)]            '
+;;lobal-set-key [(control meta  c)]      '
+;;lobal-set-key [(control shift c)]      '
+(global-set-key [(control super c)]      'copy-rectangle-as-kill)
+;;lobal-set-key [(meta    super c)]      '
+;;lobal-set-key [(control meta super c)] '
 
-(global-set-key [(meta s)] 'write-file)
+;; ==================== d ====================
+;; 
+(global-set-key [(control d)]            'duplicate-line-or-region)
+;;lobal-set-key [(meta    d)]            'kill-word)
+;;lobal-set-key [(super   d)]            'DO NOT USE ... closes all windows
+;;lobal-set-key [(control meta  d)]      '
+(global-set-key [(control shift d)]      'duplicate-as-comment)
+;;lobal-set-key [(control super d)]      '
+;;lobal-set-key [(meta    super d)]      '
+;;lobal-set-key [(control meta super d)] '
 
-(global-set-key [(super f)]  'u-search-all-files)
-(global-set-key [(super r)]  'rectangle-mark-mode)
+;; ==================== e ====================
+;; 
+(global-set-key [(control e)]            '(lambda () (interactive) (ergoemacs-extend-selection 1 1)))
+;;lobal-set-key [(meta    e)]            'forward-sentence)
+;;lobal-set-key [(super   e)]            'DO NOT USE ... opens file manager
+;;lobal-set-key [(control meta  e)]      '
+;;lobal-set-key [(control shift e)]      '
+;;lobal-set-key [(control super e)]      '
+;;lobal-set-key [(meta    super e)]      '
+;;lobal-set-key [(control meta super e)] '
 
-(global-set-key [(super \()] 'xah-insert-paren)
-(global-set-key [(super \[)] 'xah-insert-bracket)
-(global-set-key [(super \{)] 'xah-insert-brace)
-(global-set-key [(super \')] 'xah-insert-single-quote)
-(global-set-key [(super \")] 'xah-insert-double-quote)
-(global-set-key [(super \`)] 'xah-insert-emacs-quote)
+;; ==================== f ====================
+;; 
+(global-set-key [(control f)]            'xah-search-current-word)
+;;lobal-set-key [(meta    f)]            'forward-word)
+(global-set-key [(super   f)]            'u-search-all-files)
+;;lobal-set-key [(control meta  f)]      '
+(global-set-key [(control shift f)]      'u-search-buffer)
+;;lobal-set-key [(control super f)]      '
+;;lobal-set-key [(meta    super f)]      '
+;;lobal-set-key [(control meta super f)] '
+
+;; ==================== g ====================
+;; 
+(global-set-key [(control g)]            'goto-line)
+;;lobal-set-key [(meta    g)]            'PREFIX
+;;lobal-set-key [(super   g)]            '
+;;lobal-set-key [(control shift g)]      '
+;;lobal-set-key [(control super g)]      '
+;;lobal-set-key [(meta    super g)]      '
+;;lobal-set-key [(control meta super g)] '
+
+;; ==================== h ====================
+;; 
+;;lobal-set-key [(control h)]            '...HELP...
+;;lobal-set-key [(meta    h)]            'mark-paragraph)
+;;lobal-set-key [(super   h)]            '
+;;lobal-set-key [(control meta  h)]      '
+(global-set-key [(control shift h)]      'query-replace)
+;;lobal-set-key [(control super h)]      '
+;;lobal-set-key [(meta    super h)]      '
+;;lobal-set-key [(control meta super h)] '
+
+;; ==================== i ====================
+;; 
+(global-set-key [(control i)]            '(lambda () (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
+;;lobal-set-key [(meta    i)]            'tab-to-tab-stop
+;;lobal-set-key [(super   i)]            '
+;;lobal-set-key [(control meta  i)]      '
+;;lobal-set-key [(control shift i)]      '
+(global-set-key [(control super i)]      'insert-chs)
+(global-set-key [(meta    super i)]      'insert-che)
+;;lobal-set-key [(control meta super i)] '
+
+;; ==================== j ====================
+;; 
+;;lobal-set-key [(control j)]            'electric-newline-and-maybe-indent
+;;lobal-set-key [(meta    j)]            'indent-new-comment-line
+;;lobal-set-key [(super   j)]            '
+;;lobal-set-key [(control meta  j)]      '
+;;lobal-set-key [(control shift j)]      '
+;;lobal-set-key [(control super j)]      '
+;;lobal-set-key [(meta    super j)]      '
+;;lobal-set-key [(control meta super j)] '
+
+;; ==================== k ====================
+;; 
+(global-set-key [(control k)]            'comment-line)
+;;lobal-set-key [(meta    k)]            'kill-sentence)
+;;lobal-set-key [(super   k)]            '
+;;lobal-set-key [(control meta  k)]      '
+;;lobal-set-key [(control shift k)]      '
+;;lobal-set-key [(control super k)]      '
+;;lobal-set-key [(meta    super k)]      '
+;;lobal-set-key [(control meta super k)] '
+
+
+;; ==================== l ====================
+;; 
+;;lobal-set-key [(control l)]            'recenter-top-bottom
+;;lobal-set-key [(meta    l)]            'downcase-word)
+;;lobal-set-key [(super   l)]            ' DO NOT USE ... locks computer
+;;lobal-set-key [(control meta  l)]      '
+(global-set-key [(control shift l)]      'loccur-current)
+;;lobal-set-key [(control super l)]      '
+;;lobal-set-key [(meta    super l)]      '
+;;lobal-set-key [(control meta super l)] '
+
+;; ==================== m ====================
+;; 
+;;lobal-set-key [(control m)]            'newline
+;;lobal-set-key [(meta    m)]            'back-to-indentation)
+;;lobal-set-key [(super   m)]            '
+;;lobal-set-key [(control meta  m)]      '
+;;lobal-set-key [(control shift m)]      '
+;;lobal-set-key [(control super m)]      '
+;;lobal-set-key [(meta    super m)]      '
+;;lobal-set-key [(control meta super m)] '
+
+;; ==================== n ====================
+;; 
+(global-set-key [(control n)]            'new-empty-buffer)
+;;lobal-set-key [(meta    n)]            '
+;;lobal-set-key [(super   n)]            '
+;;lobal-set-key [(control meta  n)]      '
+(global-set-key [(control shift n)]      'narrow-or-widen-dwim)
+;;lobal-set-key [(control super n)]      '
+;;lobal-set-key [(meta    super n)]      '
+;;lobal-set-key [(control meta super n)] '
+
+;; ==================== o ====================
+;; 
+(global-set-key [(control o)]            'find-file)
+;;lobal-set-key [(meta    o)]            ' PREFIX
+;;lobal-set-key [(super   o)]            ' DO NOT USE ... ???
+;;lobal-set-key [(control meta  o)]      '
+;;lobal-set-key [(control shift o)]      'find-file)
+(global-set-key [(control super o)]      'open-rectangle)
+;;lobal-set-key [(meta    super o)]      '
+;;lobal-set-key [(control meta super o)] '
+
+;; ==================== p ====================
+;; 
+;;lobal-set-key [(control  p)]          'pop-to-mark-command)
+;;lobal-set-key [(meta     p)]           '
+;;lobal-set-key [(super    p)]           ' DO NOT USE ... changes screen resolution
+;;lobal-set-key [(control meta  p)]      '
+;;lobal-set-key [(control shift p)]      '
+;;lobal-set-key [(control super p)]      '
+;;lobal-set-key [(meta    super p)]      '
+;;lobal-set-key [(control meta super p)] '
+
+;; ==================== q ====================
+;; 
+(global-set-key [(control q)]            'keyboard-quit)
+;;lobal-set-key [(meta    q)]            'fill-paragraph)
+;;lobal-set-key [(super   q)]            '
+;;lobal-set-key [(control meta  q)]      '
+(global-set-key [(control shift q)]      'quoted-insert)
+;;lobal-set-key [(control super q)]      '
+;;lobal-set-key [(meta    super q)]      '
+;;lobal-set-key [(control meta super q)] '
+
+;; ==================== r ====================
+;; 
+;;lobal-set-key [(control r)]            'isearch-backward
+;;lobal-set-key [(meta    r)]            'move-to-window-line-top-bottom)
+(global-set-key [(super   r)]            'rectangle-mark-mode)
+;;lobal-set-key [(control meta  r)]      '
+;;lobal-set-key [(control shift r)]      '
+;;lobal-set-key [(control super r)]      '
+;;lobal-set-key [(meta    super r)]      '
+;;lobal-set-key [(control meta super r)] '
+
+;; ==================== s ====================
+;; 
+;;lobal-set-key [(control s)]            'isearch-forward
+(global-set-key [(meta    s)]            'write-file)
+;;lobal-set-key [(super   s)]            ' DO NOT USE ... key not registered
+;;lobal-set-key [(control meta  s)]      '
+(global-set-key [(control shift s)]      'save-buffer)
+;;lobal-set-key [(control super s)]      '
+;;lobal-set-key [(meta    super s)]      '
+;;lobal-set-key [(control meta super s)] '
+
+;; ==================== t ====================
+;; 
+(global-set-key [(control t)]            'u/transpose-lines)
+;;lobal-set-key [(meta    t)]            'transpose-words)
+;;lobal-set-key [(super   t)]            ' DO NOT USE
+;;lobal-set-key [(control meta  t)]      ' DO NOT USE
+;;lobal-set-key [(control shift t)]      '
+(global-set-key [(control super t)]      'toggle-char-case-at-point)
+(global-set-key [(meta    super t)]      'xah-toggle-letter-case)
+;;lobal-set-key [(control meta super t)] '
+
+;; ==================== u ====================
+;; 
+;;lobal-set-key [(control u)]            '...user prefix...
+;;lobal-set-key [(meta    u)]            'upcase-word)
+;;lobal-set-key [(super   u)]            '
+;;lobal-set-key [(control meta  u)]      '
+;;lobal-set-key [(control shift u)]      '
+;;lobal-set-key [(control super u)]      '
+;;lobal-set-key [(meta    super u)]      '
+;;lobal-set-key [(control meta super u)] '
+
+;; ==================== v ====================
+;; 
+;;lobal-set-key [(control v)]            'PASTE)
+;;lobal-set-key [(meta    v)]            'delete-selection-repeat-replace-region)
+;;lobal-set-key [(super   v)]            '
+;;lobal-set-key [(control meta  v)]      '
+;;lobal-set-key [(control shift v)]      '
+(global-set-key [(control super v)]      'yank-rectangle)
+;;lobal-set-key [(meta    super v)]      '
+;;lobal-set-key [(control meta super v)] '
+
+;; ==================== w ====================
+;; 
+(global-set-key [(control w)]            'kill-this-buffer)
+;;lobal-set-key [(meta    w)]            'kill-ring-save)
+;;lobal-set-key [(super   w)]            '
+;;lobal-set-key [(control meta  w)]      '
+;;lobal-set-key [(control shift w)]      '
+;;lobal-set-key [(control super w)]      '
+;;lobal-set-key [(meta    super w)]      '
+;;lobal-set-key [(control meta super w)] '
+
+;; ==================== x ====================
+;; 
+;;lobal-set-key [(control x)]            'CUT)
+;;lobal-set-key [(meta    x)]            ' DUH ... M-x
+;;lobal-set-key [(super   x)]            '
+;;lobal-set-key [(control meta  x)]      '
+;;lobal-set-key [(control shift x)]      ' PREFIX
+(global-set-key [(control super x)]      'kill-rectangle)
+;;lobal-set-key [(meta    super x)]      '
+;;lobal-set-key [(control meta super x)] '
+
+;; ==================== y ====================
+;; 
+(global-set-key [(control y)]            'undo-tree-redo)
+;;lobal-set-key [(meta    y)]            'cua-paste-pop)
+;;lobal-set-key [(super   y)]            '
+;;lobal-set-key [(control meta  y)]      '
+;;lobal-set-key [(control shift y)]      '
+;;lobal-set-key [(control super y)]      '
+;;lobal-set-key [(meta    super y)]      '
+;;lobal-set-key [(control meta super y)] '
+
+;; ==================== z ====================
+;; 
+;;lobal-set-key [(control z)]            'UNDO)
+;;lobal-set-key [(meta    z)]            'zap-to-char)
+;;lobal-set-key [(super   z)]            '
+;;lobal-set-key [(control meta  z)]      '
+;;lobal-set-key [(control shift z)]      'undo-tree-redo)
+;;lobal-set-key [(control super z)]      '
+;;lobal-set-key [(meta    super z)]      '
+;;lobal-set-key [(control meta super z)] '
+
+;; ==================== ! ====================
+;; 
+;;lobal-set-key [(control !)]            '
+;;lobal-set-key [(meta    !)]            'shell-command)
+;;lobal-set-key [(super   !)]            'DO NOT USE
+;;lobal-set-key [(control meta  !)]      '
+;;lobal-set-key [(control super !)]      '
+;;lobal-set-key [(meta    super !)]      '
+;;lobal-set-key [(control meta super !)] '
+
+;; ==================== # ====================
+;; 
+;;lobal-set-key [(control #)]            '
+;;lobal-set-key [(meta    #)]            '
+;;lobal-set-key [(super   #)]            'DO NOT USE
+;;lobal-set-key [(control meta  #)]      '
+;;lobal-set-key [(control super #)]      '
+;;lobal-set-key [(meta    super #)]      '
+;;lobal-set-key [(control meta super #)] '
+
+;; ==================== $ ====================
+;; 
+;;lobal-set-key [(control $)]            '
+;;lobal-set-key [(meta    $)]            'ispell-word)
+;;lobal-set-key [(super   $)]            'DO NOT USE
+;;lobal-set-key [(control meta  $)]      '
+;;lobal-set-key [(control super $)]      '
+;;lobal-set-key [(meta    super $)]      '
+;;lobal-set-key [(control meta super $)] '
+
+;; ==================== % ====================
+;; 
+;;lobal-set-key [(control %)]            '
+;;lobal-set-key [(meta    %)]            'query-replace)
+;;lobal-set-key [(super   %)]            'KEY NOT REGISTERED
+;;lobal-set-key [(control meta  %)]      '
+;;lobal-set-key [(control super %)]      '
+;;lobal-set-key [(meta    super %)]      '
+;;lobal-set-key [(control meta super %)] '
+
+;; ==================== & ====================
+;; 
+;;lobal-set-key [(control &)]            '
+;;lobal-set-key [(meta    &)]            'async-shell-command)
+;;lobal-set-key [(super   &)]            'KEY NOT REGISTERED
+;;lobal-set-key [(control meta  &)]      '
+;;lobal-set-key [(control super &)]      '
+;;lobal-set-key [(meta    super &)]      '
+;;lobal-set-key [(control meta super &)] '
+
+;; ==================== * ====================
+;; 
+;;lobal-set-key [(control *)]            '
+;;lobal-set-key [(meta    *)]            '
+;;lobal-set-key [(super   *)]            'KEY NOT REGISTERED
+;;lobal-set-key [(control meta  *)]      '
+;;lobal-set-key [(control super *)]      '
+;;lobal-set-key [(meta    super *)]      '
+;;lobal-set-key [(control meta super *)] '
+
+;; ==================== + ====================
+;; 
+(global-set-key [(control +)]            'text-scale-increase)
+;;lobal-set-key [(meta    +)]            ')
+;;lobal-set-key [(super   +)]            '
+;;lobal-set-key [(control meta  +)]      '
+;;lobal-set-key [(control super +)]      '
+;;lobal-set-key [(meta    super +)]      '
+;;lobal-set-key [(control meta super +)] '
+
+;; ==================== , ====================
+;; 
+;;lobal-set-key [(control ,)]            '
+;;lobal-set-key [(meta    ,)]            'xref-pop-marker-stack)
+;;lobal-set-key [(super   ,)]            '
+;;lobal-set-key [(control meta  ,)]      '
+;;lobal-set-key [(control super ,)]      '
+;;lobal-set-key [(meta    super ,)]      '
+;;lobal-set-key [(control meta super ,)] '
+
+;; ==================== - ====================
+;; 
+(global-set-key [(control -)]            'text-scale-decrease)
+;;lobal-set-key [(meta    -)]            'negative-argument)
+;;lobal-set-key [(super   -)]            '
+;;lobal-set-key [(control meta  -)]      '
+;;lobal-set-key [(control super -)]      '
+;;lobal-set-key [(meta    super -)]      '
+;;lobal-set-key [(control meta super -)] '
+
+;; ==================== . ====================
+;; 
+;;lobal-set-key [(control .)]            '
+;;lobal-set-key [(meta    .)]            'xref-find-definitions)
+;;lobal-set-key [(super   .)]            '
+;;lobal-set-key [(control meta  .)]      '
+;;lobal-set-key [(control super .)]      '
+;;lobal-set-key [(meta    super .)]      '
+;;lobal-set-key [(control meta super .)] '
+
+;; ==================== / ====================
+;; 
+;;lobal-set-key [(control /)] 'undo-tree-undo)
+;;lobal-set-key [(meta    /)] 'dabbrev-expand)
+;;lobal-set-key [(super   /)] '
+;;lobal-set-key [(control meta  /)]      '
+;;lobal-set-key [(control super /)]      '
+;;lobal-set-key [(meta    super /)]      '
+;;lobal-set-key [(control meta super /)] '
+
+;; ==================== 0 ====================
+;; 
+;;lobal-set-key [(control 0)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    0)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   0)] ' DO NOT USE
+;;lobal-set-key [(control meta  0)]      '
+;;lobal-set-key [(control super 0)]      '
+;;lobal-set-key [(meta    super 0)]      '
+;;lobal-set-key [(control meta super 0)] '
+
+; ==================== 1 ====================
+;; 
+;;lobal-set-key [(control 1)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    1)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   1)] ' DO NOT USE
+;;lobal-set-key [(control meta  1)]      '
+;;lobal-set-key [(control super 1)]      '
+;;lobal-set-key [(meta    super 1)]      '
+;;lobal-set-key [(control meta super 1)] '
+
+;; ==================== 2 ====================
+;; 
+;;lobal-set-key [(control 2)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    2)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   2)] ' DO NOT USE
+;;lobal-set-key [(control meta  2)]      '
+;;lobal-set-key [(control super 2)]      '
+;;lobal-set-key [(meta    super 2)]      '
+;;lobal-set-key [(control meta super 2)] '
+
+;; ==================== 3 ====================
+;; 
+;;lobal-set-key [(control 3)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    3)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   3)] ' DO NOT USE
+;;lobal-set-key [(control meta  3)]      '
+;;lobal-set-key [(control super 3)]      '
+;;lobal-set-key [(meta    super 3)]      '
+;;lobal-set-key [(control meta super 3)] '
+
+;; ==================== 4 ====================
+;; 
+;;lobal-set-key [(control 4)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    4)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   4)] ' DO NOT USE
+;;lobal-set-key [(control meta  4)]      '
+;;lobal-set-key [(control super 4)]      '
+;;lobal-set-key [(meta    super 4)]      '
+;;lobal-set-key [(control meta super 4)] '
+
+;; ==================== 5 ====================
+;; 
+;;lobal-set-key [(control 5)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    5)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   5)] ' DO NOT USE
+;;lobal-set-key [(control meta  5)]      '
+;;lobal-set-key [(control super 5)]      '
+;;lobal-set-key [(meta    super 5)]      '
+;;lobal-set-key [(control meta super 5)] '
+
+;; ==================== 6 ====================
+;; 
+;;lobal-set-key [(control 6)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    6)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   6)] ' DO NOT USE
+;;lobal-set-key [(control meta  6)]      '
+;;lobal-set-key [(control super 6)]      '
+;;lobal-set-key [(meta    super 6)]      '
+;;lobal-set-key [(control meta super 6)] '
+
+;; ==================== 7 ====================
+;; 
+;;lobal-set-key [(control 7)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    7)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   7)] ' DO NOT USE
+;;lobal-set-key [(control meta  7)]      '
+;;lobal-set-key [(control super 7)]      '
+;;lobal-set-key [(meta    super 7)]      '
+;;lobal-set-key [(control meta super 7)] '
+
+;; ==================== 8 ====================
+;; 
+;;lobal-set-key [(control 8)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    8)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   8)] ' DO NOT USE
+;;lobal-set-key [(control meta  8)]      '
+;;lobal-set-key [(control super 8)]      '
+;;lobal-set-key [(meta    super 8)]      '
+;;lobal-set-key [(control meta super 8)] '
+
+;; ==================== 9 ====================
+;; 
+;;lobal-set-key [(control 9)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(meta    9)] ' DO NOT USE ... digit argument
+;;lobal-set-key [(super   9)] ' DO NOT USE
+;;lobal-set-key [(control meta  9)]      '
+;;lobal-set-key [(control super 9)]      '
+;;lobal-set-key [(meta    super 9)]      '
+;;lobal-set-key [(control meta super 9)] '
+
+;; ==================== SPC ====================
+;; 
+;;lobal-set-key [(control    SPC)] 'cua-set-mark)
+;;lobal-set-key [(meta       SPC)] ' KEY NOT REGISTERED
+;;lobal-set-key [(super      SPC)] ' DO NOT USE
+;;lobal-set-key [(meta shift SPC)] 'just-one-space)
+(global-set-key [?\s- ] 'ergoemacs-shrink-whitespaces)  ;; autoloaded — [(super SPC)]
+;;lobal-set-key [(control meta  SPC)] 'mark-sexp)
+(global-set-key [?\C-\s- ] 'ergoemacs-shrink-whitespaces)
+;;lobal-set-key [(meta    super SPC)] '
+;;lobal-set-key [(control meta super SPC)] '
+
+;; ==================== : ====================
+;; 
+;;lobal-set-key [(control :)]  '
+;;lobal-set-key [(meta    :)]  'eval-expression)
+;;lobal-set-key [(super   :)]  '
+;;lobal-set-key [(control meta  :)]      '
+;;lobal-set-key [(control super :)]      '
+;;lobal-set-key [(meta    super :)]      '
+;;lobal-set-key [(control meta super :)] '
+
+;; ==================== ; ====================
+;; 
+;;lobal-set-key [(control \;)] '
+(global-set-key [(meta    \;)] 'xah-comment-dwim)
+;;lobal-set-key [(super   \;)] '
+;;lobal-set-key [(control meta  \;)]      '
+;;lobal-set-key [(control super \;)]      '
+;;lobal-set-key [(meta    super \;)]      '
+;;lobal-set-key [(control meta super \;)] '
+
+;; ==================== < ====================
+;; 
+;;lobal-set-key [(control <)] '
+;;lobal-set-key [(meta    <)] 'beginning-of-buffer)
+(global-set-key [(super   <)] 'xah-insert-lt)
+;;lobal-set-key [(control meta  <)]      '
+;;lobal-set-key [(control super <)]      '
+;;lobal-set-key [(meta    super <)]      '
+;;lobal-set-key [(control meta super <)] '
+
+;; ==================== = ====================
+;; 
+;;lobal-set-key [(control =)]  '
+;;lobal-set-key [(meta    =)]  'count-words-region)
+;;lobal-set-key [(super   =)]  '
+;;lobal-set-key [(control meta  =)]      '
+;;lobal-set-key [(control super =)]      '
+;;lobal-set-key [(meta    super =)]      '
+;;lobal-set-key [(control meta super =)] '
+
+
+;; ==================== > ====================
+;; 
+;;lobal-set-key [(control >)] '
+;;lobal-set-key [(meta    >)] 'end-of-buffer)
+(global-set-key [(super   >)] 'xah-insert-tag)
+;;lobal-set-key [(control meta  >)]      '
+;;lobal-set-key [(control super >)]      '
+;;lobal-set-key [(meta    super >)]      '
+;;lobal-set-key [(control meta super >)] '
+
+;; ==================== 9 ====================
+;; 
+;;lobal-set-key [(control ?)]  'undo-tree-redo)
+;;lobal-set-key [(meta    ?)]  'xref-find-references)
+;;lobal-set-key [(super   ?)]  '
+;;lobal-set-key [(control meta  9)]      '
+;;lobal-set-key [(control super 9)]      '
+;;lobal-set-key [(meta    super 9)]      '
+;;lobal-set-key [(control meta super 9)] '
+
+;; ==================== @ ====================
+;; 
+;;lobal-set-key [(control @)]  'cua-set-mark)
+;;lobal-set-key [(meta    @)]  'mark-word)
+;;lobal-set-key [(super   @)]  ' DO  NOT USE
+;;lobal-set-key [(control meta  @)]      '
+;;lobal-set-key [(control super @)]      '
+;;lobal-set-key [(meta    super @)]      '
+;;lobal-set-key [(control meta super @)] '
+
+;; ==================== " ====================
+;; 
+;;lobal-set-key [(control \")] '
+;;lobal-set-key [(meta    \")] '
+(global-set-key [(super   \")] 'xah-insert-double-quote)
+;;lobal-set-key [(control meta  \")]      '
+;;lobal-set-key [(control super \")]      '
+;;lobal-set-key [(meta    super \")]      '
+;;lobal-set-key [(control meta super \")] '
+
+;; ==================== ' ====================
+;; 
+;;lobal-set-key [(control \')] '
+;;lobal-set-key [(meta    \')] 'abbrev-prefix-mark)
+(global-set-key [(super   \')] 'xah-insert-single-quote)
+;;lobal-set-key [(control meta  \')]      '
+;;lobal-set-key [(control super \')]      '
+;;lobal-set-key [(meta    super \')]      '
+;;lobal-set-key [(control meta super \')] '
+
+;; ==================== ( ====================
+;; 
+;;lobal-set-key [(control \()] '
+;;lobal-set-key [(meta    \()] 'insert-parentheses)
+;;lobal-set-key [(super   \()] 'xah-insert-paren KEY NOT REGISTERED ???)
+;;lobal-set-key [(control meta  \()]      '
+;;lobal-set-key [(control super \()]      '
+;;lobal-set-key [(meta    super \()]      '
+;;lobal-set-key [(control meta super \()] '
+
+;; ==================== ) ====================
+;; 
+;;lobal-set-key [(control \))] '
+;;lobal-set-key [(meta    \))] 'move-past-close-and-reindent)
+;;lobal-set-key [(super   \))] 'move-past-close-and-reindent)
+;;lobal-set-key [(control meta  \))]      '
+;;lobal-set-key [(control super \))]      '
+;;lobal-set-key [(meta    super \))]      '
+;;lobal-set-key [(control meta super \))] '
+
+;; ==================== [ ====================
+;; 
+;;lobal-set-key [(control \[)] '
+;;lobal-set-key [(meta    \[)] '
+(global-set-key [(super   \[)] 'xah-insert-bracket)
+;;lobal-set-key [(control meta  \[)]      '
+;;lobal-set-key [(control super \[)]      '
+;;lobal-set-key [(meta    super \[)]      '
+;;lobal-set-key [(control meta super \[)] '
+
+;; ==================== \ ====================
+;; 
+;;lobal-set-key [(control \\)] 'toggle-input-method)
+;;lobal-set-key [(meta    \\)] 'delete-horizontal-space)
+;;lobal-set-key [(super   \\)] '
+;;lobal-set-key [(control meta  \\)]      '
+;;lobal-set-key [(control super \\)]      '
+;;lobal-set-key [(meta    super \\)]      '
+;;lobal-set-key [(control meta super \\)] '
+
+;; ==================== ] ====================
+;; 
+;;lobal-set-key [(control \])] 'abort-recursive-edit)
+;;lobal-set-key [(meta    \])] '
+;;lobal-set-key [(super   \])] '
+;;lobal-set-key [(control meta  \])]      '
+;;lobal-set-key [(control super \])]      '
+;;lobal-set-key [(meta    super \])]      '
+;;lobal-set-key [(control meta super \])] '
+
+;; ==================== ` ====================
+;; 
 (global-set-key [(control \`)] 'xah-insert-emacs-quote)
-(global-set-key [(super \<)] 'xah-insert-lt)
-(global-set-key [(super \>)] 'xah-insert-tag)
+;;lobal-set-key [(meta    \`)] ' DO  NOT USE
+(global-set-key [(super   \`)] 'xah-insert-emacs-quote)
+;;lobal-set-key [(control meta  \`)]      '
+;;lobal-set-key [(control super \`)]      '
+;;lobal-set-key [(meta    super \`)]      '
+;;lobal-set-key [(control meta super \`)] '
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ==================== { ====================
+;; 
+;;lobal-set-key [(control \{)] '
+;;lobal-set-key [(meta    \{)] 'backward-paragraph)
+(global-set-key [(super   \{)] 'xah-insert-brace)
+;;lobal-set-key [(control meta  \{)]      '
+;;lobal-set-key [(control super \{)]      '
+;;lobal-set-key [(meta    super \{)]      '
+;;lobal-set-key [(control meta super \{)] '
 
-(global-set-key [(control return)]       'insert-newline-after)
-(global-set-key [(control shift return)] 'insert-newline-after-and-indent)
-(global-set-key [(meta return)]          'insert-newline-before)
-(global-set-key [(super return)]         'insert-newline-before-and-indent)
+;; ==================== } ====================
+;; 
+;;lobal-set-key [(control \})] '
+;;lobal-set-key [(meta    \})] 'forward-paragraph)
+;;lobal-set-key [(super   \})] '
+;;lobal-set-key [(control meta  \})]      '
+;;lobal-set-key [(control super \})]      '
+;;lobal-set-key [(meta    super \})]      '
+;;lobal-set-key [(control meta super \})] '
 
+;; ==================== ^ ====================
+;; 
+;;lobal-set-key [(control ^)]  '
+;;lobal-set-key [(meta    ^)]  'delete-indentation)
+;;lobal-set-key [(super   ^)]  ' KEY NOT REGISTERED
+;;lobal-set-key [(control meta  ^)]      '
+;;lobal-set-key [(control super ^)]      '
+;;lobal-set-key [(meta    super ^)]      '
+;;lobal-set-key [(control meta super ^)] '
+
+;; ==================== _ ====================
+;; 
+;;lobal-set-key [(control _)]  'undo-tree-undo)
+;;lobal-set-key [(meta    _)]  'undo-tree-undo)
+;;lobal-set-key [(super   _)]  '
+;;lobal-set-key [(control meta  _)]      '
+;;lobal-set-key [(control super _)]      '
+;;lobal-set-key [(meta    super _)]      '
+;;lobal-set-key [(control meta super _)] '
+
+;; ==================== | ====================
+;; 
+;;lobal-set-key [(control |)]  '
+;;lobal-set-key [(meta    |)]  'shell-command-on-region)
+;;lobal-set-key [(super   |)]  '
+;;lobal-set-key [(control meta  |)]      '
+;;lobal-set-key [(control super |)]      '
+;;lobal-set-key [(meta    super |)]      '
+;;lobal-set-key [(control meta super |)] '
+
+;; ==================== ~ ====================
+;; 
+;;lobal-set-key [(control ~)]  '
+;;lobal-set-key [(meta    ~)]  ' DO  NOT USE
+;;lobal-set-key [(super   ~)]  '
+;;lobal-set-key [(control meta  ~)]      '
+;;lobal-set-key [(control super ~)]      '
+;;lobal-set-key [(meta    super ~)]      '
+;;lobal-set-key [(control meta super ~)] '
+
+;; ==================== TAB ====================
+;; 
+;;lobal-set-key [TAB]           ' INDENT
+(global-set-key [(control tab)] 'set-random-background-color)
+(global-set-key [(meta    tab)] 'set-random-background-color)
+;;lobal-set-key [(super   tab)] '
+;;lobal-set-key [(control meta  tab)] ' DO  NOT USE
+(global-set-key [(control super tab)] 'clean-aindent--bsunindent)
+;;lobal-set-key [(meta    super tab)] '
+;;lobal-set-key [(control meta super tab)] '
+
+;;lobal-set-key [backtab] '
+
+;; ==================== backspace ====================
+;; 
+;;lobal-set-key [backspace]           'backward-delete-char-untabify
+(global-set-key [(control backspace)] 'tinyeat-backward-preserve)
+(global-set-key [(meta    backspace)] 'backward-kill-word)
+;;lobal-set-key [(super   backspace)] 'tinyeat-delete-paragraph
+;;lobal-set-key [(control meta  backspace)]      '
+;;lobal-set-key [(control super backspace)]      '
+;;lobal-set-key [(meta    super backspace)]      '
+;;lobal-set-key [(control meta super backspace)] '
+
+;; ==================== f1 ====================
+;; 
+(global-set-key [f1]           'u-forward-word)
+(global-set-key [(control f1)] 'insert-chs)
+;;lobal-set-key [(meta    f1)] ' DO NOT USE
+(global-set-key [(super   f1)] 'u-forward-symbol)
+;;lobal-set-key [(control meta  f1)] ' DO NOT USE
+;;lobal-set-key [(control super f1)] '
+;;lobal-set-key [(meta    super f1)] '
+;;lobal-set-key [(control meta super f1)] ' DO NOT USE
+
+;; ==================== f2 ====================
+;; 
+(global-set-key [f2]           'backward-word)
+(global-set-key [(control f2)] 'insert-che)
+;;lobal-set-key [(meta    f2)] ' DO NOT USE
+(global-set-key [(super   f2)] 'backward-symbol)
+;;lobal-set-key [(control meta  f2)]      ' DO NOT USE
+;;lobal-set-key [(control super f2)]      '
+;;lobal-set-key [(meta    super f2)]      '
+;;lobal-set-key [(control meta super f2)] ' DO NOT USE
+
+;; ==================== f3 ====================
+;; 
+(global-set-key [f3]           'u-end-of-line)
+;;lobal-set-key [(control f3)] '
+;;lobal-set-key [(meta    f3)] ' DO NOT USE
+;;lobal-set-key [(super   f3)] '
+;;lobal-set-key [(control meta  f3)]      ' DO NOT USE
+;;lobal-set-key [(control super f3)]      '
+;;lobal-set-key [(meta    super f3)]      '
+;;lobal-set-key [(control meta super f3)] ' DO NOT USE
+
+;; ==================== f4 ====================
+;; 
+(global-set-key [f4]           'u-beginning-of-line)
+;;lobal-set-key [(control f4)] '
+;;lobal-set-key [(meta    f4)] ' DO NOT USE
+;;lobal-set-key [(super   f4)] '
+;;lobal-set-key [(control meta  f4)]      ' DO NOT USE
+;;lobal-set-key [(control super f4)]      '
+;;lobal-set-key [(meta    super f4)]      '
+;;lobal-set-key [(control meta super f4)] ' DO NOT USE
+
+;; ==================== f5 ====================
+;; 
+(global-set-key [f5]           'transpose-chars)
+;;lobal-set-key [(control f5)] '
+;;lobal-set-key [(meta    f5)] ' DO NOT USE
+;;lobal-set-key [(super   f5)] '
+;;lobal-set-key [(control meta  f5)]      ' DO NOT USE
+;;lobal-set-key [(control super f5)]      '
+;;lobal-set-key [(meta    super f5)]      '
+;;lobal-set-key [(control meta super f5)] ' DO NOT USE
+
+;; ==================== f6 ====================
+;; 
+(global-set-key [f6]           'capitalize-word)
+(global-set-key [(control f6)] 'capitalize-word-or-region)
+;;lobal-set-key [(meta    f6)] ' DO NOT USE
+;;lobal-set-key [(super f6)]   'xah-toggle-letter-case)
+;;lobal-set-key [(control meta  f6)]      ' DO NOT USE
+;;lobal-set-key [(control super f6)]      '
+;;lobal-set-key [(meta    super f6)]      '
+;;lobal-set-key [(control meta super f6)] ' DO NOT USE
+
+;; ==================== f7 ====================
+;; 
+(global-set-key [f7]           'downcase-word)
+(global-set-key [(control f7)] 'downcase-word-or-region)
+;;lobal-set-key [(meta    f7)] ' DO NOT USE
+;;lobal-set-key [(super   f7)] '
+;;lobal-set-key [(control meta  f7)]      ' DO NOT USE
+;;lobal-set-key [(control super f7)]      '
+;;lobal-set-key [(meta    super f7)]      '
+;;lobal-set-key [(control meta super f7)] ' DO NOT USE
+
+;; ==================== f8 ====================
+;; 
+(global-set-key [f8]           'upcase-word)
+(global-set-key [(control f8)] 'upcase-word-or-region)
+;;lobal-set-key [(meta    f8)] ' DO NOT USE
+;;lobal-set-key [(super   f8)] '
+;;lobal-set-key [(control meta  f8)]      ' DO NOT USE
+;;lobal-set-key [(control super f8)]      '
+;;lobal-set-key [(meta    super f8)]      '
+;;lobal-set-key [(control meta super f8)] ' DO NOT USE
+
+;; ==================== f9 ====================
+;; 
+(global-set-key [f9]           'kill-word)
+(global-set-key [(control f9)] 'tinyeat-delete-whole-word) ;; autoloaded
+;;lobal-set-key [(meta    f9)] ' DO NOT        USE
+;;lobal-set-key [(super   f9)] '
+;;lobal-set-key [(control meta  f9)]      ' DO NOT USE
+;;lobal-set-key [(control super f9)]      '
+;;lobal-set-key [(meta    super f9)]      '
+;;lobal-set-key [(control meta super f9)] ' DO NOT USE
+
+;; ==================== f10 ====================
+;; 
+(global-set-key [f10]           'kill-whole-line)
+(global-set-key [(control f10)] 'delete-line-text)
+;;lobal-set-key [(meta    f10)] ' DO NOT USE
+;;lobal-set-key [(super   f10)] '
+;;lobal-set-key [(control meta  f10)]      ' DO NOT USE
+;;lobal-set-key [(control super f10)]      '
+;;lobal-set-key [(meta    super f10)]      '
+;;lobal-set-key [(control meta super f10)] ' DO NOT USE
+
+;; ==================== f11 ====================
+;; 
+(global-set-key [f11]           'delete-to-eol)
+(global-set-key [(control f11)] 'join-line-1)
+;;lobal-set-key [(meta    f11)] 'toggle-maximized-frame
+;;lobal-set-key [(super   f11)] '
+;;lobal-set-key [(control meta  f11)]      ' DO NOT USE
+;;lobal-set-key [(control super f11)]      '
+;;lobal-set-key [(meta    super f11)]      '
+;;lobal-set-key [(control meta super f11)] ' DO NOT USE
+
+;; ==================== f12 ====================
+;; 
+(global-set-key [f12]           'delete-to-bol)
+(global-set-key [(control f12)] 'delete-indentation)
+;;lobal-set-key [(meta    f12)] ' DO NOT USE
+;;lobal-set-key [(super   f12)] '
+;;lobal-set-key [(control meta  f12)]      ' DO NOT USE
+;;lobal-set-key [(control super f12)]      '
+;;lobal-set-key [(meta    super f12)]      '
+;;lobal-set-key [(control meta super f12)] ' DO NOT USE
+
+;;  ==================== Print Screen ====================
+;;
+;;(global-set-key [(super print)] ')
+;;(global-set-key [(control super print)] ')
+;;(global-set-key [(meta    super print)] ')
+;;lobal-set-key [(control meta  print)]      ' DO NOT USE
+;;lobal-set-key [(control super print)]      '
+;;lobal-set-key [(meta    super print)]      '
+;;lobal-set-key [(control meta super print)] ' DO NOT USE
+
+;; ==================== Scroll_Lock ====================
+;; 
+(global-set-key [Scroll_Lock]           'completion-at-point)
+;;lobal-set-key [(control Scroll_Lock)] '
+;;lobal-set-key [(meta    Scroll_Lock)] '
+;;lobal-set-key [(super   Scroll_Lock)] '
+;;(global-set-key [(control meta  Scroll_Lock)] ')
+;;(global-set-key [(control super Scroll_Lock)] ')
+;;(global-set-key [(meta    super Scroll_Lock)] ')
+;;lobal-set-key [(control   meta super Scroll_Lock)] '
+
+;; ==================== pause ====================
+;; 
+(global-set-key [pause]           'dabbrev-expand)
+;;lobal-set-key [(control pause)] '
+(global-set-key [(meta    pause)] 'sdcv-search)
+;;lobal-set-key [(super   pause)] ' DO NOT USE
+;;(global-set-key [(control meta  pause)] ')
+;;(global-set-key [(control super pause)] ')
+;;(global-set-key [(meta    super pause)] ')
+;;lobal-set-key [(control   meta super pause)] '
+
+;; ==================== insert ====================
+;; 
 (global-set-key [insert]           'u-paste-clipboard)
 (global-set-key [(control insert)] 'overwrite-mode)
-(global-set-key [(meta  insert)]   'insert-dd-mon-yyyy)
-(global-set-key [(super insert)]   'insert-month-day-year)
-(global-set-key [(control super insert)] '(lambda () (interactive) (insert user-full-name)))
+(global-set-key [(meta    insert)] 'insert-dd-mon-yyyy)
+(global-set-key [(super   insert)] 'insert-month-day-year)
+(global-set-key [(control meta  insert)] '(lambda () (insert user-full-name)))
+;;lobal-set-key [(control super insert)]      '
+;;lobal-set-key [(meta    super insert)]      '
+;;lobal-set-key [(control meta super insert)] '
 
-(global-set-key [(meta \;)] 'xah-comment-dwim)
+;; ==================== delete ====================
+;; 
+(global-set-key [delete]           'delete-char)
+(global-set-key [(control delete)] 'tinyeat-forward-preserve) ;; autoloaded
+;;lobal-set-key [(meta    delete)] 'clean-aindent--bsunindent)
+(global-set-key [(super   delete)] '(lambda nil (interactive) (delete-region (point-min) (point-max))))
+;;lobal-set-key [(control meta  delete)] ' DO NOT USE
+(global-set-key [(control super delete)] '(lambda nil (interactive) (delete-region (point) (point-max))))
+(global-set-key [(meta    super delete)] '(lambda nil (interactive) (delete-region (point-min) (point))))
+;;lobal-set-key [(control meta super delete)] ' DOES NOT REGISTER
 
-(global-set-key [f1]  'u-forward-word)
-(global-set-key [f2]  'backward-word)
-(global-set-key [f3]  'u-end-of-line)
-(global-set-key [f4]  'u-beginning-of-line)
-(global-set-key [f5]  'transpose-chars)
-(global-set-key [f6]  'capitalize-word)
-(global-set-key [f7]  'downcase-word)
-(global-set-key [f8]  'upcase-word)
-(global-set-key [f9]  'kill-word)
-(global-set-key [f10] 'kill-whole-line)
-(global-set-key [f11] 'delete-to-eol)
-(global-set-key [f12] 'delete-to-bol)
+;; ==================== home ====================
+;; 
+(global-set-key [home]           'beginning-of-buffer)
+(global-set-key [(control home)] 'beginning-of-line)
+(global-set-key [(meta    home)] 'move-to-window-line-top-bottom)
+;;lobal-set-key [(super   home)] ' DOES NOT REGISTER
+;;lobal-set-key [(control meta  home)] 'beginning-of-defun
+;;lobal-set-key [(control super home)] '
+;;lobal-set-key [(meta    super home)] '
+;;lobal-set-key [(control meta super home)] '
 
-(global-set-key [(super f1)] 'u-forward-symbol)
-(global-set-key [(super f2)] 'backward-symbol)
-(global-set-key [(super f6)] 'xah-toggle-letter-case)
+;; ==================== end ====================
+;; 
+(global-set-key [end]           'end-of-buffer)
+(global-set-key [(control end)] 'end-of-line)
+;;lobal-set-key [(meta    end)] 'end-of-buffer-other-window)
+;;lobal-set-key [(super   end)] '
+;;lobal-set-key [(control meta  end)]      '
+;;lobal-set-key [(control super end)]      '
+;;lobal-set-key [(meta    super end)]      '
+;;lobal-set-key [(control meta super end)] '
 
-;;
-;; control-Function Keys
-;;
-(global-set-key [(control f1)]  'insert-chs)
-(global-set-key [(control f2)]  'insert-che)
-(global-set-key [(control f6)]  'capitalize-word-or-region)
-(global-set-key [(control f7)]  'downcase-word-or-region)
-(global-set-key [(control f8)]  'upcase-word-or-region)
-(global-set-key [(control f9)]  'tinyeat-delete-whole-word) ;; autoloaded
-(global-set-key [(control f10)] 'delete-line-text)
-(global-set-key [(control f11)] 'join-line-1)
-(global-set-key [(control f12)] 'delete-indentation)
+;; ==================== prior ====================
+;; 
+;;lobal-set-key [prior]           'scroll-down-command) ;; Page Up
+;;lobal-set-key [(control prior)] 'scroll-right)
+;;lobal-set-key [(meta    prior)] 'scroll-right)
+;;lobal-set-key [(super   prior)] '
+;;lobal-set-key [(control meta  prior)]      '
+;;lobal-set-key [(control super prior)]      '
+;;lobal-set-key [(meta    super prior)]      '
+;;lobal-set-key [(control meta super prior)] '
 
-;;
-;; meta-Function Keys
-;;
-(global-set-key [(meta f10)] 'toggle-frame-fullscreen)
-(global-set-key [(meta f11)] 'toggle-frame-maximized)
+;; ==================== next ====================
+;; 
+;;lobal-set-key [next]           'scroll-up-command)   ;; Page Down
+;;lobal-set-key [(control next)] 'scroll-left)
+;;lobal-set-key [(meta    next)] 'scroll-left)
+;;lobal-set-key [(super   next)] '
+;;lobal-set-key [(control meta  next)]      '
+;;lobal-set-key [(control super next)]      '
+;;lobal-set-key [(meta    super next)]      '
+;;lobal-set-key [(control meta super next)] '
 
-;;
-;; "Middle" keys
-;;
-(global-set-key [home]   'beginning-of-buffer)
-(global-set-key [end]    'end-of-buffer)
-(global-set-key [delete] 'delete-char)
+;; ==================== up ====================
+;; 
+;;lobal-set-key [up]           'previous-line
+;;lobal-set-key [(control up)] 'scroll-down-line)
+;;lobal-set-key [(meta    up)] 'scroll-down-line)
+;;lobal-set-key [(super   up)] '
+;;lobal-set-key [(control meta  up)]      '
+;;lobal-set-key [(control super up)]      '
+;;lobal-set-key [(meta    super up)]      '
+;;lobal-set-key [(control meta super up)] '
 
-(global-set-key [pause]       'dabbrev-expand)
-(global-set-key [f21]         'dabbrev-expand)
-(global-set-key [Scroll_Lock] 'completion-at-point)
-;;
-;; Keypad keys
-;;
-(global-set-key [kp-1] 'duplicate-previous)
-(global-set-key [kp-2] '(lambda () (interactive "*") (duplicate -2)))
-(global-set-key [kp-3] '(lambda () (interactive "*") (duplicate -3)))
-(global-set-key [kp-4] '(lambda () (interactive "*") (duplicate -4)))
-(global-set-key [kp-5] '(lambda () (interactive "*") (duplicate -5)))
-(global-set-key [kp-6] '(lambda () (interactive "*") (duplicate -6)))
-(global-set-key [kp-7] '(lambda () (interactive "*") (duplicate -7)))
-(global-set-key [kp-8] '(lambda () (interactive "*") (duplicate -8)))
-(global-set-key [kp-9] '(lambda () (interactive "*") (duplicate -9)))
-(global-set-key [kp-0] 'duplicate-line-or-region)
+;; ==================== left ====================
+;; 
+;;lobal-set-key [left]           'left-char)
+;;lobal-set-key [(control left)] 'left-word)
+;;lobal-set-key [(meta    left)] 'left-word)
+(global-set-key [(super   left)] 'search-word-backward)
+;;lobal-set-key [(control meta  left)] ' DOES NOT REGISTER
+;;lobal-set-key [(control shift left)] 'ergoemacs-backward-open-bracket
+;;lobal-set-key [(control super left)] ' DO NOT USE
+(global-set-key [(meta    super left)] 'backward-symbol)
+;;lobal-set-key [(control meta super left)] '
 
-(global-set-key [(meta kp-1)] 'duplicate-next)
-(global-set-key [(meta kp-2)] '(lambda () (interactive "*") (duplicate 2)))
-(global-set-key [(meta kp-3)] '(lambda () (interactive "*") (duplicate 3)))
-(global-set-key [(meta kp-4)] '(lambda () (interactive "*") (duplicate 4)))
-(global-set-key [(meta kp-5)] '(lambda () (interactive "*") (duplicate 5)))
-(global-set-key [(meta kp-6)] '(lambda () (interactive "*") (duplicate 6)))
-(global-set-key [(meta kp-7)] '(lambda () (interactive "*") (duplicate 7)))
-(global-set-key [(meta kp-8)] '(lambda () (interactive "*") (duplicate 8)))
-(global-set-key [(meta kp-9)] '(lambda () (interactive "*") (duplicate 9)))
-(global-set-key [(meta kp-0)] 'duplicate-line-or-region)
+;; ==================== down ====================
+;; 
+;;lobal-set-key [down]           'next-line)
+;;lobal-set-key [(control down)] 'scroll-up-line)
+;;lobal-set-key [(meta    down)] 'scroll-up-line)
+;;lobal-set-key [(super   down)] '
+;;lobal-set-key [(control meta  down)]      '
+;;lobal-set-key [(control super down)]      '
+;;lobal-set-key [(meta    super down)]      '
+;;lobal-set-key [(control meta super down)] '
 
-(global-set-key [kp-divide]   'toggle-fill-paragraph-or-region)
-(global-set-key [kp-multiply] 'dabbrev-expand)
-(global-set-key [kp-add]      'search-word-forward)
-(global-set-key [kp-enter]    'duplicate-previous)
-(global-set-key [kp-decimal]  'delete-horizontal-space)
+;; ==================== right ====================
+;; 
+;;lobal-set-key [right]           'right-char)
+;;lobal-set-key [(control right)] 'right-word)
+(global-set-key [(meta    right)] 'u-forward-word)
+(global-set-key [(super   right)] 'search-word-forward)
+;;lobal-set-key [(control meta  right)] ' DOES NOT REGISTER
+;;lobal-set-key [(control shift right)] 'ergoemacs-forward-open-bracket
+;;lobal-set-key [(control super right)] ' DO NOT USE
+(global-set-key [(meta    super right)] 'u-forward-symbol)
+;;lobal-set-key [(control meta super right)] '
 
+;; ==================== kp-divide ====================
+;; 
+(global-set-key [kp-divide]           'toggle-fill-paragraph-or-region)
+;;lobal-set-key [(control kp-divide)] 'undo-tree-undo)
+;;lobal-set-key [(meta    kp-divide)] 'dabbrev-expand)
+;;lobal-set-key [(super   kp-divide)] '
+;;lobal-set-key [(control meta  kp-divide)]      '
+;;lobal-set-key [(control super kp-divide)]      '
+;;lobal-set-key [(meta    super kp-divide)]      '
+;;lobal-set-key [(control meta super kp-divide)] '
+
+;; ==================== kp-multiply ====================
+;; 
+(global-set-key [kp-multiply]           'dabbrev-expand)
+;;lobal-set-key [(control kp-multiply)] '
+;;lobal-set-key [(meta    kp-multiply)] '
+;;lobal-set-key [(super   kp-multiply)] '
+;;lobal-set-key [(control meta  kp-multiply)]      '
+;;lobal-set-key [(control super kp-multiply)]      '
+;;lobal-set-key [(meta    super kp-multiply)]      '
+;;lobal-set-key [(control meta super kp-multiply)] '
+
+;; ==================== kp-subtract ====================
+;; 
 (global-set-key [kp-subtract]           'search-word-backward)
 (global-set-key [(control kp-subtract)] 'shift-number-down)
-(global-set-key [(super   kp-subtract)] 'toggle-char-case-at-point)
+;;lobal-set-key [(meta    kp-subtract)] 'negative-argument)
+;;lobal-set-key [(super   kp-subtract)] '
+;;lobal-set-key [(control meta  kp-subtract)]      '
+;;lobal-set-key [(control super kp-subtract)]      '
+;;lobal-set-key [(meta    super kp-subtract)]      '
+;;lobal-set-key [(control meta super kp-subtract)] '
 
-(global-set-key [(control kp-add)]      'shift-number-up)
+;; ==================== kp-add ====================
+;; 
+(global-set-key [kp-add]           'search-word-forward)
+(global-set-key [(control kp-add)] 'shift-number-up)
+;;lobal-set-key [(meta    kp-add)] '
+;;lobal-set-key [(super   kp-add)] '
+;;lobal-set-key [(control meta  kp-add)]      '
+;;lobal-set-key [(control super kp-add)]      '
+;;lobal-set-key [(meta    super kp-add)]      '
+;;lobal-set-key [(control meta super kp-add)] '
 
-(global-set-key [(meta kp-enter)] 'insert-newline-before)
-(global-set-key [(meta pause)]    'sdcv-search)
+;; ==================== kp-enter ====================
+;; 
+(global-set-key [kp-enter]           'duplicate-previous)
+;;lobal-set-key [(control kp-enter)] ' DO NOT USE ... messes up C-enter
+(global-set-key [(meta    kp-enter)] 'insert-newline-before)
+;;lobal-set-key [(super   kp-enter)] '
+;;lobal-set-key [(control meta  kp-enter)]      ' DO NOT USE
+;;lobal-set-key [(control super kp-enter)]      '
+;;lobal-set-key [(meta    super kp-enter)]      '
+;;lobal-set-key [(control meta super kp-enter)] '
 
-;;
-;; control-"Middle" keys
-;;
+(global-set-key [kp-decimal]           'delete-horizontal-space)
+;;lobal-set-key [(control kp-decimal)] '
+;;lobal-set-key [(meta    kp-decimal)] 'xref-find-definitions)
+;;lobal-set-key [(super   kp-decimal)] '
 
-;;(global-set-key [(control delete)]    'usr-delete-forward-space)
+;; ==================== kp-0 ====================
+;; 
+(global-set-key [kp-0] 'duplicate-line-or-region)
+;;lobal-set-key [(control kp-0)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-0)] 'duplicate-line-or-region)
+;;lobal-set-key [(super   kp-0)] '
+;;lobal-set-key [(control meta  kp-0)] ' DO NOT USE
+(global-set-key [(control super kp-0)] '(lambda () (interactive "*") (copy-clipboard-n  0)))
+(global-set-key [(meta    super kp-0)] '(lambda () (interactive "*") (paste-clipboard-n 0)))
+;;lobal-set-key [(control meta super kp-0)] '
 
-(global-set-key [(control delete)]    'tinyeat-forward-preserve) ;; autoloaded
-(global-set-key [(control backspace)] 'tinyeat-backward-preserve)
-(global-set-key [(super backspace)]   'tinyeat-delete-paragraph)
+;; ==================== kp-1 ====================
+;; 
+(global-set-key [kp-1] 'duplicate-previous)
+;;lobal-set-key [(control kp-1)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-1)] 'duplicate-next)
+;;lobal-set-key [(super   kp-1)] '
+;;lobal-set-key [(control meta  kp-1)] ' DO NOT USE
+(global-set-key [(control super kp-1)] '(lambda () (interactive "*") (copy-clipboard-n  1)))
+(global-set-key [(meta    super kp-1)] '(lambda () (interactive "*") (paste-clipboard-n 1)))
+;;lobal-set-key [(control meta super kp-1)] '
 
-(global-set-key [(control tab)] 'set-random-background-color)
-;;(global-set-key [(super tab)]         'usr-tab-close-paren)
+;; ==================== kp-2 ====================
+;; 
+(global-set-key [kp-2]           '(lambda () (interactive "*") (duplicate -2)))
+;;lobal-set-key [(control kp-2)] ' DO NOT USE  ... digit argument
+(global-set-key [(meta    kp-2)] '(lambda () (interactive "*") (duplicate 2)))
+;;lobal-set-key [(super   kp-2)] '
+;;lobal-set-key [(control meta  kp-2)] ' DO NOT USE
+(global-set-key [(control super kp-2)] '(lambda () (interactive "*") (copy-clipboard-n  2)))
+(global-set-key [(meta    super kp-2)] '(lambda () (interactive "*") (paste-clipboard-n 2)))
+;;lobal-set-key [(control meta super kp-2)] '
 
-(global-set-key [(control up)]   'scroll-down-line)
-(global-set-key [(control down)] 'scroll-up-line)
+;; ==================== kp-3 ====================
+;; 
+(global-set-key [kp-3]           '(lambda () (interactive "*") (duplicate -3)))
+;;lobal-set-key [(control kp-3)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-3)] '(lambda () (interactive "*") (duplicate 3)))
+;;lobal-set-key [(super   kp-3)] '
+;;lobal-set-key [(control meta  kp-3)] ' DO NOT USE
+(global-set-key [(control super kp-3)] '(lambda () (interactive "*") (copy-clipboard-n  3)))
+(global-set-key [(meta    super kp-3)] '(lambda () (interactive "*") (paste-clipboard-n 3)))
+;;lobal-set-key [(control meta super kp-3)] '
 
-;;
-;; Other Keys
-;;
-(global-set-key [?\s- ] 'ergoemacs-shrink-whitespaces)  ;; autoloaded — [(super SPC)]
+;; ==================== kp-4 ====================
+;; 
+(global-set-key [kp-4]           '(lambda () (interactive "*") (duplicate -4)))
+;;lobal-set-key [(control kp-4)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-4)] '(lambda () (interactive "*") (duplicate 4)))
+;;lobal-set-key [(super   kp-4)] '
+;;lobal-set-key [(control meta  kp-4)] ' DO NOT USE
+(global-set-key [(control super kp-4)] '(lambda () (interactive "*") (copy-clipboard-n  4)))
+(global-set-key [(meta    super kp-4)] '(lambda () (interactive "*") (paste-clipboard-n 4)))
+;;lobal-set-key [(control meta super kp-4)] '
+
+;; ==================== kp-5 ====================
+;; 
+(global-set-key [kp-5]           '(lambda () (interactive "*") (duplicate -5)))
+;;lobal-set-key [(control kp-5)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-5)] '(lambda () (interactive "*") (duplicate 5)))
+;;lobal-set-key [(super   kp-5)] '
+;;lobal-set-key [(control meta  kp-5)] ' DO NOT USE
+(global-set-key [(control super kp-5)] '(lambda () (interactive "*") (copy-clipboard-n  5)))
+(global-set-key [(meta    super kp-5)] '(lambda () (interactive "*") (paste-clipboard-n 5)))
+;;lobal-set-key [(control meta super kp-5)] '
+
+;; ==================== kp-6 ====================
+;; 
+(global-set-key [kp-6]           '(lambda () (interactive "*") (duplicate -6)))
+;;lobal-set-key [(control kp-6)] ' DO NOT USE ... digit argument
+(global-set-key [(meta kp-6)]    '(lambda () (interactive "*") (duplicate 6)))
+;;lobal-set-key [(super   kp-6)] '
+;;lobal-set-key [(control meta  kp-6)] ' DO NOT USE
+(global-set-key [(control super kp-6)] '(lambda () (interactive "*") (copy-clipboard-n  6)))
+(global-set-key [(meta    super kp-6)] '(lambda () (interactive "*") (paste-clipboard-n 6)))
+;;lobal-set-key [(control meta super kp-6)] '
+
+;; ==================== kp-7 ====================
+;; 
+(global-set-key [kp-7]           '(lambda () (interactive "*") (duplicate -7)))
+;;lobal-set-key [(control kp-7)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-7)] '(lambda () (interactive "*") (duplicate 7)))
+;;lobal-set-key [(super   kp-7)] '
+;;lobal-set-key [(control meta  kp-7)] ' DO NOT USE
+(global-set-key [(control super kp-7)] '(lambda () (interactive "*") (copy-clipboard-n  7)))
+(global-set-key [(meta    super kp-7)] '(lambda () (interactive "*") (paste-clipboard-n 7)))
+;;lobal-set-key [(control meta super kp-7)] '
+
+;; ==================== kp-8 ====================
+;; 
+(global-set-key [kp-8]           '(lambda () (interactive "*") (duplicate -8)))
+;;lobal-set-key [(control kp-8)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-8)] '(lambda () (interactive "*") (duplicate 8)))
+;;lobal-set-key [(super   kp-8)] '
+;;lobal-set-key [(control meta  kp-8)] ' DO NOT USE
+(global-set-key [(control super kp-8)] '(lambda () (interactive "*") (copy-clipboard-n  8)))
+(global-set-key [(meta    super kp-8)] '(lambda () (interactive "*") (paste-clipboard-n 8)))
+;;lobal-set-key [(control meta super kp-8)] '
+
+;; ==================== kp-9 ====================
+;; 
+(global-set-key [kp-9]           '(lambda () (interactive "*") (duplicate -9)))
+;;lobal-set-key [(control kp-9)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-9)] '(lambda () (interactive "*") (duplicate 9)))
+;;lobal-set-key [(super   kp-9)] '
+;;lobal-set-key [(control meta  kp-9)] ' DO NOT USE
+(global-set-key [(control super kp-9)] '(lambda () (interactive "*") (copy-clipboard-n  9)))
+(global-set-key [(meta    super kp-9)] '(lambda () (interactive "*") (paste-clipboard-n 9)))
+;;lobal-set-key [(control meta super kp-9)] '
 
 ;;; ================================================================================
 ;;;; Bindings for mouse commands.
@@ -421,34 +1429,6 @@
 ;;(global-set-key [(control meta menu)] ')
 ;;(global-set-key [(control super menu)] ')
 ;;(global-set-key [(meta super menu)] ')
-
-;;
-;; Print Screen
-;;
-;;(global-set-key [(super print)] ')
-;;(global-set-key [(control super print)] ')
-;;(global-set-key [(meta super print)] ')
-
-;;
-;; Scroll Lock
-;;
-;;(global-set-key [Scroll_Lock] ')
-;;(global-set-key [(control Scroll_Lock)] ')
-;;(global-set-key [(meta Scroll_Lock)] ')
-;;(global-set-key [(super Scroll_Lock)] ')
-;;(global-set-key [(control meta Scroll_Lock)] ')
-;;(global-set-key [(control super Scroll_Lock)] ')
-;;(global-set-key [(meta super Scroll_Lock)] ')
-
-;;
-;; Pause
-;;
-;;(global-set-key [(control pause)] ')
-;;(global-set-key [(meta pause)] ')
-;;(global-set-key [(super pause)] ')
-;;(global-set-key [(control meta pause)] ')
-;;(global-set-key [(control super pause)] ')
-;;(global-set-key [(meta super pause)] ')
 
 ;;
 (message "Loading keys...done")
