@@ -36,12 +36,14 @@
 ;;           23-May-2017 Changed ‘powerline-red-face’ to ‘error’
 ;;           13-Jun-2018 Added ‘require’ for ‘u-flags’
 ;;           03-Jul-2018 Moved ‘powerline-vc’ to rhs face2
+;;           10-Jul-2019 Added ‘require’ for ‘anzu’
 ;;
 
 ;;; Code:
 
 (message "Loading u-powerline...")
 ;;
+(require 'anzu)
 (require 'powerline)
 (require 'u-flags)
 (require 'u-macro)

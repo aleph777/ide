@@ -46,37 +46,37 @@
 (require 'dash)
 (require 's)
 
-(defconst is-shell-modes '(shell-mode
-                           ssh-mode
-                           eshell-mode))
+(defconst shell-modes '(shell-mode
+                        ssh-mode
+                        eshell-mode))
 
-(defconst is-make-modes '(makefile-automake-mode
-                          makefile-bsdmake-mode
-                          makefile-gmake-mode
-                          makefile-imake-mode
-                          makefile-makepp-mode
-                          makefile-mode))
+(defconst make-modes '(makefile-automake-mode
+                       makefile-bsdmake-mode
+                       makefile-gmake-mode
+                       makefile-imake-mode
+                       makefile-makepp-mode
+                       makefile-mode))
 
-(defconst is-perl-modes '(cperl-mode
-                          perl-mode))
+(defconst perl-modes '(cperl-mode
+                       perl-mode))
 
-(defconst is-shell-script-modes '(sh-mode
-                                  shell-script-mode))
+(defconst shell-script-modes '(sh-mode
+                               shell-script-mode))
 
-(defconst is-text-modes '(text-mode
-                          indented-text-mode))
+(defconst text-modes '(text-mode
+                       indented-text-mode))
 
-(defconst is-xml-modes '(nxml-mode
-                         xml-mode))
+(defconst xml-modes '(nxml-mode
+                      xml-mode))
 
-(defconst is-html-modes '(html-mode
-                          html-helper-mode
-                          nxhtml-mode))
+(defconst html-modes '(html-mode
+                       html-helper-mode
+                       nxhtml-mode))
 
-(defconst is-javascript-modes '(javascript-mode
-                                js-mode
-                                js2-mode
-                                espresso-mode))
+(defconst javascript-modes '(javascript-mode
+                             js-mode
+                             js2-mode
+                             espresso-mode))
 
 (defconst enable-enriched-modes '(fundamental-mode
                                   text-mode
@@ -98,7 +98,7 @@ This depends on major mode having setup syntax table properly."
 
 (defun is-shell? ()
   "Boolean: is the current mode a shell mode?"
-  (memq major-mode is-shell-modes))
+  (memq major-mode shell-modes))
 
 (defun is-not-shell? ()
   "Boolean: is the current mode not a shell mode?"
@@ -119,31 +119,31 @@ not read only?"
 
 (defun is-make-mode? ()
   "Boolean: is the current major mode a ‘make’ mode?"
-  (memq major-mode is-make-modes))
+  (memq major-mode make-modes))
 
 (defun is-perl-mode? ()
   "Boolean: is the current major mode a ‘perl’ mode?"
-  (memq major-mode is-perl-modes))
+  (memq major-mode perl-modes))
 
 (defun is-shell-script-mode? ()
   "Boolean: is the current major mode a ‘shell-script’ mode?"
-  (memq major-mode is-shell-script-modes))
+  (memq major-mode shell-script-modes))
 
 (defun is-text-mode? ()
   "Boolean: is the current major mode a ‘text’ mode?"
-  (memq major-mode is-text-modes))
+  (memq major-mode text-modes))
 
 (defun is-xml-mode? ()
   "Boolean: is the current major mode an ‘xml’ mode?"
-  (memq major-mode is-xml-modes))
+  (memq major-mode xml-modes))
 
 (defun is-html-mode? ()
   "Boolean: is the current major mode an ‘html’ mode?"
-  (memq major-mode is-html-modes))
+  (memq major-mode html-modes))
 
 (defun is-javascript-mode? ()
   "Boolean: is the current major mode a ‘javascript’ mode?"
-  (memq major-mode is-javascript-modes))
+  (memq major-mode javascript-modes))
 
 (defun is-fullscreen? ()
   "Boolean: is the current frame fullscreen?"

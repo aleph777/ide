@@ -77,7 +77,7 @@
        (hack            (car (member "Hack"             font-family-list)))
        (source-code-pro (car (member "Source Code Pro"  font-family-list)))
 
-       (font-family (or hack victor deja-vu consolas source-code-pro cousine camingo fantasque courier))
+       (font-family (or hack deja-vu consolas source-code-pro cousine camingo fantasque victor courier))
 
        ;; named color definitions
 

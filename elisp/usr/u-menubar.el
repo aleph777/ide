@@ -63,12 +63,12 @@
 
 (message "Loading u-menubar...")
 ;;
+(require 'clipboard)
 (require 'easymenu)
 (require 'u-flags)
 (require 'u-file)
 (require 'u-edit)
 (require 'u-sort)
-(require 'u-clipboard)
 (require 'u-search)
 (require 'u-view)
 (require 'u-tools)
@@ -116,11 +116,10 @@
     ))
 
 (easy-menu-define view-menu   global-map "View"   u-view-menu)
-(easy-menu-define blah-menu   global-map "lllllllllllll"     u-view-menu)
 (easy-menu-define search-menu global-map "Search" u-search-menu)
 
 (easy-menu-define edit-menu global-map "Edit" u-edit-menu)
-(easy-menu-add-item nil '("Edit") u-clipboard-menu   'marker1)
+(easy-menu-add-item nil '("Edit") clipboard-menu   'marker1)
 (define-key-after edit-menu [xxx1]      '(menu-item "--")                 'marker1)
 (define-key-after edit-menu [yank-menu] '("Select and Paste" . yank-menu) 'marker1)
 (define-key-after edit-menu [xxx2]      '(menu-item "--")                 'marker1)
