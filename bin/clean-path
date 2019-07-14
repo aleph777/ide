@@ -41,16 +41,18 @@
 #            12-May-2008 use strict
 #            13-Apr-2015 use List::MoreUtils
 #                        Updated Usage
-#            27-May-2015 Changed over to ‘say’
+#            27-May-2015 Changed over to say
+#            14-Jul-2019 use v5.10
 #
 #
 use List::MoreUtils qw(uniq);
 use strict;
+use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-if(@ARGV && ($ARGV[0] =~ /^(?:-{0,2}\?|-{1,2}help)$/))
+if(@ARGV && ($ARGV[0] =~ /^(?:-{0,2}\?|-{1,2}h(?:elp)?)$/))
 {
-  CORE::say "\nUsage: ",_ME_,"\n";exit;
+  say "\nUsage: ",_ME_,"<path1> [... <pathN>]\n";exit;
 }
-CORE::say join ':',uniq grep { -d } map { split ':' } @ARGV;
+say join ':',uniq grep { -d } map { split ':' } @ARGV;
