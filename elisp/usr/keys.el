@@ -191,7 +191,7 @@
 ;; 
 (global-set-key [(control g)]            'goto-line)
 ;;lobal-set-key [(meta    g)]            'PREFIX
-;;lobal-set-key [(super   g)]            '
+(global-set-key [(super   g)]            'centaur-tabs-toggle-groups)
 ;;lobal-set-key [(control shift g)]      '
 ;;lobal-set-key [(control super g)]      '
 ;;lobal-set-key [(meta    super g)]      '
@@ -252,7 +252,9 @@
 ;;lobal-set-key [(control super l)]      '
 ;;lobal-set-key [(meta    super l)]      '
 ;;lobal-set-key [(control meta super l)] '
+(define-key help-map [(control k)]       'describe-key)
 
+;
 ;; ==================== m ====================
 ;; 
 ;;lobal-set-key [(control m)]            'newline
@@ -1030,7 +1032,7 @@
 
 ;; ==================== insert ====================
 ;; 
-(global-set-key [insert]           'u-paste-clipboard)
+(global-set-key [insert]           'paste-clipboard)
 (global-set-key [(control insert)] 'overwrite-mode)
 (global-set-key [(meta    insert)] 'insert-dd-mon-yyyy)
 (global-set-key [(super   insert)] 'insert-month-day-year)
@@ -1038,6 +1040,17 @@
 ;;lobal-set-key [(control super insert)]      '
 ;;lobal-set-key [(meta    super insert)]      '
 ;;lobal-set-key [(control meta super insert)] '
+
+;; ==================== return ====================
+;;lobal-set-key [(return)]         'newline
+(global-set-key [(control return)] 'insert-newline-after)
+(global-set-key [(meta    return)] 'insert-newline-before)
+;;lobal-set-key [(super   return)] 'insert-newline-before-and-indent
+;;lobal-set-key [(control meta  return)] '
+;;lobal-set-key [(control shift return)] 'insert-newline-after-and-indent
+;;lobal-set-key [(control super return)] '
+;;lobal-set-key [(meta    super return)] '
+;;lobal-set-key [(control meta super return)] '
 
 ;; ==================== delete ====================
 ;; 
@@ -1101,6 +1114,7 @@
 ;;lobal-set-key [(meta    up)] 'scroll-down-line)
 ;;lobal-set-key [(super   up)] '
 ;;lobal-set-key [(control meta  up)]      '
+(global-set-key [(control shift up)]      'ergoemacs-move-text-up)
 ;;lobal-set-key [(control super up)]      '
 ;;lobal-set-key [(meta    super up)]      '
 ;;lobal-set-key [(control meta super up)] '
@@ -1124,6 +1138,7 @@
 ;;lobal-set-key [(meta    down)] 'scroll-up-line)
 ;;lobal-set-key [(super   down)] '
 ;;lobal-set-key [(control meta  down)]      '
+(global-set-key [(control shift down)]      'ergoemacs-move-text-down)
 ;;lobal-set-key [(control super down)]      '
 ;;lobal-set-key [(meta    super down)]      '
 ;;lobal-set-key [(control meta super down)] '
