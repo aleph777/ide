@@ -68,7 +68,7 @@
                          ;; F 2050
                          ((memq major-mode '(fortran-mode f90-mode)) 2050 "Fortran Files (%d)")
                          ;; G 2060
-                         ((eq major-mode 'groovy-mode) 2060"Groovy Files (%d)" )
+                         ((eq major-mode 'groovy-mode) 2060 "Groovy Files (%d)" )
                          ;; H 2070
                          ((memq major-mode '(help-mode helpful-mode)) 2070 "Help Files (%d)")
                          ((is-html-mode?)            2071 "HTML Files (%d)")
