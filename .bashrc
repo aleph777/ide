@@ -9,9 +9,10 @@ enable kill
 alias lsf='ls -F'
 alias lsc='TERM=ansi ls --color=always'
 alias avg='perl -e '\''use List::Util qw(sum);CORE::say sum(@ARGV)/@ARGV;'\'''
+alias grep='grep -P'
 alias perl='perl -Mv5.10'
 alias psfind='ps u -C'
-alias pgrep='grep -P'
+alias undo-commit='git reset --soft HEAD~1'
 alias up='sudo apt update && sudo apt upgrade'
 
 # Ignore these commands
@@ -62,7 +63,6 @@ alias emacsclient='/usr/local/bin/emacsclient -n -c'
 alias emacsdaemon='emacs --daemon'
 alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
 
-
 export COLUMNS=108
 
 # Signal Name	Signal Number	Description
@@ -73,11 +73,6 @@ export COLUMNS=108
 # SIGKILL	9	If a process gets this signal it must quit immediately and will not perform any clean-up operations
 # SIGALRM	14	Alarm clock signal (used for timers)
 # SIGTERM	15	Software termination signal (sent by kill by default)
-
-alias kdrp-quit='kill -3'
-alias kdrp-bit='kill -1'
-alias kdrp-interrupt='kill -2'
-alias kdrp-abnormal='kill -15'
 
 # RED="\[\033[0;31m\]"
 # LIGHT_RED="\[\033[1;31m\]"
