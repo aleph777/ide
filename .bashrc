@@ -6,13 +6,26 @@ shopt -s histappend
 # Don't know why this is needed
 enable kill
 
+# aliases are resolved recursively
+#   alias hello="echo Hello"
+#   alias world='hello World!'
+#
+alias perl='perl -Mv5.10'
+alias grep='grep -P'
+
 alias lsf='ls -F'
 alias lsc='TERM=ansi ls --color=always'
+
 alias avg='perl -e '\''use List::Util qw(sum);CORE::say sum(@ARGV)/@ARGV;'\'''
-alias perl='perl -Mv5.10'
+alias say='perl -e "say $_ for @ARGV"'
+
 alias psfind='ps u -C'
-alias pgrep='grep -P'
+
 alias up='sudo apt update && sudo apt upgrade'
+
+alias undo-commit='git reset --soft HEAD~1'
+alias hg='history | grep '
+
 
 # Ignore these commands
 export HISTIGNORE="ls:[bf]g:exit"
@@ -30,10 +43,13 @@ export CMAKE=/usr/local/cmake-3.13.4-Linux-x86_64
 export CLANGBIN=$CLANG/bin
 export CLANGLIB=$CLANG/lib
 export CMAKEBIN=$CMAKE/bin
+export SNAPBIN=/snap/bin
+
+alias cmake="$CMAKEBIN/cmake"
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $CLANGBIN $CMAKEBIN $DEFAULTPATH $PATH $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
 export LD_LIBRARY_PATH=$CLANGLIB
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
@@ -54,9 +70,6 @@ export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-r
 #
 #alias "git-reset-from-remote='git checkout origin/develop -- '"
 
-
-alias say='perl -e "say $_ for @ARGV"'
-
 alias emacs="emacs $EMACSARGS"
 alias emacsclient='/usr/local/bin/emacsclient -n -c'
 alias emacsdaemon='emacs --daemon'
@@ -73,11 +86,6 @@ export COLUMNS=108
 # SIGKILL	9	If a process gets this signal it must quit immediately and will not perform any clean-up operations
 # SIGALRM	14	Alarm clock signal (used for timers)
 # SIGTERM	15	Software termination signal (sent by kill by default)
-
-alias kdrp-quit='kill -3'
-alias kdrp-bit='kill -1'
-alias kdrp-interrupt='kill -2'
-alias kdrp-abnormal='kill -15'
 
 # RED="\[\033[0;31m\]"
 # LIGHT_RED="\[\033[1;31m\]"
