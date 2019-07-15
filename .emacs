@@ -18,6 +18,8 @@
 (defconst user-windows-id "tfontaine")
 (defconst user-dir-home (concat (getenv "HOME") "/"))
 
+(defalias 'user/home-directory 'user-dir-home)
+
 (setq gc-cons-threshold (* 16 1024 1024))
 
 (let* ((elisp    (concat user-dir-home "elisp/"))
@@ -27,7 +29,7 @@
   (pushnew (concat tiny "tiny")  load-path :test 'string=)
   (pushnew (concat tiny "other") load-path :test 'string=)
 
-  (pushnew (concat packages "ycmd")      load-path :test 'string=)
+  ;; (pushnew (concat packages "ycmd")      load-path :test 'string=)
   (pushnew (concat packages "declutter") load-path :test 'string=)
 
   (pushnew (concat elisp "ext") load-path :test 'string=)
