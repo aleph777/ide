@@ -66,6 +66,8 @@
 ;;           24-Jan-2019 Added ‘Go to Definition’ to ‘u-cc-mode-menu-text’
 ;;                       Added ‘Format File’ to ‘u-cc-mode-menu-text’
 ;;                       Removed ‘u-cc-reformat-buffer’ in favor of ‘eglot-format’
+;;           03-May-2019 Added KDRP C++ support
+;;           18-Jun-2019 Turned off ‘flymake-mode’
 ;;
 
 ;;; Code:
@@ -75,14 +77,15 @@
 (require 'flycheck)
 (require 'eglot)
 (require 'u-macro)
-;; (require 'ac-clang)
+(require 'f)
+(require 's)
 
 (defvar u-cc-indent-program "indent ")
 
 (defvar u-cc-indent-options (concat
-                             "-i4 "   ; set indentation level to 2 spaces
-                             "-cli4 " ; case label indent of 2 spaces
-                             "-ci4 "  ; Continuation indent of 2 spaces
+                             "-i4 "   ; set indentation level to 4 spaces
+                             "-cli4 " ; case label indent of 4 spaces
+                             "-ci4 "  ; Continuation indent of 4 spaces
                              "-st "   ; write to STDOUT
                              "-bad "  ; blank lines after declarations
                              "-bap "  ; blank lines after procedures
@@ -143,8 +146,9 @@
 (make-variable-buffer-local 'u-cc-makeflags)
 
 (defun u-c-setup()
-  "C-mode setup function"
+  "C-mode setup function."
   (abbrev-mode -1)
+  (flymake-mode -1)
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
@@ -156,6 +160,7 @@
 (defun u-c++-setup ()
   "C++-mode setup function."
   (abbrev-mode -1)
+  (flymake-mode -1)
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
@@ -165,6 +170,7 @@
 (defun u-java-setup ()
   "Java-mode setup function."
   (abbrev-mode -1)
+  (flymake-mode -1)
   (flycheck-mode -1)
   (imenu-add-to-menubar "Navigate")
   ;;
@@ -295,23 +301,158 @@
     ["Compile File" (compile (concat "javac -Xlint " (file-name-nondirectory (buffer-file-name)))) t]
     ))
 
+;; (easy-menu-define u-cpp-build-menu c++-mode-map "C++ Build"
+;;   '("Build"
+;;     ["Syntax Check" (compile (concat "g++ " u-cc-cflags " -fsyntax-only " (file-name-nondirectory (buffer-file-name)))) t]
+;;     ["Compile File" (let* ((fnn  (file-name-nondirectory   (buffer-file-name)))
+;;                            (fnse (file-name-sans-extension fnn)))
+;;                       (compile (concat "g++ " u-cc-cflags  " -c " fnn " -o " fnse ".o"))) t]
+;;     ["Compile Program" (let* ((fnn  (file-name-nondirectory   (buffer-file-name)))
+;;                               (fnse (file-name-sans-extension fnn)))
+;;                          (compile (concat "g++ " u-cc-cflags " " u-cc-ldflags " " fnn " -o " fnse))) t]
+;;     "---"
+;;     ["Make"    (compile (concat "make " u-cc-makeflags)) t]
+;;     ["Make..." compile                                     t]
+;;     "---"
+;;     ["Set Compiler Flags..." (u-cc-set-cflags)    t]
+;;     ["Set Linker Flags..."   (u-cc-set-ldflags)   t]
+;;     ["Set Make Flags..."     (u-cc-set-makeflags) t]
+;;     ))
+
+;; =============================================================================
+
+(defvar kdrp-root-path (or (getenv "ROOT_PATH") (concat (s-join "/" (list (getenv "HOME") "sandstone")))))
+(defvar kdrp-sandstone (s-join "/" (list kdrp-root-path "sandstone")))
+
+(defvar kdrp-select-build-config "Select Build Configuration [EmbeddedDebug]")
+(defvar kdrp-select-application  "Select Application [PremiumWithModus]")
+(defvar kdrp-select-library      "Select Library [libBrewEngineSyncModule]")
+
+(defvar kdrp-config "EmbeddedDebug")
+
+(defvar kdrp-application "PremiumWithModus")
+(defvar kdrp-library     "libBrewEngineSyncModule")
+
+(defvar kdrp-make-library                (format "make -j4 config=%s"    kdrp-config))
+(defvar kdrp-make-library-clean          (format "make clean config=%s " kdrp-config))
+
+(defvar kdrp-make-selected-library       (format "cd %s && make %s config=%s" kdrp-sandstone kdrp-library kdrp-config))
+(defvar kdrp-make-selected-library-clean (s-join " " (list kdrp-make-selected-library "target=clean")))
+
+(defvar kdrp-make-application            (format "cd %s && make %s config=%s" kdrp-sandstone kdrp-application kdrp-config))
+(defvar kdrp-make-application-clean      (s-join " " (list kdrp-make-application "target=clean")))
+(defvar kdrp-make-application-realclean  (s-join " " (list kdrp-make-application "target=realclean")))
+
+(defun kdrp-set-config (config)
+  "Set KDRP build configuration to CONFIG."
+  (setq kdrp-config  config
+        kdrp-select-build-config         (format "Select Build Configuration [%s]" config)
+        kdrp-make-library                (format "make -j4 config=%s"    kdrp-config)
+        kdrp-make-library-clean          (format "make clean config=%s " kdrp-config)
+        kdrp-make-selected-library       (format "cd %s && make %s config=%s" kdrp-sandstone kdrp-library kdrp-config)
+        kdrp-make-selected-library-clean (s-join " " (list kdrp-make-selected-library "target=clean"))
+        kdrp-make-application            (format "cd %s && make %s config=%s" kdrp-sandstone kdrp-application kdrp-config)
+        kdrp-make-application-clean      (s-join " " (list kdrp-make-application "target=clean"))
+        kdrp-make-application-realclean  (s-join " " (list kdrp-make-application "target=realclean"))))
+
+(defun kdrp-set-app (app)
+  "Set KDRP application to APP."
+  (setq kdrp-application app
+        kdrp-select-application         (format "Select Application [%s]" app)
+        kdrp-make-application           (format "cd %s && make %s config=%s" kdrp-sandstone kdrp-application kdrp-config)
+        kdrp-make-application-clean     (s-join " " (list kdrp-make-application "target=clean"))
+        kdrp-make-application-realclean (s-join " " (list kdrp-make-application "target=realclean"))))
+
+(defun kdrp-set-lib (lib)
+  "Set KDRP library to LIB."
+  (setq kdrp-library lib
+        kdrp-select-library              (format "Select Library [%s]" lib)
+        kdrp-make-selected-library       (format "cd %s && make %s config=%s" kdrp-sandstone kdrp-library kdrp-config)
+        kdrp-make-selected-library-clean (s-join " " (list kdrp-make-selected-library "target=clean"))))
+
+(defun kdrp-make-file ()
+  "Compile the current file."
+  (let* ((object (concat (f-base (buffer-name)) ".o"))
+         (ttb    (s-join "/" (list "." kdrp-config object)))
+         (this   (s-join " " (list "make" ttb kdrp-config))))
+    (compile this)))
+
+(defun arm? ()
+    "Is build configuration set for arm architecture?"
+  (or (string= kdrp-config "EmbeddedDebug")
+      (string= kdrp-config "EmbeddedRelease")))
+
+(defun config? (config)
+    "Is CONFIG == ‘kdrp-build-config’?"
+    (string= kdrp-config config))
+
+(defun app? (app)
+    "Is APP == ‘kdrp-application’?"
+  (string= kdrp-application app))
+
+(defun lib? (lib)
+    "Is LIB == ‘kdrp-library’?"
+  (string= kdrp-library lib))
+
 (easy-menu-define u-cpp-build-menu c++-mode-map "C++ Build"
   '("Build"
-    ["Syntax Check" (compile (concat "g++ " u-cc-cflags " -fsyntax-only " (file-name-nondirectory (buffer-file-name)))) t]
-    ["Compile File" (let* ((fnn  (file-name-nondirectory   (buffer-file-name)))
-                           (fnse (file-name-sans-extension fnn)))
-                      (compile (concat "g++ " u-cc-cflags  " -c " fnn " -o " fnse ".o"))) t]
-    ["Compile Program" (let* ((fnn  (file-name-nondirectory   (buffer-file-name)))
-                              (fnse (file-name-sans-extension fnn)))
-                         (compile (concat "g++ " u-cc-cflags " " u-cc-ldflags " " fnn " -o " fnse))) t]
+    (kdrp-select-build-config
+     ["EmbeddedDebug"   (kdrp-set-config "EmbeddedDebug")   :active t :style toggle :selected (config? "EmbeddedDebug")]
+     ["Debug"           (kdrp-set-config "Debug")           :active t :style toggle :selected (config? "Debug")]
+     ["EmbeddedRelease" (kdrp-set-config "EmbeddedRelease") :active t :style toggle :selected (config? "EmbeddedRelease")]
+     ["Release"         (kdrp-set-config "Release")         :active t :style toggle :selected (config? "Release")])
+    (kdrp-select-library
+     ["libBrewEngineSyncModule"   (kdrp-set-lib "libBrewEngineSyncModule")   :active t style toggle :selected (lib? "libBrewEngineSyncModule")]
+     ["libBrewerComponents"       (kdrp-set-lib "libBrewerComponents")       :active t style toggle :selected (lib? "libBrewerComponents")]
+     ["libBuiltInTest"            (kdrp-set-lib "libBuiltInTest")            :active t style toggle :selected (lib? "libBuiltInTest")]
+     ["libCloudFileTransfers"     (kdrp-set-lib "libCloudFileTransfers")     :active t style toggle :selected (lib? "libCloudFileTransfers")]
+     ["libCommunications"         (kdrp-set-lib "libCommunications")         :active t style toggle :selected (lib? "libCommunications")]
+     ["libConnectivity-SDK"       (kdrp-set-lib "libConnectivity-SDK")       :active t style toggle :selected (lib? "libConnectivity-SDK")]
+     ["libCrankPresentationLayer" (kdrp-set-lib "libCrankPresentationLayer") :active t style toggle :selected (lib? "libCrankPresentationLayer")]
+     ["libDataCommon"             (kdrp-set-lib "libDataCommon")             :active t style toggle :selected (lib? "libDataCommon")]
+     ["libDataModel"              (kdrp-set-lib "libDataModel")              :active t style toggle :selected (lib? "libDataModel")]
+     ["libDataModelClient"        (kdrp-set-lib "libDataModelClient")        :active t style toggle :selected (lib? "libDataModelClient")]
+     ["libDevices"                (kdrp-set-lib "libDevices")                :active t style toggle :selected (lib? "libDevices")]
+     ["libExceptions"             (kdrp-set-lib "libExceptions")             :active t style toggle :selected (lib? "libExceptions")]
+     ["libGenericIot"             (kdrp-set-lib "libGenericIot")             :active t style toggle :selected (lib? "libGenericIot")]
+     ["libImageCapture"           (kdrp-set-lib "libImageCapture")           :active t style toggle :selected (lib? "libImageCapture")]
+     ["libImageSearch"            (kdrp-set-lib "libImageSearch")            :active t style toggle :selected (lib? "libImageSearch")]
+     ["libLinuxAssert"            (kdrp-set-lib "libLinuxAssert")            :active t style toggle :selected (lib? "libLinuxAssert")]
+     ["libLinuxI2c"               (kdrp-set-lib "libLinuxI2c")               :active t style toggle :selected (lib? "libLinuxI2c")]
+     ["libLinuxInterrupt"         (kdrp-set-lib "libLinuxInterrupt")         :active t style toggle :selected (lib? "libLinuxInterrupt")]
+     ["libLinuxSerial"            (kdrp-set-lib "libLinuxSerial")            :active t style toggle :selected (lib? "libLinuxSerial")]
+     ["libLinuxUart"              (kdrp-set-lib "libLinuxUart")              :active t style toggle :selected (lib? "libLinuxUart")]
+     ["libLinuxUtilities"         (kdrp-set-lib "libLinuxUtilities")         :active t style toggle :selected (lib? "libLinuxUtilities")]
+     ["libPodDetection"           (kdrp-set-lib "libPodDetection")           :active t style toggle :selected (lib? "libPodDetection")]
+     ["libProductRecauth"         (kdrp-set-lib "libProductRecauth")         :active t style toggle :selected (lib? "libProductRecauth")]
+     ["libRecipeManagement"       (kdrp-set-lib "libRecipeManagement")       :active t style toggle :selected (lib? "libRecipeManagement")]
+     ["libSimulators"             (kdrp-set-lib "libSimulators")             :active t style toggle :selected (lib? "libSimulators")]
+     ["libSoftwareUpdate"         (kdrp-set-lib "libSoftwareUpdate")         :active t style toggle :selected (lib? "libSoftwareUpdate")]
+     ["libStateMachines"          (kdrp-set-lib "libStateMachines")          :active t style toggle :selected (lib? "libStateMachines")]
+     ["libSystemCommon"           (kdrp-set-lib "libSystemCommon")           :active t style toggle :selected (lib? "libSystemcommon")]
+     ["libUtilities"              (kdrp-set-lib "libUtilities")              :active t style toggle :selected (lib? "libUtilities")]
+     ["libSubsystemTests"         (kdrp-set-lib "libSubsystemTests")         :active t style toggle :selected (lib? "libSubsystemTests")])
+    (kdrp-select-application
+     ["PremiumWithModus"    (kdrp-set-app "PremiumWithModus")    :active t      :style toggle :selected (app? "PremiumWithModus")]
+     ["PremiumWithModusBit" (kdrp-set-app "PremiumWithModusBit") :active (arm?) :style toggle :selected (app? "PremiumWithModusBit")]
+     ["K2500"               (kdrp-set-app "K2500")               :active t      :style toggle :selected (app? "K2500")]
+     ["K2500Bit"            (kdrp-set-app "K2500Bit")            :active t      :style toggle :selected (app? "K2500Bit")]
+     ["K3500"               (kdrp-set-app "K3500")               :active t      :style toggle :selected (app? "K3500")]
+     ["K3500Bit"            (kdrp-set-app "K3500Bit")            :active (arm?) :style toggle :selected (app? "K3500Bit")]
+     ["tools"               (kdrp-set-app "tools")               :active (arm?) :style toggle :selected (app? "tools")])
     "---"
-    ["Make"    (compile (concat "make " u-cc-makeflags)) t]
-    ["Make..." compile                                     t]
+    ["Compile This File" (kdrp-make-file) :active (string= (f-ext (buffer-name)) "cpp")]
     "---"
-    ["Set Compiler Flags..." (u-cc-set-cflags)    t]
-    ["Set Linker Flags..."   (u-cc-set-ldflags)   t]
-    ["Set Make Flags..."     (u-cc-set-makeflags) t]
-    ))
+    ["Clean Current Library"  (compile kdrp-make-library-clean)          :active t]
+    ["Build Current Library"  (compile kdrp-make-library)                :active t]
+    ["Clean Selected Library" (compile kdrp-make-selected-library-clean) :active t]
+    ["Build Selected Library" (compile kdrp-make-selected-library)       :active t]
+    "---"
+    ["Clean Current Application"        (compile kdrp-make-application-clean)     :active t]
+    ["Really Clean Current Application" (compile kdrp-make-application-realclean) :active t]
+    ["Build Current Application"        (compile kdrp-make-application)           :active t]))
+
+;; =============================================================================
 
 (easy-menu-define u-cpp-build-menu c-mode-map "C Build"
   '("Build"
@@ -324,7 +465,7 @@
                          (compile (concat "gcc " u-cc-cflags " " u-cc-ldflags " " fnn " -o " fnse))) t]
     "---"
     ["Make"    (compile (concat "make " u-cc-makeflags)) t]
-    ["Make..." compile                                     t]
+    ["Make..." compile                                   t]
     "---"
     ["Set Compiler Flags..." (u-cc-set-cflags)    t]
     ["Set Linker Flags..."   (u-cc-set-ldflags)   t]
@@ -334,11 +475,11 @@
 (setq c-default-style "bsd" c-basic-offset  4)
 (c-set-offset 'case-label '+)
 
-;; (ac-clang-initialize)
 
-(add-hook 'c++-mode-hook  'u-c++-setup)
-(add-hook 'c-mode-hook    'u-c-setup)
-(add-hook 'java-mode-hook 'u-java-setup)
+
+;; (add-hook 'c++-mode-hook  'u-c++-setup)
+;; (add-hook 'c-mode-hook    'u-c-setup)
+;; (add-hook 'java-mode-hook 'u-java-setup)
 
 ;; (add-hook 'c-mode-common-hook
 ;; 	  (lambda ()
@@ -359,5 +500,3 @@
 (provide 'u-cc)
 
 ;;; u-cc.el ends here
-
-  
