@@ -1061,8 +1061,10 @@
        (fontaine/tabbar-default-fg      fontaine/white-ui)
        (fontaine/tabbar-modified-bg     fontaine/red-bright)
        (fontaine/tabbar-modified-fg     fontaine/white)
-       (fontaine/tabbar-selected-bg     fontaine/green-ui-1)
+       (fontaine/tabbar-selected-bg     fontaine/green-ui-3)
        (fontaine/tabbar-selected-fg     fontaine/black)
+       (fontaine/tabbar-unselected-bg   ibm/cool-gray-70)
+       (fontaine/tabbar-unselected-fg   fontaine/white-ui)
        (fontaine/type                   fontaine/blue-dark)
        (fontaine/variable               fontaine/blue)
        (fontaine/volatile-highlight     fontaine/blue-deep)
@@ -1094,13 +1096,20 @@
    `(powerline-inactive2 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive2-bg :foreground ,fontaine/powerline-inactive2-fg))))
    `(powerline-inactive3 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive3-bg :foreground ,fontaine/powerline-inactive3-fg))))
 
-   `(tabbar-default      ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-default-bg  :foreground ,fontaine/tabbar-default-fg))))
-   `(tabbar-modified     ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-modified-bg :foreground ,fontaine/tabbar-modified-fg :box (:line-width 1 :color ,fontaine/box :style released-button)))))
-   `(tabbar-selected     ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-selected-bg :foreground ,fontaine/tabbar-selected-fg :box (:line-width 1 :color ,fontaine/box :style pressed-button)))))
-   `(tabbar-separator    ((t (:foreground ,fontaine/separator :width normal))))
-   ;;
-   `(anzu-mode-line      ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
 
+   ;; tabbar-default                          abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; tabbar-selected                         abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; tabbar-selected-modified                abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; tabbar-unselected                       abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; tabbar-unselected-modified              abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   `(tabbar-default             ((t (:background ,fontaine/tabbar-default-bg :foreground ,fontaine/tabbar-default-bg))))
+   `(tabbar-selected            ((t (:inherit fontaine/variable-pitch :background "nil" :foreground ,fontaine/tabbar-selected-fg :weight bold))))
+   `(tabbar-selected-modified   ((t (:inherit tabbar-selected))))
+   `(tabbar-unselected          ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-unselected-bg :foreground ,fontaine/tabbar-unselected-fg))))
+   `(tabbar-unselected-modified ((t (:inherit tabbar-unselected))))
+
+   `(anzu-mode-line      ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
+   
    ;; `(clips-constant-face             ((t (:foreground ,solar/fg-blue))))
    ;; `(clips-control-face              ((t (:foreground "cyan4"         :weight bold))))
    ;; `(clips-declaration-face          ((t (:foreground "gray40"        :weight bold))))
