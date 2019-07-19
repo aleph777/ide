@@ -191,7 +191,7 @@
 ;;
 (global-set-key [(control g)]            'goto-line)
 ;;lobal-set-key [(meta    g)]            'PREFIX
-;;lobal-set-key [(super   g)]            '
+(global-set-key [(super   g)]            'centaur-tabs-toggle-groups)
 ;;lobal-set-key [(control shift g)]      '
 ;;lobal-set-key [(control super g)]      '
 ;;lobal-set-key [(meta    super g)]      '
@@ -252,7 +252,9 @@
 ;;lobal-set-key [(control super l)]      '
 ;;lobal-set-key [(meta    super l)]      '
 ;;lobal-set-key [(control meta super l)] '
+(define-key help-map [(control k)]       'describe-key)
 
+;
 ;; ==================== m ====================
 ;;
 ;;lobal-set-key [(control m)]            'newline
@@ -1031,17 +1033,17 @@
 ;; ==================== return/enter/RET ====================
 ;;
 ;;lobal-set-key [RET]              'newline-and-indent)
-(global-set-key [(control return)] 'insert-newline-after-and-indent)
-(global-set-key [(meta    return)] 'insert-newline-before-and-indent)
+(global-set-key [(control return)] 'insert-newline-after)
+(global-set-key [(meta    return)] 'insert-newline-before)
 ;;lobal-set-key [(super   return)] '
 ;;lobal-set-key [(control meta  return)] ')
-;;lobal-set-key [(control super return)] ')
-;;lobal-set-key [(meta    super return)] ')
+(global-set-key [(control super return)] 'insert-newline-after-and-indent)
+(global-set-key [(meta    super return)] 'insert-newline-before-and-indent)
 ;;lobal-set-key [(control meta super return)] '
 
 ;; ==================== insert ====================
-;;
-(global-set-key [insert]           'u-paste-clipboard)
+;; 
+(global-set-key [insert]           'paste-clipboard)
 (global-set-key [(control insert)] 'overwrite-mode)
 (global-set-key [(meta    insert)] 'insert-dd-mon-yyyy)
 (global-set-key [(super   insert)] 'insert-month-day-year)
@@ -1049,6 +1051,17 @@
 ;;lobal-set-key [(control super insert)]      '
 ;;lobal-set-key [(meta    super insert)]      '
 ;;lobal-set-key [(control meta super insert)] '
+
+;; ==================== return ====================
+;;lobal-set-key [(return)]         'newline
+(global-set-key [(control return)] 'insert-newline-after)
+(global-set-key [(meta    return)] 'insert-newline-before)
+;;lobal-set-key [(super   return)] 'insert-newline-before-and-indent
+;;lobal-set-key [(control meta  return)] '
+;;lobal-set-key [(control shift return)] 'insert-newline-after-and-indent
+;;lobal-set-key [(control super return)] '
+;;lobal-set-key [(meta    super return)] '
+;;lobal-set-key [(control meta super return)] '
 
 ;; ==================== delete ====================
 ;;
@@ -1326,6 +1339,11 @@
 ;;; ================================================================================
 ;;;; Bindings for mouse commands.
 
+;; ==================== header-line mouse ====================
+;;
+(global-set-key [header-line (control mouse-1)] 'centaur-tabs-move-current-tab-to-left)
+(global-set-key [header-line (control mouse-3)] 'centaur-tabs-move-current-tab-to-right)
+
 ;;; (define-key global-map [down-mouse-1] 'mouse-drag-region)
 ;;; (global-set-key [mouse-1]    'mouse-set-point)
 ;;; (global-set-key [drag-mouse-1]       'mouse-set-region)
@@ -1385,6 +1403,8 @@
 (global-set-key [(control mouse-5)]    'search-word-forward)
 (global-set-key [(control wheel-up)]   'search-word-backward)
 (global-set-key [(control wheel-down)] 'search-word-forward)
+
+
 ;;
 ;; Mouse side buttons
 ;;
