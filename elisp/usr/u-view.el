@@ -55,7 +55,7 @@
 (message "Loading u-view...")
 
 (require 'u-flags)
-(require 'u-clipboard)
+(require 'clipboard)
 (require 'u-frame)
 (require 'colors)
 
