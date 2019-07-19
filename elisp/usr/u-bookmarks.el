@@ -42,7 +42,7 @@
 
 (defvar u-bookmarks-menu
   '("Bookmarks"
-    ["Save Bookmarks"    bm-buffer-savebm-save t]
+    ["Save Bookmarks"    bm-buffer-save t]
     ["Toggle Bookmark"   bm-toggle            :enable (is-not-shell?)]
     ["Bookmark Function" bm-bookmark-defun    :enable (is-not-shell?)]
     ["Annotate Bookmark" bm-bookmark-annotate :enable (is-bookmark?)]
