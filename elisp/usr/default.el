@@ -289,7 +289,7 @@
           ((eq major-mode 'c-mode) "c")
           ((eq major-mode 'c++-mode)  "c++")
           ((eq major-mode 'emacs-lisp-mode) "elisp")
-          ((eq major-mode 'groovy-mode) "grrovy")
+          ((eq major-mode 'groovy-mode) "groovy")
           ((memq major-mode '(help-mode helpful-mode)) "help")
           ((is-html-mode?) "html")
           ((eq major-mode 'json-mode) "json")

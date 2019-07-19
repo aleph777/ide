@@ -1071,6 +1071,9 @@
        (fontaine/warning                fontaine/orange)
        )
 
+;; (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
+(defface fontaine/tabbar-default `((t (:background ,fontaine/tabbar-default-bg :foreground ,fontaine/tabbar-default-bg))) "Temp face." :group 'font-lock-faces)
+
   (custom-theme-set-faces
    `fontaine
    `(default             ((t (:family ,font-family :height 120 :width normal))))
@@ -1108,6 +1111,18 @@
    `(tabbar-unselected          ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-unselected-bg :foreground ,fontaine/tabbar-unselected-fg))))
    `(tabbar-unselected-modified ((t (:inherit tabbar-unselected))))
 
+   ;; centaur-tabs-default                    abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-active-bar-face            abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-close-mouse-face           abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-close-selected             abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-close-unselected           abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-modified-marker-selected   abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-modified-marker-unselected abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-selected                   abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-selected-modified          abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-unselected                 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;; centaur-tabs-unselected-modified        abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   ;;
    `(anzu-mode-line      ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
    
    ;; `(clips-constant-face             ((t (:foreground ,solar/fg-blue))))
