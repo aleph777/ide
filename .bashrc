@@ -11,21 +11,20 @@ enable kill
 #   alias world='hello World!'
 #
 alias perl='perl -Mv5.10'
-alias grep='grep -P'
-
-alias lsf='ls -F'
-alias lsc='TERM=ansi ls --color=always'
-
-alias avg='perl -e '\''use List::Util qw(sum);CORE::say sum(@ARGV)/@ARGV;'\'''
+alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
+
+alias grep='grep -P'
+alias hg='history | grep '
+
+alias lsc='TERM=ansi ls --color=always'
+alias lsf='ls -F'
 
 alias psfind='ps u -C'
 
-alias up='sudo apt update && sudo apt upgrade'
-
 alias undo-commit='git reset --soft HEAD~1'
-alias hg='history | grep '
 
+alias up='sudo apt update && sudo apt upgrade'
 
 # Ignore these commands
 export HISTIGNORE="ls:[bf]g:exit"
@@ -74,7 +73,6 @@ alias emacs="emacs $EMACSARGS"
 alias emacsclient='/usr/local/bin/emacsclient -n -c'
 alias emacsdaemon='emacs --daemon'
 alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
-
 
 export COLUMNS=108
 
