@@ -36,6 +36,7 @@
 ;;                          Added ‘paragraph-beginning-position’, ‘paragraph-end-position’, and ‘with-paragraph-or-region’
 ;;              28-Apr-2017 Added ‘basename*’ and ‘dirname’
 ;;              17-Apr-2018 Added ‘diminish-modelist’
+;;              27-Jun-2019 Added ‘append-to-list’
 ;;
 
 ;;; Code:
@@ -138,6 +139,10 @@ when there is no mark set.
   `(let ((,(car  args) (if (use-region-p) (region-beginning) (paragraph-beginning-position)))
          (,(cadr args) (if (use-region-p) (region-end)       (paragraph-end-position))))
      ,@body))
+
+(defmacro append-to-list (target suffix)
+  "Append SUFFIX to TARGET in place."
+  `(setq ,target (append ,target ,suffix)))
 
 (defsubst hook-into-modes (func &rest modes)
   "Add FUNC to each one of MODES."
