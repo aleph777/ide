@@ -38,6 +38,7 @@
 ;;           14-Jun-2018 Added ‘declutter’
 ;;           06-Jul-2018 Added ‘paradox-list-packages’
 ;;           10-Jul-2019 Completed Greek alphabet
+;;           19-Jul-2019 Added ‘open-new-shell’
 ;;
 
 ;;; Code:
@@ -382,6 +383,15 @@
      ["Spell Check Buffer" ispell-buffer :active t]
      ["Spell Check Region" ispell-region :active mark-active])
     ))
+
+(defun open-new-shell ()
+  "Open a new shell buffer."
+  (let* ((shell-number 1)
+         (shell-buffer-name "*shell <1>*"))
+    (while (not (equal nil (get-buffer shell-buffer-name)))
+      (setq shell-number (1+ shell-number)
+            shell-buffer-name (concat "*shell <" (format "%d" shell-number) ">*")))
+    (shell (get-buffer-create shell-buffer-name))))
 
 (defun print-elements-of-list (list)
   "Print each element of LIST on a line of its own."
