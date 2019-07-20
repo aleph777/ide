@@ -58,9 +58,9 @@
 (defvar lisp-build-menu-text
   '("Build"
     ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
-    ["Byte Compile And  Load" emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
+    ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
     "---"
-    ["Byte Compile   File..."   byte-compile-file]
+    ["Byte Compile File..."      byte-compile-file]
     ["Byte Recompile Directory" (byte-recompile-directory "." 0)]
 ))
 

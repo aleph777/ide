@@ -1105,7 +1105,7 @@
    ;; tabbar-selected-modified                abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
    ;; tabbar-unselected                       abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
    ;; tabbar-unselected-modified              abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   `(tabbar-default             ((t (:background ,fontaine/tabbar-default-bg))))
+   `(tabbar-default             ((t (:background ,fontaine/tabbar-default-bg :foreground ,fontaine/tabbar-default-bg))))
    `(tabbar-selected            ((t (:inherit fontaine/variable-pitch :background "nil" :foreground ,fontaine/tabbar-selected-fg :weight bold))))
    `(tabbar-selected-modified   ((t (:inherit tabbar-selected))))
    `(tabbar-unselected          ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-unselected-bg :foreground ,fontaine/tabbar-unselected-fg))))

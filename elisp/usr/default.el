@@ -292,7 +292,7 @@
           ((eq major-mode 'c-mode) "c")
           ((eq major-mode 'c++-mode)  "c++")
           ((eq major-mode 'emacs-lisp-mode) "elisp")
-          ((eq major-mode 'groovy-mode) "grrovy")
+          ((eq major-mode 'groovy-mode) "groovy")
           ((memq major-mode '(help-mode helpful-mode)) "help")
           ((is-html-mode?) "html")
           ((eq major-mode 'json-mode) "json")
@@ -305,7 +305,7 @@
           ((is-perl-mode?) "perl")
           ((eq major-mode 'python-mode) "python")
           ((eq major-mode 'ruby-mode) "ruby")
-          ((is-shell-script-mode?) "script")
+          ((memq major-mode shell-script-modes) "script")
           ((eq major-mode 'sql-mode) "sql")
           ((is-xml-mode?) "xml")
           ((memq major-mode '(magit-process-mode
@@ -344,6 +344,13 @@
     :init
     (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
     (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode)))
+
+  (use-package ccls :after cc-mode
+    :if is-linux
+    :config
+    (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
+    (setq ccls-sem-highlight-method   'font-lock)
+    (message "ccls loaded..."))
 
   (use-package clang-format :disabled)
 
@@ -409,7 +416,9 @@
      :hook
      ((c++-mode . eglot-ensure)
       ;; (c++-mode . flycheck-mode)
-      ))
+      )
+     :config
+     (message "eglot loaded..."))
 
   (use-package csharp-mode :commands csharp-mode)
 
@@ -421,6 +430,14 @@
     :preface
     (eval-when-compile
       (declare-function diminish "diminish" (arg1))))
+
+  (use-package eglot :after company
+    :hook
+    (c++-mode . eglot-ensure)
+    :config
+    (setq company-backends
+          (cons 'company-capf
+                (remove 'company-capf company-backends))))
 
   (use-package eldoc :defer
     :ensure nil
@@ -534,6 +551,9 @@
                      'sh-mode-hook
                      'yaml-mode-hook))
 
+  (use-package ide-cpp :after cc-mode
+    :ensure nil)
+
   (use-package json-mode :commands json-mode)
 
   (use-package langtool :commands langtool-check
@@ -548,10 +568,12 @@
 
   (use-package matlab-mode :commands matlab-mode)
 
-  (use-package modern-cpp-font-lock :after c++-mode
-    :diminish modern-c++-font-lock-mode
+  (use-package modern-cpp-font-lock :after cc-mode
+    ;; :diminish modern-c++-font-lock-mode
     :hook
-    (c++-mode . modern-c++-font-lock-mode))
+    (c++-mode . modern-c++-font-lock-mode)
+    :config
+    (message "modern-cpp-font-lock loaded..."))
 
   (use-package mic-paren ;; :defer nil
     :preface
@@ -593,9 +615,13 @@
     :config
     (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
-  (use-package projectile :defer defer-1
+  (use-package projectile :after project
     :hook
-    (prog-mode . projectile-mode))
+    (prog-mode . projectile-mode)
+    :config
+    (add-to-list 'project-find-functions '(lambda (dir)
+                                            (let ((root (projectile-project-root dir)))
+                                              (and root (cons 'transient root))))))
 
   (use-package python :commands python-mode)
 
