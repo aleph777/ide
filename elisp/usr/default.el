@@ -163,6 +163,7 @@
 ;;           10-Jul-2019 Fixed compiler warnings
 ;;                       Added ‘clean-aindent’
 ;;           13-Jul-2019 Added ‘centaur-tabs’
+;;           20-Jul-2019 Added conditional for Emacs 27
 ;;
 
 ;;; Code:
@@ -190,7 +191,9 @@
 
   (setq package-enable-at-startup nil)
 
-  (package-initialize)
+  (if (> emacs-major-version 26)
+      (enable-theme 'fontaine)
+    (package-initialize))
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
   ;; Bootstrap `use-package'
