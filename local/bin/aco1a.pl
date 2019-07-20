@@ -1,10 +1,11 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#use Math::Random::Secure;
-srand(8675309);
+use Math::Random::Secure qw(rand);
+
 use List::Util qw(sum);
 use File::IO;
 use strict;
+use v5.10;
 
 use constant MAX_GENERATIONS => 99999;
 use constant ALPHA           => 0.1;
@@ -18,7 +19,9 @@ my $dataFile = defined $ARGV[0] ? $ARGV[0] : 'towns1.csv';
 #
 # Have to do better than initial guess of tsp0
 #
-my @preview = qx(perl tsp0.pl $dataFile);
+my @preview = qx(perl ~/local/bin/tsp0.pl $dataFile);
+
+print @preview;
 
 chomp(my $goal = $preview[-1]);
 
@@ -81,8 +84,11 @@ for my $gen (1 .. MAX_GENERATIONS)
   }
   $done = 1 if ($population[0]{COST} - $population[-1]{COST}) == 0;
 
-  printf "$pf %5d: (%4d) %s | %s\n",$gen,$bestAnt{COST},join(' ',map { sprintf '%4d',$population[$_]{COST} } 0 .. 9),
-    join(' ',map { sprintf '%4d',$population[$_]{COST} } -10 .. -1),$bestAnt{COST} if $done || $bestCount{$bestAnt{COST}}++ == 0;
+  printf "$pf %5d: (%4d) %s | %s\n",
+    $gen,
+    $bestAnt{COST},
+    join(' ',map { sprintf '%4d',$population[$_]{COST} } 0 .. 9),
+    join(' ',map { sprintf '%4d',$population[$_]{COST} } -10 .. -1) if $done || $bestCount{$bestAnt{COST}}++ == 0;
 
   last if $done;
 }
