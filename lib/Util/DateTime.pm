@@ -140,6 +140,8 @@ my @dtkeys = qw(year month day hour minute second nanosecond);
 BEGIN
 {
   $dt = DateTime->now;
+
+  say $dt;
 }
 
 # END
