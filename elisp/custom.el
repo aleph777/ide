@@ -63,24 +63,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-<<<<<<< HEAD
-   '(centaur-tabs-default                    ((t (:inherit tabbar-default))))
-   '(centaur-tabs-modified-marker-selected   ((t (:background "nil"          :foreground "red"))))
-   '(centaur-tabs-modified-marker-unselected ((t (:inherit tabbar-unselected :foreground "red"))))
-   '(centaur-tabs-selected                   ((t (:inherit tabbar-selected))))
-   '(centaur-tabs-selected-modified          ((t (:inherit tabbar-selected-modified))))
-   '(centaur-tabs-unselected                 ((t (:inherit tabbar-unselected))))
-   '(centaur-tabs-unselected-modified        ((t (:inherit tabbar-unselected-modified))))
-=======
- '(centaur-tabs-active-bar-face ((t nil)))
- '(centaur-tabs-default ((t (:inherit tabbar-default))))
- '(centaur-tabs-modified-marker-selected   ((t (:inherit tabbar-selected    :foreground "red" :overline nil))))
- '(centaur-tabs-modified-marker-unselected ((t (:inherit tabbar-unselected  :foreground "red"))))
- '(centaur-tabs-selected ((t (:inherit tabbar-selected :overline nil))))
- '(centaur-tabs-selected-modified ((t (:inherit centaur-tabs-selected))))
- '(centaur-tabs-unselected ((t (:inherit tabbar-unselected))))
- '(centaur-tabs-unselected-modified ((t (:inherit centaur-tabs-unselected))))
->>>>>>> 72a9c3eaeaf8cdf23c88bae7f0524773a5554abb
+ '(centaur-tabs-default                    ((t (:inherit tabbar-default))))
+ '(centaur-tabs-modified-marker-selected   ((t (:background "nil"          :foreground "red"))))
+ '(centaur-tabs-modified-marker-unselected ((t (:inherit tabbar-unselected :foreground "red"))))
+ '(centaur-tabs-selected                   ((t (:inherit tabbar-selected))))
+ '(centaur-tabs-selected-modified          ((t (:inherit tabbar-selected-modified))))
+ '(centaur-tabs-unselected                 ((t (:inherit tabbar-unselected))))
+ '(centaur-tabs-unselected-modified        ((t (:inherit tabbar-unselected-modified))))
  '(line-number-current-line ((t (:background "white")))))
 
 ;;; custom.el ends here
