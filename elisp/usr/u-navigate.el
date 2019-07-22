@@ -32,11 +32,14 @@
 ;; Revision: 03-Mar-2016 Added ‘u-forward-symbol’ and ‘backward-symbol’
 ;;           16-Jan-2017 Added ‘search-word-forward’ and ‘search-word-backward’
 ;;           13-Jun-2018 Changed ‘atim-unscroll’ requirement to use ‘eval-when-compile’
+;;           22-Jul-2019 Added Bookmarks menu
 ;;
 
 ;;; Code:
 
 (message "Loading u-navigate...")
+
+(require 'u-bookmarks)
 
 (eval-when-compile
   (require 'atim-unscroll))
@@ -52,7 +55,8 @@
         (easy-menu-add-item nil '("Navigate") ["Redo scroll"      atim-unscroll-down t] "Save Point")
         (easy-menu-add-item nil '("Navigate") ["Undo scroll"      atim-unscroll-up   t] "Redo scroll")
         (easy-menu-add-item nil '("Navigate") ["Go to line..."    goto-line          t] "Undo scroll")
-        (easy-menu-add-item nil '("Navigate") ["Bookmarks"        u-bookmark-menu    t] "Go to line..."))
+        (easy-menu-add-item nil '("Navigate") ["Bookmarks"        u-bookmark-menu    t] "Go to line...")
+        (easy-menu-add-item nil '("Navigate") u-bookmarks-menu                          "---"))
     ))
 
 (defvar u-navigate-saved-point nil "Saved value of point for current buffer.")

@@ -57,6 +57,7 @@
 ;;                       Added library ‘u-search’
 ;;                       Replaced ‘usr-flags’ with ‘u-flags’
 ;;           14-Jan-2017 Added Bookmark menu
+;;           22-Jul-2019 Moved Bookmark menu to Navigate
 ;;
 
 ;;; Code:
@@ -72,7 +73,6 @@
 (require 'u-search)
 (require 'u-view)
 (require 'u-tools)
-(require 'u-bookmarks)
 (require 'u-navigate)
 ;;
 (define-key global-map [menu-bar] (make-sparse-keymap "menu-bar"))
@@ -92,7 +92,6 @@
     ["Unix Manpage…"             manual-entry       :active t :key-sequence nil]
     ))
 
-(easy-menu-define bookmarks-menu global-map "Bookmarks" u-bookmarks-menu)
 (easy-menu-define tools-menu     global-map "Tools"     u-tools-menu)
 (define-key-after tools-menu [diff-menu] '("Diff"  . menu-bar-ediff-menu) t)
 
