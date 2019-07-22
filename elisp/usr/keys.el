@@ -328,7 +328,7 @@
 ;;lobal-set-key [(super   s)]            ' DO NOT USE ... key not registered
 ;;lobal-set-key [(control meta  s)]      '
 (global-set-key [(control shift s)]      'save-buffer)
-;;lobal-set-key [(control super s)]      '
+(global-set-key [(control super s)]      'open-new-shell)
 ;;lobal-set-key [(meta    super s)]      '
 ;;lobal-set-key [(control meta super s)] '
 
