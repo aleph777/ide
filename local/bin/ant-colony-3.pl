@@ -1,8 +1,9 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
 use Math::Random::Secure qw(irand);
-
 use List::Util qw(sum max min);
+use List::MoreUtils qw(firstidx);
+use POSIX qw(strftime);
 use File::IO;
 
 use strict;
@@ -10,6 +11,7 @@ use v5.10;
 
 use constant POPULATION_SIZE  => 100;
 use constant MAX_ELITE        => 10;
+use constant MAX_ELITE_PHEREMONE => 1;
 use constant MAX_ITERATIONS   => 99999;
 use constant ENOUGH_IS_ENOUGH => 5;
 
@@ -17,8 +19,10 @@ use constant EVAPORATION_RATE   => 0.75;
 use constant PHEREMONE_EXPONENT => 2;
 use constant HEURISTIC_EXPONENT => 2;
 
-use constant PDF_MINMAX_MIN =>  10;
-use constant PDF_MINMAX_MAX => 500;
+use constant PDF_MIN_FLAG   =>   1;
+use constant PDF_MAX_FLAG   =>   2;
+use constant PDF_MINMAX_MIN =>   1;
+use constant PDF_MINMAX_MAX => 667;
 
 use constant MET_GOAL_NO  => '🙁';
 use constant MET_GOAL_YES => '😎';
@@ -51,6 +55,9 @@ my $metGoal;
 my $goal;
 my $newBest;
 my $elite;
+my $elitePheremoneMax;
+my $elitePheremoneCnt;
+my $minmaxFlag;
 my $enoughIsEnough;
 my $printFlag;
 my $bestCost;
@@ -62,6 +69,19 @@ my $dataFile = defined $ARGV[0] ? $ARGV[0] : 'citys1.csv';
 die "Can't find data file!!!"     unless -e $dataFile;
 die "$dataFile is a directory!!!" if     -d $dataFile;
 
+my @outKeys = (qw(TIMESTAMP ELITE MINMAX ITERATION),(map { "DIST$_" } 0 .. 9),map { "ROUTE$_" } 0 .. 9);
+
+my $dt = strftime "%Y%m%d%H%M%S",localtime;
+
+my $outFile = $dataFile;
+
+$outFile =~ s/(?:\.distances)?\.csv//;
+$outFile .= ".$dt.output.csv";
+
+my $of = File::IO->new(path => $outFile,newline  => 1,append => 1);
+
+$of->put(contents => [join ',',@outKeys]);
+
 @ants = map { {ROUTE => [], COST => undef, ITERATION => undef} } 1 .. POPULATION_SIZE;
 
 GetDistanceData($dataFile);
@@ -72,8 +92,12 @@ GetDistanceData($dataFile);
 $metGoal = MET_GOAL_NO;
 $newBest = NEW_BEST_NO;
 
-$printFlag = 0;
-$done      = 0;
+$printFlag  = 0;
+$done       = 0;
+$minmaxFlag = 0;
+
+$enoughIsEnough    = 0;
+$elitePheremoneMax = min(MAX_ELITE,MAX_ELITE_PHEREMONE);
 
 $goal = CheckNearestNeighbor($dataFile);
 
@@ -87,8 +111,6 @@ $bestCost = 9999999;
 ProcessSolutions(0);
 PrintCurrentIteration($ants[0],0);
 
-$enoughIsEnough = 0;
-
 for my $iter (1 .. MAX_ITERATIONS)
 {
   if($iter % 1000 == 0)
@@ -98,6 +120,13 @@ for my $iter (1 .. MAX_ITERATIONS)
     $spacer = "\n";
 
     last if ++$enoughIsEnough >= ENOUGH_IS_ENOUGH;
+
+    if(PDF_MAX_FLAG && $enoughIsEnough >= 2 && $minmaxFlag == 0)
+    {
+      $minmaxFlag = 1;
+
+      say 'MINMAX processing enabled' if $minmaxFlag;
+    }
   }
   UpdatePheremones();
   ConstructAntSolutions($iter);
@@ -115,6 +144,15 @@ for(reverse @elite)
   PrintCurrentIteration($_,$_->{ITERATION});
 }
 printf "$elite[0]{COST}/$goal = %4.2f\n",$elite[0]{COST}/$goal;
+say 'POPULATION_SIZE    => ',POPULATION_SIZE;
+say 'MAX_ELITE          => ',MAX_ELITE;
+say 'EVAPORATION_RATE   => ',EVAPORATION_RATE;
+say 'PHEREMONE_EXPONENT => ',PHEREMONE_EXPONENT;
+say 'HEURISTIC_EXPONENT => ',HEURISTIC_EXPONENT;
+
+say 'PDF_MIN_FLAG       => ',PDF_MIN_FLAG;
+say 'PDF_MINMAX_MIN     => ',PDF_MINMAX_MIN;
+say 'PDF_MINMAX_MAX     => ',PDF_MINMAX_MAX;
 
 sub CopyAnt
 {
@@ -127,6 +165,8 @@ sub CopyAnt
   return $r;
 }
 
+# Check if we've got a new best elite route or best route
+#
 sub ProcessSolutions
 {
   my $iter = shift;
@@ -136,8 +176,6 @@ sub ProcessSolutions
   splice @elite,MAX_ELITE;
 
   my $newElite = join ',',map { $_->{COST} } @elite;
-
-  # die "$elite -- $newElite" if $iter == 1;
 
   if($newElite ne $elite)
   {
@@ -155,6 +193,14 @@ sub ProcessSolutions
       }
       $newBest  = NEW_BEST_YES;
       $bestCost = $newBestCost;
+
+      if($iter > 1000)
+      {
+        $elitePheremoneMax = 1;
+        $elitePheremoneCnt = 1000;
+
+        say 'Turning on best ant-only pheremone update... ',join ' ',@{$elite[0]{ROUTE}};
+      }
     }
     else
     {
@@ -169,6 +215,17 @@ sub ProcessSolutions
   {
     $printFlag = 0;
     $newBest   = NEW_BEST_NO;
+
+    if(defined $elitePheremoneCnt)
+    {
+      if(--$elitePheremoneCnt == 0)
+      {
+        $elitePheremoneMax = min(MAX_ELITE,MAX_ELITE_PHEREMONE);
+        $elitePheremoneCnt = undef;
+
+        say 'Turning off best ant-only pheremone update.'
+      }
+    }
   }
   $done = 1 if $elite[0]{COST} == $elite[-1]{COST};
 }
@@ -177,7 +234,7 @@ sub ProcessSolutions
 #
 sub UpdatePheremones
 {
-  foreach my $ant (@elite)
+  foreach my $ant (@elite[0 .. $elitePheremoneMax-1])
   {
     my $route = $ant->{ROUTE};
     my $tau   = 1 + 1/$ant->{COST};
@@ -211,6 +268,16 @@ sub PrintCurrentIteration
       $formatElite,
       '....',
       join(' ',map { sprintf '%4d',$ants[$_]{COST} } -10 .. -1);
+
+    my $out = join ',',
+      strftime("%Y%m%d %H:%M:%S",localtime),
+      $elitePheremoneMax,
+      $minmaxFlag,
+      $itr,
+      (map { $elite[$_]{COST} } 0 .. MAX_ELITE-1),
+      (map { join '',@{$elite[$_]{ROUTE}} } 0 .. MAX_ELITE-1);
+
+    $of->put(contents => $out);
   }
   else
   {
@@ -261,10 +328,35 @@ sub ConstructAntSolution
     my %tmp  = map { $_ => $pheremone->{$_}**PHEREMONE_EXPONENT*$heuristic->{$_}**HEURISTIC_EXPONENT } @keys;
     my $sum  = sum @tmp{@keys};
 
-    my @normalization  = map { min(500,int(1000*($tmp{$_}/$sum) + 0.5) + 1) } @keys;
+    my @normalization  = map { max(int(1000*($tmp{$_}/$sum) + 0.5),1) } @keys;
 
+    if($minmaxFlag > 1 && @normalization > 1)
+    {
+      my $idx = firstidx { $_ > PDF_MINMAX_MAX } @normalization;
+
+      if($idx != -1)
+      {
+        my @nidx  = grep { $_ != $idx } 0 .. $#normalization;
+        my $diff  = $normalization[$idx] - PDF_MINMAX_MAX;
+
+        @normalization = map { max($_,PDF_MINMAX_MIN) } @normalization;
+
+        my $sum = sum map { $normalization[$_] } @nidx;
+
+        # say "$idx,$diff,@normalization" if $sum == 0;
+        my $scale = 1 + $diff/$sum;
+
+        $normalization[$_]   *= $scale for @nidx;
+        $normalization[$idx]  = PDF_MINMAX_MAX;
+
+        @normalization = map { int($_ + 0.5) } @normalization;
+      }
+    }
+    # if($city eq 'B')
+    # {
+    #   say "@normalization";
+    # }
     @{$probabilityDistribution} = map { ($keys[$_]) x $normalization[$_] } 0 .. $#keys;
-
 
     my $idx = irand @{$probabilityDistribution};
 
@@ -321,7 +413,6 @@ sub InitializeHeuristic
     $heuristic{$t} = $r;
   }
 }
-
 
 sub GetDistanceData
 {

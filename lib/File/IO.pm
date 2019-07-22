@@ -35,6 +35,7 @@
 #                       require 5.008
 #           30-Mar-2015 Added auto-support for .gz and .xz files
 #           13-Apr-2015 Use List::Util
+#           20-Jul-2019 Added dependency injection for text conversion
 #
 package File::IO;
 
@@ -46,6 +47,7 @@ use IO::Compress::Xz;
 use IO::Uncompress::Gunzip;
 use IO::Uncompress::UnXz;
 use List::Util qw(max);
+use v5.10;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
@@ -59,6 +61,8 @@ my %fields = (contents => undef,
               path     => undef,
               basename => undef,
               basedir  => undef,
+
+              processor  => undef,
 
               chomp    => 0,
 
@@ -147,15 +151,16 @@ sub get
   {
     $filename = defined $basedir ? join '/',$basedir,$basename : $basename;
   }
-  my $chomp    = exists $parm{chomp}    ? $parm{chomp}    : $this->{chomp};
-  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
-  my $unix     = exists $parm{unix}     ? $parm{unix}     : $this->{unix};
-  my $stdio    = exists $parm{stdio}    ? $parm{stdio}    : $this->{stdio};
-  my $perlio   = exists $parm{perlio}   ? $parm{perlio}   : $this->{perlio};
-  my $crlf     = exists $parm{crlf}     ? $parm{crlf}     : $this->{crlf};
-  my $bytes    = exists $parm{bytes}    ? $parm{bytes}    : $this->{bytes};
-  my $raw      = exists $parm{raw}      ? $parm{raw}      : $this->{raw};
-  my $utf8     = exists $parm{utf8}     ? $parm{utf8}     : $this->{utf8};
+  my $chomp     = exists $parm{chomp}     ? $parm{chomp}     : $this->{chomp};
+  my $contents  = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
+  my $unix      = exists $parm{unix}      ? $parm{unix}      : $this->{unix};
+  my $stdio     = exists $parm{stdio}     ? $parm{stdio}     : $this->{stdio};
+  my $perlio    = exists $parm{perlio}    ? $parm{perlio}    : $this->{perlio};
+  my $crlf      = exists $parm{crlf}      ? $parm{crlf}      : $this->{crlf};
+  my $bytes     = exists $parm{bytes}     ? $parm{bytes}     : $this->{bytes};
+  my $raw       = exists $parm{raw}       ? $parm{raw}       : $this->{raw};
+  my $utf8      = exists $parm{utf8}      ? $parm{utf8}      : $this->{utf8};
+  my $processor = exists $parm{processor} ? $parm{processor} : $this->{processor};
 
   if(defined $filename)
   {
@@ -196,6 +201,7 @@ sub get
 
     chomp @{$contents};
   }
+  $processor->get if defined $processor;
 }
 
 sub put
@@ -212,8 +218,11 @@ sub put
   my $append    = exists $parm{append}    ? $parm{append}    : $this->{append};
   my $ors       = exists $parm{ors}       ? $parm{ors}       : $this->{ors};
   my $contents  = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
+  my $processor = exists $parm{processor} ? $parm{processor} : $this->{processor};
 
   my $filename;
+
+  $processor->put if defined $processor;
 
   if(defined $path)
   {
@@ -251,11 +260,11 @@ sub put
     }
     if($newline)
     {
-      print $fh map { $_,"\n" } @{$contents};
+      say $fh $_ for @{$contents};
     }
     elsif(defined $ors)
     {
-      print $fh map { $_,$ors } @{$contents};
+      print $fh $_,$ors for @{$contents};
     }
     else
     {
@@ -267,11 +276,11 @@ sub put
   {
     if($newline)
     {
-      print map { $_,"\n" } @{$contents};
+      say $_ for @{$contents};
     }
     elsif(defined $ors)
     {
-      print map { $_,$ors } @{$contents};
+      print $_,$ors for @{$contents};
     }
     else
     {
@@ -279,6 +288,7 @@ sub put
     }
   }
 }
+
 sub maxLength
 {
   my $this = shift;

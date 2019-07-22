@@ -58,6 +58,7 @@
 ;;           26-Apr-2017 Added ‘previous-input’ and ‘next-input’
 ;;           06-May-2019 Added ‘treemacs’
 ;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
+;;           20-Jul-2019 Changed tooltip on ‘view-file’ icon
 ;;
 
 ;;; Code:
@@ -74,7 +75,7 @@
 ;;
 ;; File/Buffer operations
 ;;
-(tool-bar-add-item "mi-view"  'view-file        'view  :label "" :help "View file/Toggle View mode")
+(tool-bar-add-item "mi-view"  'view-file        'view  :label "" :help "Browse file/Toggle Browse mode")
 (tool-bar-add-item "mi-new"   'new-empty-buffer 'new   :label "" :help "New file")
 (tool-bar-add-item "mi-edit"  'find-file        'open  :label "" :help "Open file/Open file in new window...")
 (tool-bar-add-item "mi-close" 'kill-this-buffer 'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(is-not-shell?))

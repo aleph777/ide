@@ -32,7 +32,7 @@
  '(msb-max-menu-items nil)
  '(package-selected-packages
    (quote
-    (centaur-tabs u-cc ide-cpp clean-aindent-mode groovy ccls company-rtags flycheck-rtags rtags ggtags makefile-executor groovy-mode treemacs-magit company-lsp lsp-ui eglot declutter org-mode treemacs-projectile tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar treemacs undo-tree use-package volatile-highlights web-mode yaml-mode ycmd)))
+    (filladapt centaur-tabs u-cc ide-cpp clean-aindent-mode groovy ccls company-rtags flycheck-rtags rtags ggtags makefile-executor groovy-mode treemacs-magit company-lsp lsp-ui eglot declutter org-mode treemacs-projectile tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar treemacs undo-tree use-package volatile-highlights web-mode yaml-mode ycmd)))
  '(paradox-github-token t)
  '(powerline-gui-use-vcs-glyph t)
  '(recentf-max-menu-items 25)
@@ -63,13 +63,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(centaur-tabs-default                    ((t (:inherit tabbar-default))))
- '(centaur-tabs-modified-marker-selected   ((t (:background "nil"          :foreground "red"))))
+ '(centaur-tabs-default ((t (:inherit tabbar-default))))
+ '(centaur-tabs-modified-marker-selected ((t (:background "nil" :foreground "red"))))
  '(centaur-tabs-modified-marker-unselected ((t (:inherit tabbar-unselected :foreground "red"))))
- '(centaur-tabs-selected                   ((t (:inherit tabbar-selected))))
- '(centaur-tabs-selected-modified          ((t (:inherit tabbar-selected-modified))))
- '(centaur-tabs-unselected                 ((t (:inherit tabbar-unselected))))
- '(centaur-tabs-unselected-modified        ((t (:inherit tabbar-unselected-modified))))
+ '(centaur-tabs-selected ((t (:inherit tabbar-selected))))
+ '(centaur-tabs-selected-modified ((t (:inherit tabbar-selected-modified))))
+ '(centaur-tabs-unselected ((t (:inherit tabbar-unselected))))
+ '(centaur-tabs-unselected-modified ((t (:inherit tabbar-unselected-modified))))
  '(line-number-current-line ((t (:background "white")))))
 
 ;;; custom.el ends here

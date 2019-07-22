@@ -163,6 +163,8 @@
 ;;           10-Jul-2019 Fixed compiler warnings
 ;;                       Added ‘clean-aindent’
 ;;           13-Jul-2019 Added ‘centaur-tabs’
+;;           20-Jul-2019 Added conditional for Emacs 27
+;;                       Added ‘filladapt’
 ;;
 
 ;;; Code:
@@ -190,7 +192,9 @@
 
   (setq package-enable-at-startup nil)
 
-  (package-initialize)
+  (if (> emacs-major-version 26)
+      (enable-theme 'fontaine)
+    (package-initialize))
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
   ;; Bootstrap `use-package'
@@ -442,13 +446,7 @@
     :diminish eldoc-mode
     :hook (emacs-lisp-mode-hook . eldoc-mode))
 
-   (use-package plsense :disabled
-     :if is-linux
-     :after cperl-mode
-     :config
-     (progn
-       (plsense-config-default)
-       (plsense-server-start)))
+  (use-package filladapt :commands filladapt-mode)
 
   (use-package ergoemacs-functions :commands (ergoemacs-backward-open-bracket
                                               ergoemacs-forward-open-bracket
@@ -591,6 +589,14 @@
   (use-package paradox :commands paradox-list-packages)
 
   (use-package perl6-mode :commands perl6-mode)
+
+  (use-package plsense :disabled
+    :if is-linux
+    :after cperl-mode
+    :config
+    (progn
+      (plsense-config-default)
+      (plsense-server-start)))
 
   (use-package popwin :defer
     :preface

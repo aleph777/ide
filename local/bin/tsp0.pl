@@ -3,6 +3,7 @@
 use File::IO;
 use List::Util qw(sum);
 use strict;
+use v5.10;
 
 local $| = 1;
 
@@ -45,8 +46,8 @@ for(1 .. @towns)
 }
 my @distance = (map { $distance{"$route[$_]$route[$_+1]"} } 0 .. $#route-1,-1);
 
-print join(' ',map { sprintf '%4s',$_ } @route),"\n";
-print join(' ','    ',map { sprintf '%4d',$_ } @distance),"\n";
+say 'CITY:  ',join ' ',map { sprintf '%4s',$_ } @route,'A';
+say 'MILES: ',join ' ','    ',map { sprintf '%4d',$_ } @distance;
 
 my $t = '    ';
 my $d = 0;
@@ -57,6 +58,5 @@ for(0 .. $#route-1,-1)
 
   $t = join(' ',$t,sprintf '%4d',$d);
 }
-print "$t\n";
-print sum(@distance),"\n";
-
+say 'TOTAL: ',$t;
+say sum(@distance);
