@@ -28,7 +28,7 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 22-Jul-2019 Added dependency injection
 #
 package File::Hash;
 
@@ -145,7 +145,7 @@ sub get
                              contents  => $contents,
                              keyIndex  => $keyIndex);
 
-  $file->get(processor => $this);
+  $file->get(processor => $hash);
 }
 
 sub put
@@ -181,7 +181,7 @@ sub put
                            ors      => $ors,
                            newline  => 1);
 
-  $file->put(processor => $this);
+  $file->put(processor => $hash);
 }
 
 1;
