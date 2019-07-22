@@ -282,7 +282,9 @@
     (eval-when-compile
       (declare-function centaur-tabs-headline-match "centaur-tabs" ())
       (declare-function centaur-tabs-mode "centaur-tabs" (arg1))
-      (defun centaur-tabs-buffer-groups ()
+      (declare-function centaur-tabs-get-group-name "centaur-tabs" (arg1)))
+    :config
+    (defun centaur-tabs-buffer-groups ()
         "`centaur-tabs-buffer-groups' control buffers' group rules."
         (list
          (cond
@@ -318,8 +320,7 @@
           ((string-equal " " (substring (buffer-name) 0 1)) "invisible")
           ((string-match "^copy of " (buffer-name)) "copy")
           (t (centaur-tabs-get-group-name (current-buffer)))
-          ))))
-    :config
+          )))
     (setq centaur-tabs-style "wave")
     (setq centaur-tabs-height 24)
     (setq centaur-tabs-set-icons nil)
