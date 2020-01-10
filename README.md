@@ -64,9 +64,9 @@ Menus are easily reconfigured in elisp. I have reorganized the menus in this IDE
 
 ### Toolbar
 
-As with menus, Emacs toolbar sucks. Most users simply disable them altogether. Not only does the functionality suck, but the icons suck as well. Those who don't disable menus are stuck with the crappy default toolbar. Sound familiar?
+As with menus, Emacs toolbar sucks. Most users simply disable them altogether. Not only does the functionality suck, but the icons suck as well. Those who don't disable them are stuck with the crappy default toolbar. Sound familiar?
 
-The icons of my ide use png icons instead of xpm. The icons are based on the Google Material design icon set. Again, I have tried to make organize them in a cognition-friendly manner.
+The icons of my ide use png icons instead of xpm. The icons are based on the Google Material design icon set. Again, I have tried to  organize them in a cognition-friendly manner.
 
 ### Tabs
 
