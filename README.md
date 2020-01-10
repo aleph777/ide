@@ -1,4 +1,4 @@
-# Emacs-based IDE for non-touch typists
+# Emacs-based IDE for regular humans (non-touch typists)
 
 ## Inspiration
 
