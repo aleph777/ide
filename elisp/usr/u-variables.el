@@ -70,6 +70,8 @@
 
 (setq blink-cursor-blinks 0)
 
+(setq byte-compile-warnings '(not free-vars unresolved noruntime lexical make-local))
+
 (setq disabled-command-function nil)
 
 (setq fill-column 8192)
@@ -93,6 +95,8 @@
 (setq recentf-menu-before "Open in New Window...")
 
 (setq ring-bell-function '(lambda () (let ((visible-bell t)) (beep)) (beep) (beep)))
+
+(setq save-interprogram-paste-before-kill t)
 
 (setq sentence-end-double-space nil)
 

@@ -1,4 +1,4 @@
-;;; u-cc.el --- cperl-mode support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; u-cc.el --- cc-mode support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2019 Tom Fontaine
 

@@ -141,7 +141,7 @@ BEGIN
 {
   $dt = DateTime->now;
 
-  say $dt;
+  # say $dt;
 }
 
 # END

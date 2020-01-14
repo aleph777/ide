@@ -13,7 +13,8 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(require 'cl)
+;; (require 'cl)
+(eval-when-compile (require 'cl))
 
 (defconst user-windows-id "tfontaine")
 (defconst user-dir-home (concat (getenv "HOME") "/"))
@@ -29,7 +30,6 @@
   (pushnew (concat tiny "tiny")  load-path :test 'string=)
   (pushnew (concat tiny "other") load-path :test 'string=)
 
-  ;; (pushnew (concat packages "ycmd")      load-path :test 'string=)
   (pushnew (concat packages "declutter") load-path :test 'string=)
 
   (pushnew (concat elisp "ext") load-path :test 'string=)

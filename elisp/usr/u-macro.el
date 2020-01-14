@@ -45,6 +45,16 @@
 (message "Loading u-macro...")
 ;;
 (require 'diminish)
+(require 'f)
+(require 's)
+
+(defalias 'basename        'f-filename)
+(defalias 'basename-no-ext 'file-name-base)
+(defalias 'dirname         'f-dirname)
+(defalias 'file-extension  'f-ext)
+
+(defalias 'join  's-join)
+(defalias 'split 's-split)
 
 ;; (on-osx
 ;;  (setq mac-control-modifier 'control)
@@ -140,6 +150,10 @@ when there is no mark set.
          (,(cadr args) (if (use-region-p) (region-end)       (paragraph-end-position))))
      ,@body))
 
+(defmacro get-shell-output (body)
+  "Return the output of BODY minus the line terminator."
+  (nth 0 (split-string (shell-command-to-string ,@body) nil)))
+
 (defmacro append-to-list (target suffix)
   "Append SUFFIX to TARGET in place."
   `(setq ,target (append ,target ,suffix)))
@@ -176,24 +190,24 @@ when there is no mark set.
     (forward-paragraph)
     (point)))
 
-(defsubst get-shell-command (command)
-  "Return the output of COMMAND minus the line terminator."
-  (nth 0 (split-string (shell-command-to-string command) nil)))
+(defsubst replace-matches (regexp replacement-string &optional point-end)
+  "Replace all occurences of REGEXP with REPLACEMENT-STRING from point to POINT-END (defaults to ‘point-max’)."
+  (while (re-search-forward regexp (or point-end (point-max)) t)
+      (replace-match replacement-string t)))
 
-(defsubst basename-full (&optional filename)
-  "Return the base name of the FILENAME: no directory, with extension.
-FILENAME defaults to `buffer-file-name'."
-  (file-name-nondirectory (or filename (buffer-file-name))))
+(defsubst replace-matches-nre (str replacement-string &optional point-end)
+  "Replace all occurences of STR with REPLACEMENT-STRING from point to POINT-END (defaults to ‘point-max’)."
+  (while (search-forward str (or point-end (point-max)) t)
+      (replace-match replacement-string t)))
 
-(defsubst dirname (&optional filename)
-  "Return the directory of FILENAME. FILENAME defaults to the current buffer file name."
-  (file-name-directory (or filename (buffer-file-name))))
+(defsubst go-home ()
+  "Move the cursor to the beginning of buffer."
+  (goto-char (point-min)))
 
-(defsubst file-extension (&optional filename)
-  "Return the extension of the FILENAME. FILENAME defaults to the current buffer file name."
-  (file-name-extension (or filename (buffer-file-name))))
+(defsubst go-end ()
+  "Move the cursor to the end of buffer."
+  (goto-char (point-max)))
 
-(defalias 'basename 'file-name-base)
 ;;
 (message "Loading u-macro...done")
 (provide 'u-macro)

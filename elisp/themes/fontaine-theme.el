@@ -62,9 +62,6 @@
 ;;   Fantasque
 ;;   Courier New
 
-(defface fontaine/mode-line-base '((t (:family "DejaVu Sans" :box (:line-width 1 :color "gray50")))) "Temp face." :group 'font-lock-faces)
-(defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
-
 (let* ((font-family-list (font-family-list))
 
        (camingo         (car (member "CamingoCode"      font-family-list)))
@@ -897,7 +894,6 @@
        (srcsery/bright-cyan    "#53FDE9")
        (srcsery/bright-white   "#FCE8C3")
 
-
        (swedish/highlighter-pink     "#ef5777")
        (swedish/dark-periwinkle      "#575fcf")
        (swedish/megaman              "#4bcffa")
@@ -1059,20 +1055,44 @@
        (fontaine/success                fontaine/green-dark)
        (fontaine/tabbar-default-bg      fontaine/black-ui)
        (fontaine/tabbar-default-fg      fontaine/white-ui)
-       (fontaine/tabbar-modified-bg     fontaine/red-bright)
-       (fontaine/tabbar-modified-fg     fontaine/white)
-       (fontaine/tabbar-selected-bg     fontaine/green-ui-3)
+       ;; (fontaine/tabbar-modified-bg     fontaine/red-bright)
+       ;; (fontaine/tabbar-modified-fg     fontaine/white)
+       (fontaine/tabbar-selected-bg     "nil")
        (fontaine/tabbar-selected-fg     fontaine/black)
        (fontaine/tabbar-unselected-bg   ibm/cool-gray-70)
        (fontaine/tabbar-unselected-fg   fontaine/white-ui)
+       (fontaine/tabbar-modified-s-fg   fontaine/red-bright)
+       (fontaine/tabbar-modified-bg     fontaine/red-dark)
+       (fontaine/tabbar-modified-fg     fontaine/white-ui)
        (fontaine/type                   fontaine/blue-dark)
        (fontaine/variable               fontaine/blue)
        (fontaine/volatile-highlight     fontaine/blue-deep)
        (fontaine/warning                fontaine/orange)
        )
 
-;; (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
-(defface fontaine/tabbar-default `((t (:background ,fontaine/tabbar-default-bg :foreground ,fontaine/tabbar-default-bg))) "Temp face." :group 'font-lock-faces)
+;; 6 matches for "set-face-attribute" in buffer: *scratch*
+;;      48:(set-face-attribute 'tabbar-default nil           fontaine/tabbar-default-bg    fontaine/tabbar-default-fg
+;;      55:(set-face-attribute 'tabbar-unselected nil        fontaine/tabbar-unselected-bg fontaine/tabbar-unselected-fg
+;;      60:(set-face-attribute 'tabbar-modified nil          fontaine/tabbar-modified-bg   fontaine/tabbar-modified-fg
+;;      66:(set-face-attribute 'tabbar-selected nil                                        fontaine/tabbar-selected-fg
+;;      72:(set-face-attribute 'tabbar-selected-modified nil                               fontaine/tabbar-modified-s-fg
+;;      78:(set-face-attribute 'tabbar-button nil
+  ;; (defface tabbar-unselected `((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-unselected-bg :foreground ,fontaine/tabbar-unselected-fg))) "Temp face." :group 'font-lock-faces)
+
+  ;; (defface tabbar-selected   `((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-selected-bg   :foreground ,fontaine/tabbar-selected-fg :weight bold))) "Temp face." :group 'font-lock-faces)
+
+  ;; (defface tabbar-selected-modified   `((t (:inherit tabbar-selected   :foreground ,fontaine/tabbar-modified-s-fg)))   "Temp face." :group 'font-lock-faces)
+  ;; (defface tabbar-unselected-modified `((t (:inherit tabbar-unselected :foreground ,fontaine/tabbar-modified-u-fg :background ,fontaine/tabbar-modified-u-bg))) "Temp face." :group 'font-lock-faces)
+
+  (defface fontaine/mode-line-base '((t (:family "DejaVu Sans" :box (:line-width 1 :color "gray50")))) "Temp face." :group 'font-lock-faces)
+  (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "Temp face." :group 'font-lock-faces)
+
+  (defface tabbar-default           `((t (:background ,fontaine/tabbar-default-bg :foreground ,fontaine/tabbar-default-fg))) "Temp face." :group 'font-lock-faces)
+  (defface tabbar-unselected        `((t (:inherit fontaine/variable-pitch :foreground ,fontaine/tabbar-unselected-fg :background ,fontaine/tabbar-unselected-bg))) "Temp face." :group 'font-lock-faces)
+  (defface tabbar-modified          `((t (:inherit tabbar-unselected       :foreground ,fontaine/tabbar-modified-fg   :background ,fontaine/tabbar-modified-bg))) "Temp face." :group 'font-lock-faces)
+  (defface tabbar-selected          `((t (:inherit fontaine/variable-pitch :foreground ,fontaine/tabbar-selected-fg :background "nil" :weight bold))) "Temp face." :group 'font-lock-faces)
+  (defface tabbar-selected-modified `((t (:inherit tabbar-selected         :foreground ,fontaine/tabbar-modified-s-fg))) "Temp face." :group 'font-lock-faces)
+  (defface tabbar-button            `((t (:inherit tabbar-unselected))) "Temp face." :group 'font-lock-faces)
 
   (custom-theme-set-faces
    `fontaine
@@ -1100,29 +1120,6 @@
    `(powerline-inactive3 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive3-bg :foreground ,fontaine/powerline-inactive3-fg))))
 
 
-   ;; tabbar-default                          abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; tabbar-selected                         abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; tabbar-selected-modified                abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; tabbar-unselected                       abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; tabbar-unselected-modified              abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   `(tabbar-default             ((t (:background ,fontaine/tabbar-default-bg :foreground ,fontaine/tabbar-default-bg))))
-   `(tabbar-selected            ((t (:inherit fontaine/variable-pitch :background "nil" :foreground ,fontaine/tabbar-selected-fg :weight bold))))
-   `(tabbar-selected-modified   ((t (:inherit tabbar-selected))))
-   `(tabbar-unselected          ((t (:inherit fontaine/variable-pitch :background ,fontaine/tabbar-unselected-bg :foreground ,fontaine/tabbar-unselected-fg))))
-   `(tabbar-unselected-modified ((t (:inherit tabbar-unselected))))
-
-   ;; centaur-tabs-default                    abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-active-bar-face            abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-close-mouse-face           abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-close-selected             abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-close-unselected           abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-modified-marker-selected   abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-modified-marker-unselected abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-selected                   abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-selected-modified          abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-unselected                 abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;; centaur-tabs-unselected-modified        abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ
-   ;;
    `(anzu-mode-line      ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
    
    ;; `(clips-constant-face             ((t (:foreground ,solar/fg-blue))))
@@ -1160,7 +1157,7 @@
    `(font-lock-doc-face              ((t (:foreground ,fontaine/comment :slant italic :weight bold))))
 
    `(font-lock-string-face           ((t (:foreground ,fontaine/string :slant italic))))
-   `(font-lock-doc-string-face       ((t (:foreground ,fontaine/string :slant italic))))
+   ;; `(font-lock-doc-string-face       ((t (:foreground ,fontaine/string :slant italic))))
 
    `(font-lock-builtin-face          ((t (:foreground ,fontaine/builtin    :weight bold))))
    `(font-lock-constant-face         ((t (:foreground ,fontaine/constant   :weight bold))))
@@ -1169,25 +1166,14 @@
    `(font-lock-type-face             ((t (:foreground ,fontaine/type       :weight bold))))
    `(font-lock-variable-name-face    ((t (:foreground ,fontaine/variable   :weight bold))))
    `(font-lock-warning-face          ((t (:foreground ,fontaine/warning    :weight bold))))
-   ;; (font-lock-color-constant-face (,@fmt-none ,@fg-green))
-   ;; (font-lock-comment-delimiter-face ; Comment ;;  (,@fmt-ital ,@fg-base01))
-   ;; (font-lock-preprocessor-face (,@fmt-none ,@fg-orange)) ; PreProc
-   ;; (font-lock-reference-face (,@fmt-none ,@fg-cyan))
-   ;; (font-lock-negation-char-face (,@fmt-none ,@fg-red))
-   ;; (font-lock-other-type-face (,@fmt-ital ,@fg-blue))
-   ;; (font-lock-regexp-grouping-construct (,@fmt-none ,@fg-orange))
-   ;; (font-lock-special-keyword-face (,@fmt-none ,@fg-red)) ; Special
-   ;; (font-lock-exit-face (,@fmt-none ,@fg-red))
-   ;; (font-lock-other-emphasized-face (,@fmt-bldi ,@fg-violet))
-   ;; (font-lock-regexp-grouping-backslash (,@fmt-none ,@fg-yellow))
 
-   `(hes-escape-backslash-face ((t (:weight bold))))
-   `(hes-escape-face           ((t (:weight bold))))
-   `(hes-escape-sequence-face  ((t (:weight bold))))
+   ;; `(hes-escape-backslash-face ((t (:weight bold))))
+   ;; `(hes-escape-face           ((t (:weight bold))))
+   ;; `(hes-escape-sequence-face  ((t (:weight bold))))
 
    `(highlight ((t (:background ,fontaine/match))))
 
-   `(highlight-operators-face ((t (:foreground ,fontaine/operator :weight bold))))
+   ;; `(highlight-operators-face ((t (:foreground ,fontaine/operator :weight bold))))
 
    `(hl-line ((t (:background ,fontaine/current-line))))
 

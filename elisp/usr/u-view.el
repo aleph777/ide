@@ -310,6 +310,7 @@ is already narrowed."
   "Clear minor mode lighters from modeline."
   (interactive)
   (diminish-mode-list #'""
+                      'abbrev-mode
                       'anzu-mode
                       'auto-revert-mode
                       'company-mode

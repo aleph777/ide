@@ -188,7 +188,7 @@
                                 (funcall separator-left face1 face2)
                                 (powerline-major-mode face2 'l)
                                 (powerline-process face2)
-                                (powerline-minor-modes face2 'l)
+                                ;; (powerline-minor-modes face2 'l)
                                 (powerline-narrow face2 'l)
                                 (powerline-raw " " face2)
                                 (funcall separator-left face2 face3)
