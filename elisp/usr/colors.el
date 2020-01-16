@@ -1,6 +1,6 @@
 ;;; colors.el --- Color functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2017-2019 Tom Fontaine
+;;         Copyright © 2017-2020 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Jan-2017

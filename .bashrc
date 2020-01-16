@@ -72,7 +72,7 @@ export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-r
 #alias "git-reset-from-remote='git checkout origin/develop -- '"
 
 alias emacs="emacs $EMACSARGS"
-alias emacs27="~/elisp/packages/emacs/src/emacs $EMACSARGS"
+alias emacs28="~/elisp/packages/emacs/src/emacs $EMACSARGS"
 alias emacsclient='/usr/local/bin/emacsclient -n -c'
 alias emacsdaemon='emacs --daemon'
 alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
