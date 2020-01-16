@@ -48,6 +48,7 @@
  '(scroll-error-top-bottom t)
  '(scroll-preserve-screen-position t)
  '(ssh-directory-tracking-mode t)
+ '(treemacs-sorting 'alphabetic-case-insensitive-asc)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify)))
 
 (message "setting faces...")
