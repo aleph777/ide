@@ -30,7 +30,7 @@
  '(msb-display-invisible-buffers-p t)
  '(msb-max-menu-items nil)
  '(package-selected-packages
-   '(treemacs treemacs-magit treemacs-projectile minions filladapt centaur-tabs u-cc ide-cpp clean-aindent-mode groovy ccls company-rtags flycheck-rtags rtags ggtags makefile-executor groovy-mode company-lsp lsp-ui eglot declutter org-mode tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar undo-tree use-package volatile-highlights web-mode yaml-mode ycmd))
+   '(treemacs treemacs-magit treemacs-projectile minions filladapt u-cc ide-cpp clean-aindent-mode groovy ccls company-rtags flycheck-rtags rtags ggtags makefile-executor groovy-mode company-lsp lsp-ui eglot declutter org-mode tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar undo-tree use-package volatile-highlights web-mode yaml-mode ycmd))
  '(paradox-github-token t)
  '(powerline-gui-use-vcs-glyph t)
  '(recentf-max-menu-items 25)
@@ -48,7 +48,6 @@
  '(scroll-error-top-bottom t)
  '(scroll-preserve-screen-position t)
  '(ssh-directory-tracking-mode t)
- '(treemacs-sorting 'alphabetic-case-insensitive-asc)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify)))
 
 (message "setting faces...")
