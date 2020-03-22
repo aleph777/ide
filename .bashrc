@@ -14,6 +14,8 @@ alias perl='perl -Mv5.10'
 alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
 
+alias clt='printf "\033c"'
+
 alias grep='grep -P'
 alias hg='history | grep '
 
@@ -70,6 +72,7 @@ export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-r
 #alias "git-reset-from-remote='git checkout origin/develop -- '"
 
 alias emacs="emacs $EMACSARGS"
+alias emacs28="~/elisp/packages/emacs/src/emacs $EMACSARGS"
 alias emacsclient='/usr/local/bin/emacsclient -n -c'
 alias emacsdaemon='emacs --daemon'
 alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"

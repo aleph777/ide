@@ -1,6 +1,6 @@
 ;;; u-view.el --- View menu defintion and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
  
-;;         Copyright © 2016-2019 Tom Fontaine
+;;         Copyright © 2016-2020 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016
@@ -310,6 +310,7 @@ is already narrowed."
   "Clear minor mode lighters from modeline."
   (interactive)
   (diminish-mode-list #'""
+                      'abbrev-mode
                       'anzu-mode
                       'auto-revert-mode
                       'company-mode

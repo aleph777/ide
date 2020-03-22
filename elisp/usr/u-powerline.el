@@ -1,6 +1,6 @@
 ;;; u-powerline.el --- Powerline setup -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2019 by Tom Fontaine
+;;         Copyright © 2016-2020 by Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   30-Mar-2016
@@ -188,7 +188,7 @@
                                 (funcall separator-left face1 face2)
                                 (powerline-major-mode face2 'l)
                                 (powerline-process face2)
-                                (powerline-minor-modes face2 'l)
+                                ;; (powerline-minor-modes face2 'l)
                                 (powerline-narrow face2 'l)
                                 (powerline-raw " " face2)
                                 (funcall separator-left face2 face3)

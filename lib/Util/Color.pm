@@ -1,6 +1,6 @@
 # Util::Color --- [description] -*-Perl-*-
 
-#         Copyright © 2017-2019 Tom Fontaine
+#         Copyright © 2017-2020 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   07-Dec-2017

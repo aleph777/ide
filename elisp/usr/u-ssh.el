@@ -1,6 +1,6 @@
 ;;; u-ssh.el --- SSH support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2006-2019 Tom Fontaine
+;;         Copyright © 2006-2020 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   10-May-2006

@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#         Copyright © 2015-2019 Tom Fontaine
+#         Copyright © 2015-2020 Tom Fontaine
 
 # Title:  check-minimum-version
 # Author: Tom Fontaine

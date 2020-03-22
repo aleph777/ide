@@ -1,7 +1,7 @@
 ;;; keys.el --- Global key definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
 
-;;         Copyright © 1999-2019 Tom Fontaine
+;;         Copyright © 1999-2020 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -106,6 +106,7 @@
 ;;           19-Sep-2017 Added ‘M-pause’ as ‘sdcv-search’
 ;;           16-Jan-2019 Added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
 ;;           16-Jun-2019 Reformatted/reorganized
+;;           03-Sep-2019 Added ‘C-S-mouse-3’ as ‘minions-minor-modes-menu’
 ;;
 
 ;;; Code:
@@ -120,6 +121,11 @@
 (require 'undo-tree)
 (require 'u-navigate)
 (require 'xah)
+
+;; (unbind-key "C-h n")
+;; (unbind-key "C-h C-n")
+;; (unbind-key "C-x C-d")
+;; (unbind-key "M-o")
 
 ;; ==================== a ====================
 ;;
@@ -1341,8 +1347,10 @@
 
 ;; ==================== header-line mouse ====================
 ;;
-(global-set-key [header-line (control mouse-1)] 'centaur-tabs-move-current-tab-to-left)
+(global-set-key [header-line (control mouse-1)]       'centaur-tabs-move-current-tab-to-left)
+(global-set-key [header-line (control shift mouse-1)] 'centaur-tabs-backward-tab)
 (global-set-key [header-line (control mouse-3)] 'centaur-tabs-move-current-tab-to-right)
+(global-set-key [header-line (control shift mouse-3)] 'centaur-tabs-forward-tab)
 
 ;;; (define-key global-map [down-mouse-1] 'mouse-drag-region)
 ;;; (global-set-key [mouse-1]    'mouse-set-point)
@@ -1413,6 +1421,7 @@
 
 (global-set-key [(control shift mouse-1)] '(lambda (e) (interactive "e") (hs-minor-mode 1)(hs-mouse-toggle-hiding e)))
 (global-set-key [(control shift mouse-3)] 'ffap-at-mouse)
+
 (global-set-key [(meta    shift mouse-3)] '(lambda (e) (interactive "e")(let ((ffap-file-finder 'find-file-other-frame)) (ffap-at-mouse e))))
 ;;
 ;; Mode Line Mouse
@@ -1443,7 +1452,12 @@
 ;; Mode Line C-mouse
 ;;
 (global-set-key [mode-line C-mouse-1] 'mouse-delete-other-windows)
+;;lobal-set-key [mode-line C-mouse-2] 'split-window-vertically)
 (global-set-key [mode-line C-mouse-3] 'mouse-delete-window)
+
+;;lobal-set-key [mode-line C-S-mouse-1] ')
+;;lobal-set-key [mode-line C-S-mouse-2] ')
+(global-set-key [mode-line C-S-mouse-3] 'minions-minor-modes-menu)
 
 ;;; (global-set-key [mode-line C-mouse-1] 'mouse-delete-other-windows)
 ;;; ;(global-set-key [mode-line C-mouse-2] 'mouse-tear-off-window)

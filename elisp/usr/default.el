@@ -1,6 +1,6 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2000-2019 Tom Fontaine
+;;         Copyright © 2000-2020 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Sep-2000
@@ -165,6 +165,9 @@
 ;;           13-Jul-2019 Added ‘centaur-tabs’
 ;;           20-Jul-2019 Added conditional for Emacs 27
 ;;                       Added ‘filladapt’
+;;           09-Aug-2019 Added ‘git-gutter’, ‘git-gutter-fringe’, ‘fringe-helper’, and ‘ws-butler’
+;;           28-Aug-2019 Added ‘u-cpp’
+;;           03-Sep-2019 Added ‘minions’
 ;;
 
 ;;; Code:
@@ -195,6 +198,7 @@
   (if (> emacs-major-version 26)
       (enable-theme 'fontaine)
     (package-initialize))
+
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
   ;; Bootstrap `use-package'
@@ -281,56 +285,58 @@
 
     (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark-1))
 
-  (use-package centaur-tabs
-    :preface
-    (eval-when-compile
-      (declare-function centaur-tabs-headline-match "centaur-tabs" ())
-      (declare-function centaur-tabs-mode "centaur-tabs" (arg1))
-      (declare-function centaur-tabs-get-group-name "centaur-tabs" (arg1)))
-    :config
-    (defun centaur-tabs-buffer-groups ()
-        "`centaur-tabs-buffer-groups' control buffers' group rules."
-        (list
-         (cond
-          ((eq major-mode 'c-mode) "c")
-          ((eq major-mode 'c++-mode)  "c++")
-          ((eq major-mode 'emacs-lisp-mode) "elisp")
-          ((eq major-mode 'groovy-mode) "groovy")
-          ((memq major-mode '(help-mode helpful-mode)) "help")
-          ((is-html-mode?) "html")
-          ((eq major-mode 'json-mode) "json")
-          ((eq major-mode 'log-mode) "log")
-          ((eq major-mode 'lua-mode) "lua")
-          ((is-make-mode?) "make")
-          ((eq major-mode 'Man-mode) "manuals")
-          ((eq major-mode 'matlab-mode) "matlab")
-          ((memq major-mode '(org-mode calendar-mode diary-mode)) "org")
-          ((is-perl-mode?) "perl")
-          ((eq major-mode 'python-mode) "python")
-          ((eq major-mode 'ruby-mode) "ruby")
-          ((memq major-mode shell-script-modes) "script")
-          ((eq major-mode 'sql-mode) "sql")
-          ((is-xml-mode?) "xml")
-          ((memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode)) "magit")
-          ((derived-mode-p 'prog-mode) "code")
-          ((get-buffer-process (current-buffer)) "process")
-          ((string-equal "*" (substring (buffer-name) 0 1)) "misc")
-          ((string-equal " " (substring (buffer-name) 0 1)) "invisible")
-          ((string-match "^copy of " (buffer-name)) "copy")
-          (t (centaur-tabs-get-group-name (current-buffer)))
-          )))
-    (setq centaur-tabs-style "wave")
-    (setq centaur-tabs-height 24)
-    (setq centaur-tabs-set-icons nil)
-    (setq centaur-tabs-set-modified-marker t)
-    (centaur-tabs-headline-match)
-    (centaur-tabs-mode t))
+  ;; (use-package centaur-tabs :after u-macro
+  ;;   :preface
+  ;;   (eval-when-compile
+  ;;     (declare-function centaur-tabs-headline-match "centaur-tabs" ())
+  ;;     (declare-function centaur-tabs-mode "centaur-tabs" (arg1))
+  ;;     (declare-function centaur-tabs-get-group-name "centaur-tabs" (arg1)))
+  ;;   :config
+  ;;   (defun centaur-tabs-buffer-groups ()
+  ;;       "`centaur-tabs-buffer-groups' control buffers' group rules."
+  ;;       (list
+  ;;        (cond
+  ;;         ((eq major-mode 'c-mode) "c")
+  ;;         ((eq major-mode 'c++-mode)  "c++")
+  ;;         ((eq major-mode 'emacs-lisp-mode) "elisp")
+  ;;         ((eq major-mode 'groovy-mode) "groovy")
+  ;;         ((memq major-mode '(help-mode helpful-mode)) "help")
+  ;;         ((is-html-mode?) "html")
+  ;;         ((eq major-mode 'json-mode) "json")
+  ;;         ((eq major-mode 'log-mode) "log")
+  ;;         ((eq major-mode 'lua-mode) "lua")
+  ;;         ((is-make-mode?) "make")
+  ;;         ((eq major-mode 'Man-mode) "manuals")
+  ;;         ((eq major-mode 'matlab-mode) "matlab")
+  ;;         ((memq major-mode '(org-mode calendar-mode diary-mode)) "org")
+  ;;         ((is-perl-mode?) "perl")
+  ;;         ((eq major-mode 'python-mode) "python")
+  ;;         ((eq major-mode 'ruby-mode) "ruby")
+  ;;         ((memq major-mode shell-script-modes) "script")
+  ;;         ((eq major-mode 'sql-mode) "sql")
+  ;;         ((is-xml-mode?) "xml")
+  ;;         ((memq major-mode '(magit-process-mode
+  ;;                             magit-status-mode
+  ;;                             magit-diff-mode
+  ;;                             magit-log-mode
+  ;;                             magit-file-mode
+  ;;                             magit-blob-mode
+  ;;                             magit-blame-mode)) "magit")
+  ;;         ((derived-mode-p 'prog-mode) "code")
+  ;;         ((get-buffer-process (current-buffer)) "process")
+  ;;         ((string-equal "*" (substring (buffer-name) 0 1)) "misc")
+  ;;         ((string-equal " " (substring (buffer-name) 0 1)) "invisible")
+  ;;         ((string-match "^copy of " (buffer-name)) "copy")
+  ;;         (t (centaur-tabs-get-group-name (current-buffer)))
+  ;;         )))
+  ;;   (setq centaur-tabs-style "wave")
+  ;;   (setq centaur-tabs-height 24)
+  ;;   (setq centaur-tabs-set-icons nil)
+  ;;   (setq centaur-tabs-set-modified-marker t)
+  ;;   (centaur-tabs-headline-match)
+  ;;   (centaur-tabs-mode t))
+
+  (use-package cl-lib)
 
   (use-package clean-aindent-mode    ;; :defer nil
     :preface
@@ -379,7 +385,8 @@
       (setq company-minimum-prefix-length 2
             company-idle-delay 0.2
             company-show-numbers t
-            company-tooltip-align-annotations t)
+            company-tooltip-align-annotations t
+            company-clang-executable "/usr/local/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang")
       (add-to-list 'company-transformers #'company-sort-by-backend-importance)))
 
   (use-package company-jedi :after company :disabled
@@ -446,8 +453,6 @@
     :diminish eldoc-mode
     :hook (emacs-lisp-mode-hook . eldoc-mode))
 
-  (use-package filladapt :commands filladapt-mode)
-
   (use-package ergoemacs-functions :commands (ergoemacs-backward-open-bracket
                                               ergoemacs-forward-open-bracket
                                               ergoemacs-move-text-down
@@ -461,6 +466,8 @@
 
   (use-package face-remap :commands (buffer-face-mode text-scale-mode)
     :ensure nil)
+
+  (use-package filladapt :commands filladapt-mode)
 
   (use-package flycheck :defer
     :preface
@@ -495,6 +502,17 @@
       (declare-function flycheck-pos-tip-mode "flycheck-pos-tip" ()))
     :config
     (flycheck-pos-tip-mode))
+
+  (use-package fringe-helper :after git-gutter-fringe)
+
+  (use-package git-gutter :after git-gutter-fringe)
+
+  (use-package git-gutter-fringe
+    :config
+    (setq git-gutter:modified-sign "*"
+          git-gutter:added-sign    "+"
+          git-gutter:deleted-sign  "-"
+          git-gutter:window-width   1))
 
   (use-package groovy-mode :commands groovy-mode
     :mode "\\.grv\\'")
@@ -564,8 +582,12 @@
 
   (use-package matlab-mode :commands matlab-mode)
 
+  (use-package minions
+    :config
+    (minions-mode 1))
+
   (use-package modern-cpp-font-lock :after cc-mode
-    ;; :diminish modern-c++-font-lock-mode
+    :diminish modern-c++-font-lock-mode
     :hook
     (c++-mode . modern-c++-font-lock-mode)
     :config
@@ -607,7 +629,7 @@
   (use-package popwin :defer
     :config (popwin-mode))
 
-  (use-package powerline)
+  (use-package powerline :after tabbar)
 
   (use-package powerthesaurus :commands powerthesaurus-lookup-word)
 
@@ -622,6 +644,7 @@
   (use-package projectile :after project
     :hook
     (prog-mode . projectile-mode)
+    :diminish projectile-mode
     :config
     (add-to-list 'project-find-functions '(lambda (dir)
                                             (let ((root (projectile-project-root dir)))
@@ -660,11 +683,13 @@
       (shell-dirtrack-mode t)
       (setq dirtrackp nil)))
 
-  (use-package tabbar :disabled
+  (use-package tabbar
     :preface
     (eval-when-compile
       (declare-function tabbar-mode "tabbar" (ARG1)))
     :config
+    (customize-set-variable 'tabbar-separator '(0.0))
+    (customize-set-variable 'tabbar-use-images nil)
     (tabbar-mode 1))
 
   (use-package tetris :commands tetris
@@ -709,7 +734,7 @@
             treemacs-show-hidden-files          t
             treemacs-silent-filewatch           nil
             treemacs-silent-refresh             nil
-            treemacs-sorting                    'alphabetic-desc
+            treemacs-sorting                    'alphabetic-case-insensitive-asc
             treemacs-tag-follow-cleanup         t
             treemacs-tag-follow-delay           1.5
             treemacs-width                      35)
@@ -737,7 +762,13 @@
 
   (use-package treemacs-projectile :after treemacs)
 
+  (use-package u-c :after c-mode :disabled
+    :ensure nil)
+
   (use-package u-cc :after cc-mode :disabled
+    :ensure nil)
+
+  (use-package u-cpp :after c++-mode
     :ensure nil)
 
   (use-package u-clips :after clips-mode
@@ -780,7 +811,9 @@
       (global-undo-tree-mode 1)))
 
   (use-package uniquify :defer
-    :ensure nil)
+    :ensure nil
+    :config
+    (setq uniquify-ignore-buffers-re "^\\*"))
 
   (use-package volatile-highlights
     :diminish volatile-highlights-mode
@@ -801,6 +834,11 @@
                                                 (newline-mark 10 [182 10])                     ; 10 LINE FEED => "¶ <LINE FEED>"
                                                 (tab-mark 9 [9654 32 91 84 65 66 93 9] [92 9]) ;  9 TAB       => "▶ [TAB]<TAB>"
                                                 )))
+
+  (use-package ws-butler
+    :diminish ws-butler-mode
+    :config
+    (ws-butler-global-mode))
 
   (use-package writegood-mode :disabled)
 
@@ -843,8 +881,33 @@
   )
 ;; ================================================================================
 
+(defvar u/tabbar-height 20)
+(defvar u/tabbar-left  (powerline-wave-right 'tabbar-default nil u/tabbar-height))
+(defvar u/tabbar-right (powerline-wave-left  nil 'tabbar-default u/tabbar-height))
+
+(defun u/tabbar-tab-label-function (tab)
+  (powerline-render (list u/tabbar-left (format " %s  " (car tab)) u/tabbar-right)))
+
+(setq tabbar-tab-label-function #'u/tabbar-tab-label-function)
+
+(defun tabbar-add-tab (tabset object &optional _append_ignored)
+  "Add to TABSET a tab with value OBJECT if there isn't one there yet.
+ If the tab is added, it is added at the beginning of the tab list,
+ unless the optional argument APPEND is non-nil, in which case it is
+ added at the end."
+  (let ((tabs (tabbar-tabs tabset)))
+    (if (tabbar-get-tab object tabset)
+        tabs
+      (let ((tab (tabbar-make-tab object tabset)))
+        (tabbar-set-template tabset nil)
+        (set tabset (sort (cons tab tabs)
+                          (lambda (a b) (string< (buffer-name (car a))
+                                                 (buffer-name (car b))))))))))
+
+(customize-set-variable 'tabbar-use-images nil)
+
+;; ================================================================================
 ;;
 (message "default.el ...done")
-(let ((str (format "%.1f seconds" (float-time (time-subtract (current-time) before-init-time)))))
-  (message "%s" str))
+(emacs-init-time)
 ;;; default.el ends here
