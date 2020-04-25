@@ -1,6 +1,6 @@
 ;;; u-search.el --- Search menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2019 Tom Fontaine
+;;         Copyright © 2016-2020 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Feb-2016

@@ -1,6 +1,6 @@
 # File::IO --- Provides a file object -*-Perl-*-
 
-#         Copyright © 2007-2019 Tom Fontaine
+#         Copyright © 2007-2020 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   31-Jan-2007

@@ -1,6 +1,6 @@
 # Math::Statistics --- [description] -*-Perl-*-
 
-#         Copyright © 2008-2019 Tom Fontaine
+#         Copyright © 2008-2020 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   07-Feb-2008

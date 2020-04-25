@@ -15,8 +15,8 @@ use constant MAX_ELITE        => 10;
 use constant MAX_ITERATIONS   => 9999999;
 use constant ENOUGH_IS_ENOUGH => 5;
 
-use constant EVAPORATION_RATE   => 0.975;
-use constant INITIAL_EXPONENT   => 1;
+use constant EVAPORATION_RATE   => 0.95;
+use constant INITIAL_EXPONENT   => 2;
 use constant PHEREMONE_EXPONENT => 2;
 use constant HEURISTIC_EXPONENT => 2;
 
@@ -135,12 +135,11 @@ $bored = 0;
 $oops  = 0;
 
 $goal = CheckNearestNeighbor($dataFile);
+$bestLength = 9999999;
 
 InitializeHeuristic();
 InitializePheremone();
 ConstructAntSolutions(0);
-
-$bestLength = 9999999;
 
 ProcessSolutions(0);
 PrintCurrentIteration($ants[0],0);
@@ -292,7 +291,8 @@ sub ProcessSolutions
       my @formatStale = split ': ',$stale[$staleIdx];
       my $formatStale = sprintf '%2s%8d',$formatStale[0],$iter;
 
-      $bored = 1 if $formatStale[0] eq NEUTRAL;
+      # $bored = 1 if $formatStale[0] eq NEUTRAL;
+      $bored = 1;
 
       say sprintf '%s: %s',$formatStale,$formatStale[1];
 

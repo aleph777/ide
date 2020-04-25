@@ -1,6 +1,6 @@
 # File::CSV --- CSV file handler -*-Perl-*-
 
-#         Copyright © 2019-2019 Tom Fontaine
+#         Copyright © 2020-2019 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   23-Jul-2019
