@@ -734,7 +734,7 @@
             treemacs-show-hidden-files          t
             treemacs-silent-filewatch           nil
             treemacs-silent-refresh             nil
-            treemacs-sorting                    'alphabetic-desc
+            treemacs-sorting                    'alphabetic-case-insensitive-asc
             treemacs-tag-follow-cleanup         t
             treemacs-tag-follow-delay           1.5
             treemacs-width                      35)

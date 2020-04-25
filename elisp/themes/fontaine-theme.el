@@ -43,6 +43,8 @@
 ;;              09-Jun-2019 Added ‘Nord’ colors
 ;;                          Added ‘Srcsery’ colors
 ;;              09-Jul-2019 Added ‘Victor’ font
+;;              21-Jan-2020 Added ‘JetBrains’ font
+;;              28-Jan-2020 Added ‘Iosevka’ and ‘IosevkaSlab’ font
 ;;
 
 ;;; Code:
@@ -62,6 +64,8 @@
 ;;   Fantasque
 ;;   Courier New
 
+;;   Iosevka,Iosevka Light Extended:style=Light Extended,Regular
+
 (let* ((font-family-list (font-family-list))
 
        (camingo         (car (member "CamingoCode"      font-family-list)))
@@ -70,11 +74,14 @@
        (cousine         (car (member "Cousine"          font-family-list)))
        (deja-vu         (car (member "DejaVu Sans Mono" font-family-list)))
        (fantasque       (car (member "Fantasque"        font-family-list)))
+       (iosevka         (car (member "Iosevka"          font-family-list)))
+       (iosevka-slab    (car (member "Iosevka Slab"     font-family-list)))
        (victor          (car (member "Victor"           font-family-list)))
        (hack            (car (member "Hack"             font-family-list)))
+       (jet             (car (member "Jet"              font-family-list)))
        (source-code-pro (car (member "Source Code Pro"  font-family-list)))
 
-       (font-family (or hack deja-vu consolas source-code-pro cousine camingo fantasque victor courier))
+       (font-family (or hack deja-vu consolas source-code-pro jet iosevka iosevka-slab cousine camingo fantasque victor courier))
 
        ;; named color definitions
 
