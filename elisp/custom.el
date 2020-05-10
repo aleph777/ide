@@ -12,21 +12,22 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(anzu-mode-lighter " ")
- '(anzu-mode-line-update-function 'anzu--update-mode-line-local)
+ '(anzu-mode-line-update-function (quote anzu--update-mode-line-local))
  '(buffers-menu-max-size nil)
  '(comint-input-ignoredups t)
  '(comint-input-ring-size 64)
  '(company-dabbrev-code-modes
-   '(prog-mode batch-file-mode csharp-mode c++-mode erlang-mode haskell-mode jde-mode lua-mode python-mode))
- '(custom-enabled-themes '(fontaine))
+   (quote
+    (prog-mode batch-file-mode csharp-mode c++-mode erlang-mode haskell-mode jde-mode lua-mode python-mode)))
+ '(custom-enabled-themes (quote (fontaine)))
  '(custom-safe-themes t)
  '(explicit-shell-file-name "/bin/bash")
- '(imenu-sort-function 'imenu--sort-by-name)
+ '(imenu-sort-function (quote imenu--sort-by-name))
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message nil)
  '(inhibit-startup-screen t)
  '(initial-scratch-message nil)
- '(mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control))))
+ '(mouse-wheel-scroll-amount (quote (3 ((shift) . 1) ((control)))))
  '(msb-display-invisible-buffers-p t)
  '(msb-max-menu-items nil)
  '(package-selected-packages
@@ -36,19 +37,24 @@
  '(recentf-max-menu-items 25)
  '(recentf-menu-before "Open in New Window...")
  '(safe-local-variable-values
-   '((eval font-lock-add-keywords nil
-           `((,(concat "("
+   (quote
+    ((eval font-lock-add-keywords nil
+           (\`
+            (((\,
+               (concat "("
                        (regexp-opt
-                        '("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl")
+                        (quote
+                         ("sp-do-move-op" "sp-do-move-cl" "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op" "sp-do-del-cl"))
                         t)
-                       "\\_>")
-              1 'font-lock-variable-name-face)))
-     (enable-local-variables: . all)))
- '(scroll-bar-mode 'right)
+                       "\\_>"))
+              1
+              (quote font-lock-variable-name-face)))))
+     (enable-local-variables: . all))))
+ '(scroll-bar-mode (quote right))
  '(scroll-error-top-bottom t)
  '(scroll-preserve-screen-position t)
  '(ssh-directory-tracking-mode t)
- '(uniquify-buffer-name-style 'post-forward nil (uniquify)))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
 (message "setting faces...")
 (custom-set-faces
@@ -56,14 +62,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(centaur-tabs-default ((t (:inherit fontaine/tabbar-default))))
+ '(centaur-tabs-default ((t (:inherit tabbar-default))))
  '(centaur-tabs-modified-marker-selected ((t (:background "nil" :foreground "red"))))
- '(centaur-tabs-modified-marker-unselected ((t (:inherit fontaine/tabbar-unselected :foreground "red"))))
- '(centaur-tabs-selected ((t (:inherit fontaine/tabbar-selected))))
- '(centaur-tabs-selected-modified ((t (:inherit fontaine/tabbar-selected-modified))))
- '(centaur-tabs-unselected ((t (:inherit fontaine/tabbar-unselected))))
- '(centaur-tabs-unselected-modified ((t (:inherit fontaine/tabbar-unselected-modified))))
- '(line-number-current-line ((t (:background "white"))))
- '(sh-heredoc ((t (:inherit font-lock-string-face)))))
+ '(centaur-tabs-modified-marker-unselected ((t (:inherit tabbar-unselected :foreground "red"))))
+ '(centaur-tabs-selected ((t (:inherit tabbar-selected))))
+ '(centaur-tabs-selected-modified ((t (:inherit tabbar-selected-modified))))
+ '(centaur-tabs-unselected ((t (:inherit tabbar-unselected))))
+ '(centaur-tabs-unselected-modified ((t (:inherit tabbar-unselected-modified))))
+ '(line-number-current-line ((t (:background "white")))))
 
 ;;; custom.el ends here
