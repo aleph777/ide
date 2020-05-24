@@ -62,7 +62,9 @@ my %fields = (contents => undef,
               basename => undef,
               basedir  => undef,
 
-              processor  => undef,
+              command  => undef,
+
+              processor => undef,
 
               chomp    => 0,
 
@@ -161,6 +163,7 @@ sub get
   my $raw       = exists $parm{raw}       ? $parm{raw}       : $this->{raw};
   my $utf8      = exists $parm{utf8}      ? $parm{utf8}      : $this->{utf8};
   my $processor = exists $parm{processor} ? $parm{processor} : $this->{processor};
+  my $command   = exists $parm{command}   ? $parm{command}   : $this->{command};
 
   if(defined $filename)
   {
@@ -188,6 +191,10 @@ sub get
     }
     @{$contents} = <$fh>;
     close $fh;
+  }
+  elsif(defined $command)
+  {
+    @{$contents} = qx($command);
   }
   else
   {

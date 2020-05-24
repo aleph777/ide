@@ -58,7 +58,7 @@
                          ((eq major-mode 'c++-mode)       2022 "C++ Files  (%d)")
                          ((eq major-mode 'clips-mode)     2023 "CLIPS Files  (%d)")
                          ((eq major-mode 'clips-log-mode) 2024 "CLIPS LogFiles  (%d)")
-                         ((eq major-mode 'conf-mode)      2025 "Configuration Files  (%d)")
+                         ((memq major-mode '(conf-mode conf-unix-mode))      2025 "Configuration Files  (%d)")
                          ((eq major-mode 'css-mode)       2026 "CSS Files  (%d)")
                          ((eq major-mode 'Custom-mode)    2027 "Custimization (%d)")
                          ;; D 2030

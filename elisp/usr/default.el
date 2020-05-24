@@ -565,9 +565,6 @@
                      'sh-mode-hook
                      'yaml-mode-hook))
 
-  (use-package ide-cpp :after cc-mode
-    :ensure nil)
-
   (use-package json-mode :commands json-mode)
 
   (use-package langtool :commands langtool-check
@@ -577,6 +574,11 @@
   (use-package loccur :commands loccur-current)
 
   (use-package lua-mode :commands lua-mode)
+
+  (use-package make-mode :commands makefile-gmake-mode
+    :ensure nil
+    :init
+    (add-to-list 'auto-mode-alist '("\\.\\(pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
 
   (use-package magit :commands magit-status)
 

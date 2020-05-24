@@ -66,6 +66,7 @@
 
 ;;; Code:
 
+
 (message "Loading u-perl...")
 (require 'cperl-mode)
 (require 'u-frame)
@@ -75,6 +76,8 @@
 (defvar perl-which       "/usr/bin/perl")
 (defvar perl-shebang     (concat "#!" perl-which " -w    # -*-Perl-*-\n"))
 (defvar perl-min-version "5.010")
+
+(defun cperl-define-key () nil)
 
 (defun perl-setup()
   "`eval-after-load' target for perl-mode."
@@ -648,6 +651,13 @@
 (cperl-init-faces)
 
 (define-key cperl-mode-map [menu-bar] nil)
+(define-key cperl-mode-map [?\t] '(lambda nil
+                                    (interactive)
+                                    (if mark-active
+                                        (indent-region
+                                         (region-beginning)
+                                         (region-end))
+                                      (indent-for-tab-command))))
 
 (easy-menu-define u-perl-menu cperl-mode-map "U-Perl"
   '("Perl"
@@ -674,7 +684,6 @@
     ["Critique"     (compile (concat "critique " (file-name-nondirectory (buffer-file-name)))) :active t]
     ))
 
-(cperl-define-key "\t" 'indent-for-tab-command)
 (perl-init-faces)
 
 (add-hook 'cperl-mode-hook 'perl-setup)

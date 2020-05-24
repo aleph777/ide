@@ -107,7 +107,7 @@ export COLUMNS=108
 # BOLD_RED    = [31m[1m$(1)[0m
 # BOLD_YELLOW = [33m[1m$(1)[0m
 
-                                sub printGreenBold  { print STDERR "[32m[1m$_[0m" for @_; }
+# sub printGreenBold  { print STDERR "[32m[1m$_[0m" for @_; }
 # sub printPurpleBold { print STDERR "[35m[1m$_[0m" for @_; }
 # sub printYellowBold { print STDERR "[33m[1m$_[0m" for @_; }
 # sub sayGreenBold    { print STDERR "[32m[1m$_[0m" for @_; }
