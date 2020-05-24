@@ -77,5 +77,6 @@ for(0 .. $#route-1,-1)
 }
 say 'TOTAL: ',$t;
 say sum(@distance);
-say join ' ',@route;
+say join ',',@route;
+
 
