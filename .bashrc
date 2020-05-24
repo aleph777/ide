@@ -27,6 +27,7 @@ alias psfind='ps u -C'
 alias undo-commit='git reset --soft HEAD~1'
 
 alias up='sudo apt update && sudo apt upgrade'
+alias sshfs='sudo sshfs -o allow_other ubuntu@10.46.28.59:/home/ubuntu pi'
 
 # Ignore these commands
 export HISTIGNORE="ls:[bf]g:exit"
@@ -55,10 +56,14 @@ export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $D
 export LD_LIBRARY_PATH=$CLANGLIB
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
+export BRANCH='git rev-parse --abbrev-ref HEAD'
 export EMACSVERSION=$(perl -e '$x=qx(emacs --version);$v=($x=~/(\d{2}(?:\.\d{1,2}){1,2})/)[0];say $v')
 export LISP="/usr/local/share/emacs/${EMACSVERSION}/lisp"
 
-export PS1='\# [\h] \W> '
+export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
+export SHOW_LD_PATHS="ld --verbose | grep SEARCH_DIR | tr -s ' ;' \\012"
+
+#export PS1='\# [\h] \W> '
 
 #
 # Emacs
@@ -72,7 +77,7 @@ export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-r
 #alias "git-reset-from-remote='git checkout origin/develop -- '"
 
 alias emacs="emacs $EMACSARGS"
-alias emacs28="~/elisp/packages/emacs/src/emacs $EMACSARGS"
+alias emacs28="~/emacs/src/emacs $EMACSARGS"
 alias emacsclient='/usr/local/bin/emacsclient -n -c'
 alias emacsdaemon='emacs --daemon'
 alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
@@ -88,8 +93,29 @@ export COLUMNS=108
 # SIGALRM	14	Alarm clock signal (used for timers)
 # SIGTERM	15	Software termination signal (sent by kill by default)
 
+# BLUE   = [34m$(1)[0m
+# CYAN   = [36m$(1)[0m
+# GREEN  = [32m$(1)[0m
+# PURPLE = [35m$(1)[0m
+# RED    = [31m$(1)[0m
+# YELLOW = [33m$(1)[0m
+
+# BOLD_BLUE   = [34m[1m$(1)[0m
+# BOLD_CYAN   = [36m[1m$(1)[0m
+# BOLD_GREEN  = [32m[1m$(1)[0m
+# BOLD_PURPLE = [35m[1m$(1)[0m
+# BOLD_RED    = [31m[1m$(1)[0m
+# BOLD_YELLOW = [33m[1m$(1)[0m
+
+                                sub printGreenBold  { print STDERR "[32m[1m$_[0m" for @_; }
+# sub printPurpleBold { print STDERR "[35m[1m$_[0m" for @_; }
+# sub printYellowBold { print STDERR "[33m[1m$_[0m" for @_; }
+# sub sayGreenBold    { print STDERR "[32m[1m$_[0m" for @_; }
+# sub sayPurpleBold   { say   STDERR "[35m[1m$_[0m" for @_; }
+# sub sayYellowBold   { say   STDERR "[33m[1m$_[0m" for @_; }
 # RED="\[\033[0;31m\]"
-# LIGHT_RED="\[\033[1;31m\]"
+
+LIGHT_RED="\[\033[1;31m\]"
 # ORANGE='\033[0;33m'
 # YELLOW="\[\033[1;33m\]"
 # GREEN="\[\033[0;32m\]"
@@ -105,7 +131,7 @@ export COLUMNS=108
 # GRAY="\[\033[1;30m\]"
 # BLACK="\[\033[0;30m\]"
 
-# NO_COLOUR="\[\033[0m\]"
+NO_COLOUR="\[\033[0m\]"
 #
 # OLD STUFF (you never know)
 #
@@ -113,3 +139,4 @@ export COLUMNS=108
 # then
 #   export PS1='\# [\h($(basename $CLEARCASE_ROOT))] \W> ';
 # fi
+export PS1=${LIGHT_RED}'\# [\h] \W> '${NO_COLOUR}

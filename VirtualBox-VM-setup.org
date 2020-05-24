@@ -22,10 +22,13 @@
 ** su (root password!!!)
 ** usermod -G vboxsf fontaine
 ** echo "fontaine ALL=(ALL) ALL" > /etc/sudoers.d/users
+** or
+** echo 'fontaine ALL=(ALL) NOPASSWD:ALL'
 
 * RESTART
 
 * Set up local /home environment
+** TODO: this may be outdated for new environments
 ** rmdir Documents
 ** ln -s /media/sf_C_DRIVE/Users/tfontaine/Doucments/
 ** rmdir Downloads                                   
@@ -53,11 +56,14 @@
 *** source .bashrc
 *** tar xJvf ide/fonts.tar.xz
 *** cd ide
+    NOTE:   ---V                ---V don't translate from web site
 *** git config --global user.email "tomfontaine@[some tag].fastmail.fm"
 *** cd elisp
 *** mkdir packages
 *** cd packages
 *** git clone https://github.com/jaalto/project--emacs-tiny-tools
+
+*** OBSOLETE
 *** git clone https://github.com/Valloric/ycmd
 *** cd ycmd
 *** git submodule update --init --recursive
@@ -66,7 +72,7 @@
 
 * sudo bash
 ** fc-cache -f -v
-** source bin/install-from-apt.sh
+** source bin/install-from-apt.sh -- NOTE: some distros may have libgnutls<VERSION>-dev
 ** source bin/install-from-cpan.sh
 ** exit
 
@@ -82,9 +88,9 @@
 ** cd elisp
 ** ln -s ~/.emacs.d/elpa/
 ** cd /tmp
-** tar xJf ~/Downloads/emacs-[LATEST REV].tar.xz
+** tar xJf ~/Downloads/emacs-[LATEST REV].tar.xz -- NOTE: now building emacs from github latest
 ** cd emacs-[LATEST REV]
-** ./configure
+** ./configure --without-make-info
 ** make
 ** sudo make install
 ** cd
@@ -92,7 +98,7 @@
 ** mkdir .backup
 
 ** M-x package-install ergoemacs-mode
-** emacs -q .emacs 
+** emacs -Q .emacs
 ** M-x eval-buffer
 
 ** Open elisp/usr/default.el and eval-buffer
