@@ -28,15 +28,17 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 10-May-2020 Added userinit method
+#                       Added getPath
+#           17-May-2020 this file is OBSOLETE
 #
 package File::Tmp;
 
 require 5.008;
 use Carp;
 use strict;
-use File::IO;
 use Math::Random::Secure qw(irand);
+use v5.10;
 
 # use constant FOO => 'BAR';
 
@@ -47,19 +49,16 @@ my @HREF = qw();
 
 my %fields = (contents => undef,
               path     => undef,
+
               ext      => undef,
+              basedir  => '/tmp',
+              n        => 16,
+              chars    => [q(0) .. q(9),q(A) .. q(Z),q(a) .. q(z)],
 
-              newline  => 0,
-              ors      => undef,
-
-              append   => 0,
+              io       => undef,
              );
 
 my $__ME__ = join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
-
-my $io = File::IO->new();
-
-my @chars = (q(0) .. q(9),q(A) .. q(Z),q(a) .. q(z));
 
 # BEGIN
 # {
@@ -84,13 +83,8 @@ sub new
 
   @{$this}{keys %parm} = values %parm;
 
-  $this->{path} = join '','/tmp/',map { $chars[irand @chars] } 1 .. 16 unless defined $this->{path};
+  $this->userinit(%parm);
 
-  if(defined $this->{ext})
-  {
-    $this->{ext}  =~ s/^\.+//;
-    $this->{path} =  join '.',$this->{path},$this->{ext};
-  }
   return $this;
 }
 
@@ -117,30 +111,45 @@ sub configure
   @{$this}{keys %parm} = values %parm;
 }
 
+sub userinit
+{
+  my $this = shift;
+  my %parm = @_;
+
+  $this->{path} = $this->getPath(%parm) unless defined $this->{path};
+
+  $this->{io}->configure(path => $this->{path});
+
+  say $__ME__,': ',$this->{io}->contents;
+  say $__ME__,': ',scalar @{$this->{io}->contents};
+  say $__ME__,': ',$_ for @{$this->{io}->contents};
+}
+
 sub put
 {
   my $this = shift;
   my %parm = @_;
 
-  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
-  my $path     = exists $parm{path}     ? $parm{path}     : $this->{path};
+  my $contents  = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
+
+  $this->{io}->put(contents => $contents);
+}
+
+sub getPath
+{
+  my $this = shift;
+  my %parm = @_;
+
   my $ext      = exists $parm{ext}      ? $parm{ext}      : $this->{ext};
-  my $newline  = exists $parm{newline}  ? $parm{newline}  : $this->{newline};
-  my $ors      = exists $parm{ors}      ? $parm{ors}      : $this->{ors};
-  my $append   = exists $parm{append}   ? $parm{append}   : $this->{append};
+  my $chars    = exists $parm{chars}    ? $parm{chars}    : $this->{chars};
+  my $n        = exists $parm{n}        ? $parm{n}        : $this->{n};
+  my $basedir  = exists $parm{basedir}  ? $parm{basedir}  : $this->{basedir};
 
-  unless(defined $path)
-  {
-    $path = join '','/tmp/',map { $chars[irand @chars] } 1 .. 16 unless defined $path;
+  my $file = join '',map { $chars->[irand @{$chars}] } 1 .. $n;
 
-    if(defined $ext)
-    {
-      $ext  =~ s/^\.+//;
-      $path =  join '.',$path,$ext
-    }
-    $this->{path} = $path;
-  }
-  $io->put(contents => $contents,path => $path,newline => $newline,ors => $ors,append => $append);
+  $file = join '.',$file,$ext if defined $ext;
+
+  return join '',$basedir,'/',$file;
 }
 
 1;

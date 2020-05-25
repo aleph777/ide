@@ -1,9 +1,9 @@
-# File::Hash --- Produces a list of hashes from the input text file -*-Perl-*-
+# File::Hash --- [description] -*-Perl-*-
 
-#         Copyright © 2008-2020 Tom Fontaine
+#         Copyright © 2020-2020 Tom Fontaine
 
 # Author: Tom Fontaine
-# Date:   12-May-2008
+# Date:   10-May-2020
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,13 +28,18 @@
 # dealings in the software.
 
 #
-# Revision: 22-Jul-2019 Added dependency injection
+# Revision: 17-May-2020 this file is OBSOLETE
 #
+
 package File::Hash;
 
-require 5.006;
+require 5.008;
 use Carp;
 use strict;
+use v5.10;
+
+# use Foo::Bar;
+
 use File::IO;
 use Text::Hash;
 
@@ -42,27 +47,14 @@ use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
-my @AREF = qw(contents text keys);
+my @AREF = qw(contents text);
 my @HREF = qw();
 
-my %fields = (path      => undef,
-              basename  => undef,
-              basedir   => undef,
+my %fields = (contents => undef,
+              text     => undef,
 
-              type      => undef,
-
-              irs       => undef,
-
-              append    => 0,
-              ors       => undef,
-
-              keys      => undef,
-              text      => undef,
-              contents  => undef,
-              delimiter => undef,
-
-              keyIndex  => undef,
-              keyName   => undef,
+              io       => undef,
+              th       => undef,
              );
 
 # BEGIN
@@ -88,6 +80,8 @@ sub new
 
   @{$this}{keys %parm} = values %parm;
 
+  $this->userinit(%parm);
+
   return $this;
 }
 
@@ -101,9 +95,29 @@ sub AUTOLOAD
 
   return if $name eq "DESTROY";
 
-  croak "Can't access `$name' field in class $type" unless exists $this->{'_permitted'}->{$name};
+  croak "Can't access `$name' field in class $type" unless exists $this->{_permitted}->{$name};
 
   return @_ ? $this->{$name} = shift : $this->{$name};
+}
+
+sub userinit
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $io = File::IO->new(%parm);
+  my $th = Text::Hash->new(%parm);
+
+  # die _ME_,': File::IO dependency undefined!!!'   unless exists $parm{io};
+  # die _ME_,': Text::Hash dependency undefined!!!' unless exists $parm{th};
+
+  $this->{io} = $io;
+  $this->{th} = $th;
+
+  say $this->{io};
+  say $this->{th}->delimiter;
+  $this->{th}->configure(contents => $this->contents,text => $this->text);
+  $this->{io}->configure(contents => $this->text);
 }
 
 sub configure
@@ -119,33 +133,12 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $path      = exists $parm{path}      ? $parm{path}      : $this->{path};
-  my $basename  = exists $parm{basename}  ? $parm{basename}  : $this->{basename};
-  my $basedir   = exists $parm{basedir}   ? $parm{basedir}   : $this->{basedir};
-  my $text      = exists $parm{text}      ? $parm{text}      : $this->{text};
-  my $irs       = exists $parm{irs}       ? $parm{irs}       : $this->{irs};
+  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
+  my $text     = exists $parm{text}     ? $parm{text}     : $this->{text};
 
-  my $file = File::IO->new(path     => $path,
-                           basename => $basename,
-                           basedir  => $basedir,
-                           contents => $text,
-                           irs      => $irs,
-                           chomp    => 1);
-
-  my $type      = exists $parm{type}      ? $parm{type}      : $this->{type};
-  my $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $this->{delimiter};
-  my $keys      = exists $parm{keys}      ? $parm{keys}      : $this->{keys};
-  my $contents  = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
-  my $keyIndex  = exists $parm{keyIndex}  ? $parm{keyIndex}  : $this->{keyIndex};
-
-  my $hash = Text::Hash->new(type      => $type,
-                             delimiter => $delimiter,
-                             keys      => $keys,
-                             text      => $text,
-                             contents  => $contents,
-                             keyIndex  => $keyIndex);
-
-  $file->get(processor => $hash);
+  $this->{th}->configure(contents => $contents,text => $text);
+  $this->{io}->configure(contents => $text);
+  $this->{io}->get;
 }
 
 sub put
@@ -153,35 +146,12 @@ sub put
   my $this = shift;
   my %parm = @_;
 
-  my $type      = exists $parm{type}      ? $parm{type}      : $this->{type};
-  my $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $this->{delimiter};
-  my $keys      = exists $parm{keys}      ? $parm{keys}      : $this->{keys};
-  my $text      = exists $parm{text}      ? $parm{text}      : $this->{text};
-  my $contents  = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
-  my $keyName   = exists $parm{keyName}   ? $parm{keyName}   : $this->{keyName};
+  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
+  my $text     = exists $parm{text}     ? $parm{text}     : $this->{text};
 
-  my $hash = Text::Hash->new(type      => $type,
-                             delimiter => $delimiter,
-                             keys      => $keys,
-                             text      => $text,
-                             contents  => $contents,
-                             keyName   => $keyName);
-
-  my $path      = exists $parm{path}      ? $parm{path}      : $this->{path};
-  my $basename  = exists $parm{basename}  ? $parm{basename}  : $this->{basename};
-  my $basedir   = exists $parm{basedir}   ? $parm{basedir}   : $this->{basedir};
-  my $append    = exists $parm{append}    ? $parm{append}    : $this->{append};
-  my $ors       = exists $parm{ors}       ? $parm{ors}       : $this->{ors};
-
-  my $file = File::IO->new(path     => $path,
-                           basename => $basename,
-                           basedir  => $basedir,
-                           append   => $append,
-                           contents => $text,
-                           ors      => $ors,
-                           newline  => 1);
-
-  $file->put(processor => $hash);
+  $this->{th}->configure(contents => $contents,text => $text);
+  $this->{io}->configure(contents => $text);
+  $this->{io}->put;
 }
 
 1;

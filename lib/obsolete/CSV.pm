@@ -28,7 +28,7 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 17-May-2020 this file is OBSOLETE
 #
 
 package File::CSV;

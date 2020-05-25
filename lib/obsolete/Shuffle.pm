@@ -29,16 +29,18 @@
 
 #
 # Revision: 30-Mar-2015 Now using Math::Random::Secure
+#           17-May-2020 use v5.10
 #
 package Util::Shuffle;
 
 require 5.008;
 use Carp;
 use strict;
+use v5.10;
 
 use Math::Random::Secure qw(irand);
 
-use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
+use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
 
 our $AUTOLOAD;
 
@@ -96,10 +98,13 @@ sub configure
 
   @{$this}{keys %parm} = values %parm;
 }
+
 sub get
 {
   my $this = shift;
   my %parm = @_;
+
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
 
   my $contents  = exists $parm{'contents'} ? $parm{'contents'} : $this->{'contents'};
 
