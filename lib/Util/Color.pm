@@ -28,7 +28,7 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 17-May-2020 use v5.10
 #
 
 package Util::Color;
@@ -36,11 +36,12 @@ package Util::Color;
 require 5.008;
 use Carp;
 use strict;
+use v5.10;
 
 use Math::Random::Secure;
 use List::Util qw(min max);
 
-use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
+use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
 
 our $AUTOLOAD;
 
@@ -122,6 +123,8 @@ sub get
   my $this = shift;
   my %parm = @_;
 
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+
   my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
   my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
   my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
@@ -149,6 +152,8 @@ sub random
 {
   my $this = shift;
   my %parm = @_;
+
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
 
   my $scheme    = exists $parm{scheme}    ? $parm{scheme}    : $this->{scheme};
 
@@ -227,6 +232,8 @@ sub rndRed
   my $this = shift;
   my %parm = @_;
 
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+
   my $red_min = exists $parm{red_min} ? $parm{red_min} : $this->{red_min};
   my $red_max = exists $parm{red_max} ? $parm{red_max} : $this->{red_max};
   my $step    = exists $parm{step}    ? $parm{step}    : $this->{step};
@@ -246,6 +253,8 @@ sub rndGreen
   my $this = shift;
   my %parm = @_;
 
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+
   my $green_min = exists $parm{green_min} ? $parm{green_min} : $this->{green_min};
   my $green_max = exists $parm{green_max} ? $parm{green_max} : $this->{green_max};
   my $step      = exists $parm{step}      ? $parm{step}      : $this->{step};
@@ -264,6 +273,8 @@ sub rndBlue
 {
   my $this = shift;
   my %parm = @_;
+
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
 
   my $blue_min = exists $parm{blue_min} ? $parm{blue_min} : $this->{blue_min};
   my $blue_max = exists $parm{blue_max} ? $parm{blue_max} : $this->{blue_max};
