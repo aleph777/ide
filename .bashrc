@@ -57,8 +57,8 @@ export LD_LIBRARY_PATH=$CLANGLIB
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
 export BRANCH='git rev-parse --abbrev-ref HEAD'
-export EMACSVERSION=$(perl -e '$x=qx(emacs --version);$v=($x=~/(\d{2}(?:\.\d{1,2}){1,2})/)[0];say $v')
-export LISP="/usr/local/share/emacs/${EMACSVERSION}/lisp"
+# export EMACSVERSION=$(perl -e '$x=qx(emacs --version);$v=($x=~/(\d{2}(?:\.\d{1,2}){1,2})/)[0];say $v')
+# export LISP="/usr/local/share/emacs/${EMACSVERSION}/lisp"
 
 export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
 export SHOW_LD_PATHS="ld --verbose | grep SEARCH_DIR | tr -s ' ;' \\012"
@@ -78,9 +78,9 @@ export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-r
 
 alias emacs="emacs $EMACSARGS"
 alias emacs28="~/emacs/src/emacs $EMACSARGS"
-alias emacsclient='/usr/local/bin/emacsclient -n -c'
-alias emacsdaemon='emacs --daemon'
-alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
+# alias emacsclient='/usr/local/bin/emacsclient -n -c'
+# alias emacsdaemon='emacs --daemon'
+# alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
 
 export COLUMNS=108
 
@@ -119,7 +119,7 @@ LIGHT_RED="\[\033[1;31m\]"
 # ORANGE='\033[0;33m'
 # YELLOW="\[\033[1;33m\]"
 # GREEN="\[\033[0;32m\]"
-# LIGHT_GREEN="\[\033[1;32m\]"
+LIGHT_GREEN="\[\033[1;32m\]"
 # CYAN="\[\033[0;36m\]"
 # LIGHT_CYAN="\[\033[1;36m\]"
 # BLUE="\[\033[0;34m\]"
@@ -139,4 +139,4 @@ NO_COLOUR="\[\033[0m\]"
 # then
 #   export PS1='\# [\h($(basename $CLEARCASE_ROOT))] \W> ';
 # fi
-export PS1=${LIGHT_RED}'\# [\h] \W> '${NO_COLOUR}
+export PS1=${LIGHT_GREEN}'\# [\h] \W> '${NO_COLOUR}

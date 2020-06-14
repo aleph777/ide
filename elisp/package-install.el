@@ -43,7 +43,6 @@
 (package-refresh-contents)
 
 (package-install 'anzu)
-;; (package-install 'atim-unscroll)	;
 (package-install 'async)
 (package-install 'bm)
 (package-install 'clean-aindent-mode)
@@ -53,7 +52,7 @@
 (package-install 'dash)
 (package-install 'diminish)
 (package-install 'eglot)
-;; (package-install 'ergoemacs-functions)
+(package-install 'ergoemacs-mode)
 (package-install 'f)
 (package-install 'filladapt)
 (package-install 'flycheck)
