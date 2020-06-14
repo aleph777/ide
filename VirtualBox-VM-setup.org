@@ -7,7 +7,7 @@
        ii. 3 Processors
   c. Display
         i. Video Memory - 128 MB
-       ii. Enable 3D Accleration
+       ii. VMSVGA
   d. Shared Folders
         i. Add C: drive as auto-mounted permanent shared folder
   e. User Interface
@@ -15,10 +15,10 @@
 
 * Install Guest Additions
 
-* Set root password (to use update manager)
+* OBSOLETE: Set root password (to use update manager)
   https://mintguide.org/system/248-reset-the-password-for-root-or-any-user-in-linux-mint.html
 
-* Set up user account
+* OBSOLETE: Set up user account
 ** su (root password!!!)
 ** usermod -G vboxsf fontaine
 ** echo "fontaine ALL=(ALL) ALL" > /etc/sudoers.d/users
@@ -30,23 +30,21 @@
 * Set up local /home environment
 ** TODO: this may be outdated for new environments
 ** rmdir Documents
-** ln -s /media/sf_C_DRIVE/Users/tfontaine/Doucments/
+** ln -s <shared folder>/Doucments/
 ** rmdir Downloads                                   
-** ln -s /media/sf_C_DRIVE/Users/tfontaine/Downloads/
+** ln -s <shared folder>/Downloads/
 ** rmdir Music                                       
-** ln -s /media/sf_C_DRIVE/Users/tfontaine/Music/    
+** ln -s <shared folder>/Music/
 ** rmdir Pictures                                    
-** ln -s /media/sf_C_DRIVE/Users/tfontaine/Pictures/ 
+** ln -s <shared folder>/Pictures/
 ** rmdir Videos                                      
-** ln -s /media/sf_C_DRIVE/Users/tfontaine/Videos 
-
-!!! OBSOLETE !!! tar xJvf Documents/ide/ide.20161221_122949.tar.xz
+** ln -s <shared folder>/Videos
 
 * Set up IDE
-** sudo apt install git
+** sudo apt install build-essential git
 ** git clone https://github.com/aleph777/ide
 ** Pre-use IDE
-*** rm .bashrc
+*** mv .bashrc .basrc.sav
 *** ln -s ide/.bashrc
 *** ln -s ide/.emacs
 *** ln -s ide/bin
@@ -57,18 +55,12 @@
 *** tar xJvf ide/fonts.tar.xz
 *** cd ide
     NOTE:   ---V                ---V don't translate from web site
-*** git config --global user.email "tomfontaine@[some tag].fastmail.fm"
+*** git config --global user.name "<user name>"
+*** git config --global user.email "<email address>"
 *** cd elisp
 *** mkdir packages
 *** cd packages
-*** git clone https://github.com/jaalto/project--emacs-tiny-tools
-
-*** OBSOLETE
-*** git clone https://github.com/Valloric/ycmd
-*** cd ycmd
-*** git submodule update --init --recursive
-*** ./build.py --cs-completer
-*** ./build.py --clang-completer
+*** git clone https://github.com/jaalto/project\-\-emacs-tiny-tools
 
 * sudo bash
 ** fc-cache -f -v
@@ -79,28 +71,21 @@
 * Settings
 ** Theme
 ** Date & Time
-** Panel Applets (adjust and remove)
-** Emacs launcher (add Launcher from desktop and add to Menu. Restart Cinnamon)
-   emacs --no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources
 ** Disable screensaver lock
 
 * Emacs
-** cd elisp
+** git clone https://git.savannah.gnu.org/git/emacs.git
+** cd emacs
+** ./autogen.sh
+** ./configure --without-makeinfo
+** make -j4
+** cd ../elisp
 ** ln -s ~/.emacs.d/elpa/
-** cd /tmp
-** tar xJf ~/Downloads/emacs-[LATEST REV].tar.xz -- NOTE: now building emacs from github latest
-** cd emacs-[LATEST REV]
-** ./configure --without-make-info
-** make
-** sudo make install
 ** cd
 ** mkdir .autosave
 ** mkdir .backup
 
-** M-x package-install ergoemacs-mode
-** emacs -Q .emacs
-** M-x eval-buffer
-
+** emacs -Q -f elisp/package-install.el
 ** Open elisp/usr/default.el and eval-buffer
 ** M-x package-install ergoemacs-mode
 ** cd elisp
@@ -124,12 +109,12 @@
 ** tar xjf ~/Downloads/stardict-dictd-web1913-2.4.2.tar.bz2
 ** mv stardict-dictd-web1913-2.4.2 Webster1913 # .stardict or .stardict/dic???
 
-** cd ~/Downloads
-** wget http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-** cd /usr/local
-** sudo tar xJf ~/Downloads/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
-** cd ~/elisp/packages
-** git clone --depth=1 --recursive https://github.com/MaskRay/ccls
-** cd ccls
-** cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/ -DCMAKE_CXX_COMPILER=clang++
-** cmake --build Release
+# ** cd ~/Downloads
+# ** wget http://releases.llvm.org/8.0.0/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+# ** cd /usr/local
+# ** sudo tar xJf ~/Downloads/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+# ** cd ~/elisp/packages
+# ** git clone --depth=1 --recursive https://github.com/MaskRay/ccls
+# ** cd ccls
+# ** cmake -H. -BRelease -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/local/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-18.04/ -DCMAKE_CXX_COMPILER=clang++
+# ** cmake --build Release
