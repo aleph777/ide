@@ -1,48 +1,74 @@
 # -*-Shell-script-*-
 #
-apt install build-essential
-apt install cmake
-apt install cpan
-apt install cpanminus
-apt install cppcheck
-apt install flex
-apt install git
-apt install indent
-apt install libffi-dev
-apt install libgdbm-dev
-apt install libgif-dev
-apt install libgnutls-dev
-apt install libgpm-dev
-apt install libgtk-3-dev
-apt install libjpeg-dev
-apt install libncurses5-dev
-apt install libotf-dev
-apt install libpng12-dev
-apt install libreadline-dev
-apt install librsvg2-dev
-apt install libssl-dev
-apt install libtiff5-dev
-apt install libtinfo-dev
-apt install libxml2-dev
-apt install libxpm-dev
-apt install libyaml-dev
-apt install m4
-apt install mono-xbuild
-apt install openjdk-7-jdk
-apt install p7zip-full
-apt install perl-doc
-#apt install plsense
-apt install python-dev
-apt install ruby
-apt install sdcv
-apt install sloccount
-apt install yasm
-apt install zlib1g-dev
+installPackage
+{
+    local package=$1
 
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | tee /etc/apt/sources.list.d/mono-official.list
-apt-get update
-apt-get install mono-devel
-apt-get install referenceassemblies-pcl
+    apt -y install package
 
-wget -c https://releases.llvm.org/7.0.1/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+    if [[ "$?" != "0" ]]; then
+        local pkg=$(echo $package | sed -E 's/-?[[:digit:]]*(-dev)?$//')
+
+        echo $package | grep 'dev$'
+
+        if [[ "$?" == "0" ]]; then
+            apt search $package | grep dev
+        else
+            apt search $package
+        fi
+        exit 1
+    fi
+}
+
+installPackage build-essential
+installPackage autoconf
+installPackage cmake
+installPackage cpan
+installPackage cpanminus
+installPackage cppcheck
+installPackage flex
+installPackage git
+installPackage indent
+installPackage libffi-dev
+installPackage libgconf2-dev
+installPackage libgdbm-dev
+installPackage libgif-dev
+installPackage libgnutls-dev
+installPackage libgpm-dev
+installPackage libgtk-3-dev
+installPackage libjansson-dev
+installPackage libjpeg-dev
+installPackage liblcms2-dev
+installPackage libncurses5-dev
+# installPackage perl-doc
+# installPackage plsense
+installPackage libotf-dev
+installPackage libpng16-dev
+installPackage libreadline-dev
+installPackage librsvg2-dev
+installPackage libssl-dev
+installPackage libsystemd-dev
+installPackage libtiff5-dev
+installPackage libtinfo-dev
+installPackage libxml2-dev
+installPackage libxpm-dev
+installPackage libyaml-dev
+installPackage p7zip-full
+installPackage python-dev
+# installPackage ruby
+installPackage sdcv
+installPackage sloccount
+installPackage yasm
+installPackage zlib1g-dev
+
+#apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+
+# installPackage m4
+# installPackage mono-xbuild
+
+#echo "deb http://download.mono-project.com/repo/ubuntu trusty main" | tee /etc/apt/sources.list.d/mono-official.list
+#apt-get update
+#apt-get -y install mono-devel
+#apt-get -y install referenceassemblies-pcl
+
+# wget -c https://releases.llvm.org/7.0.1/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz

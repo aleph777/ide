@@ -628,9 +628,6 @@
       (declare-function popwin-mode "popwin" ()))
     :config (popwin-mode))
 
-  (use-package popwin :defer
-    :config (popwin-mode))
-
   (use-package powerline :after tabbar)
 
   (use-package powerthesaurus :commands powerthesaurus-lookup-word)

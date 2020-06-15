@@ -42,6 +42,7 @@
 ;;           30-Dec-2016 Modified header line in ‘lisp-insert-skeleton’
 ;;           02-Jan-2017 Added ‘u-lisp-imenu-generic-expression’
 ;;           18-Jan-2017 Updated ‘lisp-insert-skeleton’
+;;           13-Jun-2020 Added FORCE to byte recompile directory menu entry
 ;;
 
 ;;; Code:
@@ -61,7 +62,7 @@
     ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
     "---"
     ["Byte Compile File..."      byte-compile-file]
-    ["Byte Recompile Directory" (byte-recompile-directory "." 0)]
+    ["Byte Recompile Directory" (byte-recompile-directory "." 0 t)]
 ))
 
 (defvar lisp-mode-menu-text
