@@ -43,9 +43,10 @@
 #                        Updated Usage
 #            27-May-2015 Changed over to say
 #            14-Jul-2019 use v5.10
+#            23-Aug-2020 List::Util (Core)
 #
 #
-use List::MoreUtils qw(uniq);
+use List::Util qw(uniq);
 use strict;
 use v5.10;
 
