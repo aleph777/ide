@@ -285,57 +285,6 @@
 
     (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark-1))
 
-  ;; (use-package centaur-tabs :after u-macro
-  ;;   :preface
-  ;;   (eval-when-compile
-  ;;     (declare-function centaur-tabs-headline-match "centaur-tabs" ())
-  ;;     (declare-function centaur-tabs-mode "centaur-tabs" (arg1))
-  ;;     (declare-function centaur-tabs-get-group-name "centaur-tabs" (arg1)))
-  ;;   :config
-  ;;   (defun centaur-tabs-buffer-groups ()
-  ;;       "`centaur-tabs-buffer-groups' control buffers' group rules."
-  ;;       (list
-  ;;        (cond
-  ;;         ((eq major-mode 'c-mode) "c")
-  ;;         ((eq major-mode 'c++-mode)  "c++")
-  ;;         ((eq major-mode 'emacs-lisp-mode) "elisp")
-  ;;         ((eq major-mode 'groovy-mode) "groovy")
-  ;;         ((memq major-mode '(help-mode helpful-mode)) "help")
-  ;;         ((is-html-mode?) "html")
-  ;;         ((eq major-mode 'json-mode) "json")
-  ;;         ((eq major-mode 'log-mode) "log")
-  ;;         ((eq major-mode 'lua-mode) "lua")
-  ;;         ((is-make-mode?) "make")
-  ;;         ((eq major-mode 'Man-mode) "manuals")
-  ;;         ((eq major-mode 'matlab-mode) "matlab")
-  ;;         ((memq major-mode '(org-mode calendar-mode diary-mode)) "org")
-  ;;         ((is-perl-mode?) "perl")
-  ;;         ((eq major-mode 'python-mode) "python")
-  ;;         ((eq major-mode 'ruby-mode) "ruby")
-  ;;         ((memq major-mode shell-script-modes) "script")
-  ;;         ((eq major-mode 'sql-mode) "sql")
-  ;;         ((is-xml-mode?) "xml")
-  ;;         ((memq major-mode '(magit-process-mode
-  ;;                             magit-status-mode
-  ;;                             magit-diff-mode
-  ;;                             magit-log-mode
-  ;;                             magit-file-mode
-  ;;                             magit-blob-mode
-  ;;                             magit-blame-mode)) "magit")
-  ;;         ((derived-mode-p 'prog-mode) "code")
-  ;;         ((get-buffer-process (current-buffer)) "process")
-  ;;         ((string-equal "*" (substring (buffer-name) 0 1)) "misc")
-  ;;         ((string-equal " " (substring (buffer-name) 0 1)) "invisible")
-  ;;         ((string-match "^copy of " (buffer-name)) "copy")
-  ;;         (t (centaur-tabs-get-group-name (current-buffer)))
-  ;;         )))
-  ;;   (setq centaur-tabs-style "wave")
-  ;;   (setq centaur-tabs-height 24)
-  ;;   (setq centaur-tabs-set-icons nil)
-  ;;   (setq centaur-tabs-set-modified-marker t)
-  ;;   (centaur-tabs-headline-match)
-  ;;   (centaur-tabs-mode t))
-
   (use-package cl-lib)
 
   (use-package clean-aindent-mode    ;; :defer nil
@@ -386,7 +335,7 @@
             company-idle-delay 0.2
             company-show-numbers t
             company-tooltip-align-annotations t
-            company-clang-executable "/usr/local/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang")
+            company-clang-executable "/usr/bin/clang")
       (add-to-list 'company-transformers #'company-sort-by-backend-importance)))
 
   (use-package company-jedi :after company :disabled
@@ -503,16 +452,9 @@
     :config
     (flycheck-pos-tip-mode))
 
-  (use-package fringe-helper :after git-gutter-fringe)
-
-  (use-package git-gutter :after git-gutter-fringe)
-
-  (use-package git-gutter-fringe
+  (use-package git-gutter
     :config
-    (setq git-gutter:modified-sign "*"
-          git-gutter:added-sign    "+"
-          git-gutter:deleted-sign  "-"
-          git-gutter:window-width   1))
+    (global-git-gutter-mode t))
 
   (use-package groovy-mode :commands groovy-mode
     :mode "\\.grv\\'")
@@ -559,7 +501,6 @@
                      'java-mode-hook
                      ;; 'json-mode-hook
                      'matlab-mode-hook
-                     'perl6-mode
                      'php-mode-hook
                      'python-mode-hook
                      'sh-mode-hook
@@ -612,7 +553,7 @@
 
   (use-package paradox :commands paradox-list-packages)
 
-  (use-package perl6-mode :commands perl6-mode)
+  (use-package perl6-mode :commands perl6-mode :disabled)
 
   (use-package plsense :disabled
     :if is-linux
@@ -745,16 +686,6 @@
          (treemacs-git-mode 'extended))
         (`(t . _)
          (treemacs-git-mode 'simple))))
-    ;; :bind
-    ;; (:map global-map
-    ;;       ([(control f5)] . treemacs-toggle)
-    ;;       ("M-0"        . treemacs-select-window)
-    ;;       ("C-c 1"      . treemacs-delete-other-windows)
-    ;;       ("M-m ft"     . treemacs-toggle)
-    ;;       ("M-m fT"     . treemacs)
-    ;;       ("M-m fB"     . treemacs-bookmark)
-    ;;       ("M-m f C-t"  . treemacs-find-file)
-    ;;       ("M-m f M-t"  . treemacs-find-tag))
     )
 
   (use-package treemacs-magit :after treemacs)
