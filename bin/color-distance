@@ -35,22 +35,16 @@
 #
 # Revision:
 #
+use Util::Color;
 use strict;
 use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-use constant SCALE => sqrt 10;
-
 die _ME_,": should have two arguments!!!" unless @ARGV == 2;
 
 my ($color1,$color2) = @ARGV;
 
-my ($red1,$green1,$blue1) = map { hex(join '',"0x",$_)/256 } (substr($color1,0,2),substr($color1,2,2),substr($color1,4,2));
-my ($red2,$green2,$blue2) = map { hex(join '',"0x",$_)/256 } (substr($color2,0,2),substr($color2,2,2),substr($color2,4,2));
+my $color = Util::Color->new();
 
-my $red   = ($red1   - $red2)**2;
-my $green = ($green1 - $green2)**2;
-my $blue  = ($blue1  - $blue2)**2;
-
-say SCALE*sqrt($red + $green + $blue);
+say $color->computeDistance(hex1 => $color1,hex2 => $color2);
