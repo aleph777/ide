@@ -1,0 +1,80 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#         Copyright © 2020-2020 Tom Fontaine
+
+# Title:  color-distance
+# Author: Tom Fontaine
+# Date:   14-Sep-2020
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:
+#
+# Arguments:
+#
+# Revision:
+#
+use Util::Color;
+use strict;
+use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+use constant BLACK => '000000';
+use constant GRAY  => 'c0c0c0';
+use constant WHITE => 'ffffff';
+
+my @keys = qw(CONTRAST_BLACK CONTRAST_WHITE CONTRAST_GRAY DISTANCE_BLACK HUE SATURATION LUMINOSITY VALUE NAME TYPE);
+
+my $color = Util::Color->new();
+
+my @color;
+
+while(<>)
+{
+  if(my ($name,$value) = /^\s+\(([a-z0-9-]+\/[a-z0-9-]+)\s+"#([0-9a-f]{6})"\)/)
+  {
+    my ($hue,$saturation,$luminosity) = $color->computeHSL(value => $value);
+
+    my $r = {NAME  => $name,
+             VALUE => "#$value",
+             TYPE  => $color->getColorType(value => $value),
+             CONTRAST_BLACK => sprintf('%5.2f',$color->computeContrast(hex1 => BLACK,hex2 => $value)),
+             CONTRAST_GRAY  => sprintf('%5.2f',$color->computeContrast(hex1 => GRAY, hex2 => $value)),
+             CONTRAST_WHITE => sprintf('%5.2f',$color->computeContrast(hex1 => WHITE,hex2 => $value)),
+             DISTANCE_BLACK => sprintf('%5.2f',$color->computeDistance(hex1 => BLACK,hex2 => $value)),
+             HUE            => sprintf('%3d',$hue),
+             SATURATION     => sprintf('%5.2f',$saturation),
+             LUMINOSITY     => sprintf('%5.2f',$luminosity),
+            };
+
+    push @color,$r;
+  }
+}
+# say join ' ','=' x 35,'FOREGROUND COLORS','=' x 35;
+# say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_WHITE} <=> $a->{CONTRAST_WHITE} } grep { $_->{CONTRAST_GRAY} >= 4.5 } @color;
+# say join ' ','=' x 36,'HIGHLIGHT COLORS','=' x 35;
+# say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_BLACK} <=> $a->{CONTRAST_BLACK} } grep { $_->{CONTRAST_BLACK} >= 4.5 } @color;
+
+say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_WHITE} <=> $a->{CONTRAST_WHITE} } @color;

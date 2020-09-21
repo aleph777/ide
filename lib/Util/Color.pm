@@ -43,6 +43,8 @@ use List::Util qw(min max);
 
 use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
 
+use constant SCALE_DISTANCE => sqrt 10;
+
 our $AUTOLOAD;
 
 my @AREF = qw();
@@ -53,6 +55,10 @@ my %fields = (contents => undef,
               red   => undef,
               green => undef,
               blue  => undef,
+
+              value => undef,
+              hex1  => undef,
+              hex2  => undef,
 
               red_min   => 0,
               red_max   => 0,
@@ -288,6 +294,200 @@ sub rndBlue
   my $blue  =  $blue_min + ($step*int(rand $scale));
 
   $this->{blue} = $blue;
+}
+
+sub getRGB
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
+  my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
+  my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
+  my $value = exists $parm{value}   ? $parm{value}   : $this->{value};
+
+  if(defined $value)
+  {
+    my ($color) = $value =~ /^#*([[:xdigit:]]{6})/;
+
+    ($red,$green,$blue) = map { hex(join '',"0x",$_)/256 } (substr($color,0,2),substr($color,2,2),substr($color,4,2));
+  }
+  else
+  {
+    $red   = $red   =~ /^0x/ ? hex($red  /256)   : $red  /256;
+    $green = $green =~ /^0x/ ? hex($green/256)   : $green/256;
+    $blue  = $blue  =~ /^0x/ ? hex($blue /256)   : $blue /256;
+  }
+  return ($red,$green,$blue);
+}
+
+sub computeDistance
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $hex1 = exists $parm{hex1} ? $parm{hex1} : $this->{hex1};
+  my $hex2 = exists $parm{hex2} ? $parm{hex2} : $this->{hex2};
+
+  my ($red1,$green1,$blue1) = $this->getRGB(value => $hex1);
+  my ($red2,$green2,$blue2) = $this->getRGB(value => $hex2);
+
+  return SCALE_DISTANCE*sqrt(($red1   - $red2)  **2 +
+                             ($green1 - $green2)**2 +
+                             ($blue1  - $blue2) **2);
+}
+
+sub computeLuminance
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
+  my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
+  my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
+  my $value = exists $parm{value}   ? $parm{value}   : $this->{value};
+
+  my @rgb = map { $_ <= 0.03928 ? $_/12.92 : (($_ + 0.055)/1.055)**2.4 } $this->getRGB(red => $red,green => $green,blue => $blue,value => $value);
+
+  return 0.2126*$rgb[0] + 0.7152*$rgb[1] + 0.0722*$rgb[2];
+}
+
+sub computeContrast
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $hex1 = exists $parm{hex1} ? $parm{hex1} : $this->{hex1};
+  my $hex2 = exists $parm{hex2} ? $parm{hex2} : $this->{hex2};
+
+
+  my $ratio = ($this->computeLuminance(value => $hex1) + 0.05)/($this->computeLuminance(value => $hex2) + 0.05);
+
+  return $ratio >= 1 ? $ratio : 1/$ratio;
+}
+
+sub computeHSL
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
+  my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
+  my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
+  my $value = exists $parm{value}   ? $parm{value}   : $this->{value};
+
+  ($red,$green,$blue) = $this->getRGB(red => $red,green => $green,blue => $blue,value => $value);
+
+  my %color;
+
+  @color{qw(RED GREEN BLUE)} = ($red,$green,$blue);
+
+  my @keys = sort { $color{$b} <=> $color{$a} } qw(RED GREEN BLUE);
+
+  my $maxColor = $color{$keys[0]};
+  my $minColor = $color{$keys[2]};
+  my $range    = $maxColor - $minColor;
+
+  my $luminosity = ($maxColor + $minColor)/2;
+
+  my $saturation;
+  my $hue;
+
+  if($range < 0.0001)
+  {
+    $saturation = 0;
+    $hue        = 0;
+  }
+  else
+  {
+    $saturation = $luminosity <= 0.5 ? $range/($maxColor + $minColor) : $range/(2.0 + $range);
+
+    if($keys[0] eq 'RED')
+    {
+      $hue = 60*((($green - $blue)/$range) % 6);
+    }
+    elsif($keys[0] eq 'GREEN')
+    {
+      $hue = 60*(2.0 + ($blue - $red)/$range);
+    }
+    else
+    {
+      $hue = 60*(4.0 + ($red - $green)/$range);
+    }
+  }
+  $hue += 360 if $hue < 0;
+
+  return ($hue,$saturation,$luminosity);
+}
+
+sub getColorType
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
+  my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
+  my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
+  my $value = exists $parm{value}   ? $parm{value}   : $this->{value};
+
+  my ($hue,$saturation,$luminosity) = $this->computeHSL(red => $red,green => $green,blue => $blue,value => $value);
+
+  if($hue == 0 && $saturation == 0)
+  {
+    return $luminosity > 0.125 ? 'gray' : 'black';
+  }
+  elsif($hue >=   0 && $hue <  30)
+  {
+    return 'red';
+  }
+  elsif($hue >=  30 && $hue <  60)
+  {
+    return 'orange-red';
+  }
+  elsif($hue >=  60 && $hue <  90)
+  {
+    return 'orange'
+  }
+  elsif($hue >=  90 && $hue < 120)
+  {
+    return 'yellow-orange';
+  }
+  elsif($hue >= 120 && $hue < 150)
+  {
+    return 'yellow';
+  }
+  elsif($hue >= 150 && $hue < 180)
+  {
+    return 'yellow-green';
+  }
+  elsif($hue >= 180 && $hue <  210)
+  {
+    return 'green';
+  }
+  elsif($hue >= 210 && $hue < 240)
+  {
+    return 'blue-green';
+  }
+  elsif($hue >= 240 && $hue < 270)
+  {
+    return 'blue';
+  }
+  elsif($hue >= 270 && $hue < 300)
+  {
+    return 'blue-purple';
+  }
+  elsif($hue >= 300 && $hue < 330)
+  {
+    return 'purple';
+  }
+  elsif($hue >= 330 && $hue < 360)
+  {
+    return 'red-purple';
+  }
+  else
+  {
+    die "$value: ($hue,$saturation,$luminosity)";
+  }
 }
 
 1;

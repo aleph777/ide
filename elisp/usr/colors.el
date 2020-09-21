@@ -31,6 +31,7 @@
 
 ;; Revision: 11-Jun-2018 Added functions from ‘u-frame.el’
 ;;           30-Jul-2019 Added ‘get-background-color’
+;;           17-Sep-2020 Reworked color functions and renamed to `color/'
 
 ;;; Code:
 
@@ -40,6 +41,13 @@
   (require 'color)
   (require 'cl-macs))
 ;;
+(defconst color/step 4)
+
+(defconst color/bg-min 192)
+(defconst color/bg-dim 208)
+(defconst color/bg-mid 224)
+(defconst color/bg-max 256)
+
 (defsubst random-value (min max step)
   "Return a random number between MIN and MAX by STEP."
   (let ((scale (/ (- max min) step)))
@@ -48,17 +56,10 @@
 
 (defun random-background-color ()
   "Return a random background color."
-  (let ((min   160)
-        (max   248)
-        (step    4)
-        (red     0)
-        (green   0)
-        (blue    0))
-    (while (and (<= red 192) (<= green 192) (<= blue 192))
-      (setq red   (random-value min max step)
-            green (random-value min max step)
-            blue  (random-value min max step)))
-    (format "#%x%x%x" red green blue)))
+  (format "#%x%x%x"
+          (random-value color/bg-min color/bg-max color/step)
+          (random-value color/bg-min color/bg-max color/step)
+          (random-value color/bg-min color/bg-max color/step)))
 
 (defun set-random-background-color ()
   "Set a random background color."
@@ -69,76 +70,70 @@
   "Return the rgb hexadecimal value of the background color of the current frame."
   (cdr (assq 'background-color (frame-parameters))))
 
-(defun color-bg/red ()
+(defun color/bg-red ()
   "Return a red background color value."
-  (let* ((red   (random-value 192 248 4))
-         (green (random-value 160 188 4))
-         (blue  (random-value 128 188 4))
-         (color (format "#%x%x%x" red green blue)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-min color/bg-mid color/step)
+          (random-value color/bg-min color/bg-mid color/step)))
 
-(defun color-bg/green ()
+(defun color/bg-green ()
   "Return a green background color value."
-  (let* ((red   (random-value 128 188 4))
-         (green (random-value 192 248 4))
-         (blue  (random-value 128 188 4))
-         (color (format "#%x%x%x" red green blue)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-min color/bg-mid color/step)
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-min color/bg-mid color/step)))
 
-(defun color-bg/blue ()
+(defun color/bg-blue ()
   "Return a blue background color value."
-  (let* ((red   (random-value 128 188 4))
-         (green (random-value 128 188 4))
-         (blue  (random-value 192 248 4))
-         (color (format "#%x%x%x" red green blue)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-min color/bg-mid color/step)
+          (random-value color/bg-min color/bg-mid color/step)
+          (random-value color/bg-mid color/bg-max color/step)))
 
-(defun color-bg/cyan ()
+(defun color/bg-cyan ()
   "Return a cyan background color value."
-  (let* ((red  (random-value 128 188 4))
-         (cyan (random-value 192 248 4))
-         (color (format "#%x%x%x" red cyan cyan)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-min color/bg-mid color/step)
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-mid color/bg-max color/step)))
 
-(defun color-bg/magenta ()
+(defun color/bg-magenta ()
   "Return a magenta background color value."
-  (let* ((magenta (random-value 192 248 4))
-         (green   (random-value 128 188 4))
-         (color (format "#%x%x%x" magenta green magenta)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-min color/bg-mid color/step)
+          (random-value color/bg-mid color/bg-max color/step)))
 
-(defun color-bg/yellow ()
+(defun color/bg-yellow ()
   "Return a yellow background color value."
-  (let* ((yellow (random-value 192 248 4))
-         (blue   (random-value 128 188 4))
-         (color (format "#%x%x%x" yellow yellow blue)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-min color/bg-mid color/step)))
 
-(defun color-bg/pink ()
+(defun color/bg-pink ()
   "Return a pink background color value."
-  (let* ((red   (random-value 192 248 4))
-         (green (random-value 128 156 4))
-         (blue  (random-value 160 188 4))
-         (color (format "#%x%x%x" red green blue)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-mid color/bg-max color/step)
+          (random-value color/bg-min color/bg-dim color/step)
+          (random-value color/bg-dim color/bg-mid color/step)))
 
-(defun color-bg/indigo ()
+(defun color/bg-indigo ()
   "Return an indigo background color value."
-  (let* ((red   (random-value 160 188 4))
-         (green (random-value 128 156 4))
-         (blue  (random-value 192 248 4))
-         (color (format "#%x%x%x" red green blue)))
-    color))
+  (format "#%x%x%x"
+          (random-value color/bg-dim color/bg-mid color/step)
+          (random-value color/bg-min color/bg-dim color/step)
+          (random-value color/bg-mid color/bg-max color/step)))
 
-(defun color-bg/gray ()
+(defun color/bg-gray ()
   "Return an gray background color value."
-  (let* ((red   (random-value 192 248 4))
-         (green (random-value (round (* 0.975 red)) (round (* 1.025 red)) 4))
-         (blue  (random-value (round (* 0.975 red)) (round (* 1.025 red)) 4))
-         (color (format "#%x%x%x" red green blue)))
-    color))
+  (let* ((gray1 (random-value color/bg-min color/bg-max color/step))
+         (gray2 (random-value (max color/bg-min (round (* 0.975 gray1))) (min color/bg-max (round (* 1.025 gray1))) color/step))
+         (gray3 (random-value (max color/bg-min (round (* 0.975 gray1))) (min color/bg-max (round (* 1.025 gray1))) color/step)))
+    (format "#%x%x%x" gray1 gray2 gray3)))
 
-(defun color-hex-to-rgb (hex)
+(defun color/hex-to-rgb (hex)
   "Convert a HEX color to an RGB-triplet."
   (setq hex (replace-regexp-in-string "#" "" hex))
   (mapcar #'(lambda (s) (/ (string-to-number s 16) 255.0))
@@ -146,10 +141,10 @@
                 (substring hex 2 4)
                 (substring hex 4 6))))
 
-(defun u/color-rgb-to-hex (rgb)
+(defun color/rgb-to-hex (rgb)
   "Convert RGB to a hex color."
   (destructuring-bind
-    (red green blue) rgb (color-rgb-to-hex red green blue 2)))
+    (red green blue) rgb (color/rgb-to-hex red green blue 2)))
 
 ;; (defun color-rgb-to-hex  (red green blue &optional digits-per-component)
 ;;   "Return hexadecimal #RGB notation for the color specified by RED GREEN BLUE.
@@ -161,18 +156,18 @@
 ;;          (fmt (if (= digits-per-component 2) "#%02x%02x%02x" "#%04x%04x%04x")))
 ;;     (format fmt (* red maxval) (* green maxval) (* blue maxval))))
 
-(defun u/color-rgb-to-hsv (rgb)
+(defun color/rgb-to-hsv (rgb)
   "Convert RGB to an HSV-triplet."
   (destructuring-bind
-    (red green blue) rgb (color-rgb-to-hsv red green blue)))
+    (red green blue) rgb (color/rgb-to-hsv red green blue)))
 
-(defun u/color-rgb-to-hsl (rgb)
+(defun color/rgb-to-hsl (rgb)
    "Convert RGB to an HSL-triplet."
    (destructuring-bind
-    (red green blue) rgb (color-rgb-to-hsl red green blue))
+    (red green blue) rgb (color/rgb-to-hsl red green blue))
  )
 
-(defun scale-to-8bit (zero-to-one)
+(defun color/scale-to-8bit (zero-to-one)
   "Scale ZERO-TO-ONE (0.0-1.0) from 0-255."
   (* zero-to-one 255.0))
 
