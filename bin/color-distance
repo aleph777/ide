@@ -47,4 +47,6 @@ my ($color1,$color2) = @ARGV;
 
 my $color = Util::Color->new();
 
-say $color->computeDistance(hex1 => $color1,hex2 => $color2);
+#say $color->computeDistance(hex1 => $color1,hex2 => $color2);
+
+say join ',',$color->computeHSL(value => $ARGV[1]);

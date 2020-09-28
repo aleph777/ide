@@ -35,6 +35,7 @@
 #
 # Revision:
 #
+use File::IO;
 use Util::Color;
 use strict;
 use v5.10;
@@ -45,36 +46,29 @@ use constant BLACK => '000000';
 use constant GRAY  => 'c0c0c0';
 use constant WHITE => 'ffffff';
 
-my @keys = qw(CONTRAST_BLACK CONTRAST_WHITE CONTRAST_GRAY DISTANCE_BLACK HUE SATURATION LUMINOSITY VALUE NAME TYPE);
+my @keys = qw(NAME VALUE TYPE HUE SATURATION LUMINOSITY CONTRAST_BLACK CONTRAST_WHITE CONTRAST_GRAY DISTANCE_BLACK);
 
-my $color = Util::Color->new();
+my $io    = File::IO->new(path => $ARGV[0]);
+my $color = Util::Color->new(file => $io);
 
 my @color;
 
-while(<>)
+$color->parseThemeColors();
+
+for(@{$color->colors})
 {
-  if(my ($name,$value) = /^\s+\(([a-z0-9-]+\/[a-z0-9-]+)\s+"#([0-9a-f]{6})"\)/)
-  {
-    my ($hue,$saturation,$luminosity) = $color->computeHSL(value => $value);
+  my $value = $_->{VALUE};
 
-    my $r = {NAME  => $name,
-             VALUE => "#$value",
-             TYPE  => $color->getColorType(value => $value),
-             CONTRAST_BLACK => sprintf('%5.2f',$color->computeContrast(hex1 => BLACK,hex2 => $value)),
-             CONTRAST_GRAY  => sprintf('%5.2f',$color->computeContrast(hex1 => GRAY, hex2 => $value)),
-             CONTRAST_WHITE => sprintf('%5.2f',$color->computeContrast(hex1 => WHITE,hex2 => $value)),
-             DISTANCE_BLACK => sprintf('%5.2f',$color->computeDistance(hex1 => BLACK,hex2 => $value)),
-             HUE            => sprintf('%3d',$hue),
-             SATURATION     => sprintf('%5.2f',$saturation),
-             LUMINOSITY     => sprintf('%5.2f',$luminosity),
-            };
+  my ($hue,$saturation,$luminosity) = $color->computeHSL(value => $value);
 
-    push @color,$r;
-  }
+  $_->{HUE}            = sprintf('%3d',$hue);
+  $_->{SATURATION}     = sprintf('%5.2f',$saturation);
+  $_->{LUMINOSITY}     = sprintf('%5.2f',$luminosity);
+  $_->{TYPE}           = $color->getColorType(value => $value);
+  $_->{CONTRAST_BLACK} = sprintf('%5.2f',$color->computeContrast(hex1 => BLACK,hex2 => $value));
+  $_->{CONTRAST_GRAY}  = sprintf('%5.2f',$color->computeContrast(hex1 => GRAY, hex2 => $value));
+  $_->{CONTRAST_WHITE} = sprintf('%5.2f',$color->computeContrast(hex1 => WHITE,hex2 => $value));
+  $_->{DISTANCE_BLACK} = sprintf('%5.2f',$color->computeDistance(hex1 => BLACK,hex2 => $value));
 }
-# say join ' ','=' x 35,'FOREGROUND COLORS','=' x 35;
-# say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_WHITE} <=> $a->{CONTRAST_WHITE} } grep { $_->{CONTRAST_GRAY} >= 4.5 } @color;
-# say join ' ','=' x 36,'HIGHLIGHT COLORS','=' x 35;
-# say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_BLACK} <=> $a->{CONTRAST_BLACK} } grep { $_->{CONTRAST_BLACK} >= 4.5 } @color;
-
-say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_WHITE} <=> $a->{CONTRAST_WHITE} } @color;
+say join ',',@keys;
+say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_WHITE} <=> $a->{CONTRAST_WHITE} } @{$color->colors};

@@ -47,7 +47,7 @@ use constant SCALE_DISTANCE => sqrt 10;
 
 our $AUTOLOAD;
 
-my @AREF = qw();
+my @AREF = qw(colors);
 my @HREF = qw();
 
 my %fields = (contents => undef,
@@ -59,6 +59,9 @@ my %fields = (contents => undef,
               value => undef,
               hex1  => undef,
               hex2  => undef,
+
+              file   => undef,
+              colors => undef,
 
               red_min   => 0,
               red_max   => 0,
@@ -347,7 +350,7 @@ sub computeLuminance
   my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
   my $value = exists $parm{value}   ? $parm{value}   : $this->{value};
 
-  my @rgb = map { $_ <= 0.03928 ? $_/12.92 : (($_ + 0.055)/1.055)**2.4 } $this->getRGB(red => $red,green => $green,blue => $blue,value => $value);
+  my @rgb = $this->getRGB(red => $red,green => $green,blue => $blue,value => $value);
 
   return 0.2126*$rgb[0] + 0.7152*$rgb[1] + 0.0722*$rgb[2];
 }
@@ -400,11 +403,16 @@ sub computeHSL
   }
   else
   {
-    $saturation = $luminosity <= 0.5 ? $range/($maxColor + $minColor) : $range/(2.0 + $range);
+    $saturation = $range/$maxColor;
 
     if($keys[0] eq 'RED')
     {
-      $hue = 60*((($green - $blue)/$range) % 6);
+      my $c    = ($green - $blue)/$range;
+      my $intc = int($c + 0.5);
+      my $frac = $intc - $c;
+      my $modc = $intc % 6;
+
+      $hue = 60*($green - $blue)/$range;
     }
     elsif($keys[0] eq 'GREEN')
     {
@@ -418,6 +426,32 @@ sub computeHSL
   $hue += 360 if $hue < 0;
 
   return ($hue,$saturation,$luminosity);
+}
+
+sub getShade
+{
+  my $luminosity = 2*shift;
+
+  if($luminosity < 0.125)
+  {
+    return 'black';
+  }
+  elsif($luminosity < 0.375)
+  {
+    return 'dark';
+  }
+  elsif($luminosity < 0.625)
+  {
+    return ();
+  }
+  elsif($luminosity < 0.875)
+  {
+    return 'light';
+  }
+  else
+  {
+    return 'bright';
+  }
 }
 
 sub getColorType
@@ -434,59 +468,91 @@ sub getColorType
 
   if($hue == 0 && $saturation == 0)
   {
-    return $luminosity > 0.125 ? 'gray' : 'black';
+    if($luminosity < 0.125)
+    {
+      return 'black';
+    }
+    elsif($luminosity < 0.375)
+    {
+      return 'gray-dark';
+    }
+    elsif($luminosity < 0.625)
+    {
+      return 'gray';
+    }
+    elsif($luminosity < 0.875)
+    {
+      return 'gray-light';
+    }
+    else
+    {
+      return 'white';
+    }
   }
   elsif($hue >=   0 && $hue <  30)
   {
-    return 'red';
+    return join '-',$saturation >= 0.25 ? 'red' : 'gray',getShade($luminosity);
   }
   elsif($hue >=  30 && $hue <  60)
   {
-    return 'orange-red';
+    return join '-',$saturation >= 0.25 ? 'orange' : 'gray',getShade($luminosity);
   }
   elsif($hue >=  60 && $hue <  90)
   {
-    return 'orange'
+    return join '-',$saturation >= 0.25 ? 'yellow' : 'gray',getShade($luminosity);
   }
   elsif($hue >=  90 && $hue < 120)
   {
-    return 'yellow-orange';
+    return join '-',$saturation >= 0.25 ? 'yellow-green' : 'gray',getShade($luminosity);
   }
-  elsif($hue >= 120 && $hue < 150)
+  elsif($hue >= 120 && $hue < 180)
   {
-    return 'yellow';
+    return join '-',$saturation >= 0.25 ? 'green' : 'gray',getShade($luminosity);
   }
-  elsif($hue >= 150 && $hue < 180)
+  elsif($hue >= 180 && $hue <  240)
   {
-    return 'yellow-green';
-  }
-  elsif($hue >= 180 && $hue <  210)
-  {
-    return 'green';
-  }
-  elsif($hue >= 210 && $hue < 240)
-  {
-    return 'blue-green';
+    return join '-',$saturation >= 0.25 ? 'cyan' : 'gray',getShade($luminosity);
   }
   elsif($hue >= 240 && $hue < 270)
   {
-    return 'blue';
+    return join '-',$saturation >= 0.25 ? 'blue' : 'gray',getShade($luminosity);
   }
   elsif($hue >= 270 && $hue < 300)
   {
-    return 'blue-purple';
+    return join '-',$saturation >= 0.25 ? 'indigo' : 'gray',getShade($luminosity);
   }
   elsif($hue >= 300 && $hue < 330)
   {
-    return 'purple';
+    return join '-',$saturation >= 0.25 ? 'magenta' : 'gray',getShade($luminosity);
   }
   elsif($hue >= 330 && $hue < 360)
   {
-    return 'red-purple';
+    return join '-',$saturation >= 0.25 ? 'violet' : 'gray',getShade($luminosity);
   }
   else
   {
     die "$value: ($hue,$saturation,$luminosity)";
+  }
+}
+
+sub parseThemeColors
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $file   = exists $parm{file}    ? $parm{file}    : $this->{file};
+  my $colors = exists $parm{colors}  ? $parm{colors}  : $this->{colors};
+
+  $file->get();
+
+  for(@{$file->contents})
+  {
+    if(my ($name,$value) = /^\s+\(([a-z0-9-]+\/[a-z0-9-]+)\s+"#([0-9a-f]{6})"\)/)
+    {
+      my $r = {NAME => $name,VALUE => $value};
+
+      push @{$colors},$r;
+    }
   }
 }
 

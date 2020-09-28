@@ -1,0 +1,151 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#         Copyright © 2020-2020 Tom Fontaine
+
+# Title:  color-distance
+# Author: Tom Fontaine
+# Date:   14-Sep-2020
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:
+#
+# Arguments:
+#
+# Revision:
+#
+use strict;
+use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+# Relative luminance calculation
+
+# Each color component value in RGB form C8= {R8 - red, G8 - green, B8 - blue}
+# is an integer between 0 and 255.
+
+# Firstly, convert color components to real values in range 0..1:
+#    Csrgb = C8/255, where C8 = { R8, G8, B8 }
+
+# Then find linear RGB value for each color component C = { R,G,B }:
+
+#   C = ((Csrgb+0.055)/1.055)**2.4 , when Csrgb > 0.03928
+#     or
+#   C = Csrgb/12.92, when Csrgb <= 0.03928
+
+# Using linear color components C={R, G, B} one may get the relative luminance by:
+#    L = 0.2126R + 0.7152G + 0.0722B1
+
+# The coefficients in the formula above reflect human eye sensitivity
+# to the particular color component: human eye senses green component
+# most luminous, red one - a bit less and blue component is the least
+# one of three.
+
+# Contrast
+
+# Knowing the relative luminance you may easily calculate the contrast
+# ratio of a colored text by the formula: (L1 + 0.05) / (L2 + 0.05),
+# where L1 and L2 - relative luminance of text and background color (L1>L2).
+
+# The contrast ratio shows how easy a human recognises text or image
+# on colored background. To be easily readable, the text color and
+# background color contrast ratio must be 7:1.The contrast ratio must
+# be at least 4.5 for the big text or logo images.
+
+use constant BLACK => '010101';
+use constant GRAY  => 'c0c0c0';
+use constant WHITE => 'ffffff';
+
+sub getColor
+{
+  my $rgb = shift;
+
+  die $rgb if $rgb !~ /^[0-9a-f]{6}$/;
+
+  return map { hex(join '',"0x",$_)/255 } (substr($rgb,0,2),substr($rgb,2,2),substr($rgb,4,2));
+}
+
+sub getLuminance
+{
+  my $rgb = shift;
+  my @rgb = getColor($rgb);
+
+  @rgb = map { $_ <= 0.03928 ? $_/12.92 :  (($_ + 0.055) / 1.055)**2.4 } @rgb;
+
+  return 0.2126*$rgb[0] + 0.7152*$rgb[1] + 0.0722*$rgb[2];
+}
+
+use constant LUMINANCE_BLACK => getLuminance(BLACK);
+use constant LUMINANCE_GRAY  => getLuminance(GRAY);
+use constant LUMINANCE_WHITE => getLuminance(WHITE);
+
+use constant SCALE => sqrt 10;
+
+my @keys = qw(NAME VALUE CONTRAST_BLACK CONTRAST_GRAY CONTRAST_WHITE);
+
+sub colorDistance
+{
+  my ($color1,$color2) = @_;
+
+  my ($red1,$green1,$blue1) = getColor($color1);
+  my ($red2,$green2,$blue2) = getColor($color2);
+
+  my $red   = ($red1   - $red2)**2;
+  my $green = ($green1 - $green2)**2;
+  my $blue  = ($blue1  - $blue2)**2;
+
+  return round2(SCALE*sqrt($red + $green + $blue));
+}
+
+sub round2
+{
+  my $val = shift;
+
+  return int(100*$val + 0.5)/100;
+}
+
+sub getContrastRatio
+{
+  my $ratio = shift()/getLuminance(shift);
+
+  return $ratio >= 1 ? round2($ratio) : round2(1/$ratio);
+}
+
+my @color;
+
+while(<>)
+{
+  if(my ($name,$value) = /^\s+\(([a-z0-9-]+\/[a-z0-9-]+)\s+"#([[:xdigit:]]{6})"\)/)
+  {
+    my $r = {NAME  => $name,
+             VALUE => "#$value",
+             CONTRAST_BLACK => getContrastRatio(LUMINANCE_BLACK,$value),
+             CONTRAST_GRAY  => getContrastRatio(LUMINANCE_GRAY, $value),
+             CONTRAST_WHITE => getContrastRatio(LUMINANCE_WHITE,$value),
+            };
+
+    push @color,$r;
+  }
+}
+say join ',',@{$_}{@keys} for sort { $b->{CONTRAST_WHITE} <=> $a->{CONTRAST_WHITE} } grep { $_->{CONTRAST_GRAY} >= 4.5 } @color;
