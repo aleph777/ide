@@ -596,6 +596,8 @@
     :hook
     (prog-mode . rainbow-delimiters-mode))
 
+  (use-package rainbow-mode)
+
   (use-package s) ;; :defer nil
 
   (use-package sdcv :commands sdcv-search)
