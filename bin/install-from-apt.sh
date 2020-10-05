@@ -1,10 +1,10 @@
 # -*-Shell-script-*-
 #
-installPackage
+installPackage()
 {
     local package=$1
 
-    apt -y install package
+    apt -y install $package
 
     if [[ "$?" != "0" ]]; then
         local pkg=$(echo $package | sed -E 's/-?[[:digit:]]*(-dev)?$//')
@@ -20,10 +20,9 @@ installPackage
     fi
 }
 
-installPackage build-essential
 installPackage autoconf
+installPackage build-essential
 installPackage cmake
-installPackage cpan
 installPackage cpanminus
 installPackage cppcheck
 installPackage flex
@@ -33,7 +32,7 @@ installPackage libffi-dev
 installPackage libgconf2-dev
 installPackage libgdbm-dev
 installPackage libgif-dev
-installPackage libgnutls-dev
+installPackage libgnutls28-dev
 installPackage libgpm-dev
 installPackage libgtk-3-dev
 installPackage libjansson-dev
@@ -43,7 +42,7 @@ installPackage libncurses5-dev
 # installPackage perl-doc
 # installPackage plsense
 installPackage libotf-dev
-installPackage libpng16-dev
+installPackage libpng-dev
 installPackage libreadline-dev
 installPackage librsvg2-dev
 installPackage libssl-dev
@@ -53,6 +52,7 @@ installPackage libtinfo-dev
 installPackage libxml2-dev
 installPackage libxpm-dev
 installPackage libyaml-dev
+installPackage net-tools
 installPackage p7zip-full
 installPackage python-dev
 # installPackage ruby
