@@ -143,9 +143,9 @@ sub get
   $green = 0 unless defined $green;
   $blue  = 0 unless defined $blue;
 
-  $red   = min(max($red, 0), 255);
+  $red   = min(max($red,   0), 255);
   $green = min(max($green, 0), 255);
-  $blue  = min(max($blue, 0), 255);
+  $blue  = min(max($blue,  0), 255);
 
   $this->{contents} = sprintf $fmt,$red,$green,$blue;
 }
@@ -178,9 +178,9 @@ sub random
   my $blue_max  = exists $parm{blue_max}  ? $parm{blue_max}  : $this->{blue_max};
   my $step      = exists $parm{step}      ? $parm{step}      : $this->{step};
 
-  $this->rndRed(red_min => $red_min, red_max => $red_max, step => $step);
+  $this->rndRed(red_min     => $red_min,   red_max   => $red_max,   step => $step);
   $this->rndGreen(green_min => $green_min, green_max => $green_max, step => $step);
-  $this->rndBlue(blue_min => $blue_min, blue_max => $blue_max, step => $step);
+  $this->rndBlue(blue_min   => $blue_min,  blue_max  => $blue_max,  step => $step);
 
   $this->get();
 }
@@ -407,11 +407,6 @@ sub computeHSL
 
     if($keys[0] eq 'RED')
     {
-      my $c    = ($green - $blue)/$range;
-      my $intc = int($c + 0.5);
-      my $frac = $intc - $c;
-      my $modc = $intc % 6;
-
       $hue = 60*($green - $blue)/$range;
     }
     elsif($keys[0] eq 'GREEN')
@@ -503,15 +498,23 @@ sub getColorType
   }
   elsif($hue >=  90 && $hue < 120)
   {
-    return join '-',$saturation >= 0.25 ? 'yellow-green' : 'gray',getShade($luminosity);
+    return join '-',$saturation >= 0.25 ? 'green-yellow' : 'gray',getShade($luminosity);
   }
-  elsif($hue >= 120 && $hue < 180)
+  elsif($hue >= 120 && $hue < 150)
   {
     return join '-',$saturation >= 0.25 ? 'green' : 'gray',getShade($luminosity);
   }
-  elsif($hue >= 180 && $hue <  240)
+  elsif($hue >= 150 && $hue < 180)
+  {
+    return join '-',$saturation >= 0.25 ? 'cyan-green' : 'gray',getShade($luminosity);
+  }
+  elsif($hue >= 180 && $hue <  210)
   {
     return join '-',$saturation >= 0.25 ? 'cyan' : 'gray',getShade($luminosity);
+  }
+  elsif($hue >= 210 && $hue <  240)
+  {
+    return join '-',$saturation >= 0.25 ? 'blue-cyan' : 'gray',getShade($luminosity);
   }
   elsif($hue >= 240 && $hue < 270)
   {
@@ -527,7 +530,7 @@ sub getColorType
   }
   elsif($hue >= 330 && $hue < 360)
   {
-    return join '-',$saturation >= 0.25 ? 'violet' : 'gray',getShade($luminosity);
+    return join '-',$saturation >= 0.25 ? 'red-magenta' : 'gray',getShade($luminosity);
   }
   else
   {
@@ -547,7 +550,7 @@ sub parseThemeColors
 
   for(@{$file->contents})
   {
-    if(my ($name,$value) = /^\s+\(([a-z0-9-]+\/[a-z0-9-]+)\s+"#([0-9a-f]{6})"\)/)
+    if(my ($name,$value) = /^.defconst ([a-z0-9-]+\/[a-z0-9-]+) +"#([0-9a-f]{6})"\)/)
     {
       my $r = {NAME => $name,VALUE => $value};
 
