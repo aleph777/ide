@@ -38,6 +38,7 @@
 ;;           03-Jul-2017 Moved ‘user-dir-home’ to .emacs
 ;;           24-Aug-2017 Moved ‘gc-cons-threshold’ to .emacs
 ;;           19-Apr-2018 Removed ‘u-initial-major-mode’
+;;           15-Dec-2020 Moved defvars to .emacs
 ;;
 
 ;;; Code:
@@ -46,9 +47,6 @@
 ;;
 (eval-when-compile
  (require 'u-macro))
-
-(defvar user-dir-bin (concat user-dir-home "bin/")) ;; this should be evaluated at run time
-(defvar user-copyright-holder user-full-name)
 
 (let ((autosave-dir (concat user-dir-home ".autosave/")))
   (setq auto-save-file-name-transforms `((".*"   ,autosave-dir t))))

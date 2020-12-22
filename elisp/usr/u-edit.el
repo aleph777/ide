@@ -404,14 +404,6 @@
        ((string-match "^[[:upper:]]" tmp-string)
         (downcase-region (point) (+ 1(point)))))))
 
-(defun u/transpose-lines ()
-  "Transpose current line with previous line."
-  (interactive "*")
-  (beginning-of-line)
-  (save-excursion
-    (transpose-lines 1)))
-
-
 ;;
 (message "Loading u-edit...done")
 (provide 'u-edit)

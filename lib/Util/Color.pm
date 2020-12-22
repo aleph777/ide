@@ -1,4 +1,4 @@
-# Util::Color --- [description] -*-Perl-*-
+# Util::Color --- color utilities -*-Perl-*-
 
 #         Copyright © 2017-2020 Tom Fontaine
 
@@ -178,9 +178,9 @@ sub random
   my $blue_max  = exists $parm{blue_max}  ? $parm{blue_max}  : $this->{blue_max};
   my $step      = exists $parm{step}      ? $parm{step}      : $this->{step};
 
-  $this->rndRed(red_min     => $red_min,   red_max   => $red_max,   step => $step);
+  $this->rndRed(  red_min   => $red_min,   red_max   => $red_max,   step => $step);
   $this->rndGreen(green_min => $green_min, green_max => $green_max, step => $step);
-  $this->rndBlue(blue_min   => $blue_min,  blue_max  => $blue_max,  step => $step);
+  $this->rndBlue( blue_min  => $blue_min,  blue_max  => $blue_max,  step => $step);
 
   $this->get();
 }

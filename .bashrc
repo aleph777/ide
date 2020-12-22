@@ -62,7 +62,7 @@ alias psfind='ps u -C'
 export EDITOR='nano'
 export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
 export EMACSBIN=~/emacs/src/emacs
-export EMACSVERSION=$(emacs --version | grep '\d$' | cut -d' ' -f3)
+#export EMACSVERSION=$(emacs --version | grep '\d$' | cut -d' ' -f3)
 export LISP="~/emacs/lisp"
 alias emacs="$EMACSBIN $EMACSARGS"
 # alias emacsclient='/usr/local/bin/emacsclient -n -c'
@@ -161,4 +161,4 @@ if [[ "$THIS_ARCH" = "x86_64" ]]; then
 else
     PROMPT_COLOR=${LIGHT_BLUE}
 fi
-export PS1=${PROMPT_COLOR}'\# [${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOUR}
+export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOUR}

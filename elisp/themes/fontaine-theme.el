@@ -48,6 +48,8 @@
 ;;              23-Sep-2020 Added ‘canva’ colors
 ;;                          Cleaned up mint definitions
 ;;              05-Oct-2020 Major overhaul
+;;              20-Oct-2020 Added variable pitch fonts
+;;              26-Oct-2020 Added ‘Segoe UI' font
 ;;
 
 ;;; Code:
@@ -56,35 +58,33 @@
 
 (deftheme fontaine)
 
-(defconst themes-dir (concat user-dir-home "/elisp/themes"))
-(defconst colors-dir (concat themes-dir "/colors"))
+(defconst themes-dir (concat user-dir-home "/elisp/themes/"))
+(defconst colors-dir (concat themes-dir "colors/"))
 
-(load-file (concat colors-dir "/american.el"))
-(load-file (concat colors-dir "/aussie.el"))
-(load-file (concat colors-dir "/british.el"))
-(load-file (concat colors-dir "/canadian.el"))
-(load-file (concat colors-dir "/canva.el"))
-(load-file (concat colors-dir "/chinese.el"))
-(load-file (concat colors-dir "/color-blind.el"))
-(load-file (concat colors-dir "/dutch.el"))
-(load-file (concat colors-dir "/flat.el"))
-(load-file (concat colors-dir "/french.el"))
-(load-file (concat colors-dir "/german.el"))
-(load-file (concat colors-dir "/ibm.el"))
-(load-file (concat colors-dir "/indian.el"))
-(load-file (concat colors-dir "/material.el"))
-(load-file (concat colors-dir "/material-ui.el"))
-(load-file (concat colors-dir "/nord.el"))
-(load-file (concat colors-dir "/qualitative.el"))
-(load-file (concat colors-dir "/russian.el"))
-(load-file (concat colors-dir "/spanish.el"))
-(load-file (concat colors-dir "/solar.el"))
-(load-file (concat colors-dir "/srcsery.el"))
-(load-file (concat colors-dir "/swedish.el"))
-(load-file (concat colors-dir "/turkish.el"))
-(load-file (concat colors-dir "/x11.el"))
-
-;; (add-to-list 'default-frame-alist '(alpha . (92 . 90)))
+(load-file (concat colors-dir "american.el"))
+(load-file (concat colors-dir "aussie.el"))
+(load-file (concat colors-dir "british.el"))
+(load-file (concat colors-dir "canadian.el"))
+(load-file (concat colors-dir "canva.el"))
+(load-file (concat colors-dir "chinese.el"))
+(load-file (concat colors-dir "color-blind.el"))
+(load-file (concat colors-dir "dutch.el"))
+(load-file (concat colors-dir "flat.el"))
+(load-file (concat colors-dir "french.el"))
+(load-file (concat colors-dir "german.el"))
+(load-file (concat colors-dir "ibm.el"))
+(load-file (concat colors-dir "indian.el"))
+(load-file (concat colors-dir "material.el"))
+(load-file (concat colors-dir "material-ui.el"))
+(load-file (concat colors-dir "nord.el"))
+(load-file (concat colors-dir "qualitative.el"))
+(load-file (concat colors-dir "russian.el"))
+(load-file (concat colors-dir "spanish.el"))
+(load-file (concat colors-dir "solar.el"))
+(load-file (concat colors-dir "srcsery.el"))
+(load-file (concat colors-dir "swedish.el"))
+(load-file (concat colors-dir "turkish.el"))
+(load-file (concat colors-dir "x11.el"))
 
 ;; Windows fonts
 ;;   Consolas
@@ -105,16 +105,28 @@
        (cousine         (car (member "Cousine"          font-family-list)))
        (deja-vu         (car (member "DejaVu Sans Mono" font-family-list)))
        (fantasque       (car (member "Fantasque"        font-family-list)))
+       (firacode        (car (member "Fira Code"        font-family-list)))
+       (hack            (car (member "Hack"             font-family-list)))
+       (input           (car (member "Input"            font-family-list)))
        (iosevka         (car (member "Iosevka"          font-family-list)))
        (iosevka-slab    (car (member "Iosevka Slab"     font-family-list)))
-       (victor          (car (member "Victor"           font-family-list)))
-       (hack            (car (member "Hack"             font-family-list)))
        (jet             (car (member "Jet"              font-family-list)))
        (source-code-pro (car (member "Source Code Pro"  font-family-list)))
+       (victor          (car (member "Victor"           font-family-list)))
 
-       (font-family (or hack deja-vu consolas source-code-pro jet iosevka iosevka-slab cousine camingo fantasque victor courier))
+       (dejavu-sans (car (member "DejaVu Sans" font-family-list)))
+       (open-sans   (car (member "Open Sans"   font-family-list)))
+       (noto-sans   (car (member "Noto Sans"   font-family-list)))
+       (roboto      (car (member "Roboto"      font-family-list)))
+       (segoe-ui    (car (member "Segoe UI"    font-family-list)))
+       (source-sans (car (member "Source Sans" font-family-list)))
 
-       (mint-y/green "#8fa876")
+       (fontaine/fixed-pitch-family    (or hack deja-vu consolas source-code-pro jet firacode iosevka iosevka-slab cousine camingo fantasque victor input courier))
+       (fontaine/variable-pitch-family (or roboto noto-sans source-sans dejavu-sans open-sans segoe-ui))
+
+       (mint-y/green   "#8fa876")
+       (mint-y/green-2 "#b3c4a2")
+
        (mint-x/black "#2f2f2f")
        (mint-x/white "#cccccc")
 
@@ -150,7 +162,7 @@
        (fontaine/bg-yellow  x11/yellow)
 
        (fontaine/bg-green-1 mint-y/green)
-       (fontaine/bg-green-2 material/light-green-600)
+       (fontaine/bg-green-2 mint-y/green-2)
        (fontaine/bg-green-3 material/light-green-400)
        (fontaine/bg-green-4 aussie/pure-apple)
        (fontaine/bg-green-5 ibm/green-60)
@@ -198,19 +210,19 @@
        (fontaine/bg-paren-no-match fontaine/bg-yellow)
        (fontaine/fg-paren-no-match fontaine/fg-red)
 
-       (fontaine/bg-powerline-active1 fontaine/bg-mode-line-active)
-       (fontaine/fg-powerline-active1 fontaine/fg-mode-line-active)
-       (fontaine/bg-powerline-active2 fontaine/bg-green-2)
-       (fontaine/fg-powerline-active2 fontaine/fg-black)
-       (fontaine/bg-powerline-active3 fontaine/bg-green-3)
-       (fontaine/fg-powerline-active3 fontaine/fg-black)
+       (fontaine/bg-powerline-active0 fontaine/bg-green-1)
+       (fontaine/fg-powerline-active0 fontaine/fg-black)
+       (fontaine/bg-powerline-active1 fontaine/bg-green-2)
+       (fontaine/fg-powerline-active1 fontaine/fg-black)
+       (fontaine/bg-powerline-active2 fontaine/bg-mode-line-active)
+       (fontaine/fg-powerline-active2 fontaine/fg-mode-line-active)
 
-       (fontaine/bg-powerline-inactive1 fontaine/bg-mode-line-inactive)
-       (fontaine/fg-powerline-inactive1 fontaine/fg-mode-line-inactive)
+       (fontaine/bg-powerline-inactive0 fontaine/bg-mode-line-inactive)
+       (fontaine/fg-powerline-inactive0 fontaine/fg-mode-line-inactive)
+       (fontaine/bg-powerline-inactive1 fontaine/bg-gray-1)
+       (fontaine/fg-powerline-inactive1 fontaine/fg-white)
        (fontaine/bg-powerline-inactive2 fontaine/bg-gray-2)
        (fontaine/fg-powerline-inactive2 fontaine/fg-white)
-       (fontaine/bg-powerline-inactive3 fontaine/bg-gray-3)
-       (fontaine/fg-powerline-inactive3 fontaine/fg-white)
 
        (fontaine/match   fontaine/bg-blue-2)
        (fontaine/prompt  fontaine/fg-red)
@@ -254,30 +266,31 @@
        (fontaine/warning            fontaine/fg-orange)
        )
 
-  (defface fontaine/variable-pitch '((t (:inherit variable-pitch :height 0.8))) "" :group 'font-lock-faces)
+  (set-face-attribute 'default        nil :family fontaine/fixed-pitch-family    :height 120)
+  (set-face-attribute 'fixed-pitch    nil :family fontaine/fixed-pitch-family    :height 120)
+  (set-face-attribute 'variable-pitch nil :family fontaine/variable-pitch-family :height 120)
 
-  (defface fontaine/mode-line-base '((t (:family "DejaVu Sans" :box (:line-width 1 :color "gray50")))) "" :group 'font-lock-faces)
+  (defface fontaine/mode-line-base '((t (:inherit variable-pitch :box (:line-width 1 :color "gray50")))) "" :group 'font-lock-faces)
 
-  (defface tabbar-default `((t (:inherit fontaine/variable-pitch :background ,fontaine/bg-tabbar-default :foreground ,fontaine/fg-tabbar-default))) "" :group 'font-lock-faces)
+  (defface tabbar-default `((t (:inherit variable-pitch :height 0.8 :background ,fontaine/bg-tabbar-default :foreground ,fontaine/fg-tabbar-default))) "" :group 'font-lock-faces)
 
   (defface tabbar-unselected `((t (:inherit tabbar-default :background ,fontaine/bg-tabbar-unselected))) "" :group 'font-lock-faces)
 
   (defface tabbar-modified `((t (:inherit tabbar-default :background ,fontaine/bg-tabbar-modified :foreground ,fontaine/fg-tabbar-modified))) "" :group 'font-lock-faces)
 
-  (defface tabbar-selected `((t (:inherit tabbar-default :background "nil" :foreground ,fontaine/fg-tabbar-selected :weight bold))) "" :group 'font-lock-faces)
+  (defface tabbar-selected `((t (:inherit tabbar-default :background "xxx" :foreground ,fontaine/fg-tabbar-selected :weight bold))) "" :group 'font-lock-faces)
 
 
   (defface tabbar-selected-modified `((t (:inherit tabbar-selected :foreground ,fontaine/fg-tabbar-modified-selected))) "" :group 'font-lock-faces)
 
   (defface tabbar-button            `((t (:inherit tabbar-unselected))) "" :group 'font-lock-faces)
 
+  (defface fontaine/powerline-red `((t (:inherit variable-pitch :foreground "#fd3c3c"))) "" :group 'font-lock-faces)
+
   (custom-theme-set-faces
    `fontaine
 
    ;; basic settings
-
-   `(default ((t (:family ,font-family :height 120 :width normal))))
-   ;;
 
    `(anzu-mode-line ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
 
@@ -293,24 +306,24 @@
    `(cperl-hash-face           ((t (:foreground ,fontaine/hash            :weight bold))))
    `(cperl-nonoverridable-face ((t (:foreground ,fontaine/non-overridable :weight bold))))
 
-   `(error ((t (:foreground ,fontaine/error   :weight bold))))
+   `(error ((t (:foreground ,fontaine/error :weight bold))))
 
    `(font-lock-builtin-face          ((t (:foreground ,fontaine/builtin  :weight bold))))
-   `(font-lock-comment-face          ((t (:foreground ,fontaine/comment  :slant  italic))))
+   `(font-lock-comment-face          ((t (:foreground ,fontaine/comment               :slant italic))))
    `(font-lock-constant-face         ((t (:foreground ,fontaine/constant :weight bold))))
    `(font-lock-doc-face              ((t (:foreground ,fontaine/comment  :weight bold :slant italic))))
    `(font-lock-function-name-face    ((t (:foreground ,fontaine/function :weight bold))))
    `(font-lock-keyword-face          ((t (:foreground ,fontaine/keyword  :weight bold))))
-   `(font-lock-string-face           ((t (:foreground ,fontaine/string   : slant italic))))
+   `(font-lock-string-face           ((t (:foreground ,fontaine/string                :slant italic))))
    `(font-lock-type-face             ((t (:foreground ,fontaine/type     :weight bold))))
    `(font-lock-variable-name-face    ((t (:foreground ,fontaine/variable :weight bold))))
    `(font-lock-warning-face          ((t (:foreground ,fontaine/warning  :weight bold))))
 
    `(fringe  ((t (:background nil))))
 
-   `(git-gutter:added                ((t (:foreground ,fontaine/added    :weight bold))))
-   `(git-gutter:deleted              ((t (:foreground ,fontaine/deleted  :weight bold))))
-   `(git-gutter:modified             ((t (:foreground ,fontaine/modified :weight bold))))
+   `(git-gutter:added    ((t (:foreground ,fontaine/added    :weight bold))))
+   `(git-gutter:deleted  ((t (:foreground ,fontaine/deleted  :weight bold))))
+   `(git-gutter:modified ((t (:foreground ,fontaine/modified :weight bold))))
 
    `(highlight ((t (:background ,fontaine/match))))
 
@@ -323,22 +336,23 @@
 
    `(match ((t (:background ,fontaine/match))))
 
-   `(mode-line           ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-mode-line-active   :foreground ,fontaine/bg-mode-line-active))))
-   `(mode-line-inactive  ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-mode-line-inactive :foreground ,fontaine/bg-mode-line-inactive))))
+   `(mode-line           ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-mode-line-active   :foreground ,fontaine/fg-mode-line-active))))
+   `(mode-line-inactive  ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-mode-line-inactive :foreground ,fontaine/fg-mode-line-inactive))))
 
    `(paren-face-match    ((t (:background ,fontaine/match))))
    `(paren-face-mismatch ((t (:background ,fontaine/bg-paren-mismatch :foreground ,fontaine/fg-paren-mismatch))))
    `(paren-face-no-match ((t (:background ,fontaine/bg-paren-no-match :foreground ,fontaine/fg-paren-no-match))))
 
-   `(powerline-active1   ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-active1 :foreground ,fontaine/fg-powerline-active1 :weight bold))))
-   `(powerline-active2   ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-active2 :foreground ,fontaine/fg-powerline-active2))))
-   `(powerline-active3   ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-active3 :foreground ,fontaine/fg-powerline-active3))))
+   `(powerline-active0   ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-active0   :foreground ,fontaine/fg-powerline-active0  :weight bold))))
+   `(powerline-active1   ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-active1   :foreground ,fontaine/fg-powerline-active1))))
+   `(powerline-active2   ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-active2   :foreground ,fontaine/fg-powerline-active2))))
 
-   `(powerline-inactive1 ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-inactive1 :foreground ,fontaine/fg-powerline-inactive1 :weight bold))))
+   `(powerline-inactive0 ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-inactive0 :foreground ,fontaine/fg-powerline-inactive0 :weight bold))))
+   `(powerline-inactive1 ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-inactive1 :foreground ,fontaine/fg-powerline-inactive1))))
    `(powerline-inactive2 ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-inactive2 :foreground ,fontaine/fg-powerline-inactive2))))
-   `(powerline-inactive3 ((t (:inherit fontaine/mode-line-base :background ,fontaine/bg-powerline-inactive3 :foreground ,fontaine/fg-powerline-inactive3))))
 
-   `(rainbow-delimiters-base-face    ((t (:inherit unspecified :weight bold))))
+   ;; ((((((((()))))))))
+  `(rainbow-delimiters-base-face     ((t (:inherit  :weight bold))))
    `(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-1))))
    `(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-2))))
    `(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-3))))
@@ -363,8 +377,8 @@
    `(warning ((t (:foreground ,fontaine/warning :weight bold))))
 
    `(web-mode-json-key-face ((t (:weight bold))))
-   ) ;; custom-theme-set-faces
-  ) ;; let*
+
+   )) ;; custom-theme-set-faces ;; let*
  ;;
 (message "Loading fontaine-theme...done")
 (provide-theme 'fontaine)
@@ -374,4 +388,3 @@
 ;; End:
 
 ;;; fontaine-theme.el ends here
-;; rainbow ((((((((()))))))))
