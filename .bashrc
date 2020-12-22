@@ -1,5 +1,9 @@
 # -*-Shell-script-*-
 
+if [[ -e $HOME/.bashrc_original ]]; then
+    source $HOME/.bashrc_original
+fi
+
 # Signal Name	Signal Number	Description
 # SIGHUP	1	Hang up detected on controlling terminal or death of controlling process
 # SIGINT	2	Issued if the user sends an interrupt signal (Ctrl + C)
@@ -20,8 +24,6 @@ export PROMPT_COMMAND="history -a; history -n"
 # Don't know why this is needed
 #
 enable kill
-
-. /etc/bash_completion
 
 export IDE="$HOME/ide"
 
@@ -54,6 +56,9 @@ alias hg='history | grep '
 alias lsc='TERM=ansi ls --color=always'
 alias lsf='ls -F'
 alias psfind='ps u -C'
+
+# these are a handy reference
+#
 # alias sshfs='sudo sshfs -o allow_other ubuntu@10.46.28.59:/home/ubuntu pi'
 # ssh-copy-id ubuntu@192.168.1.253
 
@@ -62,7 +67,7 @@ alias psfind='ps u -C'
 export EDITOR='nano'
 export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
 export EMACSBIN=~/emacs/src/emacs
-export EMACSVERSION=$(emacs --version | grep '\d$' | cut -d' ' -f3)
+#export EMACSVERSION=$(emacs --version | grep '\d$' | cut -d' ' -f3)
 export LISP="~/emacs/lisp"
 alias emacs="$EMACSBIN $EMACSARGS"
 # alias emacsclient='/usr/local/bin/emacsclient -n -c'

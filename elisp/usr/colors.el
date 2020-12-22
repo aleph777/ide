@@ -143,7 +143,7 @@
 
 (defun color/rgb-to-hex (rgb)
   "Convert RGB to a hex color."
-  (destructuring-bind
+  (cl-destructuring-bind
     (red green blue) rgb (color/rgb-to-hex red green blue 2)))
 
 ;; (defun color-rgb-to-hex  (red green blue &optional digits-per-component)
@@ -158,12 +158,12 @@
 
 (defun color/rgb-to-hsv (rgb)
   "Convert RGB to an HSV-triplet."
-  (destructuring-bind
+  (cl-destructuring-bind
     (red green blue) rgb (color/rgb-to-hsv red green blue)))
 
 (defun color/rgb-to-hsl (rgb)
    "Convert RGB to an HSL-triplet."
-   (destructuring-bind
+   (cl-destructuring-bind
     (red green blue) rgb (color/rgb-to-hsl red green blue))
  )
 
