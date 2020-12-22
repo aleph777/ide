@@ -166,4 +166,4 @@ if [[ "$THIS_ARCH" = "x86_64" ]]; then
 else
     PROMPT_COLOR=${LIGHT_BLUE}
 fi
-export PS1=${PROMPT_COLOR}'\# [${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOUR}
+export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOUR}

@@ -48,6 +48,7 @@
 ;;           02-Jul-2018 Changed menu text to eliminate reference to frame
 ;;           06-Jul-2018 Added ‘list-faces-display’
 ;;                       Moved randon background colors to submenu
+;;           21-Oct-2020 Fixed ‘is-line-numbers-absolute?' and ‘is-line-numbers-relative?'
 ;;
 
 ;;; Code:
@@ -74,11 +75,11 @@
 
 (defsubst is-line-numbers-absolute? ()
   "Return boolean t if ‘display-line-numbers’ absolute mode is chosen."
-  (eq line-numbers 'absolute))
+  (or (eq display-line-numbers t) (eq display-line-numbers 'absolute)))
 
 (defsubst is-line-numbers-relative? ()
   "Return boolean t if ‘display-line-numbers’ relative mode is chosen."
-  (eq line-numbers 'relative))
+  (eq display-line-numbers 'relative))
 
 (defun u-which-function-mode ()
   "Toggle function ‘which-function-mode’ and keep local setting for modeline."

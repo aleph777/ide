@@ -107,6 +107,7 @@
 ;;           16-Jan-2019 Added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
 ;;           16-Jun-2019 Reformatted/reorganized
 ;;           03-Sep-2019 Added ‘C-S-mouse-3’ as ‘minions-minor-modes-menu’
+;;           15-Dec-2020 Added ‘kp-*' for non-numlocked keypad keys
 ;;
 
 ;;; Code:
@@ -197,7 +198,7 @@
 ;;
 (global-set-key [(control g)]            'goto-line)
 ;;lobal-set-key [(meta    g)]            'PREFIX
-(global-set-key [(super   g)]            'centaur-tabs-toggle-groups)
+;;lobal-set-key [(super   g)]            ')
 ;;lobal-set-key [(control shift g)]      '
 ;;lobal-set-key [(control super g)]      '
 ;;lobal-set-key [(meta    super g)]      '
@@ -210,7 +211,7 @@
 ;;lobal-set-key [(super   h)]            '
 ;;lobal-set-key [(control meta  h)]      '
 (global-set-key [(control shift h)]      'query-replace)
-;;lobal-set-key [(control super h)]      '
+(global-set-key [(control super h)]      'hs-hide-block)
 ;;lobal-set-key [(meta    super h)]      '
 ;;lobal-set-key [(control meta super h)] '
 
@@ -268,7 +269,7 @@
 ;;lobal-set-key [(super   m)]            '
 ;;lobal-set-key [(control meta  m)]      '
 ;;lobal-set-key [(control shift m)]      '
-;;lobal-set-key [(control super m)]      '
+;;lobal-set-key [(control super m)]      ' DO NOT USE ...
 ;;lobal-set-key [(meta    super m)]      '
 ;;lobal-set-key [(control meta super m)] '
 
@@ -332,21 +333,21 @@
 ;;lobal-set-key [(control s)]            'isearch-forward
 (global-set-key [(meta    s)]            'write-file)
 ;;lobal-set-key [(super   s)]            ' DO NOT USE ... key not registered
-;;lobal-set-key [(control meta  s)]      '
+(global-set-key [(control meta  s)]      'open-new-shell)
 (global-set-key [(control shift s)]      'save-buffer)
-(global-set-key [(control super s)]      'open-new-shell)
+(global-set-key [(control super s)]      'hs-show-block)
 ;;lobal-set-key [(meta    super s)]      '
 ;;lobal-set-key [(control meta super s)] '
 
 ;; ==================== t ====================
 ;;
-(global-set-key [(control t)]            'u/transpose-lines)
+(global-set-key [(control t)]            'xah-toggle-letter-case)
 ;;lobal-set-key [(meta    t)]            'transpose-words)
 ;;lobal-set-key [(super   t)]            ' DO NOT USE
 ;;lobal-set-key [(control meta  t)]      ' DO NOT USE
 (global-set-key [(control shift t)]      'ergoemacs-toggle-camel-case)
 (global-set-key [(control super t)]      'toggle-char-case-at-point)
-(global-set-key [(meta    super t)]      'xah-toggle-letter-case)
+;;lobal-set-key [(meta    super t)]      ')
 ;;lobal-set-key [(control meta super t)] '
 
 ;; ==================== u ====================
@@ -929,8 +930,8 @@
 
 ;; ==================== f6 ====================
 ;;
-(global-set-key [f6]           'capitalize-word)
-(global-set-key [(control f6)] 'capitalize-word-or-region)
+(global-set-key [f6]           'capitalize-dwim)
+;;lobal-set-key [(control f6)] 'capitalize-word-or-region)
 ;;lobal-set-key [(meta    f6)] ' DO NOT USE
 ;;lobal-set-key [(super f6)]   'xah-toggle-letter-case)
 ;;lobal-set-key [(control meta  f6)]      ' DO NOT USE
@@ -940,8 +941,8 @@
 
 ;; ==================== f7 ====================
 ;;
-(global-set-key [f7]           'downcase-word)
-(global-set-key [(control f7)] 'downcase-word-or-region)
+(global-set-key [f7]           'downcase-dwim)
+;;lobal-set-key [(control f7)] 'downcase-word-or-region)
 ;;lobal-set-key [(meta    f7)] ' DO NOT USE
 ;;lobal-set-key [(super   f7)] '
 ;;lobal-set-key [(control meta  f7)]      ' DO NOT USE
@@ -951,8 +952,8 @@
 
 ;; ==================== f8 ====================
 ;;
-(global-set-key [f8]           'upcase-word)
-(global-set-key [(control f8)] 'upcase-word-or-region)
+(global-set-key [f8]           'upcase-dwim)
+;;obal-set-key [(control f8)] 'upcase-word-or-region)
 ;;lobal-set-key [(meta    f8)] ' DO NOT USE
 ;;lobal-set-key [(super   f8)] '
 ;;lobal-set-key [(control meta  f8)]      ' DO NOT USE
@@ -1232,7 +1233,7 @@
 ;;lobal-set-key [(meta    kp-decimal)] 'xref-find-definitions)
 ;;lobal-set-key [(super   kp-decimal)] '
 
-;; ==================== kp-0 ====================
+;; ==================== kp-0/kp-insert ====================
 ;;
 (global-set-key [kp-0] 'duplicate-line-or-region)
 ;;lobal-set-key [(control kp-0)] ' DO NOT USE ... digit argument
@@ -1243,7 +1244,16 @@
 (global-set-key [(meta    super kp-0)] '(lambda () (interactive "*") (paste-clipboard-n 0)))
 ;;lobal-set-key [(control meta super kp-0)] '
 
-;; ==================== kp-1 ====================
+(global-set-key [kp-insert] 'duplicate-line-or-region)
+;;lobal-set-key [(control kp-insert)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-insert)] 'duplicate-line-or-region)
+;;lobal-set-key [(super   kp-insert)] '
+;;lobal-set-key [(control meta  kp-insert)] ' DO NOT USE
+(global-set-key [(control super kp-insert)] '(lambda () (interactive "*") (copy-clipboard-n  0)))
+(global-set-key [(meta    super kp-insert)] '(lambda () (interactive "*") (paste-clipboard-n 0)))
+;;lobal-set-key [(control meta super kp-insert)] '
+
+;; ==================== kp-1/kp-end ====================
 ;;
 (global-set-key [kp-1] 'duplicate-previous)
 ;;lobal-set-key [(control kp-1)] ' DO NOT USE ... digit argument
@@ -1254,7 +1264,16 @@
 (global-set-key [(meta    super kp-1)] '(lambda () (interactive "*") (paste-clipboard-n 1)))
 ;;lobal-set-key [(control meta super kp-1)] '
 
-;; ==================== kp-2 ====================
+(global-set-key [kp-end] 'duplicate-previous)
+;;lobal-set-key [(control kp-end)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-end)] 'duplicate-next)
+;;lobal-set-key [(super   kp-end)] '
+;;lobal-set-key [(control meta  kp-end)] ' DO NOT USE
+(global-set-key [(control super kp-end)] '(lambda () (interactive "*") (copy-clipboard-n  1)))
+(global-set-key [(meta    super kp-end)] '(lambda () (interactive "*") (paste-clipboard-n 1)))
+;;lobal-set-key [(control meta super kp-end)] '
+
+;; ==================== kp-2/kp-down ====================
 ;;
 (global-set-key [kp-2]           '(lambda () (interactive "*") (duplicate -2)))
 ;;lobal-set-key [(control kp-2)] ' DO NOT USE  ... digit argument
@@ -1265,7 +1284,16 @@
 (global-set-key [(meta    super kp-2)] '(lambda () (interactive "*") (paste-clipboard-n 2)))
 ;;lobal-set-key [(control meta super kp-2)] '
 
-;; ==================== kp-3 ====================
+(global-set-key [kp-down]           '(lambda () (interactive "*") (duplicate -2)))
+;;lobal-set-key [(control kp-down)] ' DO NOT USE  ... digit argument
+(global-set-key [(meta    kp-down)] '(lambda () (interactive "*") (duplicate 2)))
+;;lobal-set-key [(super   kp-down)] '
+;;lobal-set-key [(control meta  kp-down)] ' DO NOT USE
+(global-set-key [(control super kp-down)] '(lambda () (interactive "*") (copy-clipboard-n  2)))
+(global-set-key [(meta    super kp-down)] '(lambda () (interactive "*") (paste-clipboard-n 2)))
+;;lobal-set-key [(control meta super kp-down)] '
+
+;; ==================== kp-3/kp-next ====================
 ;;
 (global-set-key [kp-3]           '(lambda () (interactive "*") (duplicate -3)))
 ;;lobal-set-key [(control kp-3)] ' DO NOT USE ... digit argument
@@ -1276,7 +1304,16 @@
 (global-set-key [(meta    super kp-3)] '(lambda () (interactive "*") (paste-clipboard-n 3)))
 ;;lobal-set-key [(control meta super kp-3)] '
 
-;; ==================== kp-4 ====================
+(global-set-key [kp-next]           '(lambda () (interactive "*") (duplicate -3)))
+;;lobal-set-key [(control kp-next)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-next)] '(lambda () (interactive "*") (duplicate 3)))
+;;lobal-set-key [(super   kp-next)] '
+;;lobal-set-key [(control meta  kp-next)] ' DO NOT USE
+(global-set-key [(control super kp-next)] '(lambda () (interactive "*") (copy-clipboard-n  3)))
+(global-set-key [(meta    super kp-next)] '(lambda () (interactive "*") (paste-clipboard-n 3)))
+;;lobal-set-key [(control meta super kp-next)] '
+
+;; ==================== kp-4/kp-left ====================
 ;;
 (global-set-key [kp-4]           '(lambda () (interactive "*") (duplicate -4)))
 ;;lobal-set-key [(control kp-4)] ' DO NOT USE ... digit argument
@@ -1287,7 +1324,16 @@
 (global-set-key [(meta    super kp-4)] '(lambda () (interactive "*") (paste-clipboard-n 4)))
 ;;lobal-set-key [(control meta super kp-4)] '
 
-;; ==================== kp-5 ====================
+;(global-set-key [kp-left]           '(lambda () (interactive "*") (duplicate -4)))
+;;lobal-set-key [(control kp-left)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-left)] '(lambda () (interactive "*") (duplicate 4)))
+;;lobal-set-key [(super   kp-left)] '
+;;lobal-set-key [(control meta  kp-left)] ' DO NOT USE
+(global-set-key [(control super kp-left)] '(lambda () (interactive "*") (copy-clipboard-n  4)))
+(global-set-key [(meta    super kp-left)] '(lambda () (interactive "*") (paste-clipboard-n 4)))
+;;lobal-set-key [(control meta super kp-left)] '
+
+;; ==================== kp-5/kp-begin ====================
 ;;
 (global-set-key [kp-5]           '(lambda () (interactive "*") (duplicate -5)))
 ;;lobal-set-key [(control kp-5)] ' DO NOT USE ... digit argument
@@ -1298,7 +1344,16 @@
 (global-set-key [(meta    super kp-5)] '(lambda () (interactive "*") (paste-clipboard-n 5)))
 ;;lobal-set-key [(control meta super kp-5)] '
 
-;; ==================== kp-6 ====================
+(global-set-key [kp-begin]           '(lambda () (interactive "*") (duplicate -5)))
+;;lobal-set-key [(control kp-begin)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-begin)] '(lambda () (interactive "*") (duplicate 5)))
+;;lobal-set-key [(super   kp-begin)] '
+;;lobal-set-key [(control meta  kp-begin)] ' DO NOT USE
+(global-set-key [(control super kp-begin)] '(lambda () (interactive "*") (copy-clipboard-n  5)))
+(global-set-key [(meta    super kp-begin)] '(lambda () (interactive "*") (paste-clipboard-n 5)))
+;;lobal-set-key [(control meta super kp-begin)] '
+
+;; ==================== kp-6/kp-right ====================
 ;;
 (global-set-key [kp-6]           '(lambda () (interactive "*") (duplicate -6)))
 ;;lobal-set-key [(control kp-6)] ' DO NOT USE ... digit argument
@@ -1309,7 +1364,16 @@
 (global-set-key [(meta    super kp-6)] '(lambda () (interactive "*") (paste-clipboard-n 6)))
 ;;lobal-set-key [(control meta super kp-6)] '
 
-;; ==================== kp-7 ====================
+(global-set-key [kp-right]           '(lambda () (interactive "*") (duplicate -6)))
+;;lobal-set-key [(control kp-right)] ' DO NOT USE ... digit argument
+(global-set-key [(meta kp-right)]    '(lambda () (interactive "*") (duplicate 6)))
+;;lobal-set-key [(super   kp-right)] '
+;;lobal-set-key [(control meta  kp-right)] ' DO NOT USE
+(global-set-key [(control super kp-right)] '(lambda () (interactive "*") (copy-clipboard-n  6)))
+(global-set-key [(meta    super kp-right)] '(lambda () (interactive "*") (paste-clipboard-n 6)))
+;;lobal-set-key [(control meta super kp-right)] '
+
+;; ==================== kp-7/kp-home ====================
 ;;
 (global-set-key [kp-7]           '(lambda () (interactive "*") (duplicate -7)))
 ;;lobal-set-key [(control kp-7)] ' DO NOT USE ... digit argument
@@ -1320,7 +1384,16 @@
 (global-set-key [(meta    super kp-7)] '(lambda () (interactive "*") (paste-clipboard-n 7)))
 ;;lobal-set-key [(control meta super kp-7)] '
 
-;; ==================== kp-8 ====================
+(global-set-key [kp-home]           '(lambda () (interactive "*") (duplicate -7)))
+;;lobal-set-key [(control kp-home)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-home)] '(lambda () (interactive "*") (duplicate 7)))
+;;lobal-set-key [(super   kp-home)] '
+;;lobal-set-key [(control meta  kp-home)] ' DO NOT USE
+(global-set-key [(control super kp-home)] '(lambda () (interactive "*") (copy-clipboard-n  7)))
+(global-set-key [(meta    super kp-home)] '(lambda () (interactive "*") (paste-clipboard-n 7)))
+;;lobal-set-key [(control meta super kp-home)] '
+
+;; ==================== kp-8/kp-up ====================
 ;;
 (global-set-key [kp-8]           '(lambda () (interactive "*") (duplicate -8)))
 ;;lobal-set-key [(control kp-8)] ' DO NOT USE ... digit argument
@@ -1331,7 +1404,16 @@
 (global-set-key [(meta    super kp-8)] '(lambda () (interactive "*") (paste-clipboard-n 8)))
 ;;lobal-set-key [(control meta super kp-8)] '
 
-;; ==================== kp-9 ====================
+(global-set-key [kp-up]           '(lambda () (interactive "*") (duplicate -8)))
+;;lobal-set-key [(control kp-up)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-up)] '(lambda () (interactive "*") (duplicate 8)))
+;;lobal-set-key [(super   kp-up)] '
+;;lobal-set-key [(control meta  kp-up)] ' DO NOT USE
+(global-set-key [(control super kp-up)] '(lambda () (interactive "*") (copy-clipboard-n  8)))
+(global-set-key [(meta    super kp-up)] '(lambda () (interactive "*") (paste-clipboard-n 8)))
+;;lobal-set-key [(control meta super kp-up)] '
+
+;; ==================== kp-9/kp-prior ====================
 ;;
 (global-set-key [kp-9]           '(lambda () (interactive "*") (duplicate -9)))
 ;;lobal-set-key [(control kp-9)] ' DO NOT USE ... digit argument
@@ -1342,6 +1424,15 @@
 (global-set-key [(meta    super kp-9)] '(lambda () (interactive "*") (paste-clipboard-n 9)))
 ;;lobal-set-key [(control meta super kp-9)] '
 
+(global-set-key [kp-prior]           '(lambda () (interactive "*") (duplicate -9)))
+;;lobal-set-key [(control kp-prior)] ' DO NOT USE ... digit argument
+(global-set-key [(meta    kp-prior)] '(lambda () (interactive "*") (duplicate 9)))
+;;lobal-set-key [(super   kp-prior)] '
+;;lobal-set-key [(control meta  kp-prior)] ' DO NOT USE
+(global-set-key [(control super kp-prior)] '(lambda () (interactive "*") (copy-clipboard-n  9)))
+(global-set-key [(meta    super kp-prior)] '(lambda () (interactive "*") (paste-clipboard-n 9)))
+;;lobal-set-key [(control meta super kp-prior)] '
+
 ;;; ================================================================================
 ;;;; Bindings for mouse commands.
 
@@ -1349,7 +1440,7 @@
 ;;
 (global-set-key [header-line (control mouse-1)]       'centaur-tabs-move-current-tab-to-left)
 (global-set-key [header-line (control shift mouse-1)] 'centaur-tabs-backward-tab)
-(global-set-key [header-line (control mouse-3)] 'centaur-tabs-move-current-tab-to-right)
+(global-set-key [header-line (control mouse-3)]       'centaur-tabs-move-current-tab-to-right)
 (global-set-key [header-line (control shift mouse-3)] 'centaur-tabs-forward-tab)
 
 ;;; (define-key global-map [down-mouse-1] 'mouse-drag-region)

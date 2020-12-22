@@ -128,7 +128,7 @@
 
 (tool-bar-add-item "mi-zoom-in"  'text-scale-increase 'zoom-in  :label "")
 (tool-bar-add-item "mi-zoom-out" 'text-scale-decrease 'zoom-out :label "")
-(tool-bar-add-item "mi-tree"     'treemacs             'tree      :label "" :help "Toggle treemacs")
+(tool-bar-add-item "mi-tree"     'treemacs            'tree     :label "" :help "Toggle treemacs")
 ;; (tool-bar-add-item "00-expand" 'dabbrev-expand 'expand :label "" :help  "Expand abbrev/Complete Symbol" :visible '(is-rw?))
 ;;
 ;; Comint functions

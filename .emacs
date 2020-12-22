@@ -16,8 +16,17 @@
 ;; (require 'cl)
 (eval-when-compile (require 'cl))
 
-(defconst user-windows-id "tfontaine")
-(defconst user-dir-home (concat (getenv "HOME") "/"))
+(defconst is-cygwin?    (eq system-type 'cygwin))
+(defconst is-daemon?    (daemonp))
+(defconst is-gui?       (display-graphic-p))
+(defconst is-linux?     (eq system-type 'gnu/linux))
+(defconst is-linux-gui? (and is-linux? is-gui?))
+(defconst is-windows?   (eq system-type 'windows-nt))
+
+(defconst user-windows-id       "tfontaine")
+(defconst user-dir-home         (concat (getenv "HOME") "/"))
+(defconst user-dir-bin          (concat user-dir-home "bin/")) ;; this should be evaluated at run time
+(defconst user-copyright-holder user-full-name)
 
 (defalias 'user/home-directory 'user-dir-home)
 

@@ -18,6 +18,7 @@
  '(comint-input-ring-size 64)
  '(company-dabbrev-code-modes
    '(prog-mode batch-file-mode csharp-mode c++-mode erlang-mode haskell-mode jde-mode lua-mode python-mode))
+ '(cperl-hairy t)
  '(custom-enabled-themes '(fontaine))
  '(custom-safe-themes t)
  '(explicit-shell-file-name "/bin/bash")
@@ -30,9 +31,10 @@
  '(msb-display-invisible-buffers-p t)
  '(msb-max-menu-items nil)
  '(package-selected-packages
-   '(company projectile git-gutter helpful rainbow-mode ws-butler s diminish treemacs treemacs-magit treemacs-projectile minions filladapt u-cc ide-cpp clean-aindent-mode groovy ccls company-rtags flycheck-rtags rtags ggtags makefile-executor groovy-mode company-lsp lsp-ui eglot declutter org-mode tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin powerline rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar undo-tree use-package volatile-highlights web-mode yaml-mode ycmd))
+   '(consult consult-flycheck consult-selectrum marginalia selectrum ivy-posframe wgrep smex flx counsel ivy-rich ivy-hydra ivy unicode-fonts emojify powerline vterm anti-zenburn-theme acme-theme abyss-theme rainbow-mode ws-butler treemacs treemacs-magit treemacs-projectile minions filladapt u-cc ide-cpp clean-aindent-mode groovy ccls company-rtags flycheck-rtags rtags ggtags makefile-executor groovy-mode company-lsp lsp-ui eglot declutter org-mode tinyeat tetrist pretty-column elisp--witness--lisp magit async anzu bm clang-format clips-mode company-jedi company-plsense company-ycmd csharp-mode cuda-mode delight ergoemacs-functions ergoemacs-mode f flycheck-pos-tip flycheck-ycmd highlight-escape-sequences highlight-operators json-mode langtool loccur lua-mode matlab-mode mic-paren modern-cpp-font-lock neotree nxml-mode org-cua-dwim paradox perl6-mode plsense popwin rainbow-delimiters shift-number smartparens smooth-scrolling ssh tabbar undo-tree use-package volatile-highlights web-mode yaml-mode ycmd))
  '(paradox-github-token t)
  '(powerline-gui-use-vcs-glyph t)
+ '(rainbow-x-colors nil)
  '(recentf-max-menu-items 25)
  '(recentf-menu-before "Open in New Window...")
  '(safe-local-variable-values
@@ -48,6 +50,8 @@
  '(scroll-error-top-bottom t)
  '(scroll-preserve-screen-position t)
  '(ssh-directory-tracking-mode t)
+ '(tabbar-separator '(0.0))
+ '(tabbar-use-images nil)
  '(uniquify-buffer-name-style 'post-forward nil (uniquify)))
 
 (message "setting faces...")
@@ -62,7 +66,6 @@
  '(centaur-tabs-selected ((t (:inherit tabbar-selected))))
  '(centaur-tabs-selected-modified ((t (:inherit tabbar-selected-modified))))
  '(centaur-tabs-unselected ((t (:inherit tabbar-unselected))))
- '(centaur-tabs-unselected-modified ((t (:inherit tabbar-unselected-modified))))
- '(line-number-current-line ((t (:background "white")))))
+ '(centaur-tabs-unselected-modified ((t (:inherit tabbar-unselected-modified)))))
 
 ;;; custom.el ends here

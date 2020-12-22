@@ -63,43 +63,43 @@
 ;;
 (defmacro on-cygwin (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on Cygwin."
-  `(when (eq system-type 'cygwin)
+  `(when is-cygwin?
      ,statement
      ,@statements))
 
 (defmacro on-gnu/linux (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GNU/Linux."
-  `(when (eq system-type 'gnu/linux)
+  `(when is-linux?
      ,statement
      ,@statements))
 
 (defmacro on-gnu/linux-gui (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GNU/Linux."
-  `(when (and (eq system-type 'gnu/linux) (display-graphic-p))
+  `(when is-linux-gui?
      ,statement
      ,@statements))
 
 (defmacro on-windows (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on Microsoft Windows."
-  `(when (eq system-type 'windows-nt)
+  `(when is-windows
      ,statement
      ,@statements))
 
 (defmacro on-daemon (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run as Emacs daemon."
-  `(when (daemonp)
+  `(when is-daemon?
      ,statement
      ,@statements))
 
 (defmacro on-gui (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GUI."
-  `(when (display-graphic-p)
+  `(when is-gui?
      ,statement
      ,@statements))
 
 (defmacro not-on-gui (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GUI."
-  `(when (not (display-graphic-p))
+  `(when (not is-gui?)
      ,statement
      ,@statements))
 

@@ -168,29 +168,24 @@
 ;;           09-Aug-2019 Added ‘git-gutter’, ‘git-gutter-fringe’, ‘fringe-helper’, and ‘ws-butler’
 ;;           28-Aug-2019 Added ‘u-cpp’
 ;;           03-Sep-2019 Added ‘minions’
+;;           05-Oct-2020 Added ‘rainbow-mode’ and ‘display-line-numbers’
+;;           28-Oct-2020 Fixed ‘tabbar' and ‘powerline' initialization relationship
+;;           10-Nov-2020 Added ‘emojify' and ‘unicode-fonts'
+;;           15-Dec-2020 Moved defconts to .emacs
+;;                       Removed defer constants (use let variables)
 ;;
 
 ;;; Code:
 
 (message "Configuring from default.el...")
 
-(defconst is-cygwin    (eq system-type 'cygwin))
-(defconst is-gui       (display-graphic-p))
-(defconst is-linux     (eq system-type 'gnu/linux))
-(defconst is-linux-gui (and is-gui (eq system-type 'gnu/linux)))
-(defconst is-windows   (eq system-type 'windows-nt))
-(defconst is-daemon    (daemonp))
-
-(defconst defer-1  5)
-(defconst defer-2 10)
-(defconst defer-3 15)
-
-(defalias 'perl-mode 'cperl-mode)
-
 ;;
 (message "Initializing package system...")
 
-(let ((file-name-handler-alist nil))
+(let ((file-name-handler-alist nil)
+      (defer-1  5)
+      (defer-2 10)
+      (defer-3 15))
   (require 'package)
 
   (setq package-enable-at-startup nil)
@@ -303,10 +298,11 @@
     (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode)))
 
   (use-package ccls :after cc-mode
-    :if is-linux
+    :if is-linux?
     :config
     (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
-    (setq ccls-sem-highlight-method   'font-lock)
+    ;; (setq ccls-sem-highlight-method   'font-lock)
+    (setq ccls-sem-highlight-method 'overlay)
     (message "ccls loaded..."))
 
   (use-package clang-format :disabled)
@@ -318,7 +314,7 @@
   (use-package clips-mode :commands clips-mode)
 
   (use-package company :defer
-    :if is-linux
+    :if is-linux?
     :diminish company-mode
     :preface
     (eval-when-compile
@@ -339,12 +335,12 @@
       (add-to-list 'company-transformers #'company-sort-by-backend-importance)))
 
   (use-package company-jedi :after company :disabled
-    :if is-linux
+    :if is-linux?
     :config
     (add-to-list 'company-backends '(company-jedi company-files)))
 
   (use-package company-plsense :disabled
-    :if is-linux
+    :if is-linux?
     :after plsense
     :config
     (add-to-list 'company-backends 'company-plsense))
@@ -362,11 +358,11 @@
     )
 
   (use-package declutter :commands declutter :disabled
-    :if is-linux
+    :if is-linux?
     :ensure nil)
 
    (use-package eglot :after company
-     :if is-linux
+     :if is-linux?
      :init
      (with-eval-after-load 'project
        (add-to-list 'project-find-functions
@@ -378,6 +374,9 @@
      :config
      (message "eglot loaded..."))
 
+   (use-package emojify :defer
+     :commands emojify-mode)
+
   (use-package csharp-mode :commands csharp-mode)
 
   (use-package cuda-mode :commands cuda-mode)
@@ -388,6 +387,14 @@
     :preface
     (eval-when-compile
       (declare-function diminish "diminish" (arg1))))
+
+  (use-package display-line-numbers
+    :ensure nil
+    :config
+    (hook-into-modes #'display-line-numbers-mode
+                     'org-mode-hook
+                     'prog-mode-hook
+                     'text-mode-hook))
 
   (use-package eglot :after company
     :hook
@@ -403,6 +410,7 @@
     :hook (emacs-lisp-mode-hook . eldoc-mode))
 
   (use-package ergoemacs-functions :commands (ergoemacs-backward-open-bracket
+                                              ergoemacs-extend-selection
                                               ergoemacs-forward-open-bracket
                                               ergoemacs-move-text-down
                                               ergoemacs-move-text-up
@@ -556,7 +564,7 @@
   (use-package perl6-mode :commands perl6-mode :disabled)
 
   (use-package plsense :disabled
-    :if is-linux
+    :if is-linux?
     :after cperl-mode
     :config
     (progn
@@ -569,7 +577,7 @@
       (declare-function popwin-mode "popwin" ()))
     :config (popwin-mode))
 
-  (use-package powerline :after tabbar)
+  (use-package powerline)
 
   (use-package powerthesaurus :commands powerthesaurus-lookup-word)
 
@@ -625,14 +633,42 @@
       (shell-dirtrack-mode t)
       (setq dirtrackp nil)))
 
-  (use-package tabbar
+  (use-package tabbar :after powerline
     :preface
     (eval-when-compile
       (declare-function tabbar-mode "tabbar" (ARG1)))
+    :init
+    (defvar u/tabbar-height 20)
     :config
+    (defun tabbar-add-tab (tabset object &optional _append_ignored)
+      "Add to TABSET a tab with value OBJECT if there isn't one there yet.
+ If the tab is added, it is added at the beginning of the tab list,
+ unless the optional argument APPEND is non-nil, in which case it is
+ added at the end."
+      (let ((tabs (tabbar-tabs tabset)))
+        (if (tabbar-get-tab object tabset)
+            tabs
+          (let ((tab (tabbar-make-tab object tabset)))
+            (tabbar-set-template tabset nil)
+            (set tabset (sort (cons tab tabs)
+                              (lambda (a b) (string< (buffer-name (car a))
+                                                     (buffer-name (car b))))))))))
+
+    (defvar u/tabbar-left  (powerline-wave-right 'tabbar-default nil u/tabbar-height))
+    (defvar u/tabbar-right (powerline-wave-left  nil 'tabbar-default u/tabbar-height))
+
+    (defun u/tabbar-tab-label-function (tab)
+      (powerline-render (list u/tabbar-left (format " %s  " (car tab)) u/tabbar-right)))
+
+
     (customize-set-variable 'tabbar-separator '(0.0))
     (customize-set-variable 'tabbar-use-images nil)
-    (tabbar-mode 1))
+    (tabbar-mode 1)
+
+    ;; tabbar-tab-label-function will be reset after enabling tabbar-mode
+
+    (setq tabbar-tab-label-function #'u/tabbar-tab-label-function)
+    (customize-set-variable 'tabbar-use-images nil))
 
   (use-package tetris :commands tetris
     :config
@@ -649,7 +685,8 @@
                                   tinyeat-forward-preserve)
     :ensure nil)
 
-  (use-package tinysearch :commands (tinysearch-search-word-forward tinysearch-search-word-backward)
+  (use-package tinysearch :commands (tinysearch-search-word-forward
+                                     tinysearch-search-word-backward)
     :ensure nil)
 
   (use-package treemacs :commands treemacs
@@ -742,6 +779,30 @@
     (progn
       (global-undo-tree-mode 1)))
 
+  (use-package unicode-fonts :defer
+    :ensure t
+    :init
+    (defun u/replace-unicode-font-mapping (block-name old-font new-font)
+      (let* ((block-idx (cl-position-if
+                         (lambda (i) (string-equal (car i) block-name))
+                         unicode-fonts-block-font-mapping))
+             (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
+             (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
+        (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
+              `(,updated-block))))
+    :custom
+    (unicode-fonts-skip-font-groups '(low-quality-glyphs))
+    :config
+    ;; Fix the font mappings to use the right emoji font
+    (mapc
+     (lambda (block-name)
+       (u/replace-unicode-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
+     '("Dingbats"
+       "Emoticons"
+       "Miscellaneous Symbols and Pictographs"
+       "Transport and Map Symbols"))
+    (unicode-fonts-setup))
+
   (use-package uniquify :defer
     :ensure nil
     :config
@@ -811,33 +872,6 @@
    (delete-other-windows))
 
   )
-;; ================================================================================
-
-(defvar u/tabbar-height 20)
-(defvar u/tabbar-left  (powerline-wave-right 'tabbar-default nil u/tabbar-height))
-(defvar u/tabbar-right (powerline-wave-left  nil 'tabbar-default u/tabbar-height))
-
-(defun u/tabbar-tab-label-function (tab)
-  (powerline-render (list u/tabbar-left (format " %s  " (car tab)) u/tabbar-right)))
-
-(setq tabbar-tab-label-function #'u/tabbar-tab-label-function)
-
-(defun tabbar-add-tab (tabset object &optional _append_ignored)
-  "Add to TABSET a tab with value OBJECT if there isn't one there yet.
- If the tab is added, it is added at the beginning of the tab list,
- unless the optional argument APPEND is non-nil, in which case it is
- added at the end."
-  (let ((tabs (tabbar-tabs tabset)))
-    (if (tabbar-get-tab object tabset)
-        tabs
-      (let ((tab (tabbar-make-tab object tabset)))
-        (tabbar-set-template tabset nil)
-        (set tabset (sort (cons tab tabs)
-                          (lambda (a b) (string< (buffer-name (car a))
-                                                 (buffer-name (car b))))))))))
-
-(customize-set-variable 'tabbar-use-images nil)
-
 ;; ================================================================================
 ;;
 (message "default.el ...done")
