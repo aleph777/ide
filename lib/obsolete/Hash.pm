@@ -1,6 +1,6 @@
 # File::Hash --- [description] -*-Perl-*-
 
-#         Copyright © 2020-2020 Tom Fontaine
+#         Copyright © 2020-2021 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   10-May-2020

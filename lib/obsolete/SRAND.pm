@@ -1,6 +1,6 @@
 # Math::SRAND --- DEPRECATED -*-Perl-*-
 
-#         Copyright © 2008-2020 Tom Fontaine
+#         Copyright © 2008-2021 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   22-May-2008

@@ -1,6 +1,6 @@
 # Text::Hash --- Produces a list of hashes from the input text -*-Perl-*-
 
-#         Copyright © 2008-2020 Tom Fontaine
+#         Copyright © 2008-2021 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   12-May-2008

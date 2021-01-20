@@ -1,6 +1,6 @@
 # Text::SQL --- SQL support -*-Perl-*-
 
-#         Copyright © 2015-2020 Tom Fontaine
+#         Copyright © 2015-2021 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   12-Aug-2015
