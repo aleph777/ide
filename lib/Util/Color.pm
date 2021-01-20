@@ -78,6 +78,71 @@ my %fields = (contents => undef,
 
 my $saved_scheme = 'NONE';
 
+my @hue = (('R' ) x  6,
+           ('Ry') x 12,
+           ('RY') x 12,
+           ('YR') x 12,
+           ('Yr') x 12,
+           ('Y' ) x 12,
+           ('Yg') x 12,
+           ('YG') x 12,
+           ('GY') x 12,
+           ('Gy') x 12,
+           ('G' ) x 12,
+           ('Gc') x 12,
+           ('GC') x 12,
+           ('CG') x 12,
+           ('Cg') x 12,
+           ('C' ) x 12,
+           ('Cb') x 12,
+           ('CB') x 12,
+           ('BC') x 12,
+           ('Bc') x 12,
+           ('B' ) x 12,
+           ('Bm') x 12,
+           ('BM') x 12,
+           ('MB') x 12,
+           ('Mb') x 12,
+           ('M' ) x 12,
+           ('Mr') x 12,
+           ('MR') x 12,
+           ('RM') x 12,
+           ('Rm') x 12,
+           ('R' ) x  6,
+          );
+
+my %color = (R  => {TYPE => 'red',     SUBTYPE => 'red',         COMMON => 'red'},
+             Ry => {TYPE => 'red',     SUBTYPE => 'red-yellow',  COMMON => 'red'},
+             RY => {TYPE => 'red',     SUBTYPE => 'red-yellow',  COMMON => '???'},
+             YR => {TYPE => 'yellow',  SUBTYPE => 'yellow-red',  COMMON => '???'},
+             Yr => {TYPE => 'yellow',  SUBTYPE => 'yellow-red',  COMMON => '???'},
+             Y  => {TYPE => 'yellow',  SUBTYPE => 'yellow'    ,  COMMON => 'yellow'},
+             Yg => {TYPE => 'yellow',  SUBTYPE => 'yellow-green',COMMON => '???'},
+             YG => {TYPE => 'yellow',  SUBTYPE => 'yellow-green',COMMON => '???'},
+             GY => {TYPE => 'green',   SUBTYPE => 'green-yellow',COMMON => '???'},
+             Gy => {TYPE => 'green',   SUBTYPE => 'green-yellow',COMMON => '???'},
+             G  => {TYPE => 'green',   SUBTYPE => 'green',      ,COMMON => 'green'},
+             Gc => {TYPE => 'green',   SUBTYPE => 'green-cyan',  COMMON => '???'},
+             GC => {TYPE => 'green',   SUBTYPE => 'green-cyan',  COMMON => '???'},
+             CG => {TYPE => 'cyan',    SUBTYPE => 'cyan-green',  COMMON => '???'},
+             Cg => {TYPE => 'cyan',    SUBTYPE => 'cyan-green',  COMMON => '???'},
+             C  => {TYPE => 'cyan',    SUBTYPE => 'cyan',        COMMON => 'cyan'},
+             Cb => {TYPE => 'cyan',    SUBTYPE => 'cyan-blue',   COMMON => '???'},
+             CB => {TYPE => 'cyan',    SUBTYPE => 'cyan-blue',   COMMON => '???'},
+             BC => {TYPE => 'blue',    SUBTYPE => 'blue-cyan',   COMMON => '???'},
+             Bc => {TYPE => 'blue',    SUBTYPE => 'blue-cyan',   COMMON => '???'},
+             B  => {TYPE => 'blue',    SUBTYPE => 'blue',        COMMON => 'blue'},
+             Bm => {TYPE => 'blue',    SUBTYPE => 'blue-magenta',COMMON => '???'},
+             BM => {TYPE => 'blue',    SUBTYPE => 'blue-magenta',COMMON => '???'},
+             MB => {TYPE => 'magenta', SUBTYPE => 'magenta-blue',COMMON => '???'},
+             Mb => {TYPE => 'magenta', SUBTYPE => 'magenta-blue',COMMON => '???'},
+             M  => {TYPE => 'magenta', SUBTYPE => 'magenta',     COMMON => 'magenta'},
+             Mr => {TYPE => 'magenta', SUBTYPE => 'magenta-red', COMMON => '???'},
+             MR => {TYPE => 'magenta', SUBTYPE => 'magenta-red', COMMON => '???'},
+             RM => {TYPE => 'red',     SUBTYPE => 'red-magenta', COMMON => '???'},
+             Rm => {TYPE => 'red',     SUBTYPE => 'red-magenta', COMMON => '???'},
+         );
+
 # BEGIN
 # {
 # }
@@ -311,9 +376,11 @@ sub getRGB
 
   if(defined $value)
   {
-    my ($color) = $value =~ /^#*([[:xdigit:]]{6})/;
+    my ($color) = $value =~ /^#*([[:xdigit:]]{6})/;die $value unless defined $color;
 
     ($red,$green,$blue) = map { hex(join '',"0x",$_)/256 } (substr($color,0,2),substr($color,2,2),substr($color,4,2));
+
+    die "($red,$green,$blue)\n" unless defined $red && defined $green && defined $blue;
   }
   else
   {
@@ -350,7 +417,7 @@ sub computeLuminance
   my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
   my $value = exists $parm{value}   ? $parm{value}   : $this->{value};
 
-  my @rgb = $this->getRGB(red => $red,green => $green,blue => $blue,value => $value);
+  my @rgb = map { $_ <= 0.03928 ? $_/12.92 : (($_  + 0.055)/1.055)**2.4 } $this->getRGB(red => $red,green => $green,blue => $blue,value => $value);
 
   return 0.2126*$rgb[0] + 0.7152*$rgb[1] + 0.0722*$rgb[2];
 }
@@ -461,81 +528,93 @@ sub getColorType
 
   my ($hue,$saturation,$luminosity) = $this->computeHSL(red => $red,green => $green,blue => $blue,value => $value);
 
+  my $r = {TYPE => undef, SHADE => undef};
+
   if($hue == 0 && $saturation == 0)
   {
-    if($luminosity < 0.125)
-    {
-      return 'black';
-    }
-    elsif($luminosity < 0.375)
-    {
-      return 'gray-dark';
-    }
-    elsif($luminosity < 0.625)
-    {
-      return 'gray';
-    }
-    elsif($luminosity < 0.875)
-    {
-      return 'gray-light';
-    }
-    else
-    {
-      return 'white';
-    }
-  }
-  elsif($hue >=   0 && $hue <  30)
-  {
-    return join '-',$saturation >= 0.25 ? 'red' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >=  30 && $hue <  60)
-  {
-    return join '-',$saturation >= 0.25 ? 'orange' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >=  60 && $hue <  90)
-  {
-    return join '-',$saturation >= 0.25 ? 'yellow' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >=  90 && $hue < 120)
-  {
-    return join '-',$saturation >= 0.25 ? 'green-yellow' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 120 && $hue < 150)
-  {
-    return join '-',$saturation >= 0.25 ? 'green' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 150 && $hue < 180)
-  {
-    return join '-',$saturation >= 0.25 ? 'cyan-green' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 180 && $hue <  210)
-  {
-    return join '-',$saturation >= 0.25 ? 'cyan' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 210 && $hue <  240)
-  {
-    return join '-',$saturation >= 0.25 ? 'blue-cyan' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 240 && $hue < 270)
-  {
-    return join '-',$saturation >= 0.25 ? 'blue' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 270 && $hue < 300)
-  {
-    return join '-',$saturation >= 0.25 ? 'indigo' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 300 && $hue < 330)
-  {
-    return join '-',$saturation >= 0.25 ? 'magenta' : 'gray',getShade($luminosity);
-  }
-  elsif($hue >= 330 && $hue < 360)
-  {
-    return join '-',$saturation >= 0.25 ? 'red-magenta' : 'gray',getShade($luminosity);
+    $r->{TYPE}  = 'gray';
   }
   else
   {
-    die "$value: ($hue,$saturation,$luminosity)";
+    my $h = $hue[int $hue];
+    my $c = $color{$h};
+
+    $r->{TYPE} = $saturation >= 0.25 ? $c->{SUBTYPE} : 'gray';
+
   }
+  if($luminosity < 0.125)
+  {
+    $r->{SHADE} = 'black';
+  }
+  elsif($luminosity < 0.375)
+  {
+    $r->{SHADE} = 'dark';
+  }
+  elsif($luminosity < 0.625)
+  {
+    $r->{SHADE} = 'medium';
+  }
+  elsif($luminosity < 0.875)
+  {
+    $r->{SHADE} = 'light'
+  }
+  else
+  {
+    $r->{SHADE} = 'white';
+  }
+  return $r;
+  # elsif($hue >=   0 && $hue <  30)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'red' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >=  30 && $hue <  60)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'orange' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >=  60 && $hue <  90)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'yellow' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >=  90 && $hue < 120)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'green-yellow' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 120 && $hue < 150)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'green' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 150 && $hue < 180)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'cyan-green' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 180 && $hue <  210)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'cyan' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 210 && $hue <  240)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'blue-cyan' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 240 && $hue < 270)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'blue' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 270 && $hue < 300)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'indigo' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 300 && $hue < 330)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'magenta' : 'gray',getShade($luminosity);
+  # }
+  # elsif($hue >= 330 && $hue < 360)
+  # {
+  #   return join '-',$saturation >= 0.25 ? 'red-magenta' : 'gray',getShade($luminosity);
+  # }
+  # else
+  # {
+  #   die "$value: ($hue,$saturation,$luminosity)";
+  # }
 }
 
 sub parseThemeColors
@@ -550,7 +629,7 @@ sub parseThemeColors
 
   for(@{$file->contents})
   {
-    if(my ($name,$value) = /^.defconst ([a-z0-9-]+\/[a-z0-9-]+) +"#([0-9a-f]{6})"\)/)
+    if(my ($name,$value) = /^.defconst ([a-z0-9-]+\/[a-z0-9-]+) +"(#[0-9a-f]{6})"\)/)
     {
       my $r = {NAME => $name,VALUE => $value};
 

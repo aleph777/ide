@@ -1,6 +1,6 @@
 ;;; duplicate.el --- Duplicate text from surrounding lines -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2005-2020 Tom Fontaine
+;;         Copyright © 2005-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   12-Jan-2005

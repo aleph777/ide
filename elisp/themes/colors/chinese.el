@@ -1,6 +1,6 @@
 ;;; chinese.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2020  Tom Fontaine
+;;         Copyright © 2020-2021  Tom Fontaine
 
 (defconst chinese/anti-flash-white  "#f1f2f6")
 (defconst chinese/baywharf          "#747d8c")

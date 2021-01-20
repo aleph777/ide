@@ -1,6 +1,6 @@
 ;;; u-macro.el --- Global macro definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2020 Tom Fontaine
+;;         Copyright © 2016-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   10-Jun-2016

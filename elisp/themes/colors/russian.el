@@ -1,6 +1,6 @@
 ;;; russian.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2020  Tom Fontaine
+;;         Copyright © 2020-2021  Tom Fontaine
 
 (defconst russian/apple-valley            "#ea8685")
 (defconst russian/biscay                  "#303952")

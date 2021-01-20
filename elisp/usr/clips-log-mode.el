@@ -1,6 +1,6 @@
 ;;; clips-log-mode.el --- Major mode for CLIPS log files -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2020 Tom Fontaine
+;;         Copyright © 2016-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   16-Aug-2016

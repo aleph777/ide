@@ -1,6 +1,6 @@
 ;;; canadian.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2020  Tom Fontaine
+;;         Copyright © 2020-2021  Tom Fontaine
 
 (defconst canadian/amour                  "#ee5253")
 (defconst canadian/aqua-velvet            "#01a3a4")

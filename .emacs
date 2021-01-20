@@ -13,7 +13,6 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-;; (require 'cl)
 (eval-when-compile (require 'cl))
 
 (defconst is-cygwin?    (eq system-type 'cygwin))

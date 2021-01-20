@@ -1,6 +1,6 @@
 ;;; colors-american.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2020  Tom Fontaine
+;;         Copyright © 2020-2021  Tom Fontaine
 
 (defconst srcsery/black          "#1c1b19")
 (defconst srcsery/blue           "#2c78bf")

@@ -1,6 +1,6 @@
 ;;; canva.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2020  Tom Fontaine
+;;         Copyright © 2020-2021  Tom Fontaine
 
 (defconst canva/accent-charcoal        "#353c3f")
 (defconst canva/accent-orange          "#ff8d3f")

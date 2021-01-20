@@ -1,6 +1,6 @@
 ;;; ibm.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2020  Tom Fontaine
+;;         Copyright © 2020-2021  Tom Fontaine
 
 (defconst ibm/aqua-01 "#d1f0f7")
 (defconst ibm/aqua-10 "#a0e3f0")

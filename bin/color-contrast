@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#         Copyright © 2020-2020 Tom Fontaine
+#         Copyright © 2020-2021 Tom Fontaine
 
 # Title:  color-distance
 # Author: Tom Fontaine
@@ -41,10 +41,34 @@ use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-die _ME_,": should have two arguments!!!" unless @ARGV == 2;
+# die _ME_,": should have two arguments!!!" unless @ARGV == 2;
 
-my ($color1,$color2) = @ARGV;
+# my ($color1,$color2) = @ARGV;
 
-my $color = Util::Color->new();
+# my $color = Util::Color->new();
 
-say $color->computeContrast(hex1 => $color1,hex2 => $color2);
+# say $color->computeContrast(hex1 => $color1,hex2 => $color2);
+
+sub computeLuminance
+{
+  my ($red,$green,$blue) = @_;
+
+  # if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
+  #
+  my $r = $red   <= 0.03928 ? $red/12.92   : (($red   + 0.055)/1.055)**2.4;
+  my $g = $green <= 0.03928 ? $green/12.92 : (($green + 0.055)/1.055)**2.4;
+  my $b = $blue  <= 0.03928 ? $blue/12.92  : (($blue  + 0.055)/1.055)**2.4;
+
+  return 0.2126*$r + 0.7152*$g + 0.0722*$b;
+}
+
+sub computeContrast
+{
+  my ($l1,$l2) = @_;
+
+  return $l1 > $l2 ? ($l1 + 0.05)/($l2 + 0.05) : ($l2 + 0.05)/($l1 + 0.05);
+}
+
+my ($red,$green,$blue) = map { hex($_)/255 } (substr($ARGV[0],0,2),substr($ARGV[0],2,2),substr($ARGV[0],4,2));
+
+say computeContrast(computeLuminance($red,$green,$blue),computeLuminance(1,1,1));

@@ -28,8 +28,7 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Takes Perl source code and calculates the minimum version
-#            of perl required to be able to run it.
+# Purpose:   Fixes copyright statements for the current year.
 #
 # Arguments: $1 is file 1 to check
 #            .
@@ -58,11 +57,11 @@ for(grep { -e } @ARGV)
 
   for(grep /^(?:;;|#) +Copyright /,@{$io->contents})
   {
-    if(/^((?:;;|#) +Copyright .+ (?:\d{4}-))(\d{4}) /)
+    if(/^(?:;;|#) +Copyright .+ (?:\d{4}-)(\d{4})/)
     {
-      s/$2/$year/o;
+      s/-$1/-$year/;
     }
-    elsif(my ($c) = /^(?:;;|#) +Copyright .+ (\d{4}) /)
+    elsif(my ($c) = /^(?:;;|#) +Copyright .+ (\d{4})/)
     {
       s/$c/$c-$year/;
     }

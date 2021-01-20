@@ -1,6 +1,6 @@
 ;;; u-powerline.el --- Powerline setup -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2020 by Tom Fontaine
+;;         Copyright © 2016-2021 by Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   30-Mar-2016
@@ -95,7 +95,6 @@
 
 (defvar mode-line-encoding-format '("" current-encoding ""))
 
-;;(setq mode-line-row-column-format '(" Ln: %l Col: " current-column " "))
 (defvar mode-line-row-column-format '(" Ln: %l Col: " current-column " ")
   "Format for displaying the column in the mode line.")
 

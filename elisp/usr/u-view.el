@@ -1,6 +1,6 @@
 ;;; u-view.el --- View menu defintion and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
  
-;;         Copyright © 2016-2020 Tom Fontaine
+;;         Copyright © 2016-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016

@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2012-2020 Tom Fontaine
+;;         Copyright © 2012-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   26-Dec-2012

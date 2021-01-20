@@ -1,6 +1,6 @@
 ;;; u-csharp.el --- CSharp major mode -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2015-2020 Tom Fontaine
+;;         Copyright © 2015-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   12-May-2015

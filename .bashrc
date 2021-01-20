@@ -57,6 +57,10 @@ alias psfind='ps u -C'
 # alias sshfs='sudo sshfs -o allow_other ubuntu@10.46.28.59:/home/ubuntu pi'
 # ssh-copy-id ubuntu@192.168.1.253
 
+# setting up video resolution
+#
+alias set1920x1080='xrandr --newmode $(cvt 1920 1080 | cut -d" " -f2- | tail -1) && xrandr --addmode Virtual1 "1920x1080_60.00"'
+
 # Emacs
 #
 export EDITOR='nano'

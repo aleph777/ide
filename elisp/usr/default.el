@@ -1,6 +1,6 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2000-2020 Tom Fontaine
+;;         Copyright © 2000-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Sep-2000
@@ -307,7 +307,7 @@
 
   (use-package clang-format :disabled)
 
-  (use-package clips-log-mode :commands clips-log-mode
+  (use-package clips-log-mode :commands clips-log-mode :disabled
     :ensure nil
     :mode "\\.log\\'")
 
@@ -865,9 +865,10 @@
   ;; also "(if (not interactive) ..."
   ;;
   (on-gui
-   (set-random-background-color)
-   (on-gnu/linux
-    (shell))
+   (set-background-color "gray95")
+   ;; (set-random-background-color)
+   ;; (on-gnu/linux
+   ;;  (shell))
    (reset-frame-size)
    (delete-other-windows))
 

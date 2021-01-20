@@ -1,6 +1,6 @@
 ;;; pquery.el --- Perl query-replace -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2001-2020 Tom Fontaine
+;;         Copyright © 2001-2021 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   06-Dec-2001
