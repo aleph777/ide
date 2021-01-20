@@ -4,7 +4,7 @@ installPackage()
 {
     local package=$1
 
-    apt -y install $package
+    apt install -y $package
 
     if [[ "$?" != "0" ]]; then
         local pkg=$(echo $package | sed -E 's/-?[[:digit:]]*(-dev)?$//')
@@ -25,8 +25,9 @@ installPackage build-essential
 installPackage cmake
 installPackage cpanminus
 installPackage cppcheck
+installPackage ffmpeg
 installPackage flex
-installPackage git
+#installPackage git
 installPackage indent
 installPackage libffi-dev
 installPackage libgconf2-dev

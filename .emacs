@@ -35,17 +35,17 @@
        (packages (concat elisp "packages/"))
        (tiny     (concat packages "project--emacs-tiny-tools/lisp/")))
 
-  (pushnew (concat tiny "tiny")  load-path :test 'string=)
-  (pushnew (concat tiny "other") load-path :test 'string=)
+  (cl-pushnew (concat tiny "tiny")  load-path :test 'string=)
+  (cl-pushnew (concat tiny "other") load-path :test 'string=)
 
-  (pushnew (concat packages "declutter") load-path :test 'string=)
+  (cl-pushnew (concat packages "declutter") load-path :test 'string=)
 
-  (pushnew (concat elisp "ext") load-path :test 'string=)
-  (pushnew (concat elisp "usr") load-path :test 'string=)
+  (cl-pushnew (concat elisp "ext") load-path :test 'string=)
+  (cl-pushnew (concat elisp "usr") load-path :test 'string=)
 
-  (pushnew (concat elisp "images") image-load-path :test 'string=)
+  (cl-pushnew (concat elisp "images") image-load-path :test 'string=)
 
-  (pushnew (concat elisp "themes") custom-theme-load-path :test 'string=)
+  (cl-pushnew (concat elisp "themes") custom-theme-load-path :test 'string=)
 
   (setq custom-file (concat elisp "custom.el"))
   )
