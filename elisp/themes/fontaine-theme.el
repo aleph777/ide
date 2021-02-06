@@ -214,12 +214,11 @@
 
 (deftheme fontaine)
 
-(defconst themes-dir (concat user-dir-home "/elisp/themes/"))
-(defconst colors-dir (concat themes-dir "colors/"))
-
-;; load color definitions
-;;
-(mapc 'load-file (file-expand-wildcards (concat colors-dir "*.el")))
+(let* ((themes-dir (if (bound-and-true-p tjf:user/dir-themes)
+                       tjf:user/dir-themes
+                     (concate user-dir-home "elisp/themes/")))
+       (colors-dir (concat themes-dir "colors/")))
+  (mapc #'load-file (file-expand-wildcards (concat colors-dir "*.el"))))
 
 ;; Windows fonts
 ;;   Consolas
@@ -339,7 +338,9 @@
        (fontaine/default-bg         fontaine/bg-gray)
        (fontaine/default-fg         fontaine/fg-black)
        (fontaine/deleted            fontaine/fg-red)
+       (fontaine/escape             fontaine/fg-blue-magenta)
        (fontaine/error              fontaine/fg-red)
+       (fontaine/execute            fontaine/fg-magenta-red)
        (fontaine/function           fontaine/fg-blue)
        (fontaine/hash               fontaine/fg-magenta)
        (fontaine/inactive-1         ibm/cool-gray-70)
@@ -398,34 +399,85 @@
        (fontaine/powerline-inactive1-fg fontaine/fg-white)
        (fontaine/powerline-inactive2-fg fontaine/fg-white)
 
+       ;; theme elements: tabbar
+
        (fontaine/tabbar-bg                   fontaine/bg-black)
        (fontaine/tabbar-fg                   fontaine/fg-white)
-       (fontaine/tabbar-modified-bg          fontaine/bg-red)
-       (fontaine/tabbar-modified-fg          fontaine/fg-white)
+       (fontaine/tabbar-modified-bg          x11/red)
+       (fontaine/tabbar-modified-fg          x11/white)
        (fontaine/tabbar-modified-selected-fg fontaine/fg-red)
        (fontaine/tabbar-selected-fg          fontaine/fg-black)
-       (fontaine/tabbar-unselected-bg        fontaine/inactive-1)
-      )
+       (fontaine/tabbar-unselected-bg        fontaine/inactive-1))
+
+  (message "Defining faces...")
+
+  ;; (defface clips-constant-face '((t (:foreground ,fontaine/constant)))
+  ;;   "CLIPS constant face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-constant-face (make-face 'clips-constant-face))
+
+  ;; (defface clips-control-face '((t (:foreground ,fontaine/builtin :weight bold)))
+  ;;   "CLIPS control face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-control-face (make-face 'clips-control-face))
+
+  ;; (defface clips-declaration-face '((t (:foreground ,fontaine/non-overridable :weight bold)))
+  ;;   "CLIPS declaration face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-declaration-face (make-face 'clips-declaration-face))
+
+  ;; (defface clips-function-face '((t (:foreground ,fontaine/function :weight bold)))
+  ;;   "CLIPS function face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-function-face (make-face 'clips-function-face))
+
+  ;; (defface clips-global-variable-face '((t (:foreground ,fontaine/variable :weight bold)))
+  ;;   "CLIPS global variable face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-global-variable-face (make-face 'clips-global-variable-face))
+
+  ;; (defface clips-logical-face '((t (:foreground ,fontaine/fg-yellow-red :weight bold)))
+  ;;   "CLIPS logical face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-logical-face (make-face 'clips-logical-face))
+
+  ;; (defface clips-object-match-face '((t (:foreground ,fontaine/fg-magenta-blue :weight bold)))
+  ;;   "CLIPS global variable face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-object-match-face (make-face 'clips-object-match-face))
+
+  ;; (defface clips-variable-face '((t (:foreground ,fontaine/variable)))
+  ;;   "CLIPS variable face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-variable-face (make-face 'clips-variable-face))
+
+  ;; (defface clips-verb-face '((t(:foreground ,fontaine/fg-green :weight bold) ))
+  ;;   "CLIPS verb face."
+  ;;   :group 'font-lock-faces)
+  ;; (defvar clips-verb-face (make-face 'clips-verb-face))
 
   (defface fontaine/mode-line-base '((t (:inherit variable-pitch :box (:line-width 1 :color "gray50")))) "" :group 'font-lock-faces)
 
   (defface tabbar-default    `((t (:inherit variable-pitch :height 0.8 :background ,fontaine/tabbar-bg :foreground ,fontaine/tabbar-fg))) "" :group 'font-lock-faces)
   (defface tabbar-modified   `((t (:inherit tabbar-default :background ,fontaine/tabbar-modified-bg :foreground ,fontaine/tabbar-modified-fg))) "" :group 'font-lock-faces)
-  (defface tabbar-selected   `((t (:inherit tabbar-default :background "xxx" :foreground ,fontaine/tabbar-selected-fg :weight bold))) "" :group 'font-lock-faces)
+  (defface tabbar-selected   `((t (:inherit tabbar-default :background "xxx" :foreground "black" :weight bold))) "" :group 'font-lock-faces)
   (defface tabbar-selected-modified `((t (:inherit tabbar-selected :foreground ,fontaine/tabbar-modified-selected-fg))) "" :group 'font-lock-faces)
   (defface tabbar-unselected `((t (:inherit tabbar-default :background ,fontaine/tabbar-unselected-bg))) "" :group 'font-lock-faces)
   (defface tabbar-button     `((t (:inherit tabbar-unselected))) "" :group 'font-lock-faces)
 
+
+
   (defface fontaine/powerline-red `((t (:inherit variable-pitch :foreground ,fontaine/warning))) "" :group 'font-lock-faces)
 
-  ;; (set-background-color "gray95")
+  (message "Defining faces...done")
+  (message "Setting faces...")
 
   (custom-theme-set-faces
    `fontaine
 
-   `(default        ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/fg-black :background ,fontaine/bg-gray))))
-   `(fixed-pitch    ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/fg-black))))
-   `(variable-pitch ((t (:family ,fontaine/variable-pitch-family :height ,fontaine/variable-pitch-height :foreground ,fontaine/fg-black))))
+   `(default        ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg :background ,fontaine/default-bg))))
+   `(fixed-pitch    ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg))))
+   `(variable-pitch ((t (:family ,fontaine/variable-pitch-family :height ,fontaine/variable-pitch-height :foreground ,fontaine/default-fg))))
 
    `(bold   ((t :weight bold)))
    `(italic ((t :slant  italic)))
@@ -433,7 +485,6 @@
    `(bold-italic ((t :inherit (bold italic))))
 
    ;; not fully defined - need to see an example first
-   `(escape-glyph      ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
    `(homoglyph         ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
    `(mm-command-output ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
    `(nobreak-hyphen    ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
@@ -442,10 +493,10 @@
    ;; basic settings
 
 ;;;;; annotate
-   ;; `(annotate-annotation ((,class :inherit fontaine-theme-subtle-blue)))
-   ;; `(annotate-annotation-secondary ((,class :inherit fontaine-theme-subtle-green)))
-   ;; `(annotate-highlight ((,class :background ,blue-nuanced-bg :underline ,blue-intense)))
-   ;; `(annotate-highlight-secondary ((,class :background ,green-nuanced-bg :underline ,green-intense)))
+   ;; `(annotate-annotation ((t :inherit fontaine-theme-subtle-blue)))
+   ;; `(annotate-annotation-secondary ((t :inherit fontaine-theme-subtle-green)))
+   ;; `(annotate-highlight ((t :background ,blue-nuanced-bg :underline ,blue-intense)))
+   ;; `(annotate-highlight-secondary ((t :background ,green-nuanced-bg :underline ,green-intense)))
 
    `(anzu-mode-line ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
 
@@ -455,36 +506,36 @@
    `(bm-fringe-face            ((t :background "saddlebrown" :foreground "white" )))
 
 ;;;;; company-mode
-   ;; `(company-echo-common ((,class :foreground ,magenta-alt-other)))
-   ;; `(company-preview ((,class :background ,bg-dim :foreground ,fg-dim)))
-   ;; `(company-preview-common ((,class :foreground ,blue-alt)))
-   ;; `(company-preview-search ((,class :inherit fontaine-theme-special-calm)))
-   ;; `(company-scrollbar-bg ((,class :background ,bg-active)))
-   ;; `(company-scrollbar-fg ((,class :background ,fg-active)))
-   ;; `(company-template-field ((,class :inherit fontaine-theme-intense-magenta)))
-   ;; `(company-tooltip ((,class :background ,bg-alt :foreground ,fg-alt)))
-   ;; `(company-tooltip-annotation ((,class :inherit fontaine-theme-slant :foreground ,fg-special-cold)))
-   ;; `(company-tooltip-annotation-selection ((,class :inherit bold :foreground ,fg-main)))
-   ;; `(company-tooltip-common ((,class :inherit bold :foreground ,blue-alt)))
-   ;; `(company-tooltip-common-selection ((,class :foreground ,fg-main)))
-   ;; `(company-tooltip-mouse ((,class :inherit fontaine-theme-intense-blue)))
-   ;; `(company-tooltip-search ((,class :inherit (fontaine-theme-refine-cyan bold))))
-   ;; `(company-tooltip-search-selection ((,class :inherit (fontaine-theme-intense-green bold) :underline t)))
-   ;; `(company-tooltip-selection ((,class :inherit (fontaine-theme-subtle-cyan bold))))
+   ;; `(company-echo-common ((t :foreground ,magenta-alt-other)))
+   ;; `(company-preview ((t :background ,bg-dim :foreground ,fg-dim)))
+   ;; `(company-preview-common ((t :foreground ,blue-alt)))
+   ;; `(company-preview-search ((t :inherit fontaine-theme-special-calm)))
+   ;; `(company-scrollbar-bg ((t :background ,bg-active)))
+   ;; `(company-scrollbar-fg ((t :background ,fg-active)))
+   ;; `(company-template-field ((t :inherit fontaine-theme-intense-magenta)))
+   ;; `(company-tooltip ((t :background ,bg-alt :foreground ,fg-alt)))
+   ;; `(company-tooltip-annotation ((t :inherit fontaine-theme-slant :foreground ,fg-special-cold)))
+   ;; `(company-tooltip-annotation-selection ((t :inherit bold :foreground ,fg-main)))
+   ;; `(company-tooltip-common ((t :inherit bold :foreground ,blue-alt)))
+   ;; `(company-tooltip-common-selection ((t :foreground ,fg-main)))
+   ;; `(company-tooltip-mouse ((t :inherit fontaine-theme-intense-blue)))
+   ;; `(company-tooltip-search ((t :inherit (fontaine-theme-refine-cyan bold))))
+   ;; `(company-tooltip-search-selection ((t :inherit (fontaine-theme-intense-green bold) :underline t)))
+   ;; `(company-tooltip-selection ((t :inherit (fontaine-theme-subtle-cyan bold))))
 ;;;;; company-posframe
-   ;; `(company-posframe-active-backend-name ((,class :inherit bold :background ,bg-active :foreground ,blue-active)))
-   ;; `(company-posframe-inactive-backend-name ((,class :background ,bg-active :foreground ,fg-active)))
-   ;; `(company-posframe-metadata ((,class :background ,bg-inactive :foreground ,fg-inactive)))
+   ;; `(company-posframe-active-backend-name ((t :inherit bold :background ,bg-active :foreground ,blue-active)))
+   ;; `(company-posframe-inactive-backend-name ((t :background ,bg-active :foreground ,fg-active)))
+   ;; `(company-posframe-metadata ((t :background ,bg-inactive :foreground ,fg-inactive)))
 
 ;;;;; compilation
-   ;; `(compilation-column-number ((,class :foreground ,magenta-alt-other)))
-   ;; `(compilation-error ((,class :inherit fontaine-theme-bold :foreground ,red)))
-   ;; `(compilation-info ((,class :inherit fontaine-theme-bold :foreground ,fg-special-cold)))
-   ;; `(compilation-line-number ((,class :foreground ,fg-special-warm)))
-   ;; `(compilation-mode-line-exit ((,class :inherit fontaine-theme-bold :foreground ,blue-active)))
-   ;; `(compilation-mode-line-fail ((,class :inherit fontaine-theme-bold :foreground ,red-active)))
-   ;; `(compilation-mode-line-run ((,class :inherit fontaine-theme-bold :foreground ,magenta-active)))
-   ;; `(compilation-warning ((,class :inherit fontaine-theme-bold :foreground ,yellow)))
+   ;; `(compilation-column-number ((t :foreground ,magenta-alt-other)))
+   ;; `(compilation-error ((t :inherit fontaine-theme-bold :foreground ,red)))
+   ;; `(compilation-info ((t :inherit fontaine-theme-bold :foreground ,fg-special-cold)))
+   ;; `(compilation-line-number ((t :foreground ,fg-special-warm)))
+   ;; `(compilation-mode-line-exit ((t :inherit fontaine-theme-bold :foreground ,blue-active)))
+   ;; `(compilation-mode-line-fail ((t :inherit fontaine-theme-bold :foreground ,red-active)))
+   ;; `(compilation-mode-line-run ((t :inherit fontaine-theme-bold :foreground ,magenta-active)))
+   ;; `(compilation-warning ((t :inherit fontaine-theme-bold :foreground ,yellow)))
 
    `(cursor ((t (:background ,fontaine/cursor))))
 
@@ -500,14 +551,16 @@
    `(cperl-nonoverridable-face ((t (:foreground ,fontaine/non-overridable :weight bold))))
 
 ;;;;; eglot
-   ;; `(eglot-mode-line ((,class :inherit fontaine-theme-bold :foreground ,magenta-active)))
+   ;; `(eglot-mode-line ((t :inherit fontaine-theme-bold :foreground ,magenta-active)))
 
    `(error ((t (:foreground ,fontaine/error :weight bold))))
+
+   `(escape-glyph ((t :inherit bold-italic :foreground ,fontaine/escape)))
 
    `(file-name-shadow ((t (:foreground ,fontaine/shadow))))
 
 ;;;;; fold-this
-   ;; `(fold-this-overlay ((,class :inherit fontaine-theme-special-mild)))
+   ;; `(fold-this-overlay ((t :inherit fontaine-theme-special-mild)))
 
    `(font-lock-builtin-face           ((t (:inherit bold        :foreground ,fontaine/builtin))))
    `(font-lock-comment-face           ((t (:inherit italic      :foreground ,fontaine/comment))))
@@ -527,11 +580,11 @@
    `(git-gutter:added    ((t (:foreground ,fontaine/added    :weight bold))))
    `(git-gutter:deleted  ((t (:foreground ,fontaine/deleted  :weight bold))))
    `(git-gutter:modified ((t (:foreground ,fontaine/modified :weight bold))))
-   ;; `(git-gutter:separator ((,class :inherit fontaine-theme-fringe-cyan)))
-   ;; `(git-gutter:unchanged ((,class :inherit fontaine-theme-fringe-magenta)))
+   ;; `(git-gutter:separator ((t :inherit fontaine-theme-fringe-cyan)))
+   ;; `(git-gutter:unchanged ((t :inherit fontaine-theme-fringe-magenta)))
 
 ;;;;; helpful
-   ;; `(helpful-heading ((,class :inherit fontaine-theme-heading-1)))
+   ;; `(helpful-heading ((t :inherit fontaine-theme-heading-1)))
 
    `(highlight ((t (:background ,fontaine/match))))
 
@@ -543,55 +596,55 @@
 
    `(line-number              ((t (:foreground ,fontaine/line-number))))
    `(line-number-current-line ((t (:foreground ,fontaine/line-number :background ,fontaine/current-line :weight bold))))
-   ;; `(line-number-major-tick ((,class :inherit (bold default) :background ,yellow-nuanced-bg :foreground ,yellow-nuanced-fg)))
-   ;; `(line-number-minor-tick ((,class :inherit (bold default) :background ,bg-inactive :foreground ,fg-inactive)))
+   ;; `(line-number-major-tick ((t :inherit (bold default) :background ,yellow-nuanced-bg :foreground ,yellow-nuanced-fg)))
+   ;; `(line-number-minor-tick ((t :inherit (bold default) :background ,bg-inactive :foreground ,fg-inactive)))
 
 ;;;;; lsp-mode
-   ;; `(lsp-face-highlight-read ((,class :inherit fontaine-theme-subtle-blue :underline t)))
-   ;; `(lsp-face-highlight-textual ((,class :inherit fontaine-theme-subtle-blue)))
-   ;; `(lsp-face-highlight-write ((,class :inherit (fontaine-theme-refine-blue bold))))
-   ;; `(lsp-face-semhl-constant ((,class :foreground ,blue-alt-other)))
+   ;; `(lsp-face-highlight-read ((t :inherit fontaine-theme-subtle-blue :underline t)))
+   ;; `(lsp-face-highlight-textual ((t :inherit fontaine-theme-subtle-blue)))
+   ;; `(lsp-face-highlight-write ((t :inherit (fontaine-theme-refine-blue bold))))
+   ;; `(lsp-face-semhl-constant ((t :foreground ,blue-alt-other)))
    ;; `(lsp-face-semhl-deprecated
    ;;   ((,(append '((supports :underline (:style wave))) class)
    ;;     :foreground ,yellow :underline (:style wave))
-   ;;    (,class :foreground ,yellow :underline t)))
-   ;; `(lsp-face-semhl-enummember ((,class :foreground ,blue-alt-other)))
-   ;; `(lsp-face-semhl-field ((,class :foreground ,cyan-alt)))
-   ;; `(lsp-face-semhl-field-static ((,class :inherit fontaine-theme-slant :foreground ,cyan-alt)))
-   ;; `(lsp-face-semhl-function ((,class :foreground ,magenta)))
-   ;; `(lsp-face-semhl-method ((,class :foreground ,magenta)))
-   ;; `(lsp-face-semhl-namespace ((,class :inherit fontaine-theme-bold :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-preprocessor ((,class :foreground ,red-alt-other)))
-   ;; `(lsp-face-semhl-static-method ((,class :inherit fontaine-theme-slant :foreground ,magenta)))
-   ;; `(lsp-face-semhl-type-class ((,class :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-enum ((,class :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-primitive ((,class :inherit fontaine-theme-slant :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-template ((,class :inherit fontaine-theme-slant :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-typedef ((,class :inherit fontaine-theme-slant :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-variable ((,class :foreground ,cyan)))
-   ;; `(lsp-face-semhl-variable-local ((,class :foreground ,cyan)))
-   ;; `(lsp-face-semhl-variable-parameter ((,class :foreground ,cyan-alt-other)))
-   ;; `(lsp-lens-face ((,class :height 0.8 :foreground ,fg-alt)))
-   ;; `(lsp-lens-mouse-face ((,class :height 0.8 :foreground ,blue-alt-other :underline t)))
-   ;; `(lsp-ui-doc-background ((,class :background ,bg-alt)))
-   ;; `(lsp-ui-doc-header ((,class :background ,bg-header :foreground ,fg-header)))
-   ;; `(lsp-ui-doc-url ((,class :inherit button)))
-   ;; `(lsp-ui-peek-filename ((,class :foreground ,fg-special-warm)))
-   ;; `(lsp-ui-peek-footer ((,class :background ,bg-header :foreground ,fg-header)))
-   ;; `(lsp-ui-peek-header ((,class :background ,bg-header :foreground ,fg-header)))
-   ;; `(lsp-ui-peek-highlight ((,class :inherit fontaine-theme-subtle-blue)))
-   ;; `(lsp-ui-peek-line-number ((,class :inherit shadow)))
-   ;; `(lsp-ui-peek-list ((,class :background ,bg-dim)))
-   ;; `(lsp-ui-peek-peek ((,class :background ,bg-alt)))
-   ;; `(lsp-ui-peek-selection ((,class :inherit fontaine-theme-subtle-cyan)))
-   ;; `(lsp-ui-sideline-code-action ((,class :foreground ,yellow)))
-   ;; `(lsp-ui-sideline-current-symbol ((,class :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-main)))
-   ;; `(lsp-ui-sideline-symbol ((,class :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-alt)))
-   ;; `(lsp-ui-sideline-symbol-info ((,class :inherit italic :height 0.99)))
+   ;;    (t :foreground ,yellow :underline t)))
+   ;; `(lsp-face-semhl-enummember ((t :foreground ,blue-alt-other)))
+   ;; `(lsp-face-semhl-field ((t :foreground ,cyan-alt)))
+   ;; `(lsp-face-semhl-field-static ((t :inherit fontaine-theme-slant :foreground ,cyan-alt)))
+   ;; `(lsp-face-semhl-function ((t :foreground ,magenta)))
+   ;; `(lsp-face-semhl-method ((t :foreground ,magenta)))
+   ;; `(lsp-face-semhl-namespace ((t :inherit fontaine-theme-bold :foreground ,magenta-alt)))
+   ;; `(lsp-face-semhl-preprocessor ((t :foreground ,red-alt-other)))
+   ;; `(lsp-face-semhl-static-method ((t :inherit fontaine-theme-slant :foreground ,magenta)))
+   ;; `(lsp-face-semhl-type-class ((t :foreground ,magenta-alt)))
+   ;; `(lsp-face-semhl-type-enum ((t :foreground ,magenta-alt)))
+   ;; `(lsp-face-semhl-type-primitive ((t :inherit fontaine-theme-slant :foreground ,magenta-alt)))
+   ;; `(lsp-face-semhl-type-template ((t :inherit fontaine-theme-slant :foreground ,magenta-alt)))
+   ;; `(lsp-face-semhl-type-typedef ((t :inherit fontaine-theme-slant :foreground ,magenta-alt)))
+   ;; `(lsp-face-semhl-variable ((t :foreground ,cyan)))
+   ;; `(lsp-face-semhl-variable-local ((t :foreground ,cyan)))
+   ;; `(lsp-face-semhl-variable-parameter ((t :foreground ,cyan-alt-other)))
+   ;; `(lsp-lens-face ((t :height 0.8 :foreground ,fg-alt)))
+   ;; `(lsp-lens-mouse-face ((t :height 0.8 :foreground ,blue-alt-other :underline t)))
+   ;; `(lsp-ui-doc-background ((t :background ,bg-alt)))
+   ;; `(lsp-ui-doc-header ((t :background ,bg-header :foreground ,fg-header)))
+   ;; `(lsp-ui-doc-url ((t :inherit button)))
+   ;; `(lsp-ui-peek-filename ((t :foreground ,fg-special-warm)))
+   ;; `(lsp-ui-peek-footer ((t :background ,bg-header :foreground ,fg-header)))
+   ;; `(lsp-ui-peek-header ((t :background ,bg-header :foreground ,fg-header)))
+   ;; `(lsp-ui-peek-highlight ((t :inherit fontaine-theme-subtle-blue)))
+   ;; `(lsp-ui-peek-line-number ((t :inherit shadow)))
+   ;; `(lsp-ui-peek-list ((t :background ,bg-dim)))
+   ;; `(lsp-ui-peek-peek ((t :background ,bg-alt)))
+   ;; `(lsp-ui-peek-selection ((t :inherit fontaine-theme-subtle-cyan)))
+   ;; `(lsp-ui-sideline-code-action ((t :foreground ,yellow)))
+   ;; `(lsp-ui-sideline-current-symbol ((t :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-main)))
+   ;; `(lsp-ui-sideline-symbol ((t :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-alt)))
+   ;; `(lsp-ui-sideline-symbol-info ((t :inherit italic :height 0.99)))
 
 ;;;;; make-mode (makefiles)
-   ;; `(makefile-makepp-perl ((,class :background ,cyan-nuanced-bg)))
-   ;; `(makefile-space ((,class :background ,magenta-nuanced-bg)))
+   ;; `(makefile-makepp-perl ((t :background ,cyan-nuanced-bg)))
+   ;; `(makefile-space ((t :background ,magenta-nuanced-bg)))
 
    `(match ((t (:background ,fontaine/match))))
 
@@ -603,18 +656,18 @@
    `(next-error ((t (:background ,fontaine/bg-red :foreground ,fontaine/default-fg))))
 
 ;;;;; paradox
-   ;; `(paradox-archive-face ((,class :foreground ,fg-special-mild)))
-   ;; `(paradox-comment-face ((,class :inherit font-lock-comment-face)))
-   ;; `(paradox-commit-tag-face ((,class :inherit fontaine-theme-refine-magenta :box t)))
-   ;; `(paradox-description-face ((,class :foreground ,fg-special-cold)))
-   ;; `(paradox-description-face-multiline ((,class :foreground ,fg-special-cold)))
-   ;; `(paradox-download-face ((,class :inherit fontaine-theme-bold :foreground ,blue-alt-other)))
-   ;; `(paradox-highlight-face ((,class :inherit fontaine-theme-bold :foreground ,cyan-alt-other)))
-   ;; `(paradox-homepage-button-face ((,class :foreground ,magenta-alt-other :underline t)))
-   ;; `(paradox-mode-line-face ((,class :inherit bold :foreground ,cyan-active)))
-   ;; `(paradox-name-face ((,class :foreground ,blue :underline t)))
-   ;; `(paradox-star-face ((,class :foreground ,magenta)))
-   ;; `(paradox-starred-face ((,class :foreground ,magenta-alt)))
+   ;; `(paradox-archive-face ((t :foreground ,fg-special-mild)))
+   ;; `(paradox-comment-face ((t :inherit font-lock-comment-face)))
+   ;; `(paradox-commit-tag-face ((t :inherit fontaine-theme-refine-magenta :box t)))
+   ;; `(paradox-description-face ((t :foreground ,fg-special-cold)))
+   ;; `(paradox-description-face-multiline ((t :foreground ,fg-special-cold)))
+   ;; `(paradox-download-face ((t :inherit fontaine-theme-bold :foreground ,blue-alt-other)))
+   ;; `(paradox-highlight-face ((t :inherit fontaine-theme-bold :foreground ,cyan-alt-other)))
+   ;; `(paradox-homepage-button-face ((t :foreground ,magenta-alt-other :underline t)))
+   ;; `(paradox-mode-line-face ((t :inherit bold :foreground ,cyan-active)))
+   ;; `(paradox-name-face ((t :foreground ,blue :underline t)))
+   ;; `(paradox-star-face ((t :foreground ,magenta)))
+   ;; `(paradox-starred-face ((t :foreground ,magenta-alt)))
 
    `(paren-face-match    ((t (:background ,fontaine/match))))
    `(paren-face-mismatch ((t (:background ,fontaine/paren-mismatch-bg :foreground ,fontaine/paren-mismatch-fg))))
@@ -628,7 +681,7 @@
    `(powerline-inactive1 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive1-bg :foreground ,fontaine/powerline-inactive1-fg))))
    `(powerline-inactive2 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive2-bg :foreground ,fontaine/powerline-inactive2-fg))))
 
-  `(rainbow-delimiters-base-face     ((t (:inherit fixed-pitch :weight bold))))
+   `(rainbow-delimiters-base-face     ((t (:inherit fixed-pitch :weight bold))))
    `(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-1))))
    `(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-2))))
    `(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-3))))
@@ -648,58 +701,58 @@
 
    `(secondary-selection ((t (:background ,fontaine/secondary))))
 
+;;;;; shell-script-mode
+   ;; `(sh-heredoc ((t :foreground ,blue-alt)))
+   `(sh-quoted-exec ((t :foreground ,fontaine/execute)))
+
    `(shadow ((t (:foreground ,fontaine/shadow))))
 
-;;;;; shell-script-mode
-   ;; `(sh-heredoc ((,class :foreground ,blue-alt)))
-   ;; `(sh-quoted-exec ((,class :inherit fontaine-theme-bold :foreground ,magenta-alt)))
-
 ;;;;; smartparens
-   ;; `(sp-pair-overlay-face ((,class :inherit fontaine-theme-special-warm)))
-   ;; `(sp-show-pair-enclosing ((,class :inherit fontaine-theme-special-mild)))
-   ;; `(sp-show-pair-match-face ((,class ,@(fontaine-themes--paren bg-paren-match bg-paren-match-intense) :foreground ,fg-main)))
-   ;; `(sp-show-pair-mismatch-face ((,class :inherit fontaine-theme-intense-red)))
-   ;; `(sp-wrap-overlay-closing-pair ((,class :inherit sp-pair-overlay-face)))
-   ;; `(sp-wrap-overlay-face ((,class :inherit sp-pair-overlay-face)))
-   ;; `(sp-wrap-overlay-opening-pair ((,class :inherit sp-pair-overlay-face)))
-   ;; `(sp-wrap-tag-overlay-face ((,class :inherit sp-pair-overlay-face)))
+   ;; `(sp-pair-overlay-face ((t :inherit fontaine-theme-special-warm)))
+   ;; `(sp-show-pair-enclosing ((t :inherit fontaine-theme-special-mild)))
+   ;; `(sp-show-pair-match-face ((t ,@(fontaine-themes--paren bg-paren-match bg-paren-match-intense) :foreground ,fg-main)))
+   ;; `(sp-show-pair-mismatch-face ((t :inherit fontaine-theme-intense-red)))
+   ;; `(sp-wrap-overlay-closing-pair ((t :inherit sp-pair-overlay-face)))
+   ;; `(sp-wrap-overlay-face ((t :inherit sp-pair-overlay-face)))
+   ;; `(sp-wrap-overlay-opening-pair ((t :inherit sp-pair-overlay-face)))
+   ;; `(sp-wrap-tag-overlay-face ((t :inherit sp-pair-overlay-face)))
 
 ;;;;; smerge
-   ;; `(smerge-base ((,class :inherit fontaine-theme-diff-changed)))
-   ;; `(smerge-lower ((,class :inherit fontaine-theme-diff-added)))
-   ;; `(smerge-markers ((,class :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
-   ;; `(smerge-refined-added ((,class :inherit fontaine-theme-diff-refine-added)))
-   ;; `(smerge-refined-changed ((,class)))
-   ;; `(smerge-refined-removed ((,class :inherit fontaine-theme-diff-refine-removed)))
-   ;; `(smerge-upper ((,class :inherit fontaine-theme-diff-removed)))
+   ;; `(smerge-base ((t :inherit fontaine-theme-diff-changed)))
+   ;; `(smerge-lower ((t :inherit fontaine-theme-diff-added)))
+   ;; `(smerge-markers ((t :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
+   ;; `(smerge-refined-added ((t :inherit fontaine-theme-diff-refine-added)))
+   ;; `(smerge-refined-changed ((t)))
+   ;; `(smerge-refined-removed ((t :inherit fontaine-theme-diff-refine-removed)))
+   ;; `(smerge-upper ((t :inherit fontaine-theme-diff-removed)))
 
    `(success ((t (:foreground ,fontaine/success :weight bold))))
 
    `(trailing-whitespace ((t (:background ,fontaine/whitespace))))
 
 ;;;;; treemacs
-   ;; `(treemacs-directory-collapsed-face ((,class :foreground ,magenta-alt)))
-   ;; `(treemacs-directory-face ((,class :inherit dired-directory)))
-   ;; `(treemacs-file-face ((,class :foreground ,fg-main)))
-   ;; `(treemacs-fringe-indicator-face ((,class :foreground ,fg-main)))
-   ;; `(treemacs-git-added-face ((,class :foreground ,green-intense)))
-   ;; `(treemacs-git-conflict-face ((,class :inherit (fontaine-theme-intense-red bold))))
-   ;; `(treemacs-git-ignored-face ((,class :inherit shadow)))
-   ;; `(treemacs-git-modified-face ((,class :foreground ,yellow-alt-other)))
-   ;; `(treemacs-git-renamed-face ((,class :foreground ,cyan-alt-other)))
-   ;; `(treemacs-git-unmodified-face ((,class :foreground ,fg-main)))
-   ;; `(treemacs-git-untracked-face ((,class :foreground ,red-alt-other)))
-   ;; `(treemacs-help-column-face ((,class :inherit fontaine-theme-bold :foreground ,magenta-alt-other :underline t)))
-   ;; `(treemacs-help-title-face ((,class :foreground ,blue-alt-other)))
-   ;; `(treemacs-on-failure-pulse-face ((,class :inherit fontaine-theme-intense-red)))
-   ;; `(treemacs-on-success-pulse-face ((,class :inherit fontaine-theme-intense-green)))
-   ;; `(treemacs-root-face ((,class :inherit bold :foreground ,blue-alt-other :height 1.2 :underline t)))
-   ;; `(treemacs-root-remote-disconnected-face ((,class :inherit treemacs-root-remote-face :foreground ,yellow)))
-   ;; `(treemacs-root-remote-face ((,class :inherit treemacs-root-face :foreground ,magenta)))
-   ;; `(treemacs-root-remote-unreadable-face ((,class :inherit treemacs-root-unreadable-face)))
-   ;; `(treemacs-root-unreadable-face ((,class :inherit treemacs-root-face :strike-through t)))
-   ;; `(treemacs-tags-face ((,class :foreground ,blue-alt)))
-   ;; `(treemacs-tags-face ((,class :foreground ,magenta-alt)))
+   ;; `(treemacs-directory-collapsed-face ((t :foreground ,magenta-alt)))
+   ;; `(treemacs-directory-face ((t :inherit dired-directory)))
+   ;; `(treemacs-file-face ((t :foreground ,fg-main)))
+   ;; `(treemacs-fringe-indicator-face ((t :foreground ,fg-main)))
+   ;; `(treemacs-git-added-face ((t :foreground ,green-intense)))
+   ;; `(treemacs-git-conflict-face ((t :inherit (fontaine-theme-intense-red bold))))
+   ;; `(treemacs-git-ignored-face ((t :inherit shadow)))
+   ;; `(treemacs-git-modified-face ((t :foreground ,yellow-alt-other)))
+   ;; `(treemacs-git-renamed-face ((t :foreground ,cyan-alt-other)))
+   ;; `(treemacs-git-unmodified-face ((t :foreground ,fg-main)))
+   ;; `(treemacs-git-untracked-face ((t :foreground ,red-alt-other)))
+   ;; `(treemacs-help-column-face ((t :inherit fontaine-theme-bold :foreground ,magenta-alt-other :underline t)))
+   ;; `(treemacs-help-title-face ((t :foreground ,blue-alt-other)))
+   ;; `(treemacs-on-failure-pulse-face ((t :inherit fontaine-theme-intense-red)))
+   ;; `(treemacs-on-success-pulse-face ((t :inherit fontaine-theme-intense-green)))
+   ;; `(treemacs-root-face ((t :inherit bold :foreground ,blue-alt-other :height 1.2 :underline t)))
+   ;; `(treemacs-root-remote-disconnected-face ((t :inherit treemacs-root-remote-face :foreground ,yellow)))
+   ;; `(treemacs-root-remote-face ((t :inherit treemacs-root-face :foreground ,magenta)))
+   ;; `(treemacs-root-remote-unreadable-face ((t :inherit treemacs-root-unreadable-face)))
+   ;; `(treemacs-root-unreadable-face ((t :inherit treemacs-root-face :strike-through t)))
+   ;; `(treemacs-tags-face ((t :foreground ,blue-alt)))
+   ;; `(treemacs-tags-face ((t :foreground ,magenta-alt)))
 
    `(vhl/default-face ((t (:background ,fontaine/volatile-highlight))))
 
@@ -708,31 +761,31 @@
    `(web-mode-json-key-face ((t (:weight bold))))
 
 ;;;;; which-function-mode
-   ;; `(which-func ((,class :foreground ,magenta-active)))
+   ;; `(which-func ((t :foreground ,magenta-active)))
 
 ;;;;; whitespace-mode
-   ;; `(whitespace-big-indent ((,class :inherit fontaine-theme-subtle-red)))
-   ;; `(whitespace-empty ((,class :inherit fontaine-theme-intense-magenta)))
-   ;; `(whitespace-hspace ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-indentation ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-line ((,class :background ,bg-alt)))
-   ;; `(whitespace-newline ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-space ((,class :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-space-after-tab ((,class :inherit fontaine-theme-subtle-magenta)))
-   ;; `(whitespace-space-before-tab ((,class :inherit fontaine-theme-subtle-cyan)))
-   ;; `(whitespace-tab ((,class :inherit fontaine-theme-subtle-green)))
-   ;; `(whitespace-trailing ((,class :inherit fontaine-theme-intense-red)))
+   ;; `(whitespace-big-indent ((t :inherit fontaine-theme-subtle-red)))
+   ;; `(whitespace-empty ((t :inherit fontaine-theme-intense-magenta)))
+   ;; `(whitespace-hspace ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
+   ;; `(whitespace-indentation ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
+   ;; `(whitespace-line ((t :background ,bg-alt)))
+   ;; `(whitespace-newline ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
+   ;; `(whitespace-space ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
+   ;; `(whitespace-space-after-tab ((t :inherit fontaine-theme-subtle-magenta)))
+   ;; `(whitespace-space-before-tab ((t :inherit fontaine-theme-subtle-cyan)))
+   ;; `(whitespace-tab ((t :inherit fontaine-theme-subtle-green)))
+   ;; `(whitespace-trailing ((t :inherit fontaine-theme-intense-red)))
 
 ;;;;; xref
-   ;; `(xref-file-header ((,class :inherit bold :foreground ,fg-special-cold)))
-   ;; `(xref-line-number ((,class :inherit shadow)))
-   ;; `(xref-match ((,class :inherit match)))
+   ;; `(xref-file-header ((t :inherit bold :foreground ,fg-special-cold)))
+   ;; `(xref-line-number ((t :inherit shadow)))
+   ;; `(xref-match ((t :inherit match)))
 
 ;;;;; yaml-mode
-   ;; `(yaml-tab-face ((,class :inherit fontaine-theme-intense-red)))
+   ;; `(yaml-tab-face ((t :inherit fontaine-theme-intense-red)))
 
    )) ;; custom-theme-set-faces ;; let*
- ;;
+;;
 (message "Loading fontaine-theme...done")
 
 ;;;###autoload
