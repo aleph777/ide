@@ -900,7 +900,7 @@
 
 ;; ==================== f3 ====================
 ;;
-(global-set-key [f3]           'tjf:navigate/end-of-line)
+(global-set-key [f3]           'tjf:navigate/goto-end-of-line)
 ;;lobal-set-key [(control f3)] '
 ;;lobal-set-key [(meta    f3)] ' DO NOT USE
 ;;lobal-set-key [(super   f3)] '

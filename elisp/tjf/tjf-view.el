@@ -228,7 +228,7 @@ is already narrowed."
     (princ (format "Host ID:     %s\n"        (system-name)))
     (princ (format "User ID:     %s (%s)\n\n" (user-login-name) (user-full-name)))
     (princ (format "System Type: %s\n"        system-type))
-    (princ (format "OS/Desktop:  %s/%s\n"     (get-os-version) (get-desktop)))
+    (princ (format "OS/Desktop:  %s/%s\n"     (tjf:view/get-os-version) (tjf:view/get-desktop)))
     (princ (format "Version:     %s\n"        (emacs-version)))))
 
 (defun tjf:view/reset-default-font ()
@@ -316,7 +316,7 @@ is already narrowed."
     ["Decrease Text Size" text-scale-decrease t]
     ["Reset Text Size"    (text-scale-mode 0) t]
     "---"
-    ["Properties"  display-properties]
+    ["Properties"  tjf:view/properties]
     "---"
     ["Diminish Minor Modes" diminish-minor-modes]
     "---"

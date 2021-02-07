@@ -339,7 +339,7 @@
         bm-cycle-all-buffers t)
 
   ;; where to store persistant files
-  (setq bm-repository-file (concat tjf:user/dir-config "bm-repository"))
+  (setq bm-repository-file (concat tjf:user/dir-config "bookmarks"))
 
   ;; save bookmarks
   (setq-default bm-buffer-persistence t)
@@ -355,7 +355,6 @@
   (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark-1))
 
 (use-package cc-mode
-  :mode
   :commands (c-mode c++-mode)
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
@@ -378,7 +377,7 @@
 
 (use-package clips-mode
   :straight t
-  :mode
+  :mode "\\.clips\\'"
   :commands clips-mode
   :config
   (message "Loading clips-mode...done"))
@@ -404,7 +403,7 @@
     (defvar company-tooltip-align-annotations)
     (defvar company-tooltip-limit)
     (defvar company-transformers)
-    (defvar tychoish-config-path))
+    )
   :init
   (add-hook 'prog-mode-hook 'company-mode)
   (add-hook 'text-mode-hook 'company-mode)
@@ -428,7 +427,7 @@
   (setq company-dabbrev-downcase nil)
   (setq company-echo-delay 0)
   (setq company-idle-delay 0)
-  (setq company-ispell-dictionary (f-join tychoish-config-path "aspell-pws"))
+  ;; (setq company-ispell-dictionary (f-join tychoish-config-path "aspell-pws"))
   (setq company-minimum-prefix-length 2)
   (setq company-show-numbers t)
   (setq company-tooltip-align-annotations t)
@@ -450,8 +449,8 @@
   (add-to-list 'company-backends 'company-plsense))
 
 (use-package cperl-mode
-  :mode
   :commands (convert-to-perl cperl-mode perl-mode)
+  :mode "\\.p\\(l\\|m\\)\\'"
   :init
   (defalias 'perl-mode 'cperl-mode)
   :config
@@ -463,10 +462,10 @@
 
 (use-package csharp-mode
   :straight t
-  :mode
+  :mode "\\.cs\'"
   :commands csharp-mode
   :config
-  (message "Loading cperl-mode...done"))
+  (message "Loading csharp-mode...done"))
 
 (use-package cua-base
   :config
@@ -474,7 +473,7 @@
 
 (use-package cuda-mode
   :straight t
-  :mode
+  :mode "\\.cuda\'"
   :commands cuda-mode)
 
 (use-package dash)
@@ -598,9 +597,8 @@
 
 (use-package groovy-mode
   :straight t
-  :mode
-  :commands groovy-mode
-  :mode "\\.grv\\'")
+  :mode "\\.grv\\'"
+  :commands groovy-mode)
 
 (use-package helpful
   :straight t
@@ -641,7 +639,7 @@
 
 (use-package json-mode
   :straight t
-  :mode
+  :mode "\\.json\\'"
   :commands json-mode)
 
 (use-package langtool
@@ -650,9 +648,9 @@
   :preface
   (eval-when-compile
     (defvar langtool-language-tool-jar)
-    (defvar user-dir-home))
+    (defvar tjf:user/dir-home))
   :config
-  (setq langtool-language-tool-jar (concat user-dir-home "Documents/LanguageTool-4.1/languagetool-commandline.jar")))
+  (setq langtool-language-tool-jar (concat tjf:user/dir-home "Documents/LanguageTool-4.1/languagetool-commandline.jar")))
 
 (use-package loccur
   :straight t
@@ -660,7 +658,7 @@
 
 (use-package lua-mode
   :straight t
-  :mode
+  :mode "\\.lua\\'"
   :commands lua-mode)
 
 (use-package magit
@@ -668,7 +666,7 @@
   :commands magit-status)
 
 (use-package make-mode
-  :mode
+  :mode "\\.mk\\'"
   :commands makefile-gmake-mode
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
@@ -677,7 +675,7 @@
 
 (use-package matlab-mode
   :straight t
-  :mode
+  :mode "\\.m\\'"
   :commands matlab-mode)
 
 (use-package mic-paren
@@ -705,7 +703,7 @@
   (setq msb-max-menu-items 32))
 
 (use-package org-mode
-  :mode
+  :mode "\\.org\\'"
   :commands org-mode
   :init
   (add-hook 'org-mode-hook #'visual-line-mode))
@@ -752,7 +750,7 @@
   ;; )
 
 (use-package python
-  :mode
+  :mode "\\.py\\'"
   :commands python-mode)
 
 (use-package rainbow-delimiters
@@ -782,6 +780,7 @@
   ;; :hook (after-init-hook . recentf-mode))
 
 (use-package replace
+  :config
   (add-hook 'occur-mode-hook #'(lambda ()
                                  (make-local-variable 'which-function-mode)
                                  (setq which-function-mode nil))))
@@ -829,47 +828,6 @@
 (use-package so-long
   :config
   (global-so-long-mode 1))
-
-;; (use-package tabbar
-;;   :straight t
-;;   :after powerline
-;;   :functions (powerline-render powerline-wave-left powerline-wave-right tabbar-get-tab tabbar-make-tab tabbar-mode tabbar-set-template tabbar-tabs tjf:tabbar/label-function)
-;;   :init
-;;   (defvar tjf:tabbar/height)
-;;   (setq   tjf:tabbar/height 20)
-;;   :preface
-;;   (eval-when-compile
-;;     (defvar tabbar-tab-label-function))
-;;   :config
-;;   (defun tabbar-add-tab (tabset object &optional _append_ignored)
-;;     "Add to TABSET a tab with value OBJECT if there isn't one there yet.
-;;  If the tab is added, it is added at the beginning of the tab list,
-;;  unless the optional argument APPEND is non-nil, in which case it is
-;;  added at the end."
-;;     (let ((tabs (tabbar-tabs tabset)))
-;;       (if (tabbar-get-tab object tabset)
-;;           tabs
-;;         (let ((tab (tabbar-make-tab object tabset)))
-;;           (tabbar-set-template tabset nil)
-;;           (set tabset (sort (cons tab tabs)
-;;                             (lambda (a b) (string< (buffer-name (car a))
-;;                                                    (buffer-name (car b))))))))))
-
-;;   (defvar tjf:tabbar/left)
-;;   (setq   tjf:tabbar/left  (powerline-wave-right 'tabbar-default nil tjf:tabbar/height))
-;;   (defvar tjf:tabbar/right)
-;;   (setq   tjf:tabbar/right (powerline-wave-left  nil 'tabbar-default tjf:tabbar/height))
-
-;;   (defun tjf:tabbar/label-function (tab)
-;;     (powerline-render (list tjf:tabbar/left (format " %s " (car tab)) tjf:tabbar/right)))
-
-;;   (tabbar-mode 1)
-
-;;   ;; tabbar-tab-label-function will be reset after enabling tabbar-mode
-
-;;   (setq tabbar-tab-label-function #'tjf:tabbar/label-function)
-;;   (customize-set-variable 'tabbar-separator '(0.0))
-;;   (customize-set-variable 'tabbar-use-images nil))
 
 (use-package tetris
   :commands tetris
@@ -1137,7 +1095,7 @@
 
 (use-package yaml-mode
   :straight t
-  :mode
+  :mode "\\.yaml\\'"
   :commands yaml-mode)
 
 (use-package xah)

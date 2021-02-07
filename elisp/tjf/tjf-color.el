@@ -237,30 +237,35 @@
 
 (defun tjf:color/set-background-blue ()
   "Return a random blueish background color."
+  (interactive)
   (tjf:color/set-background(list (/ (tjf:color/random 210 269) 360.0)
                                  (/ (tjf:color/random tjf:color/saturation-minimum-bg tjf:color/saturation-maximum-bg) 100.0)
                                  (/ (tjf:color/random tjf:color/luminance-minimum-bg  tjf:color/luminance-maximum-bg)  100.0))))
 
 (defun tjf:color/set-background-cyan ()
   "Return a random cyanish background color."
+  (interactive)
   (tjf:color/set-background(list (/ (tjf:color/random 150 209) 360.0)
                                  (/ (tjf:color/random tjf:color/saturation-minimum-bg tjf:color/saturation-maximum-bg) 100.0)
                                  (/ (tjf:color/random tjf:color/luminance-minimum-bg  tjf:color/luminance-maximum-bg)  100.0))))
 
 (defun tjf:color/set-background-gray ()
   "Return a random grayish background color."
+  (interactive)
   (tjf:color/set-background(list (/ (tjf:color/random 0 359) 360.0)
                                  (/ (tjf:color/random tjf:color/gray-saturation-minimum-bg tjf:color/gray-saturation-maximum-bg) 100.0)
                                  (/ (tjf:color/random tjf:color/luminance-minimum-bg       tjf:color/luminance-maximum-bg)       100.0))))
 
 (defun tjf:color/set-background-green ()
   "Return a random greenish background color."
+  (interactive)
   (tjf:color/set-background(list (/ (tjf:color/random 90 149) 360.0)
                                  (/ (tjf:color/random tjf:color/saturation-minimum-bg tjf:color/saturation-maximum-bg) 100.0)
                                  (/ (tjf:color/random tjf:color/luminance-minimum-bg  tjf:color/luminance-maximum-bg)  100.0))))
 
 (defun tjf:color/set-background-magenta ()
   "Return a random magentaish background color."
+  (interactive)
   (tjf:color/set-background(list (/ (tjf:color/random 270 329) 360.0)
                                  (/ (tjf:color/random tjf:color/saturation-minimum-bg tjf:color/saturation-maximum-bg) 100.0)
                                  (/ (tjf:color/random tjf:color/luminance-minimum-bg  tjf:color/luminance-maximum-bg)  100.0))))
@@ -272,6 +277,7 @@
 
 (defun tjf:color/set-background-red ()
   "Return a random redish background color."
+  (interactive)
   (let ((hue (tjf:color/random -30 29)))
     (tjf:color/set-background(list (/ (if (< hue 0) (+ hue 360) hue) 360.0)
                                    (/ (tjf:color/random tjf:color/saturation-minimum-bg tjf:color/saturation-maximum-bg) 100.0)
@@ -279,6 +285,7 @@
 
 (defun tjf:color/set-background-yellow ()
   "Return a random yellowish background color."
+  (interactive)
   (tjf:color/set-background(list (/ (tjf:color/random 30 89) 360.0)
                                  (/ (tjf:color/random tjf:color/saturation-minimum-bg tjf:color/saturation-maximum-bg) 100.0)
                                  (/ (tjf:color/random tjf:color/luminance-minimum-bg  tjf:color/luminance-maximum-bg)  100.0))))

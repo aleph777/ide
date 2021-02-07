@@ -113,7 +113,8 @@
   "Convert the word at current point or the selected region to first caps."
   (interactive "*")
   (with-word-or-region (beg end)
-                       (capitalize-region beg end)))
+                       (capitalize-region beg end)
+                       (tjf:navigate/forward-word)))
 
 (defun tjf:edit/cleanse-whitespace ()
   "Untabify, then trim excess whitespace and compress all blank lines."
@@ -195,7 +196,8 @@
   "Convert the word at current point or the selected region to lowercase."
   (interactive "*")
   (with-word-or-region (beg end)
-                       (downcase-region beg end)))
+                       (downcase-region beg end)
+                       (tjf:navigate/forward-word)))
 
 (defun tjf:edit/fill ()
   "Fill the current paragraph or selected region."
@@ -309,7 +311,7 @@
     (tjf:edit/fill)))
 
 (defun tjf:edit/untabify ()
-  "Untabify the entire buffer or region."
+  "Untabify the ENTIRE buffer or region."
   (interactive "*")
   (with-buffer-or-region (beg end)
                          (untabify beg end)))
@@ -318,7 +320,8 @@
   "Convert the word at current point or the selected region to uppercase."
   (interactive "*")
   (with-word-or-region (beg end)
-                       (upcase-region beg end)))
+                       (upcase-region beg end)
+                       (tjf:navigate/forward-word)))
 
 (defvar tjf:edit/menu
   '("Edit"
