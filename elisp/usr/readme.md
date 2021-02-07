@@ -1,1 +1,1 @@
-Personal Emacs Lisp library
+This library is obsolete and maintained only for reference.
