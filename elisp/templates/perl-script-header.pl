@@ -2,7 +2,6 @@
 #         Copyright © <<<YEAR>>> <<<AUTHOR>>>
 
 # Title:  <<<TITLE>>>
-# Author: <<<AUTHOR>>>
 # Date:   <<<DATE>>>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -38,7 +37,4 @@ use strict;
 use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
-
-
-
 
