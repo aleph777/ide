@@ -70,7 +70,7 @@ The icons of my ide use *png* icons instead of *xpm*. The icons are based on the
 
 ### Tabs
 
-I used the *centaur-tabs* package from *MELPA*. I really like that package, but I have had a number of problems with it. I am in the process of returning to the *tabbar* package,  making changes based on this article: https://amitp.blogspot.com/2018/10/emacs-prettier-tabbar.html.
+I use a custom version of the *tabbar* package, making changes based on this article: https://amitp.blogspot.com/2018/10/emacs-prettier-tabbar.html. In my custom version of tabbar, I've changed the tabs from being located on the *header-line* to being located on the *tab-line*.
 
 ### Screenshot
 

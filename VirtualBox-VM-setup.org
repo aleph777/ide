@@ -46,7 +46,8 @@
 ** Pre-use IDE
 *** mv .bashrc .basrc.sav
 *** ln -s ide/.bashrc
-*** ln -s ide/.emacs
+*** ln -s ide/.emacs.el
+*** ln -s ide/early-init.el
 *** ln -s ide/bin
 *** ln -s ide/elisp
 *** ln -s ide/lib
