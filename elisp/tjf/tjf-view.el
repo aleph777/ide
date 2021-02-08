@@ -327,7 +327,7 @@ is already narrowed."
     ["Reposition Window" reposition-window]
     "---"
     ("Window"
-     ["Make New Window"       make-new-frame]
+     ["Make New Window"       tjf:frame/make-new]
      ["Make Window Invisible" make-frame-invisible :enable (delete-frame-enabled-p)]
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
      "---"
@@ -350,9 +350,9 @@ is already narrowed."
       ["Decrease Luminance"           tjf:color/darken-background]
       ["Increase Luminance"           tjf:color/brighten-background])
      "---"
-     ["Query Window Font "   (message (query-frame-font   'modeline))]
-     ["Query Window Size "   (message (query-frame-size   'modeline))]
-     ["Query Window Colors " (message (query-frame-colors 'modeline))])
+     ["Query Window Font "   (message (tjf:frame/font   'modeline))]
+     ["Query Window Size "   (message (tjf:frame/size   'modeline))]
+     ["Query Window Colors " (message (tjf:frame/colors 'modeline))])
     ("Pane"
      ["Split Pane Vertically"   split-window-vertically]
      ["Split Pane Horizontally" split-window-horizontally]
