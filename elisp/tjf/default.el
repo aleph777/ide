@@ -223,8 +223,7 @@
 (use-package diminish
   :straight t
   :after use-package
-  :functions
-  diminish)
+  :functions diminish)
 
 (use-package f
   :straight t)
@@ -674,6 +673,7 @@
 (use-package mapreplace)
 
 (use-package matlab-mode
+  :defer t
   :straight t
   :mode "\\.m\\'"
   :commands matlab-mode)
@@ -703,11 +703,11 @@
   (setq msb-max-menu-items 32))
 
 (use-package org-mode
+  :defer t
   :mode "\\.org\\'"
   :commands org-mode
   :init
   (add-hook 'org-mode-hook #'visual-line-mode))
-  ;; :hook (org-mode . visual-line-mode))
 
 (use-package paradox
   :straight t
@@ -838,14 +838,9 @@
   :commands text-mode
   :init
   (add-hook 'text-mode-hook #'turn-on-auto-fill))
-  ;; :hook (text-mode . turn-on-auto-fill))
 
 (use-package tinyeat
-  :commands
-  (tinyeat-backward-preserve
-   tinyeat-delete-paragraph
-   tinyeat-delete-whole-word
-   tinyeat-forward-preserve))
+  :commands (tinyeat-backward-preserve tinyeat-delete-paragraph tinyeat-delete-whole-word tinyeat-forward-preserve))
 
 (use-package tinysearch
   :commands (tinysearch-search-word-forward tinysearch-search-word-backward))
@@ -854,11 +849,12 @@
   :after (bm tjf-flags))
 
 (use-package tjf-clips
+  :defer t
   :after clips-mode
+  :commands clips-mode
   :functions tjf:clips/setup
   :init
   (add-hook 'clips-mode-hook #'tjf:clips/setup))
-  ;; :hook (clips-mode-hook . tjf:clips/setup))
 
 (use-package tjf-color
   :after (cl-macs color))
@@ -867,10 +863,11 @@
   :after tjf-flags)
 
 (use-package tjf-csharp
+  :defer t
   :after csharp-mode
+  :commands csharp-mode
   :init
   (add-hook 'csharp-mode-hook #'tjf:csharp/setup))
-  ;; :hook (csharp-mode . tjf:csharp/setup))
 
 (use-package tjf-date)
 
@@ -903,7 +900,10 @@
   :after (diminish f s))
 
 (use-package tjf-matlab
-  :after matlab)
+  :defer t
+  :after matlab
+  :config
+  (add-hook 'matlab-mode-hook #'tjf:matlab/setup))
 
 (use-package tjf-menubar
   :after (easymenu tjf-clipboard tjf-edit tjf-file tjf-flags tjf-navigate tjf-search tjf-sort tjf-tools tjf-view))
@@ -918,17 +918,20 @@
 
 (use-package tjf-perl
   :after cperl-mode
-  :functions convert-to-perl)
+  :commands (convert-to-perl cperl-mode)
+  :init
+  (add-hook 'cperl-mode-hook #'tjf:perl/setup))
 
 (use-package tjf-powerline
   :after powerline)
 
 (use-package tjf-python
+  :defer t
   :after python
+  :commands python-mode
   :functions tjf:python/setup
   :init
   (add-hook 'python-mode-hook #'tjf:python/setup))
-  ;; :hook (python-mode-hook . tjf:python/setup))
 
 (use-package tjf-query-replace
   :commands tjf:query-replace/do)
@@ -951,7 +954,7 @@
   :after tjf-flags)
 
 (use-package tjf-view
-  :after (tjf-clipboard tjf-color tjf-flags tjf-frame))
+  :after (tjf-clipboard tjf-color tjf-flags tjf-frame undo-tree))
 
 (use-package treemacs
   :straight t

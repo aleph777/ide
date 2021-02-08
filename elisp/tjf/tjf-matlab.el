@@ -37,6 +37,7 @@
 ;;; Code:
 
 (message "Loading tjf-matlab...")
+(require 'matlab)
 
 ;;
 (defun tjf:matlab/setup ()

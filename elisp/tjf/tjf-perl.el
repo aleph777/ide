@@ -72,12 +72,12 @@
 (require 'cperl-mode)
 (require 'tjf-frame)
 (require 'tjf-date)
-(require 'tjf-settings)
 
 ;;; overload
 (defun cperl-define-key () nil)
 
-(defvar tjf:perl/lib (getenv "PERLLIB"))
+(defvar tjf:perl/lib         (getenv "PERLLIB"))
+(defvar tjf:perl/me          "use constant _ME_ => $0 =~ m=([^/]+)$=;\n\n")
 (defvar tjf:perl/min-version "5.010")
 (defvar tjf:perl/which       "/usr/bin/perl")
 (defvar tjf:perl/shebang     (concat "#!" tjf:perl/which " -w    # -*-Perl-*-\n"))
@@ -183,14 +183,10 @@
   "Insert the script usage code."
   (interactive "*")
   (tjf:perl/insert-me)
-  (insert "if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:-(?:(?:-(?:h(?:elp)?|\\?)|h(?:elp)?)$|\\?)|\\?$))/))\n")
-  (insert "{\n")
-  (insert "  print \"\\nUsage: $me\\n\\n\";\n")
-  (insert "  exit;\n")
-  (insert "}\n"))
+  (insert-file-contents (concat tjf:user/dir-elisp "templates/perl-script-usage.pl")))
 
 (defun tjf:perl/setup()
-  "`eval-after-load' target for perl-mode."
+  "Set up a buffer for ‘perl-mode’."
   (imenu-add-to-menubar "Navigate")
   (abbrev-mode -1)
   (unless tjf:perl/lib
@@ -246,8 +242,6 @@
     ["Syntax Check" (compile (concat "export PERLLIB=" tjf:perl/lib ";" tjf:perl/which " -c " (file-name-nondirectory (buffer-file-name))))]
     ["Critique"     (compile (concat "critique " (file-name-nondirectory (buffer-file-name))))]
     ))
-
-(add-hook 'cperl-mode-hook 'tjf:perl/setup)
 
 ;;
 (message "Loading tjf-perl...done")

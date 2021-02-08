@@ -74,6 +74,7 @@
 (require 'tjf-sort)
 (require 'tjf-tools)
 (require 'tjf-view)
+(require 'undo-tree)
 
 ;;; overload
 (defun undo-tree-update-menu-bar ()
