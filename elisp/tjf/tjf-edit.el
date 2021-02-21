@@ -112,9 +112,9 @@
 (defun tjf:edit/capitalize ()
   "Convert the word at current point or the selected region to first caps."
   (interactive "*")
-  (with-word-or-region (beg end)
-                       (capitalize-region beg end)
-                       (tjf:navigate/forward-word)))
+  (if (use-region-p)
+      (capitalize-region (region-beginning) (region-end) (region-noncontiguous-p))
+    (capitalize-word 1)))
 
 (defun tjf:edit/cleanse-whitespace ()
   "Untabify, then trim excess whitespace and compress all blank lines."
@@ -195,9 +195,12 @@
 (defun tjf:edit/downcase ()
   "Convert the word at current point or the selected region to lowercase."
   (interactive "*")
-  (with-word-or-region (beg end)
-                       (downcase-region beg end)
-                       (tjf:navigate/forward-word)))
+  (if (use-region-p)
+      (downcase-region (region-beginning) (region-end) (region-noncontiguous-p))
+    (if (looking-at "[A-Za-z0-9]")
+        (skip-chars-backward "[:alnum:]")
+      (skip-chars-forward "[^:alnum:]"))
+    (downcase-word 1)))
 
 (defun tjf:edit/fill ()
   "Fill the current paragraph or selected region."
@@ -319,9 +322,12 @@
 (defun tjf:edit/upcase ()
   "Convert the word at current point or the selected region to uppercase."
   (interactive "*")
-  (with-word-or-region (beg end)
-                       (upcase-region beg end)
-                       (tjf:navigate/forward-word)))
+  (if (use-region-p)
+      (upcase-region (region-beginning) (region-end) (region-noncontiguous-p))
+    (if (looking-at "[A-Za-z0-9]")
+        (skip-chars-backward "[:alnum:]")
+      (skip-chars-forward "[^:alnum:]"))
+    (upcase-word 1)))
 
 (defvar tjf:edit/menu
   '("Edit"
@@ -343,10 +349,10 @@
 
 (defvar tjf:edit/menu-align
   '("Align"
-    ["Align Columns Region"    align-columns    :enable (tjf:flags/enable-modify-region?)]
-    ["Align Equals"            align-equals     :enable (tjf:flags/enable-modify-region?)]
-    ["Align Regexp..."         align-regexp     :enable (tjf:flags/enable-modify-region?)]
-    ["Align Columns Rectangle" pretty-rectangle :enable (tjf:flags/enable-modify-region?)]))
+    ["Align Columns Region"    tjf:edit/align-columns :enable (tjf:flags/enable-modify-region?)]
+    ["Align Equals"            tjf:edit/align-equals  :enable (tjf:flags/enable-modify-region?)]
+    ["Align Regexp..."         align-regexp           :enable (tjf:flags/enable-modify-region?)]
+    ["Align Columns Rectangle" pretty-rectangle       :enable (tjf:flags/enable-modify-region?)]))
 
 (defvar tjf:edit/menu-case
   '("Case"

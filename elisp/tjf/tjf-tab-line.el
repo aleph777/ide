@@ -274,7 +274,7 @@ scroll right button.  It should scroll the current tab set.")
   "Function to obtain a help string for the scroll right button.
 The help string is displayed when the mouse is onto the button.
 The function is called with no arguments.")
-
+
 ;;; Misc.
 ;;
 (eval-and-compile
@@ -330,7 +330,7 @@ room."
               w (+ w (char-width (aref str n)))))
       (concat (substring str 0 i) el (substring str n)))
      )))
-
+
 ;;; Tab and tab set
 ;;
 (defsubst tabbar-make-tab (object tabset)

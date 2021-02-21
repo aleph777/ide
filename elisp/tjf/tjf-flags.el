@@ -278,6 +278,8 @@ This depends on major mode having setup syntax table properly."
 
 ;; visible- functions are for :visible in menu/toolbar entries
 
+(defalias 'tjf:flags/visible-shell? 'tjf:flags/is-shell-mode?)
+
 (defalias 'tjf:flags/visible-not-shell? 'tjf:flags/is-not-shell-mode?)
 
 (defalias 'tjf:flags/visible-replace? 'tjf:flags/is-not-shell-mode-or-read-only?)

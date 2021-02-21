@@ -165,9 +165,6 @@
 (easy-menu-add-item nil '("Edit") tjf:edit/menu-case                      'marker2)
 
 (easy-menu-define file-menu global-map "File" tjf:file/menu)
-(recentf-mode)
-
-(add-hook 'menu-bar-update-hook 'tjf:navigate/menu)
 
 ;;
 (message "Loading tjf-menubar...done")

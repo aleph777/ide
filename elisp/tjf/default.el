@@ -180,6 +180,20 @@
 
 ;;; Code:
 
+(defun message--with-timestamp (format-string &rest args)
+  "Add timestamps to `*Messages*' buffer."
+  (when (and (>   (length  format-string) 0)
+             (not (string= format-string " ")))
+    (let ((deactivate-mark nil))
+      (save-mark-and-excursion
+        (with-current-buffer "*Messages*"
+          (let ((inhibit-read-only t))
+            (goto-char (point-max))
+            (when (not (bolp)) (newline))
+            (insert (format-time-string "[%T.%3N] " (current-time)))))))))
+
+(advice-add 'message :before #'message--with-timestamp)
+
 (message "Configuring from default.el...")
 
 ;;
@@ -205,13 +219,13 @@
 
 ;; Configure `use-package' prior to loading it.
 (eval-and-compile
-  (setq use-package-always-ensure nil)
-  (setq use-package-always-defer nil)
-  (setq use-package-always-demand nil)
-  (setq use-package-expand-minimally nil)
+  (setq use-package-always-ensure        nil)
+  (setq use-package-always-defer         nil)
+  (setq use-package-always-demand        nil)
+  (setq use-package-expand-minimally     nil)
   (setq use-package-enable-imenu-support t)
-  (setq use-package-compute-statistics nil)
-  (setq use-package-hook-name-suffix nil)) ;; Write hooks using their real name instead of a shorter version: after-init ==> `after-init-hook'
+  (setq use-package-compute-statistics   nil)
+  (setq use-package-hook-name-suffix     nil)) ;; Write hooks using their real name instead of a shorter version: after-init ==> `after-init-hook'
 
 (use-package straight-x)
 ;; provides `straight-x-clean-unused-repos' (part of `straight.el')
@@ -226,7 +240,24 @@
   :functions diminish)
 
 (use-package f
-  :straight t)
+  :straight t
+  :config
+  (defun basename (&optional filename)
+    (if filename
+        (f-filename filename)
+      (f-filename (buffer-file-name))))
+  (defun basename-no-ext (&optional filename)
+    (if filename
+        (file-name-base filename)
+      (file-name-base (buffer-file-name))))
+  (defun dirname (&optional filename)
+    (if filename
+        (f-dirname filename)
+      (f-dirname (buffer-file-name))))
+  (defun file-extension (&optional filename)
+    (if filename
+        (f-ext filename)
+      (f-ext (buffer-file-name)))))
 
 (use-package emacs
   :preface
@@ -234,18 +265,35 @@
     (defvar gnutls-min-prime-bits)
     (defvar which-func-modes))
   :config
+  (setq current-language-environment "UTF-8")
+  (setq locale-coding-system   'utf-8)
+  (set-language-environment    'utf-8)
+  (set-default-coding-systems  'utf-8)
+  (set-terminal-coding-system  'utf-8)
+  (set-selection-coding-system 'utf-8)
+  (prefer-coding-system        'utf-8)
+
   (setq         auto-save-file-name-transforms      `((".*"   ,tjf:user/dir-autosave t)))
   (setq         backup-directory-alist              `((".*" . ,tjf:user/dir-backup)))
   (setq         blink-cursor-blinks                 0)
+  (setq         buffers-menu-max-size               nil)
   (setq         byte-compile-warnings               '(not free-vars unresolved noruntime lexical make-local))
   (setq         colon-double-space                  nil)
+  (setq         comint-input-ignoredups             t)
+  (setq         comint-input-ring-size              64)
   (setq-default cursor-type                         '(bar . 2))
   (setq         disabled-command-function           nil)
   (setq         echo-keystrokes                     0.25)
+  (setq         explicit-shell-file-name            "/bin/bash")
   (setq         fill-column                         8192)
   (setq-default font-lock-maximum-decoration        t)
   (setq-default frame-title-format                  "%b")
   (setq         gnutls-min-prime-bits               80)
+  (setq         imenu-sort-function                 'imenu--sort-by-name)
+  (setq         indent-tabs-mode                    nil)
+  (setq         inhibit-startup-echo-area-message   nil)
+  (setq         inhibit-startup-screen              t)
+  (setq         initial-scratch-message             nil)
   (setq-default indent-tabs-mode                    nil)
   (setq         inhibit-startup-buffer-menu         t)
   (setq         max-image-size                      256)
@@ -253,14 +301,18 @@
   (setq         mouse-drag-copy-region              t)
   (setq         mouse-yank-at-point                 t)
   (setq         mouse-wheel-scroll-amount           '(1 ((shift) . 5) ((meta)) ((control))))
+  ;; (setq         mouse-wheel-scroll-amount           '(3 ((shift) . 1) ((control))))
   (setq         recenter-positions                  '(top middle bottom))
   (setq         ring-bell-function                  '(lambda () (let ((visible-bell t)) (beep)) (beep) (beep)))
   (setq         save-interprogram-paste-before-kill t)
-  (setq-default scroll-preserve-screen-position     t)
+  (setq         scroll-bar-mode                     'right)
   (setq-default scroll-conservatively               0)
+  (setq-default scroll-error-top-bottom t)
   (setq-default scroll-margin                       0)
+  (setq-default scroll-preserve-screen-position     t)
   (setq         sentence-end-double-space           nil)
   (setq         sentence-end-without-period         nil)
+  ;; (setq         ssh-directory-tracking-mode         t)
   (setq-default tab-always-indent                   'complete)
   (setq         use-hard-newlines                   nil)
   (setq         which-func-modes                    '(emacs-lisp-mode c-mode c++-mode cperl-mode python-mode diff-mode))
@@ -289,11 +341,11 @@
   (defun anzu--update-mode-line-local (here total)
     (when anzu--state
       (let ((status (cl-case anzu--state
-                      (search (format " (%s/%d%s) "
+                      (search (format "I-search: (%s/%d%s) "
                                       (anzu--format-here-position here total)
                                       total (if anzu--overflow-p "+" "")))
-                      (replace-query (format " (%d items) " total))
-                      (replace (format " (%d/%d) " here total)))))
+                      (replace-query (format "Query Replace: (%d matches) " total))
+                      (replace (format "Query Replace:  (%d/%d) " here total)))))
         (propertize status 'face 'anzu-mode-line))))
   :config
   (setq anzu-mode-line-update-function #'anzu--update-mode-line-local)
@@ -348,18 +400,15 @@
 
   ;; Make a more bookmarky symbol for a 'mark':
   (define-fringe-bitmap 'bm-marker-left [0 0 15 15 15 15 0 0] 8 4 'center)
-  (let ((material/fg-orange-800  "#ef6c00"))
-    (set-face-attribute 'bm-fringe-persistent-face nil :foreground "white" :background material/fg-orange-800)) ;; theme???
 
-  (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark-1))
+  (define-key bm-show-mode-map [mouse-1] 'bm-show-goto-bookmark)
+  (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark))
 
 (use-package cc-mode
   :commands (c-mode c++-mode)
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode)))
-
-(use-package cl-lib)
 
 (use-package cl-macs)
 
@@ -440,6 +489,16 @@
   :commands (company-jedi)
   :after (company python-mode))
 
+(use-package company-lsp
+  :straight t
+  :after (company lsp-mode)
+  :config
+  (push 'company-lsp company-backends)
+  (setq company-lsp-cache-candidates    'auto)
+  (setq company-lsp-async               t)
+  (setq company-lsp-enable-snippet      nil)
+  (setq company-lsp-enable-recompletion t))
+
 (use-package company-plsense :disabled
   :if is-linux?
   :straight t
@@ -454,9 +513,27 @@
   (defalias 'perl-mode 'cperl-mode)
   :config
   ;;           (plsense-server-start)
-  (define-key cperl-mode-map "{" nil)
-  (define-key cperl-mode-map "(" nil)
-  (define-key cperl-mode-map "[" nil)
+  (setq cperl-hairy t)
+
+  (setq cperl-indent-region-fix-constructs nil)
+  (setq cperl-style-alist (append cperl-style-alist '(("TJF"
+                                                       (cperl-indent-level               .  2)
+                                                       (cperl-brace-offset               .  0)
+                                                       (cperl-continued-brace-offset     . -2)
+                                                       (cperl-label-offset               . -2)
+                                                       (cperl-extra-newline-before-brace .  t)
+                                                       (cperl-merge-trailing-else        .  nil)
+                                                       (cperl-continued-statement-offset .  2)))))
+
+  (cperl-set-style "TJF")
+  (cperl-init-faces)
+
+  (define-key cperl-mode-map [menu-bar] nil)
+  (define-key cperl-mode-map [?\t]      '(lambda nil (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
+  (define-key cperl-mode-map "{"        nil)
+  (define-key cperl-mode-map "("        nil)
+  (define-key cperl-mode-map "["        nil)
+
   (message "Loading cperl-mode...done"))
 
 (use-package csharp-mode
@@ -488,6 +565,7 @@
 (use-package easymenu)
 
 (use-package ediff
+  :commands ediff
   :preface
   (eval-when-compile
     (defvar ediff-merge-revisions-with-ancestor))
@@ -499,16 +577,16 @@
   (setq ediff-split-window-function            'split-window-horizontally)
   (setq ediff-window-setup-function            'ediff-setup-windows-plain))
 
-(use-package eglot
-  :if is-linux?
-  :straight t
-  :after company
-  :init
-  (hook-into-modes #'eglot-ensure 'c++-mode)
+;; (use-package eglot
+;;   :if is-linux?
+;;   :straight t
+;;   :after company
+;;   :init
+;;   (hook-into-modes #'eglot-ensure 'c++-mode)
 
-  (with-eval-after-load 'project
-    (add-to-list 'project-find-functions
-                 #'(lambda (dir) (let ((root (projectile-project-root dir))) (and root (cons 'transient root)))))))
+;;   (with-eval-after-load 'project
+;;     (add-to-list 'project-find-functions
+;;                  #'(lambda (dir) (let ((root (projectile-project-root dir))) (and root (cons 'transient root)))))))
   ;; :hook
   ;; ((c++-mode . eglot-ensure)
   ;;  (c++-mode . flycheck-mode)
@@ -544,6 +622,43 @@
   buffer-face-mode)
 
 (use-package filladapt :commands filladapt-mode)
+
+;; (use-package flycheck
+;;   :defer t
+;;   :diminish
+;;   :hook (after-init . global-flycheck-mode)
+;;   :commands (flycheck-add-mode)
+;;   :custom
+;;   (flycheck-global-modes
+;;    '(not outline-mode diff-mode shell-mode eshell-mode term-mode))
+;;   (flycheck-emacs-lisp-load-path 'inherit)
+;;   (flycheck-indication-mode (if (display-graphic-p) 'right-fringe 'right-margin))
+;;   :init
+;;   (if (display-graphic-p)
+;;       (use-package flycheck-posframe
+;;         :custom-face
+;;         (flycheck-posframe-face ((t (:foreground ,(face-foreground 'success)))))
+;;         (flycheck-posframe-info-face ((t (:foreground ,(face-foreground 'success)))))
+;;         :hook (flycheck-mode . flycheck-posframe-mode)
+;;         :custom
+;;         (flycheck-posframe-border-width 4)
+;;         (flycheck-posframe-inhibit-functions
+;;          '((lambda (&rest _) (bound-and-true-p company-backend)))))
+;;     (use-package flycheck-pos-tip
+;;       :defines flycheck-pos-tip-timeout
+;;       :hook (flycheck-mode . flycheck-pos-tip-mode)
+;;       :custom (flycheck-pos-tip-timeout 30)))
+;;   :config
+;;   (use-package flycheck-popup-tip
+;;     :hook (flycheck-mode . flycheck-popup-tip-mode))
+;;   (when (fboundp 'define-fringe-bitmap)
+;;     (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
+;;       [16 48 112 240 112 48 16] nil nil 'center))
+;;   (when (executable-find "vale")
+;;     (use-package flycheck-vale
+;;       :config
+;;       (flycheck-vale-setup)
+;;       (flycheck-add-mode 'vale 'latex-mode))))
 
 (use-package flycheck
   :straight t
@@ -601,6 +716,7 @@
 
 (use-package helpful
   :straight t
+  :commands  (helpful-callable helpful-variable helpful-key)
   :functions (helpful-callable helpful-variable helpful-key)
   :config
   (global-set-key (kbd "C-h   f") #'helpful-callable)
@@ -631,10 +747,11 @@
   ;; (setq lazy-count-prefix-format      nil)
   ;; (setq lazy-count-suffix-format      " (%s/%s)")
   (setq search-highlight              t)
-  (setq search-whitespace-regexp      ".*?")
-  :bind (:map isearch-mode-map
-              ("C-g" . isearch-cancel)
-              ("M-/" . isearch-complete)))
+  (setq search-whitespace-regexp      "\s+?")
+  ;; :bind (:map isearch-mode-map
+  ;;             ("C-g" . isearch-cancel)
+  ;;             ("M-/" . isearch-complete))
+  )
 
 (use-package json-mode
   :straight t
@@ -655,6 +772,80 @@
   :straight t
   :commands loccur-current)
 
+;; (use-package lsp-mode
+;;   :defer t
+;;   :commands lsp
+;;   :custom
+;;   (lsp-auto-guess-root nil)
+;;   (lsp-prefer-flymake nil) ; Use flycheck instead of flymake
+;;   (lsp-file-watch-threshold 2000)
+;;   (read-process-output-max (* 1024 1024))
+;;   (lsp-eldoc-hook nil)
+;;   :bind (:map lsp-mode-map ("C-c C-f" . lsp-format-buffer))
+;;   :hook ((java-mode python-mode go-mode
+;;           js-mode js2-mode typescript-mode web-mode
+;;           c-mode c++-mode objc-mode) . lsp))
+;; -LSPPac
+
+;; ;; LSPUI
+;; (use-package lsp-ui
+;;   :after lsp-mode
+;;   :diminish
+;;   :commands lsp-ui-mode
+;;   :custom-face
+;;   (lsp-ui-doc-background ((t (:background nil))))
+;;   (lsp-ui-doc-header ((t (:inherit (font-lock-string-face italic)))))
+;;   :bind
+;;   (:map lsp-ui-mode-map
+;;         ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+;;         ([remap xref-find-references] . lsp-ui-peek-find-references)
+;;         ("C-c u" . lsp-ui-imenu)
+;;         ("M-i" . lsp-ui-doc-focus-frame))
+;;   (:map lsp-mode-map
+;;         ("M-n" . forward-paragraph)
+;;         ("M-p" . backward-paragraph))
+;;   :custom
+;;   (lsp-ui-doc-header t)
+;;   (lsp-ui-doc-include-signature t)
+;;   (lsp-ui-doc-border (face-foreground 'default))
+;;   (lsp-ui-sideline-enable nil)
+;;   (lsp-ui-sideline-ignore-duplicate t)
+;;   (lsp-ui-sideline-show-code-actions nil)
+;;   :config
+;;   ;; Use lsp-ui-doc-webkit only in GUI
+;;   (if (display-graphic-p)
+;;       (setq lsp-ui-doc-use-webkit t))
+;;   ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
+;;   ;; https://github.com/emacs-lsp/lsp-ui/issues/243
+;;   (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
+;;     (setq mode-line-format nil)))
+
+(use-package lsp-mode
+  :straight t
+  :commands lsp
+  :config
+  (setq lsp-clients-clangd-executable "/usr/bin/clangd")
+  (setq lsp-clients-clangd-args       nil)
+
+  (lsp-prefer-flymake nil)
+
+  (hook-into-modes #'lsp
+                   'c++-mode-hook
+                   'c-mode-hook
+                   'python-mode-hook))
+
+(use-package lsp-ui
+  :straight t
+  :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-show-diagnostics  nil)
+  (setq lsp-ui-sideline-show-hover        t)
+  (setq lsp-ui-sideline-show-code-actions t)
+  (setq lsp-ui-sideline-update-mode       'line)
+  (setq lsp-ui-sideline-delay             0.2)
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references]  #'lsp-ui-peek-find-references))
+
 (use-package lua-mode
   :straight t
   :mode "\\.lua\\'"
@@ -668,7 +859,7 @@
   :mode "\\.mk\\'"
   :commands makefile-gmake-mode
   :init
-  (add-to-list 'auto-mode-alist '("\\.\\(pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
+  (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
 
 (use-package mapreplace)
 
@@ -700,7 +891,8 @@
 
 (use-package msb
   :config
-  (setq msb-max-menu-items 32))
+  (setq msb-display-invisible-buffers-p     t)
+  (setq msb-max-menu-items                  nil))
 
 (use-package org-mode
   :defer t
@@ -711,7 +903,13 @@
 
 (use-package paradox
   :straight t
-  :commands paradox-list-packages)
+  :commands paradox-list-packages
+  :preface
+  (eval-when-compile
+    (defvar package-archives))
+  :config
+  (add-to-list 'package-archives '("melpa-stable " . "http://stable.melpa.org/packages/"))
+  (add-to-list 'package-archives '("melpa"         . "http://melpa.org/packages/")))
 
 (use-package plsense
   :disabled t
@@ -747,7 +945,6 @@
   (add-to-list 'project-find-functions #'(lambda (dir)
                                            (let ((root (projectile-project-root dir)))
                                              (and root (cons 'transient root))))))
-  ;; )
 
 (use-package python
   :mode "\\.py\\'"
@@ -757,10 +954,9 @@
   :straight t
   :commands rainbow-delimiters-mode
   :init
-  (hook-into-modes #'smartparens-mode
+  (hook-into-modes #'rainbow-delimiters-mode
                    'prog-mode-hook
                    'lisp-interaction-mode-hook))
-;; :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package rainbow-mode
   :straight t
@@ -784,8 +980,6 @@
   (add-hook 'occur-mode-hook #'(lambda ()
                                  (make-local-variable 'which-function-mode)
                                  (setq which-function-mode nil))))
-  ;; :hook
-  ;; (occur-mode-hook . (lambda () (make-local-variable 'which-function-mode) (setq which-function-mode nil))))
 
 (use-package s
   :straight t)
@@ -813,8 +1007,8 @@
                    'prog-mode-hook
                    'shell-mode-hook
                    'lisp-interaction-mode-hook)
-  ;; :hook ((prog-mode shell-mode lisp-interaction-mode) . smartparens-mode)
   :config
+  (require 'smartparens-config)
   (sp-local-pair sp-lisp-modes "'" nil :actions nil)
   (sp-local-pair sp-lisp-modes "`" nil :actions nil))
 
@@ -848,6 +1042,43 @@
 (use-package tjf-bookmark
   :after (bm tjf-flags))
 
+(use-package tjf-c
+  :after tjf-cc
+  :init
+  (add-hook 'c-mode-hook #'tjf:c/setup)
+  :config
+  (define-key c-mode-map    [menu-bar]    nil)
+  (define-key c-mode-map    [(control d)] nil)
+
+  (easy-menu-define tjf-c-menu c-mode-map "C" (append '("C") tjf:cc/menu-text))
+  (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu))
+
+(use-package tjf-cc
+  :after (cc-mode f)
+  :preface
+  (eval-when-compile
+    (defvar tjf:c/dialect)
+    (defvar tjf:cpp/dialect))
+  :config
+  (setq c-default-style "bsd")
+  (setq c-basic-offset  4)
+
+  (tjf:cc/set-dialect "c17")
+  (tjf:cc/set-dialect "c++17")
+
+  (c-set-offset 'case-label '+))
+
+(use-package tjf-cpp
+  :after tjf-cc
+  :init
+  (add-hook 'c++-mode-hook #'tjf:cpp/setup)
+  :config
+  (define-key c++-mode-map    [menu-bar]    nil)
+  (define-key c++-mode-map    [(control d)] nil)
+
+  (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
+  (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu))
+
 (use-package tjf-clips
   :defer t
   :after clips-mode
@@ -866,6 +1097,9 @@
   :defer t
   :after csharp-mode
   :commands csharp-mode
+  :preface
+  (eval-when-compile
+    (defvar csharp-mode-map))
   :init
   (add-hook 'csharp-mode-hook #'tjf:csharp/setup))
 
@@ -883,7 +1117,7 @@
   :after (tjf-flags tjf-frame))
 
 (use-package tjf-keys
-  :after (anzu bm tjf-clipboard tjf-duplicate tjf-edit tjf-file tjf-navigate tjf-search tjf-tools undo-tree xah) )
+  :after (anzu bm tjf-clipboard tjf-duplicate tjf-edit tjf-file tjf-navigate tjf-search tjf-tools undo-tree xah))
 
 (use-package tjf-frame
   :after (frame tjf-color tjf-flags)
@@ -906,7 +1140,11 @@
   (add-hook 'matlab-mode-hook #'tjf:matlab/setup))
 
 (use-package tjf-menubar
-  :after (easymenu tjf-clipboard tjf-edit tjf-file tjf-flags tjf-navigate tjf-search tjf-sort tjf-tools tjf-view))
+  :after (easymenu tjf-clipboard tjf-edit tjf-file tjf-flags tjf-navigate tjf-search tjf-sort tjf-tools tjf-view)
+  :config
+  (setq recentf-menu-before "Open in New Window...")
+  (recentf-mode)
+  (add-hook 'menu-bar-update-hook 'tjf:navigate/menu))
 
 (use-package tjf-msb
   :after msb
@@ -918,12 +1156,21 @@
 
 (use-package tjf-perl
   :after cperl-mode
-  :commands (convert-to-perl cperl-mode)
+  :preface
+  (defun tjf:perl/setup ())
   :init
   (add-hook 'cperl-mode-hook #'tjf:perl/setup))
 
 (use-package tjf-powerline
-  :after powerline)
+  :after powerline
+  :config
+  (add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
+
+  (alias-face powerline-red-face fontaine/powerline-red)
+
+  (setq powerline-default-separator 'wave)
+
+  (tjf:powerline/alt-theme))
 
 (use-package tjf-python
   :defer t
@@ -945,7 +1192,10 @@
   :after powerline
   :config
   (tjf:tabline/mode 1)
-  (setq tjf:tabline/tab-label-function #'tjf:tabline/label-function))
+
+  (setq tjf:tabline/separator          '(0.0))
+  (setq tjf:tabline/tab-label-function #'tjf:tabline/label-function)
+  (setq tjf:tabline/use-images         nil))
 
 (use-package tjf-toolbar
   :after (tjf-color tjf-flags tjf-frame tjf-navigate tjf-search))
@@ -955,6 +1205,55 @@
 
 (use-package tjf-view
   :after (tjf-clipboard tjf-color tjf-flags tjf-frame undo-tree))
+
+;; (use-package treemacs
+;;   :init
+;;   (with-eval-after-load 'winum
+;;     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+;;   :custom
+;;   (treemacs-collapse-dirs 3)
+;;   (treemacs-deferred-git-apply-delay 0.5)
+;;   (treemacs-display-in-side-window t)
+;;   (treemacs-file-event-delay 5000)
+;;   (treemacs-file-follow-delay 0.2)
+;;   (treemacs-follow-after-init t)
+;;   (treemacs-follow-recenter-distance 0.1)
+;;   (treemacs-git-command-pipe "")
+;;   (treemacs-goto-tag-strategy 'refetch-index)
+;;   (treemacs-indentation 2)
+;;   (treemacs-indentation-string " ")
+;;   (treemacs-is-never-other-window nil)
+;;   (treemacs-max-git-entries 5000)
+;;   (treemacs-no-png-images nil)
+;;   (treemacs-no-delete-other-windows t)
+;;   (treemacs-project-follow-cleanup nil)
+;;   (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
+;;   (treemacs-recenter-after-file-follow nil)
+;;   (treemacs-recenter-after-tag-follow nil)
+;;   (treemacs-show-cursor nil)
+;;   (treemacs-show-hidden-files t)
+;;   (treemacs-silent-filewatch nil)
+;;   (treemacs-silent-refresh nil)
+;;   (treemacs-sorting 'alphabetic-desc)
+;;   (treemacs-space-between-root-nodes t)
+;;   (treemacs-tag-follow-cleanup t)
+;;   (treemacs-tag-follow-delay 1.5)
+;;   (treemacs-width 35)
+;;   :config
+;;   ;; The default width and height of the icons is 22 pixels. If you are
+;;   ;; using a Hi-DPI display, uncomment this to double the icon size.
+;;   ;;(treemacs-resize-icons 44)
+;;   (treemacs-follow-mode t)
+;;   (treemacs-filewatch-mode t)
+;;   (treemacs-fringe-indicator-mode t)
+;;   :bind
+;;   (("M-0"       . treemacs-select-window)
+;;    ("C-x t 1"   . treemacs-delete-other-windows)
+;;    ("C-x t t"   . treemacs)
+;;    ("C-x t B"   . treemacs-bookmark)
+;;    ("C-x t C-t" . treemacs-find-file)
+;;    ("C-x t M-t" . treemacs-find-tag))
+;;   (:map treemacs-mode-map ("C-p" . treemacs-previous-line)))
 
 (use-package treemacs
   :straight t
@@ -1013,14 +1312,15 @@
 
 (use-package treemacs-magit
   :straight t
-  :after treemacs)
+  :after (treemacs magit))
 
 (use-package treemacs-projectile
   :straight t
-  :after treemacs)
+  :after (treemacs projectile))
 
 (use-package undo-tree
   :straight t
+  :commands undo-tree-undo
   :diminish undo-tree-mode
   :functions global-undo-tree-mode
   :config
@@ -1028,30 +1328,13 @@
 
 (use-package unicode-fonts
   :straight t
-  :functions unicode-fonts-setup
-  :preface
-  (eval-when-compile
-    (defvar unicode-fonts-block-font-mapping))
-  (defun tjf:unicode/replace-font-mapping (block-name old-font new-font)
-    (let* ((block-idx (cl-position-if
-                       (lambda (i) (string-equal (car i) block-name))
-                       unicode-fonts-block-font-mapping))
-           (block-fonts (cadr (nth block-idx unicode-fonts-block-font-mapping)))
-           (updated-block (cl-substitute new-font old-font block-fonts :test 'string-equal)))
-      (setf (cdr (nth block-idx unicode-fonts-block-font-mapping))
-            `(,updated-block))))
-  :custom
-  (unicode-fonts-skip-font-groups '(low-quality-glyphs))
+  :init
+  (defun tjf:unicode/emoji-fonts ()
+    (set-fontset-font t 'symbol "Noto Color Emoji")
+    (set-fontset-font t 'symbol "Symbola" nil 'append))
   :config
-  ;; Fix the font mappings to use the right emoji font
-  (mapc
-   (lambda (block-name)
-     (tjf:unicode/replace-font-mapping block-name "Apple Color Emoji" "Noto Color Emoji"))
-   '("Dingbats"
-     "Emoticons"
-     "Miscellaneous Symbols and Pictographs"
-     "Transport and Map Symbols"))
-  (unicode-fonts-setup))
+  (unicode-fonts-setup)
+  (tjf:unicode/emoji-fonts))
 
 (use-package uniquify
   :config

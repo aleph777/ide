@@ -663,7 +663,7 @@
 
 ;; ==================== < ====================
 ;;
-;;lobal-set-key [(control <)] '
+(global-set-key [(control <)] 'xah-insert-lt)
 ;;lobal-set-key [(meta    <)] 'beginning-of-buffer)
 (global-set-key [(super   <)] 'xah-insert-lt)
 ;;lobal-set-key [(control meta  <)]      '
@@ -684,7 +684,7 @@
 
 ;; ==================== > ====================
 ;;
-;;lobal-set-key [(control >)] '
+(global-set-key [(control >)] 'xah-insert-tag)
 ;;lobal-set-key [(meta    >)] 'end-of-buffer)
 (global-set-key [(super   >)] 'xah-insert-tag)
 ;;lobal-set-key [(control meta  >)]      '

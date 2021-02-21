@@ -72,10 +72,10 @@
 (defvar tjf:frame/format-font-modeline   "Font: %s")
 (defvar tjf:frame/format-font-properties "Font:        %s\n")
 
-(defvar tjf:frame/default-width  120)
-(defvar tjf:frame/default-height  40)
+(defvar tjf:frame/default-width  128)
+(defvar tjf:frame/default-height  56)
 
-(defvar tjf:frame/alt-width  112)
+(defvar tjf:frame/alt-width  128)
 (defvar tjf:frame/alt-height  40)
 
 (defvar tjf:frame/default-size (list (cons 'width tjf:frame/default-width) (cons 'height tjf:frame/default-height)))

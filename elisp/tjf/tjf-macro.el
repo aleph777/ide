@@ -44,16 +44,9 @@
 
 (message "Loading tjf-macro...")
 (require 'diminish)
-(require 'f)
 (require 's)
 
 ;; aliases, not macros
-
-(defalias 'basename        'f-filename)
-(defalias 'basename-no-ext 'file-name-base)
-(defalias 'dirname         'f-dirname)
-(defalias 'file-extension  'f-ext)
-
 (defalias 'join  's-join)
 (defalias 'split 's-split)
 
@@ -110,7 +103,7 @@
      ,statement
      ,@statements))
 
-(defmacro not-on-gui (statement &rest statements)
+(defmacro on-not-gui (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GUI."
   `(when (not is-gui?)
      ,statement

@@ -72,7 +72,7 @@
   (let ((name   (substring (file-name-nondirectory (buffer-file-name)) 0 -3))
         (year   (format-time-string "%Y-%Y"))
         (author (user-full-name))
-        (date   (get-dd-mon-yyyy)))
+        (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
     (save-excursion
       (while (search-forward "<<<NAME>>>" (point-max) t)
         (replace-match name t)))
@@ -109,7 +109,7 @@
     ["Evaluate Buffer" eval-buffer :active t          ]
     ["Evaluate Region" eval-region :active mark-active]
     "---"
-    ["Insert Skeleton"   lisp-insert-skeleton :enable (buffer-file-name)]
+    ["Insert Skeleton"   tjf:lisp/insert-skeleton :enable (buffer-file-name)]
     ))
 
 ;;

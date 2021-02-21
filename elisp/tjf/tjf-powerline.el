@@ -95,6 +95,16 @@
 (defvar tjf:powerline/word-count-format '("" tjf:powerline/bufreg-line-count "," tjf:powerline/bufreg-word-count "," tjf:powerline/bufreg-byte-count " ")
   "Format for displaying the word count info in the mode line.")
 
+(defun tjf:powerline/buffer-status ()
+  "Return the read/write/modified status of the current buffer."
+  (if (and buffer-read-only (buffer-modified-p))
+      (propertize "RO/MOD " 'face 'powerline-red-face 'help-echo "Buffer is read-only and has been modified." 'mouse-face 'mode-line-highlight)
+    (if (buffer-modified-p)
+        (propertize " MOD   "  'face 'powerline-red-face 'help-echo "Buffer has been modified." 'mouse-face 'mode-line-highlight)
+      (if buffer-read-only
+          (propertize "  RO   " 'face 'mode-line 'help-echo "Buffer is read-only." 'mouse-face 'mode-line-highlight)
+        (propertize "  ――   " 'help-echo "Buffer is unmodified." 'mouse-face 'mode-line-highlight)))))
+
 (defun tjf:powerline/encoding ()
   "Translate `buffer-file-coding-system' into a modeline string."
   (if buffer-file-name
@@ -103,6 +113,13 @@
     ""))
 
 (defvar tjf:powerline/encoding (tjf:powerline/encoding))
+
+(defun tjf:powerline/fill (face reserve)
+    "Return empty space using FACE and leaving RESERVE space on the right."
+    (setq reserve (* (- reserve 3) 0.825))
+    (propertize " "
+                'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
+                'face face))
 
 (defun tjf:powerline/update-modeline-vars ()
   "Update the strings containing the modeline variables."
@@ -118,6 +135,60 @@
   (setq tjf:powerline/encoding (tjf:powerline/encoding))
   (set-buffer-modified-p (buffer-modified-p)))
 
+
+(defun tjf:powerline/alt-theme ()
+  "Setup the default mode-line."
+  (interactive)
+  (setq-default mode-line-format
+                '("  "
+                  (:eval
+                   (let* ((active (powerline-selected-window-active))
+                          (mode-line (if active 'mode-line 'mode-line-inactive))  ;; mode-line > face1 > face2 > face3 > face2 > face1 > mode-line
+
+                          (face0 (if active 'powerline-active0 'powerline-inactive0))
+                          (face1 (if active 'powerline-active1 'powerline-inactive1))
+                          (face2 (if active 'powerline-active2 'powerline-inactive2))
+
+                          (separator-left  (intern (format "powerline-%s-%s" (powerline-current-separator) (car powerline-default-separator-dir))))
+                          (separator-right (intern (format "powerline-%s-%s" (powerline-current-separator) (cdr powerline-default-separator-dir))))
+
+                          (lhs (list
+                                (when (and (boundp 'global-anzu-mode) global-anzu-mode)
+                                    (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
+                                (unless (and (boundp 'global-anzu-mode) global-anzu-mode anzu--state)
+                                  (powerline-raw '(:eval (tjf:powerline/buffer-status))))
+                                (funcall separator-left mode-line face0)
+                                (powerline-buffer-id face0 'l)
+                                (when (and (boundp 'which-function-mode) (eq tjf:view/which-function-mode 'on))
+                                  (powerline-raw which-func-format face0 'l))
+                                (powerline-vc face0) ;; !!!!
+                                (powerline-raw " " face0)
+                                (funcall separator-left face0 face1)
+                                (powerline-major-mode face1 'l)
+                                (powerline-process face1)
+                                (powerline-narrow face1 'l)
+                                (powerline-raw " " face1)
+                                (funcall separator-left face1 face2)
+
+                                ))
+
+                          (center (list (powerline-raw (if (tjf:flags/is-caps-lock-on? (tjf:flags/x-led-mask)) " CAPS-LOCK" "") face2 'l)))
+
+                          (rhs (list (powerline-raw global-mode-string face2 'r)
+                                     (funcall separator-right face2 face1)
+				     (powerline-raw tjf:powerline/row-column-format face1 'r)
+				     (funcall separator-right face1 face0)
+				     (powerline-raw tjf:powerline/word-count-format face0 'r)
+				     (funcall separator-right face0 mode-line)
+                                     (powerline-raw tjf:powerline/encoding-format nil 'l)
+                                     )))
+		     (concat (powerline-render lhs)
+                             (powerline-fill-center face2 (/ (powerline-width center) 2.0))
+                             (powerline-render center)
+			     (tjf:powerline/fill face2 (powerline-width rhs))
+			     (powerline-render rhs))))
+                  )))
+
 (defun tjf:powerline/theme ()
   "Setup the default mode-line."
   (interactive)
@@ -131,47 +202,39 @@
                           (face1 (if active 'powerline-active1 'powerline-inactive1))
                           (face2 (if active 'powerline-active2 'powerline-inactive2))
 
-                          (separator-left (intern (format "powerline-%s-%s"
-							  (powerline-current-separator)
-                                                          (car powerline-default-separator-dir))))
-                          (separator-right (intern (format "powerline-%s-%s"
-                                                           (powerline-current-separator)
-                                                           (cdr powerline-default-separator-dir))))
+                          (separator-left  (intern (format "powerline-%s-%s" (powerline-current-separator) (car powerline-default-separator-dir))))
+                          (separator-right (intern (format "powerline-%s-%s" (powerline-current-separator) (cdr powerline-default-separator-dir))))
                           (lhs (list
-                                ;; (powerline-raw mode-line-mule-info nil 'l)
-                                ;;(powerline-raw mode-line-modified nil 'l)
-                                (when (and (boundp 'global-anzu-mode) global-anzu-mode)
-                                  (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
                                 (powerline-raw '(:eval
                                                  (if (and buffer-read-only (buffer-modified-p))
-                                                     (propertize "RO/MOD" 'face 'powerline-red-face
+                                                     (propertize "RO/MOD " 'face 'powerline-red-face
                                                                  'help-echo "Buffer is read-only and has been modified."
                                                                  'mouse-face 'mode-line-highlight)
                                                    (if (buffer-modified-p)
-                                                       (propertize "MOD" 'face 'powerline-red-face
+                                                       (propertize "MOD " 'face 'powerline-red-face
                                                                    'help-echo "Buffer has been modified."
                                                                    'mouse-face 'mode-line-highlight)
                                                      (if buffer-read-only
-                                                         (propertize "RO" 'face 'mode-line
+                                                         (propertize "RO " 'face 'mode-line
                                                                      'help-echo "Buffer is read-only."
                                                                      'mouse-face 'mode-line-highlight)
-                                                       (propertize "――" 'help-echo "Buffer is unmodified."
+                                                       (propertize "―― " 'help-echo "Buffer is unmodified."
                                                                    'mouse-face 'mode-line-highlight))))))
+                                (when (and (boundp 'global-anzu-mode) global-anzu-mode)
+                                  (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
                                 (funcall separator-left mode-line face0)
                                 (powerline-buffer-id face0 'l)
                                 (when (and (boundp 'which-function-mode) (eq tjf:view/which-function-mode 'on))
                                   (powerline-raw which-func-format face0 'l))
-                                ;; (powerline-raw " " face0)
                                 (powerline-vc face0) ;; !!!!
+                                (powerline-raw " " face0)
                                 (funcall separator-left face0 face1)
                                 (powerline-major-mode face1 'l)
                                 (powerline-process face1)
-                                ;; (powerline-minor-modes face1 'l)
                                 (powerline-narrow face1 'l)
                                 (powerline-raw " " face1)
                                 (funcall separator-left face1 face2)
                                 (powerline-raw (if (tjf:flags/is-caps-lock-on? (tjf:flags/x-led-mask)) " CAPS-LOCK" "") face2 'l)
-                                ;; (powerline-vc face2 'r)
                                 ))
                           (rhs (list (powerline-raw global-mode-string face2 'r)
                                      (funcall separator-right face2 face1)
@@ -179,20 +242,19 @@
 				     (funcall separator-right face1 face0)
 				     (powerline-raw tjf:powerline/word-count-format face0 'r)
 				     (funcall separator-right face0 mode-line)
-                                     ;; (powerline-raw mode-line-mule-info nil 'l)
                                      (powerline-raw tjf:powerline/encoding-format nil 'l)
                                      )))
 		     (concat (powerline-render lhs)
-			     (powerline-fill face2 (powerline-width rhs))
+			     (tjf:powerline/fill face2 (powerline-width rhs))
 			     (powerline-render rhs))))
                   )))
 
-(add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
+;; (add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
 
-(alias-face powerline-red-face fontaine/powerline-red)
+;; (alias-face powerline-red-face fontaine/powerline-red)
 
-(setq powerline-default-separator 'wave)
-(tjf:powerline/theme)
+;; (setq powerline-default-separator 'wave)
+;; (tjf:powerline/theme)
 ;
 ;;
 (message "Loading tjf-powerline...done")

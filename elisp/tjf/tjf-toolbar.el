@@ -103,7 +103,7 @@
 ;; File/Buffer operations
 ;;
 (tool-bar-add-item "mi-view"  'view-file        'view  :label "" :help "Browse file/Toggle Browse mode")
-(tool-bar-add-item "mi-new"   'new-empty-buffer 'new   :label "" :help "New file")
+(tool-bar-add-item "mi-new"   'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
 (tool-bar-add-item "mi-edit"  'find-file        'open  :label "" :help "Open file/Open file in new window...")
 (tool-bar-add-item "mi-close" 'kill-this-buffer 'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:flags/visible-not-shell?))
 (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
@@ -147,12 +147,12 @@
 ;;
 ;; Misc
 ;;
-(tool-bar-add-item "mi-repeat"  'repeat-complex-command    'repeat  :label "" :help "Repeat Command...")
+(tool-bar-add-item "mi-repeat"  'repeat-complex-command             'repeat  :label "" :help "Repeat Command...")
 ;; (tool-bar-add-item "00-hide"    'hs-hide-block             'hide :label "" :help "Hide block" :visible 'hs-minor-mode)
 ;; (tool-bar-add-item "00-show"    'hs-show-block             'show :label "" :help "Show block" :visible 'hs-minor-mode)
-(tool-bar-add-item "mi-find"    'tjf:search/occur          'search  :label "" :help "Show matching lines...")
-(tool-bar-add-item "mi-replace" 'anzu-query-replace        'replace :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
-(tool-bar-add-item "mi-case"    'toggle-char-case-at-point 'case    :label "" :help "Toggle case")
+(tool-bar-add-item "mi-find"    'tjf:search/occur                   'search  :label "" :help "Show matching lines...")
+(tool-bar-add-item "mi-replace" 'anzu-query-replace                 'replace :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
+(tool-bar-add-item "mi-case"    'tjf:edit/toggle-char-case-at-point 'case :label "" :help "Toggle case")
 
 (define-key-after  (default-value 'tool-bar-map) [separator-6] menu-bar-separator)
 
@@ -161,9 +161,9 @@
 (tool-bar-add-item "mi-tree"     'treemacs            'tree     :label "" :help "Toggle treemacs")
 ;; (tool-bar-add-item "00-expand" 'dabbrev-expand 'expand :label "" :help  "Expand abbrev/Complete Symbol" :visible '(is-rw?))
 
-(tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:flags/is-shell?) :label "" :help "Previous input")
-(tool-bar-add-item "mi-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:flags/is-shell?) :label "" :help "Next input")
-(tool-bar-add-item "mi-cancel"   'comint-delete-output       'cancel     :visible '(tjf:flags/is-shell?) :label "" :help "Flush output")
+(tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:flags/visible-shell?) :label "" :help "Previous input")
+(tool-bar-add-item "mi-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:flags/visible-shell?) :label "" :help "Next input")
+(tool-bar-add-item "mi-cancel"   'comint-delete-output       'cancel     :visible '(tjf:flags/visible-shell?) :label "" :help "Flush output")
 
 ;;
 ;; Control
@@ -172,7 +172,6 @@
 (define-key tool-bar-map [(control close)]     'exit-buffer-and-frame)
 (define-key tool-bar-map [(control copy)]      'copy-rectangle-as-kill)
 (define-key tool-bar-map [(control cut)]       'kill-rectangle)
-;; (define-key tool-bar-map [(control expand)]    'completion-at-point)
 (define-key tool-bar-map [(control forward)]   'bm-next)
 (define-key tool-bar-map [(control goto)]      'goto-saved-point)
 (define-key tool-bar-map [(control open)]      'find-file-other-frame)

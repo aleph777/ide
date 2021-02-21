@@ -577,18 +577,17 @@ current cached copy."
   :group 'tjf-tabline)
 
 (defface tjf:tabline/selected
-  '((t :inherit tjf:tabline/default :background "xxx" :foreground "black"))
+  '((t :inherit tjf:tabline/default :background "xxx"     :foreground "black"))
   "Face used for the selected tab."
   :group 'tjf-tabline)
 
 (defface tjf:tabline/modified
-  '((t :inherit tjf:tabline/default :background "red" :foreground "white"))
+  '((t :inherit tjf:tabline/default :background "red"     :foreground "white"))
   "Face used for unsaved tabs."
   :group 'tjf-tabline)
 
-(defface tjf:tabline/selected-modified
-  '((t
-     :inherit tjf:tabline/selected                    :foreground "red"))
+(defface tjf:tabline/sel-mod
+  '((t     :inherit tjf:tabline/selected                  :foreground "red"))
   "Face used for unsaved and selected tabs."
   :group 'tjf-tabline)
 
@@ -1111,7 +1110,7 @@ Call `tjf:tabline/tab-label-function' to obtain a label for TAB."
            'mouse-face 'tjf:tabline/highlight
            'face (cond ((and (tjf:tabline/selected-p tab (tjf:tabline/current-tabset))
                              (tjf:tabline/modified-p tab (tjf:tabline/current-tabset)))
-                        'tjf:tabline/selected-modified)
+                        'tjf:tabline/sel-mod)
                        ((tjf:tabline/selected-p tab (tjf:tabline/current-tabset))
                         'tjf:tabline/selected)
                        ((tjf:tabline/modified-p tab (tjf:tabline/current-tabset))

@@ -413,7 +413,7 @@
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (tjf:flags/enable-write?)]
     ["Complete Word Spelling" ispell-complete-word               :enable (tjf:flags/enable-write?)]
     "---"
-    ["Initialize Perl Mode"   convert-to-perl :visible (tjf:flags/visible-convert-to-perl?) :key-sequence nil]
+    ["Initialize Perl Mode"   tjf:perl/convert :visible (tjf:flags/visible-convert-to-perl?) :key-sequence nil]
     "---"
     ["Adaptive Fill" filladapt-mode :style toggle :selected filladapt-mode]
     ["Enriched Text" enriched-mode  :style toggle :selected enriched-mode :enable (tjf:flags/enable-enriched-mode?)]
