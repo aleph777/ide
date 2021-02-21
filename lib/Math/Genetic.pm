@@ -34,14 +34,15 @@
 #                       use strict
 #           22-May-2008 use Math::SRAND
 #           13-Apr-2015 use Math::Random::Secure
+#           17-Feb-2021 use v5.10
 #
 package Math::Genetic;
 
-require 5.006;
 use Carp;
 use strict;
-use Math::Random::Secure qw(irand rand);
 use List::Util qw(sum);
+use Math::Random::Secure qw(irand rand);
+use v5.10;
 
 # use constant FOO => 'BAR';
 
@@ -59,7 +60,7 @@ my %fields = (Vectors             => undef,
               NP_Scale            => 5,
               CrossoverRatio      => 0.9,
               WeightDifferential  => 0.7,
-              MutationRate        => undef,
+              MutationRate        => 0.01,
               MinDiff             => 0.00005,
               MaxGenerations      => undef,
               Print               => 1,
@@ -118,6 +119,7 @@ sub configure
 
   @{$this}{keys %parm} = values %parm;
 }
+
 sub solve
 {
   my $this = shift;
@@ -179,6 +181,7 @@ sub solve
     last if ($vectors->[-1]{COST} - $vectors->[0]{COST}) <= $diff || (defined $maxgen && $i == $maxgen) || $this->{HUP};
   }
 }
+
 sub initializeVectors
 {
   my ($vectors,$vkeys,$spec,$np,$resume) = @_;
@@ -215,6 +218,7 @@ sub initializeVectors
     push @{$vectors},$h;
   }
 }
+
 sub makeTrialVectors
 {
   my ($vectors,$vkeys,$spec,$crossover_ratio,$weight_differential,$mutation,$trial_vectors) = @_;
@@ -278,6 +282,7 @@ sub makeTrialVectors
     push @{$trial_vectors},$h;
   }
 }
+
 sub irradiate
 {
   my ($vectors,$vkeys,$spec) = @_;
@@ -307,5 +312,6 @@ sub irradiate
     }
   }
 }
+
 
 1;

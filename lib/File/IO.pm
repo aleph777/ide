@@ -36,17 +36,17 @@
 #           30-Mar-2015 Added auto-support for .gz and .xz files
 #           13-Apr-2015 Use List::Util
 #           20-Jul-2019 Added dependency injection for text conversion
+#           17-Feb-2021 use v5.10
 #
 package File::IO;
 
-require 5.008;
 use Carp;
-use strict;
 use IO::Compress::Gzip;
 use IO::Compress::Xz;
 use IO::Uncompress::Gunzip;
 use IO::Uncompress::UnXz;
 use List::Util qw(max);
+use strict;
 use v5.10;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
