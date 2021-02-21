@@ -83,27 +83,24 @@
 (defvar tjf:perl/shebang     (concat "#!" tjf:perl/which " -w    # -*-Perl-*-\n"))
 
 ;;;###autoload
-(defun tjf:perl/convert-to-perl ()
+(defun tjf:perl/convert ()
   "Convert the current file into a Perl script."
   (interactive "*")
   (tjf:perl/insert-script-skeleton)
-  (set-auto-mode)
-  (reset-frame-size))
+  (set-auto-mode))
 
 (defun tjf:perl/fill-out-template ()
   "Replace template fields with the associated data."
   (let* ((dirbase (file-name-nondirectory (directory-file-name default-directory)))
          (modbase (replace-regexp-in-string ".pm$" "" (file-name-nondirectory (buffer-file-name))))
-         (package (if (not (equal dirbase "lib")) (concat dirbase "::" modbase) modbase))
+         (package (if (not (string= dirbase "lib")) (concat dirbase "::" modbase) modbase))
          (year    (format-time-string "%Y-%Y"))
          (author  (user-full-name))
-         (date    (get-dd-mon-yyyy)))
+         (date    (tjf:date/today tjf:date/dd-mon-yyyy)))
     (search-forward "<<<PACKAGE>>>")
     (replace-match package t)
     (search-forward "<<<YEAR>>>")
     (replace-match year t)
-    (search-forward "<<<AUTHOR>>>")
-    (replace-match author t)
     (search-forward "<<<AUTHOR>>>")
     (replace-match author t)
     (search-forward "<<<DATE>>>")
@@ -153,7 +150,7 @@
   (let* ((year   (format-time-string "%Y-%Y"))
          (author (user-full-name))
          (title  (file-name-nondirectory (buffer-name)))
-         (date   (get-dd-mon-yyyy)))
+         (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
     (save-excursion
       (search-forward "<<<YEAR>>>")
       (replace-match year t)
@@ -161,8 +158,6 @@
       (replace-match author t)
       (search-forward "<<<TITLE>>>")
       (replace-match title t)
-      (search-forward "<<<AUTHOR>>>")
-      (replace-match author t)
       (search-forward "<<<DATE>>>")
       (replace-match date t))))
 
@@ -195,29 +190,6 @@
   (flycheck-mode))
 
 ;;
-(setq cperl-indent-region-fix-constructs nil cperl-hairy t
-      cperl-style-alist (append cperl-style-alist '(("TJF"
-                                                     (cperl-indent-level               .  2)
-                                                     (cperl-brace-offset               .  0)
-                                                     (cperl-continued-brace-offset     . -2)
-                                                     (cperl-label-offset               . -2)
-                                                     (cperl-extra-newline-before-brace .  t)
-                                                     (cperl-merge-trailing-else        .  nil)
-                                                     (cperl-continued-statement-offset .  2)))))
-
-(cperl-set-style "TJF")
-(cperl-init-faces)
-
-(define-key cperl-mode-map [menu-bar] nil)
-(define-key cperl-mode-map [?\t] '(lambda nil
-                                    (interactive)
-                                    (if mark-active
-                                        (indent-region
-                                         (region-beginning)
-                                         (region-end))
-                                      (indent-for-tab-command))))
-
-
 (easy-menu-define tjf:perl/menu cperl-mode-map "tjf-Perl"
   '("Perl"
     ["Beginning Of Function" beginning-of-defun]

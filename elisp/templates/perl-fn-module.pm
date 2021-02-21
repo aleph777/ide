@@ -32,10 +32,10 @@
 
 package <<<PACKAGE>>>;
 
-require 5.008;
 use Exporter 'import';
 use Carp;
 use strict;
+use v5.10;
 
 our @EXPORT_OK = qw();
 

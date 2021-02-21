@@ -173,6 +173,7 @@
 ;;           10-Nov-2020 Added ‘emojify' and ‘unicode-fonts'
 ;;           15-Dec-2020 Moved defconts to .emacs
 ;;                       Removed defer constants (use let variables)
+;;           24-Jan-2021 Added ‘dash'
 ;;
 
 ;;; Code:
@@ -182,10 +183,7 @@
 ;;
 (message "Initializing package system...")
 
-(let ((file-name-handler-alist nil)
-      (defer-1  5)
-      (defer-2 10)
-      (defer-3 15))
+;; (let ((file-name-handler-alist nil))
   (require 'package)
 
   (setq package-enable-at-startup nil)
@@ -204,12 +202,17 @@
   (setq use-package-always-ensure t)
 
   (eval-when-compile
+    (require 'cl-lib)
     (require 'u-macro)
     (require 'use-package))
   ;;
   (message "Loading packages...")
 
-  (use-package anzu
+
+(cl-pushnew (concat user-dir-home "elisp/tjf") load-path :test 'string=)
+(load-library "with-editor")
+
+(use-package anzu
     :diminish anzu-mode
     :preface
     (eval-when-compile
@@ -279,8 +282,6 @@
       (set-face-attribute 'bm-fringe-persistent-face nil :foreground "white" :background material/fg-orange-800))
 
     (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark-1))
-
-  (use-package cl-lib)
 
   (use-package clean-aindent-mode    ;; :defer nil
     :preface
@@ -356,6 +357,8 @@
       (define-key cperl-mode-map "[" nil))
     ;;           (plsense-server-start)
     )
+
+  (use-package dash)
 
   (use-package declutter :commands declutter :disabled
     :if is-linux?
@@ -633,42 +636,48 @@
       (shell-dirtrack-mode t)
       (setq dirtrackp nil)))
 
-  (use-package tabbar :after powerline
-    :preface
-    (eval-when-compile
-      (declare-function tabbar-mode "tabbar" (ARG1)))
-    :init
-    (defvar u/tabbar-height 20)
-    :config
-    (defun tabbar-add-tab (tabset object &optional _append_ignored)
-      "Add to TABSET a tab with value OBJECT if there isn't one there yet.
- If the tab is added, it is added at the beginning of the tab list,
- unless the optional argument APPEND is non-nil, in which case it is
- added at the end."
-      (let ((tabs (tabbar-tabs tabset)))
-        (if (tabbar-get-tab object tabset)
-            tabs
-          (let ((tab (tabbar-make-tab object tabset)))
-            (tabbar-set-template tabset nil)
-            (set tabset (sort (cons tab tabs)
-                              (lambda (a b) (string< (buffer-name (car a))
-                                                     (buffer-name (car b))))))))))
+(use-package tjf-tabline
+  :after powerline
+  :config
+  (tjf:tabline/mode 1)
+  (setq tjf:tabline/tab-label-function #'tjf:tabline/label-function))
 
-    (defvar u/tabbar-left  (powerline-wave-right 'tabbar-default nil u/tabbar-height))
-    (defvar u/tabbar-right (powerline-wave-left  nil 'tabbar-default u/tabbar-height))
+  ;; (use-package tabbar :after powerline
+ ;;    :preface
+ ;;    (eval-when-compile
+ ;;      (declare-function tabbar-mode "tabbar" (ARG1)))
+ ;;    :init
+ ;;    (defvar u/tabbar-height 20)
+ ;;    :config
+ ;;    (defun tabbar-add-tab (tabset object &optional _append_ignored)
+ ;;      "Add to TABSET a tab with value OBJECT if there isn't one there yet.
+ ;; If the tab is added, it is added at the beginning of the tab list,
+ ;; unless the optional argument APPEND is non-nil, in which case it is
+ ;; added at the end."
+ ;;      (let ((tabs (tabbar-tabs tabset)))
+ ;;        (if (tabbar-get-tab object tabset)
+ ;;            tabs
+ ;;          (let ((tab (tabbar-make-tab object tabset)))
+ ;;            (tabbar-set-template tabset nil)
+ ;;            (set tabset (sort (cons tab tabs)
+ ;;                              (lambda (a b) (string< (buffer-name (car a))
+ ;;                                                     (buffer-name (car b))))))))))
 
-    (defun u/tabbar-tab-label-function (tab)
-      (powerline-render (list u/tabbar-left (format " %s  " (car tab)) u/tabbar-right)))
+ ;;    (defvar u/tabbar-left  (powerline-wave-right 'tabbar-default nil u/tabbar-height))
+ ;;    (defvar u/tabbar-right (powerline-wave-left  nil 'tabbar-default u/tabbar-height))
+
+ ;;    (defun u/tabbar-tab-label-function (tab)
+ ;;      (powerline-render (list u/tabbar-left (format " %s  " (car tab)) u/tabbar-right)))
 
 
-    (customize-set-variable 'tabbar-separator '(0.0))
-    (customize-set-variable 'tabbar-use-images nil)
-    (tabbar-mode 1)
+ ;;    (customize-set-variable 'tabbar-separator '(0.0))
+ ;;    (customize-set-variable 'tabbar-use-images nil)
+ ;;    (tabbar-mode 1)
 
-    ;; tabbar-tab-label-function will be reset after enabling tabbar-mode
+ ;;    ;; tabbar-tab-label-function will be reset after enabling tabbar-mode
 
-    (setq tabbar-tab-label-function #'u/tabbar-tab-label-function)
-    (customize-set-variable 'tabbar-use-images nil))
+ ;;    (setq tabbar-tab-label-function #'u/tabbar-tab-label-function)
+ ;;    (customize-set-variable 'tabbar-use-images nil))
 
   (use-package tetris :commands tetris
     :config
@@ -779,7 +788,7 @@
     (progn
       (global-undo-tree-mode 1)))
 
-  (use-package unicode-fonts :defer
+  (use-package unicode-fonts :disabled
     :ensure t
     :init
     (defun u/replace-unicode-font-mapping (block-name old-font new-font)
@@ -828,7 +837,7 @@
                                                 (tab-mark 9 [9654 32 91 84 65 66 93 9] [92 9]) ;  9 TAB       => "▶ [TAB]<TAB>"
                                                 )))
 
-  (use-package ws-butler
+   (use-package ws-butler
     :diminish ws-butler-mode
     :config
     (ws-butler-global-mode))
@@ -872,7 +881,7 @@
    (reset-frame-size)
    (delete-other-windows))
 
-  )
+  ;; )
 ;; ================================================================================
 ;;
 (message "default.el ...done")

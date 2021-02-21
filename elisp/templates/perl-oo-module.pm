@@ -32,9 +32,9 @@
 
 package <<<PACKAGE>>>;
 
-require 5.008;
 use Carp;
 use strict;
+use v5.10;
 
 # use Foo::Bar;
 
