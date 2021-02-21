@@ -8,8 +8,7 @@
 (message "Loading .emacs.el...")
 
 ;;
-(eval-when-compile
-  (require 'cl))
+(require 'cl-lib)
 
 (defvar is-cygwin?    (eq system-type 'cygwin))
 (defvar is-daemon?    (daemonp))
