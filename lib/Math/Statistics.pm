@@ -1,4 +1,4 @@
-# Math::Statistics --- [description] -*-Perl-*-
+# Math::Statistics --- Statistics object -*-Perl-*-
 
 #         Copyright © 2008-2021 Tom Fontaine
 
@@ -28,54 +28,50 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 18-Feb-2021 Major overhaul
 #
-package Math::Statistics;
+package Math::Stats;
 
-require 5.006;
 use Carp;
 use strict;
-use List::Util qw(sum first);
+use v5.10;
 
-# use constant FOO => 'BAR';
+use List::Util qw(any first max product sum);
+
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
-my @AREF = qw(Data CorrData Histogram);
-my @HREF = qw(Frequency);
+my @AREF = qw(data data1 histogram);
+my @HREF = qw();
 
-my %fields = (Data               => undef,
-              CorrData           => undef,
-              Histogram          => undef,
-              Frequency          => undef,
+my %fields = (data  => undef,
+              data1 => undef,
 
-              LowerTrim          => 0,
-              UpperTrim          => 0,
+              maximum => undef,
+              minimum => undef,
+              range   => undef,
 
-              Partitions         => 2,
-              BinWidth           => 1,
+              mean     => undef,
+              stdev    => undef,
+              variance => undef,
 
-              Min                => undef,
-              Max                => undef,
-              MinIndex           => undef,
-              MaxIndex           => undef,
+              harmonicMean  => undef,
+              geometricMean => undef,
 
-              Sum                => undef,
-              Range              => undef,
-              Mean               => undef,
-              Median             => undef,
-              Variance           => undef,
-              StandardDeviation  => undef,
-              Correlation        => undef,
-              TrimmedMean        => undef,
-              GeometricMean      => undef,
-              HarmonicMean       => undef,
-              Mode               => undef,
-              MinBin             => undef,
-              MaxBin             => undef,
+              trim        => undef,
+              trimmedMean => undef,
+
+              correlation => undef,
+
+              histogram  => undef,
+              binMinimum => undef,
+              binMaximum => undef,
+              binWidth   => undef,
+              mode       => undef,
              );
 
-my $__ME__ = join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
+my $threshold = 0.000001;
 
 # BEGIN
 # {
@@ -113,7 +109,7 @@ sub AUTOLOAD
 
   return if $name eq "DESTROY";
 
-  croak "Can't access `$name' field in class $type" unless exists $this->{'_permitted'}->{$name};
+  croak "Can't access `$name' field in class $type" unless exists $this->{_permitted}->{$name};
 
   return @_ ? $this->{$name} = shift : $this->{$name};
 }
@@ -125,119 +121,100 @@ sub configure
 
   @{$this}{keys %parm} = values %parm;
 }
+
 sub get
 {
-  my $self = shift;
+  my $this = shift;
   my %parm = @_;
 
-  my $data = exists $parm{Data}       ? $parm{Data}       : $self->{Data};
-  my $freq = exists $parm{Frequency}  ? $parm{Frequency}  : $self->{Frequency};
-  my $hist = exists $parm{Histogram}  ? $parm{Histogram}  : $self->{Histogram};
-  my $corr = exists $parm{CorrData}   ? $parm{CorrData}   : $self->{CorrData};
-  my $utrm = exists $parm{UpperTrim}  ? $parm{UpperTrim}  : $self->{UpperTrim};
-  my $ltrm = exists $parm{LowerTrim}  ? $parm{LowerTrim}  : $self->{LowerTrim};
-  my $part = exists $parm{Partitions} ? $parm{Partitions} : $self->{Partitions};
+  my $__ME__ = (caller(0))[3];
 
-  unless(@{$data} > 1)
-  {
-    if(@{$data})
-    {
-      print STDERR "Math::Statistics::get: not enough data\n";
-    }
-    else
-    {
-      print STDERR "Math::Statistics::get: empty data set\n";
-    }
-    return;
-  }
+  my $data      = exists $parm{data}       ? $parm{data}       : $this->{data};
+  my $data1     = exists $parm{data1}      ? $parm{data1}      : $this->{data1};
+  my $trim      = exists $parm{trim}       ? $parm{trim}       : $this->{trim};
+  my $histogram = exists $parm{histogram}  ? $parm{histogram}  : $this->{histogram};
+
   my @data = sort { $a <=> $b } @{$data};
 
-  $self->{Min} = $data[0];
-  $self->{Max} = $data[-1];
+  die $__ME__,': not enough data!!!',"\n" unless @data >= 2;
 
-  $self->{MinIndex} = first { $data->[$_] == $self->{Min} } 0 .. $#data;
-  $self->{MaxIndex} = first { $data->[$_] == $self->{Max} } 0 .. $#data;
+  $this->{minimum} = $data[0];
+  $this->{maximum} = $data[-1];
 
-  $self->{Sum}    = sum @data;
-  $self->{Range}  = $self->{Max} - $self->{Min};
-  $self->{Mean}   = $self->{Sum}/@data;
-  $self->{Median} = ($self->{Max} + $self->{Min})/2;
+  $this->{minIndex} = first { equals(@{$data}[$_],$this->{minimum}) } 0 .. $#data;
+  $this->{maxIndex} = first { equals(@{$data}[$_],$this->{maximum}) } 0 .. $#data;
 
-  $self->{Variance}          = sum([map { ($_ - $self->{Mean})**2 } @{$data}])/(@{$data} - 1);
-  $self->{StandardDeviation} = sqrt($self->{Variance});
+  $this->{sum}    = sum @data;
+  $this->{range}  = $this->{maximum} - $this->{minimum};
+  $this->{mean}   = $this->{sum}/@data;
 
-  if(@{$corr})
+  $this->{variance} = sum([map { ($_ - $this->{mean})**2 } @data])/(@data - 1);
+  $this->{stdev}    = sqrt($this->{variance});
+
+  my $mid = @data/2;
+
+  $this->{median} = @data % 2 == 0 ? ($data[$mid-1] + $data[$mid])/2 : $data[$mid];
+
+  if(defined $trim && $trim > 0 && $trim < 0.45)
   {
-    my $meanx = $self->{Mean};
-    my $meany = average($corr);
+    my $trmin = int @data*$trim;
+    my $trmax = int @data*(1 - $trim);
+    my $trrng = $trmax - $trmin;
+
+    die $__ME__,': not enough data for trimmed mean!!!',"\n" if $trrng == 0;
+
+    $this->{trimmedMean} = sum(@data[$trmin .. $trmax])/$trrng;
+  }
+  if(any { $_ == 0 } @data)
+  {
+    $this->{geometricMean} = 0;
+    $this->{harmonicMean}  = 0;
+  }
+  else
+  {
+    $this->{geometricMean} = product(@data) ** (1/@data);
+    $this->{harmonicMean}  = @data/sum(map { 1/$_ } @data);
+  }
+  if(defined $data1 && @{$data1} == @{$data})
+  {
+    my $meanx = $this->{mean};
+    my $meany = sum(@{$data1})/@data;
 
     my @x = map { $_ - $meanx } @{$data};
-    my @y = map { $_ - $meany } @{$corr};
+    my @y = map { $_ - $meany } @{$data1};
 
     my $xx = sum([map { $_**2 } @x]);
     my $yy = sum([map { $_**2 } @y]);
     my $xy = sum([map { $x[$_]*$y[$_] } (0 .. $#x)]);
 
-    $self->{Correlation} = $xy/sqrt($xx*$yy);
+    $this->{correlation} = $xy/sqrt($xx*$yy);
   }
-  if($utrm || $ltrm)
-  {
-    $self->{TrimmedMean} = average([@data[int($ltrm*@data) .. $#data-int($utrm*@data)]]);
-  }
-  unless(grep { $_ == 0 } @{$data})
-  {
-    my $gm  = 1;
-    my $exp = 1/@{$data};
+  my $binMinimum = exists $parm{binMinimum} ? $parm{binMinimum} : $this->{binMinimum};
+  my $binMaximum = exists $parm{binMaximum} ? $parm{binMaximum} : $this->{binMaximum};
+  my $binWidth   = exists $parm{binWidth}   ? $parm{binWidth}   : $this->{binWidth};
 
-    for(@{$data}) { $gm *= $_**$exp; }
+  $binMinimum = int($this->{minimum}) if not defined $binMinimum || $this->{minimum} < $binMinimum;
+  $binMaximum = int($this->{maximum}) if not defined $binMaximum || $this->{maximum} > $binMaximum;
+  $binWidth   = 1 if not defined $binWidth || $binWidth == 0;
 
-    $self->{GeometricMean} = $gm;
+  $this->{binMinimum} = $binMinimum;
+  $this->{binMaximum} = $binMaximum;
+  $this->{binWidth}   = $binWidth;
 
-    my $hs = sum([map { 1/$_ } @{$data}]);
+  my $binCount = int(($binMaximum - $binMinimum)/$binWidth) + 1;
 
-    $self->{HarmonicMean} = @{$data}/$hs;
-  }
-  my %count;
+  @{$histogram} = (0) x $binCount;
 
-  for(@{$data}) { $count{$_} = exists $count{$_} ? $count{$_} + 1 : 1; }
+  $histogram->[int(($_ - $binMinimum)/$binWidth)]++ for @data;
 
-  $self->{Mode} = (sort { $count{$b} <=> $count{$a} } keys %count)[0];
+  $this->{mode} = max(@{$histogram})*$binWidth + $binMinimum;
+}
 
-  my $interval = ($self->{Max} - $self->{Min})/$part;
-  my $iterate  = $self->{Min};
+sub equals
+{
+  my ($x1,$x2) = @_;
 
-  $freq->{$iterate} = 0 while ($iterate += $interval) <= $self->{Max};
-
-  my @bkeys = sort { $a <=> $b } keys %{$freq};
-
-  for(@{$data})
-  {
-    foreach my $key (@bkeys)
-    {
-      if($_ <= $key)
-      {
-        $freq->{$key}++;
-        last;
-      }
-    }
-  }
-  my $minbin = exists $parm{MinBin}    ? $parm{MinBin}    : $self->{MinBin};
-  my $maxbin = exists $parm{MaxBin}    ? $parm{MaxBin}    : $self->{MaxBin};
-  my $width  = exists $parm{BinWidth}  ? $parm{BinWidth}  : $self->{BinWidth};
-
-  $minbin = $self->{Min} if not defined $minbin || $self->{Min} < $minbin;
-  $maxbin = $self->{Max} if not defined $maxbin || $self->{Max} > $maxbin;
-
-  $minbin = int($minbin/$width)*$width;
-  $maxbin = int($maxbin/$width)*$width;
-
-  $self->{MinBin} = $minbin;
-  $self->{MaxBin} = $maxbin;
-
-  @{$hist} = (0) x (1+int(($maxbin - $minbin)/$width));
-
-  #  for(@{$data}) { $hist->[int(($_ - $minbin)/$width)]++; }
-  $hist->[int(($_ - $minbin)/$width)]++ for @{$data};
+  return abs($x1 - $x2) < $threshold;
 }
 
 1;
