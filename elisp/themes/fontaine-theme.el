@@ -53,6 +53,8 @@
 ;;              14-Jan-2021 Fixed copyright
 ;;                          load colors programmatically
 ;;                          rainbow-delimiters use wcag hue progression
+;;              09-Feb-2021 Changed ‘variable-pitch’ font to Nimbus Sans
+;;                          Fixed broken font lookups
 ;;
 
 ;; =============================================================================
@@ -232,31 +234,32 @@
 ;;   Iosevka,Iosevka Light Extended:style=Light Extended,Regular
 
 (let* ((font-family-list (font-family-list))
+       (camingo         (car (member "CamingoCode"         font-family-list)))
+       (consolas        (car (member "Consolas"            font-family-list)))
+       (courier         (car (member "Courier 10 Pitch"    font-family-list)))
+       (cousine         (car (member "Cousine"             font-family-list)))
+       (deja-vu         (car (member "DejaVu Sans Mono"    font-family-list)))
+       (fantasque       (car (member "Fantasque Sans Mono" font-family-list)))
+       (firacode        (car (member "Fira Code"           font-family-list)))
+       (hack            (car (member "Hack"                font-family-list)))
+       (input           (car (member "Input"               font-family-list)))
+       (iosevka         (car (member "Iosevka"             font-family-list)))
+       (iosevka-slab    (car (member "Iosevka Slab"        font-family-list)))
+       (jet             (car (member "Jet"                 font-family-list)))
+       (source-code-pro (car (member "Source Code Pro"     font-family-list)))
+       (victor          (car (member "Victor Mono"         font-family-list)))
 
-       (camingo         (car (member "CamingoCode"      font-family-list)))
-       (consolas        (car (member "Consolas"         font-family-list)))
-       (courier         (car (member "Courier 10 Pitch" font-family-list)))
-       (cousine         (car (member "Cousine"          font-family-list)))
-       (deja-vu         (car (member "DejaVu Sans Mono" font-family-list)))
-       (fantasque       (car (member "Fantasque"        font-family-list)))
-       (firacode        (car (member "Fira Code"        font-family-list)))
-       (hack            (car (member "Hack"             font-family-list)))
-       (input           (car (member "Input"            font-family-list)))
-       (iosevka         (car (member "Iosevka"          font-family-list)))
-       (iosevka-slab    (car (member "Iosevka Slab"     font-family-list)))
-       (jet             (car (member "Jet"              font-family-list)))
-       (source-code-pro (car (member "Source Code Pro"  font-family-list)))
-       (victor          (car (member "Victor"           font-family-list)))
-
-       (dejavu-sans (car (member "DejaVu Sans" font-family-list)))
-       (open-sans   (car (member "Open Sans"   font-family-list)))
-       (noto-sans   (car (member "Noto Sans"   font-family-list)))
-       (roboto      (car (member "Roboto"      font-family-list)))
-       (segoe-ui    (car (member "Segoe UI"    font-family-list)))
-       (source-sans (car (member "Source Sans" font-family-list)))
+       (avenir-next (car (member "Avenir Next Rounded Pro" font-family-list)))
+       (dejavu-sans (car (member "DejaVu Sans"             font-family-list)))
+       (open-sans   (car (member "Open Sans"               font-family-list)))
+       (nimbus-sans (car (member "Nimbus Sans"             font-family-list)))
+       (noto-sans   (car (member "Noto Sans"               font-family-list)))
+       (roboto      (car (member "Roboto"                  font-family-list)))
+       (segoe-ui    (car (member "Segoe UI"                font-family-list)))
+       (source-sans (car (member "Source Sans Pro"         font-family-list)))
 
        (fontaine/fixed-pitch-family    (or hack deja-vu consolas source-code-pro jet firacode iosevka iosevka-slab cousine camingo fantasque victor input courier))
-       (fontaine/variable-pitch-family (or roboto noto-sans source-sans dejavu-sans open-sans segoe-ui))
+       (fontaine/variable-pitch-family (or nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
 
        (fontaine/fixed-pitch-height    120)
        (fontaine/variable-pitch-height 120)
@@ -401,13 +404,13 @@
 
        ;; theme elements: tabbar
 
-       (fontaine/tabbar-bg                   fontaine/bg-black)
-       (fontaine/tabbar-fg                   fontaine/fg-white)
-       (fontaine/tabbar-modified-bg          x11/red)
-       (fontaine/tabbar-modified-fg          x11/white)
-       (fontaine/tabbar-modified-selected-fg fontaine/fg-red)
-       (fontaine/tabbar-selected-fg          fontaine/fg-black)
-       (fontaine/tabbar-unselected-bg        fontaine/inactive-1))
+       (fontaine/tabbar-bg            fontaine/bg-black)
+       (fontaine/tabbar-fg            fontaine/fg-white)
+       (fontaine/tabbar-modified-bg   x11/red)
+       (fontaine/tabbar-modified-fg   x11/white)
+       (fontaine/tabbar-sel-mod-fg    fontaine/fg-red)
+       (fontaine/tabbar-selected-fg   fontaine/fg-black)
+       (fontaine/tabbar-unselected-bg fontaine/inactive-1))
 
   (message "Defining faces...")
 
@@ -456,21 +459,12 @@
   ;;   :group 'font-lock-faces)
   ;; (defvar clips-verb-face (make-face 'clips-verb-face))
 
-  (defface fontaine/mode-line-base '((t (:inherit variable-pitch :box (:line-width 1 :color "gray50")))) "" :group 'font-lock-faces)
 
-  (defface tabbar-default    `((t (:inherit variable-pitch :height 0.8 :background ,fontaine/tabbar-bg :foreground ,fontaine/tabbar-fg))) "" :group 'font-lock-faces)
-  (defface tabbar-modified   `((t (:inherit tabbar-default :background ,fontaine/tabbar-modified-bg :foreground ,fontaine/tabbar-modified-fg))) "" :group 'font-lock-faces)
-  (defface tabbar-selected   `((t (:inherit tabbar-default :background "xxx" :foreground "black" :weight bold))) "" :group 'font-lock-faces)
-  (defface tabbar-selected-modified `((t (:inherit tabbar-selected :foreground ,fontaine/tabbar-modified-selected-fg))) "" :group 'font-lock-faces)
-  (defface tabbar-unselected `((t (:inherit tabbar-default :background ,fontaine/tabbar-unselected-bg))) "" :group 'font-lock-faces)
-  (defface tabbar-button     `((t (:inherit tabbar-unselected))) "" :group 'font-lock-faces)
-
-
-
-  (defface fontaine/powerline-red `((t (:inherit variable-pitch :foreground ,fontaine/warning))) "" :group 'font-lock-faces)
+  (defface fontaine/mode-line-base `((t (:inherit variable-pitch :box (:line-width 1 :color ,fontaine/mode-line-box)))) "" :group 'font-lock-faces)
+  (defface fontaine/powerline-red  `((t (:inherit variable-pitch :foreground ,fontaine/warning))) "" :group 'font-lock-faces)
+  (defface fontaine/tabline-base   `((t (:inherit default        :family ,fontaine/variable-pitch-family :height 0.8))) "" :group 'font-lock-faces)
 
   (message "Defining faces...done")
-  (message "Setting faces...")
 
   (custom-theme-set-faces
    `fontaine
@@ -478,6 +472,7 @@
    `(default        ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg :background ,fontaine/default-bg))))
    `(fixed-pitch    ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg))))
    `(variable-pitch ((t (:family ,fontaine/variable-pitch-family :height ,fontaine/variable-pitch-height :foreground ,fontaine/default-fg))))
+
 
    `(bold   ((t :weight bold)))
    `(italic ((t :slant  italic)))
@@ -498,12 +493,13 @@
    ;; `(annotate-highlight ((t :background ,blue-nuanced-bg :underline ,blue-intense)))
    ;; `(annotate-highlight-secondary ((t :background ,green-nuanced-bg :underline ,green-intense)))
 
-   `(anzu-mode-line ((t (:inherit minibuffer-prompt :foreground ,fontaine/match :weight bold))))
+   `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :foreground ,fontaine/match :weight bold))))
 
-   ;; `(bm-face                   ((t :background "hotpink" :foreground "red" :extend t)))
-   ;; `(bm-fringe-persistent-face ((t :background ,fontaine/bookmark-bg :foreground ,fontaine/bookmark-fg )))
-   ;; `(bm-persistent-face        ((t :background "black" :foreground "orange" :extend t)))
-   `(bm-fringe-face            ((t :background "saddlebrown" :foreground "white" )))
+   `(bm-face                   ((t :background "hotpink" :foreground "blue" :extend t)))
+   `(bm-fringe-face            ((t :background "yellow" :foreground "red" )))
+   `(bm-fringe-persistent-face ((t :background ,fontaine/bookmark-bg :foreground ,fontaine/bookmark-fg )))
+
+;; (set-face-attribute 'bm-fringe-persistent-face nil :foreground "white" :background material/fg-orange-800))
 
 ;;;;; company-mode
    ;; `(company-echo-common ((t :foreground ,magenta-alt-other)))
@@ -727,6 +723,13 @@
    ;; `(smerge-upper ((t :inherit fontaine-theme-diff-removed)))
 
    `(success ((t (:foreground ,fontaine/success :weight bold))))
+
+   `(tjf:tabline/default    ((t (:inherit fontaine/tabline-base :background ,fontaine/tabbar-bg          :foreground ,fontaine/tabbar-fg))))
+   `(tjf:tabline/modified   ((t (:inherit tjf:tabline/default   :background ,fontaine/tabbar-modified-bg :foreground ,fontaine/tabbar-modified-fg))))
+   `(tjf:tabline/selected   ((t (:inherit fontaine/tabline-base :weight bold))))
+   `(tjf:tabline/sel-mod    ((t (:inherit tjf:tabline/selected                                           :foreground ,fontaine/tabbar-sel-mod-fg))))
+   `(tjf:tabline/unselected ((t (:inherit tjf:tabline/default   :background ,fontaine/tabbar-unselected-bg))))
+   `(tjf:tabline/button     ((t (:inherit tjf:tabline/unselected))))
 
    `(trailing-whitespace ((t (:background ,fontaine/whitespace))))
 
