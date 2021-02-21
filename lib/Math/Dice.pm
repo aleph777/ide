@@ -29,6 +29,7 @@
 
 #
 # Revision: 20-Apr-2015 use Math::Random::Secure
+#           12-Feb-2021 added getDistribution
 #
 package Math::Dice;
 
@@ -38,16 +39,20 @@ use Carp;
 use strict;
 use List::Util qw(sum);
 use Math::Random::Secure qw(irand);
+use v5.10;
 
 # use constant FOO => 'BAR';
 
 our $AUTOLOAD;
 
-my @AREF = qw();
+my @AREF = qw(contents dice);
 my @HREF = qw();
 
 my %fields = (N     => 1,
               sides => 6,
+
+              contents => undef,
+              dice     => undef,
              );
 
 # BEGIN
@@ -113,6 +118,34 @@ sub get
   #my @sides = (1 .. $sides);
 
   return sum(map { 1 + irand $sides } (1 .. $n));
+}
+
+
+sub getDistribution
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $__ME__ = (caller(0))[3];
+
+  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
+  my $dice     = exists $parm{dice}     ? $parm{dice}     : $this->{dice};
+  my $n        = exists $parm{N}        ? $parm{N}        : $this->{N};
+
+  # 'dice' should be 'die' but oh well
+
+  my @tmp = @{$dice};
+
+  for (1 .. $n-1)
+  {
+    for(0 .. $#tmp)
+    {
+      my $d = shift @tmp;
+
+      push @tmp,map { join ',',$d,$_ } @{$dice};
+    }
+  }
+  @{$contents} = map { sum(split ',') } @tmp;
 }
 
 1;
