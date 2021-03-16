@@ -71,6 +71,8 @@
 ;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
 ;;           10-Jul-2019 Added ‘u/transpose-lines’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           11-Mar-2021 Removed ‘tjf:edit/delete-forward-whitespace’ and ‘tjf:edit/delete-backward-whitespace’
+;;                       Updated ‘tjf:edit/capitalize’, ‘tjf:edit/downcase’, and ‘tjf:edit/upcase’
 ;;
 
 ;;; Code:
@@ -112,9 +114,9 @@
 (defun tjf:edit/capitalize ()
   "Convert the word at current point or the selected region to first caps."
   (interactive "*")
-  (if (use-region-p)
-      (capitalize-region (region-beginning) (region-end) (region-noncontiguous-p))
-    (capitalize-word 1)))
+  (with-word-or-region (beg end)
+                       (capitalize-region beg end (region-noncontiguous-p))
+                       (goto-char end)))
 
 (defun tjf:edit/cleanse-whitespace ()
   "Untabify, then trim excess whitespace and compress all blank lines."
@@ -133,6 +135,44 @@
   (interactive "*r")
   (goto-char start)
   (comment-kill (count-lines start end)))
+
+(defun tjf:edit/delete-backward ()
+  "Delete syntax backward."
+  (interactive)
+  (let* ((syntax (string (char-syntax (char-before))))
+         (begin  (save-excursion
+                   (cond
+                    ((equal syntax " ") (skip-syntax-backward " "))
+                    ((equal syntax "w") (skip-syntax-backward "w"))
+                    ((equal syntax "_") (skip-syntax-backward "w_"))
+                    ((equal syntax "(") (skip-syntax-backward "()"))
+                    ((equal syntax ")") (skip-syntax-backward ")"))
+                    ((equal syntax "<") (skip-syntax-backward "<"))
+                    ((equal syntax ">") (skip-syntax-backward ">"))
+                    ((equal syntax ".") (skip-syntax-backward "."))
+                    ((equal syntax "'") (skip-syntax-backward "'"))
+                    (t (error "Unknown syntax")))
+                   (point))))
+    (delete-region begin (point))))
+
+(defun tjf:edit/delete-forward ()
+  "Delete syntax forward."
+  (interactive)
+  (let* ((syntax (string (char-syntax (char-after))))
+         (end    (save-excursion
+                   (cond
+                    ((equal syntax " ") (skip-syntax-forward " "))
+                    ((equal syntax "w") (skip-syntax-forward "w"))
+                    ((equal syntax "_") (skip-syntax-forward "w_") )
+                    ((equal syntax "(") (skip-syntax-forward "()"))
+                    ((equal syntax ")") (skip-syntax-forward ")"))
+                    ((equal syntax "<") (skip-syntax-forward "<"))
+                    ((equal syntax ">") (skip-syntax-forward ">"))
+                    ((equal syntax ".") (skip-syntax-forward "."))
+                    ((equal syntax "'") (skip-syntax-forward "'"))
+                    (t (error "Unknown syntax")))
+                   (point))))
+    (delete-region (point) end)))
 
 (defun tjf:edit/delete-line ()
   "Cuts the entire contents of the current line."
@@ -176,31 +216,34 @@
 
 (defalias 'tjf:edit/delete-to-eol 'kill-line)
 
-(defun tjf:edit/delete-whitespace-backward ()
-  "Delete whitespace from just prior to point to non-whitespace."
+(defun tjf:edit/delete-word ()
+  "Delete the entire word at point."
   (interactive "*")
-  (if (looking-at "[ \t]")
-      (let ((point-sav (point)))
-        (skip-chars-backward " \t")
-        (delete-region (point) point-sav))
-    (if (eolp)
-        (delete-trailing-whitespace))))
+  (if (looking-at-word-or-symbol)
+      (delete-region (word-beginning-position) (word-end-position))))
 
-(defun tjf:edit/delete-whitespace-forward ()
-  "Delete whitespace from point to non-whitespace."
-  (interactive "*")
-  (if (looking-at "[ \t]+")
-      (delete-region (match-beginning 0) (match-end 0))))
+;; (defun tjf:edit/delete-whitespace-backward ()
+;;   "Delete whitespace from just prior to point to non-whitespace."
+;;   (interactive "*")
+;;   (if (looking-at "[[:space:]]")
+;;       (let ((point-sav (point)))
+;;         (skip-chars-backward "[:space:]")
+;;         (delete-region (point) point-sav))
+;;     (if (eolp)
+;;         (delete-trailing-whitespace))))
+
+;; (defun tjf:edit/delete-whitespace-forward ()
+;;   "Delete whitespace from point to non-whitespace."
+;;   (interactive "*")
+;;   (if (looking-at "[[:space:]]")
+;;       (delete-region (match-beginning 0) (match-end 0))))
 
 (defun tjf:edit/downcase ()
   "Convert the word at current point or the selected region to lowercase."
   (interactive "*")
-  (if (use-region-p)
-      (downcase-region (region-beginning) (region-end) (region-noncontiguous-p))
-    (if (looking-at "[A-Za-z0-9]")
-        (skip-chars-backward "[:alnum:]")
-      (skip-chars-forward "[^:alnum:]"))
-    (downcase-word 1)))
+  (with-word-or-region (beg end)
+                       (downcase-region beg end (region-noncontiguous-p))
+                       (goto-char end)))
 
 (defun tjf:edit/fill ()
   "Fill the current paragraph or selected region."
@@ -322,12 +365,9 @@
 (defun tjf:edit/upcase ()
   "Convert the word at current point or the selected region to uppercase."
   (interactive "*")
-  (if (use-region-p)
-      (upcase-region (region-beginning) (region-end) (region-noncontiguous-p))
-    (if (looking-at "[A-Za-z0-9]")
-        (skip-chars-backward "[:alnum:]")
-      (skip-chars-forward "[^:alnum:]"))
-    (upcase-word 1)))
+  (with-word-or-region (beg end)
+                       (upcase-region beg end (region-noncontiguous-p))
+                       (goto-char end)))
 
 (defvar tjf:edit/menu
   '("Edit"
