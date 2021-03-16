@@ -176,12 +176,13 @@
 ;;                       Removed defer constants (use let variables)
 ;;           24-Jan-2021 Added ‘dash'
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           11-Mar-2021 Removed ‘tinysearch’ and ‘tinyeat’
 ;;
 
 ;;; Code:
 
 (defun message--with-timestamp (format-string &rest args)
-  "Add timestamps to `*Messages*' buffer."
+  "Add FORMAT-STRING timestamp (using ARGS) to `*Messages*' buffer."
   (when (and (>   (length  format-string) 0)
              (not (string= format-string " ")))
     (let ((deactivate-mark nil))
@@ -281,6 +282,7 @@
   (setq         colon-double-space                  nil)
   (setq         comint-input-ignoredups             t)
   (setq         comint-input-ring-size              64)
+  (setq         comp-async-report-warnings-errors   nil)
   (setq-default cursor-type                         '(bar . 2))
   (setq         disabled-command-function           nil)
   (setq         echo-keystrokes                     0.25)
@@ -529,7 +531,7 @@
   (cperl-init-faces)
 
   (define-key cperl-mode-map [menu-bar] nil)
-  (define-key cperl-mode-map [?\t]      '(lambda nil (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
+  (define-key cperl-mode-map [?\t]      #'(lambda nil (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
   (define-key cperl-mode-map "{"        nil)
   (define-key cperl-mode-map "("        nil)
   (define-key cperl-mode-map "["        nil)
@@ -1032,12 +1034,6 @@
   :commands text-mode
   :init
   (add-hook 'text-mode-hook #'turn-on-auto-fill))
-
-(use-package tinyeat
-  :commands (tinyeat-backward-preserve tinyeat-delete-paragraph tinyeat-delete-whole-word tinyeat-forward-preserve))
-
-(use-package tinysearch
-  :commands (tinysearch-search-word-forward tinysearch-search-word-backward))
 
 (use-package tjf-bookmark
   :after (bm tjf-flags))
