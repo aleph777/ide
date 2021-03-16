@@ -45,10 +45,6 @@
 (defvar tjf:navigate/saved-point nil "Saved value of point for current buffer.")
 (make-variable-buffer-local 'tjf:navigate/saved-point)
 
-;; these should go in tjf-search
-(defalias 'search-word-forward  'tinysearch-search-word-forward)
-(defalias 'search-word-backward 'tinysearch-search-word-backward)
-
 (defun tjf:navigate/backward-symbol ()
   "Move the cursor backward to the beginning of the previous symbol."
   (interactive)
