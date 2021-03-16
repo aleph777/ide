@@ -109,7 +109,8 @@
 ;;           03-Sep-2019 Added ‘C-S-mouse-3’ as ‘minions-minor-modes-menu’
 ;;           15-Dec-2020 Added ‘kp-*' for non-numlocked keypad keys
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;
+;;           16-Mar-2021 Removed ‘tinyeat-delete-whole-word’, ‘tinyeat-backward-preserve’, and ‘tinyeat-forward-preserve’
+;;                       Fixed warnings on lambda functions
 
 ;;; Code:
 
@@ -177,7 +178,7 @@
 
 ;; ==================== e ====================
 ;;
-(global-set-key [(control e)]            '(lambda () (interactive) (ergoemacs-extend-selection 1 1)))
+(global-set-key [(control e)]            #'(lambda () (interactive) (ergoemacs-extend-selection 1 1)))
 ;;lobal-set-key [(meta    e)]            'forward-sentence)
 ;;lobal-set-key [(super   e)]            'DO NOT USE ... opens file manager
 ;;lobal-set-key [(control meta  e)]      '
@@ -220,7 +221,7 @@
 
 ;; ==================== i ====================
 ;;
-(global-set-key [(control i)]            '(lambda () (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
+(global-set-key [(control i)]            #'(lambda () (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
 ;;lobal-set-key [(meta    i)]            'tab-to-tab-stop
 ;;lobal-set-key [(super   i)]            '
 ;;lobal-set-key [(control meta  i)]      '
@@ -868,7 +869,7 @@
 ;; ==================== backspace ====================
 ;;
 ;;lobal-set-key [backspace]           'backward-delete-char-untabify
-(global-set-key [(control backspace)] 'tinyeat-backward-preserve)
+(global-set-key [(control backspace)] 'tjf:edit/delete-backward)
 (global-set-key [(meta    backspace)] 'backward-kill-word)
 ;;lobal-set-key [(super   backspace)] 'tinyeat-delete-paragraph
 ;;lobal-set-key [(control meta  backspace)]      '
@@ -967,7 +968,7 @@
 ;; ==================== f9 ====================
 ;;
 (global-set-key [f9]           'kill-word)
-(global-set-key [(control f9)] 'tinyeat-delete-whole-word) ;; autoloaded
+(global-set-key [(control f9)] 'tjf:edit/delete-word) ;; autoloaded
 ;;lobal-set-key [(meta    f9)] ' DO NOT        USE
 ;;lobal-set-key [(super   f9)] '
 ;;lobal-set-key [(control meta  f9)]      ' DO NOT USE
@@ -1057,7 +1058,7 @@
 (global-set-key [(control insert)] 'overwrite-mode)
 (global-set-key [(meta    insert)] 'tjf:date/insert-dd-mon-yyyy)
 (global-set-key [(super   insert)] 'tjf:date/insert-month-day-year)
-(global-set-key [(control meta  insert)] '(lambda () (insert user-full-name)))
+(global-set-key [(control meta  insert)] #'(lambda () (insert user-full-name)))
 ;;lobal-set-key [(control super insert)]      '
 ;;lobal-set-key [(meta    super insert)]      '
 ;;lobal-set-key [(control meta super insert)] '
@@ -1076,12 +1077,12 @@
 ;; ==================== delete ====================
 ;;
 (global-set-key [delete]           'delete-char)
-(global-set-key [(control delete)] 'tinyeat-forward-preserve) ;; autoloaded
+(global-set-key [(control delete)] 'tjf:edit/delete-forward) ;; autoloaded
 ;;lobal-set-key [(meta    delete)] 'clean-aindent--bsunindent)
-(global-set-key [(super   delete)] '(lambda nil (interactive) (delete-region (point-min) (point-max))))
+(global-set-key [(super   delete)] #'(lambda nil (interactive) (delete-region (point-min) (point-max))))
 ;;lobal-set-key [(control meta  delete)] ' DO NOT USE
-(global-set-key [(control super delete)] '(lambda nil (interactive) (delete-region (point) (point-max))))
-(global-set-key [(meta    super delete)] '(lambda nil (interactive) (delete-region (point-min) (point))))
+(global-set-key [(control super delete)] #'(lambda nil (interactive) (delete-region (point) (point-max))))
+(global-set-key [(meta    super delete)] #'(lambda nil (interactive) (delete-region (point-min) (point))))
 ;;lobal-set-key [(control meta super delete)] ' DOES NOT REGISTER
 
 ;; ==================== home ====================
@@ -1243,8 +1244,8 @@
 (global-set-key [(meta    kp-0)] 'tjf:duplicate/line-or-region)
 ;;lobal-set-key [(super   kp-0)] '
 ;;lobal-set-key [(control meta  kp-0)] ' DO NOT USE
-(global-set-key [(control super kp-0)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
-(global-set-key [(meta    super kp-0)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
+(global-set-key [(control super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
+(global-set-key [(meta    super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
 ;;lobal-set-key [(control meta super kp-0)] '
 
 (global-set-key [kp-insert] 'duplicate-line-or-region)
@@ -1252,8 +1253,8 @@
 (global-set-key [(meta    kp-insert)] 'duplicate-line-or-region)
 ;;lobal-set-key [(super   kp-insert)] '
 ;;lobal-set-key [(control meta  kp-insert)] ' DO NOT USE
-(global-set-key [(control super kp-insert)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
-(global-set-key [(meta    super kp-insert)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
+(global-set-key [(control super kp-insert)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
+(global-set-key [(meta    super kp-insert)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
 ;;lobal-set-key [(control meta super kp-insert)] '
 
 ;; ==================== kp-1/kp-end ====================
@@ -1263,8 +1264,8 @@
 (global-set-key [(meta    kp-1)] 'tjf:duplicate/next)
 ;;lobal-set-key [(super   kp-1)] '
 ;;lobal-set-key [(control meta  kp-1)] ' DO NOT USE
-(global-set-key [(control super kp-1)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
-(global-set-key [(meta    super kp-1)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
+(global-set-key [(control super kp-1)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
+(global-set-key [(meta    super kp-1)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
 ;;lobal-set-key [(control meta super kp-1)] '
 
 (global-set-key [kp-end] 'tjf:duplicate/previous)
@@ -1272,168 +1273,168 @@
 (global-set-key [(meta    kp-end)] 'tjf:duplicate/next)
 ;;lobal-set-key [(super   kp-end)] '
 ;;lobal-set-key [(control meta  kp-end)] ' DO NOT USE
-(global-set-key [(control super kp-end)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
-(global-set-key [(meta    super kp-end)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
+(global-set-key [(control super kp-end)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
+(global-set-key [(meta    super kp-end)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
 ;;lobal-set-key [(control meta super kp-end)] '
 
 ;; ==================== kp-2/kp-down ====================
 ;;
-(global-set-key [kp-2]           '(lambda () (interactive "*") (tjf:duplicate/syntax -2)))
+(global-set-key [kp-2]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -2)))
 ;;lobal-set-key [(control kp-2)] ' DO NOT USE  ... digit argument
-(global-set-key [(meta    kp-2)] '(lambda () (interactive "*") (tjf:duplicate/syntax 2)))
+(global-set-key [(meta    kp-2)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 2)))
 ;;lobal-set-key [(super   kp-2)] '
 ;;lobal-set-key [(control meta  kp-2)] ' DO NOT USE
-(global-set-key [(control super kp-2)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
-(global-set-key [(meta    super kp-2)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
+(global-set-key [(control super kp-2)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
+(global-set-key [(meta    super kp-2)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
 ;;lobal-set-key [(control meta super kp-2)] '
 
-(global-set-key [kp-down]           '(lambda () (interactive "*") (tjf:duplicate/syntax -2)))
+(global-set-key [kp-down]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -2)))
 ;;lobal-set-key [(control kp-down)] ' DO NOT USE  ... digit argument
-(global-set-key [(meta    kp-down)] '(lambda () (interactive "*") (tjf:duplicate/syntax 2)))
+(global-set-key [(meta    kp-down)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 2)))
 ;;lobal-set-key [(super   kp-down)] '
 ;;lobal-set-key [(control meta  kp-down)] ' DO NOT USE
-(global-set-key [(control super kp-down)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
-(global-set-key [(meta    super kp-down)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
+(global-set-key [(control super kp-down)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
+(global-set-key [(meta    super kp-down)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
 ;;lobal-set-key [(control meta super kp-down)] '
 
 ;; ==================== kp-3/kp-next ====================
 ;;
-(global-set-key [kp-3]           '(lambda () (interactive "*") (tjf:duplicate/syntax -3)))
+(global-set-key [kp-3]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -3)))
 ;;lobal-set-key [(control kp-3)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-3)] '(lambda () (interactive "*") (tjf:duplicate/syntax 3)))
+(global-set-key [(meta    kp-3)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 3)))
 ;;lobal-set-key [(super   kp-3)] '
 ;;lobal-set-key [(control meta  kp-3)] ' DO NOT USE
-(global-set-key [(control super kp-3)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
-(global-set-key [(meta    super kp-3)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
+(global-set-key [(control super kp-3)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
+(global-set-key [(meta    super kp-3)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
 ;;lobal-set-key [(control meta super kp-3)] '
 
-(global-set-key [kp-next]           '(lambda () (interactive "*") (tjf:duplicate/syntax -3)))
+(global-set-key [kp-next]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -3)))
 ;;lobal-set-key [(control kp-next)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-next)] '(lambda () (interactive "*") (tjf:duplicate/syntax 3)))
+(global-set-key [(meta    kp-next)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 3)))
 ;;lobal-set-key [(super   kp-next)] '
 ;;lobal-set-key [(control meta  kp-next)] ' DO NOT USE
-(global-set-key [(control super kp-next)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
-(global-set-key [(meta    super kp-next)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
+(global-set-key [(control super kp-next)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
+(global-set-key [(meta    super kp-next)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
 ;;lobal-set-key [(control meta super kp-next)] '
 
 ;; ==================== kp-4/kp-left ====================
 ;;
-(global-set-key [kp-4]           '(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
+(global-set-key [kp-4]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
 ;;lobal-set-key [(control kp-4)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-4)] '(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
+(global-set-key [(meta    kp-4)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
 ;;lobal-set-key [(super   kp-4)] '
 ;;lobal-set-key [(control meta  kp-4)] ' DO NOT USE
-(global-set-key [(control super kp-4)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
-(global-set-key [(meta    super kp-4)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
+(global-set-key [(control super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
+(global-set-key [(meta    super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
 ;;lobal-set-key [(control meta super kp-4)] '
 
-;(global-set-key [kp-left]           '(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
+;(global-set-key [kp-left]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
 ;;lobal-set-key [(control kp-left)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-left)] '(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
+(global-set-key [(meta    kp-left)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
 ;;lobal-set-key [(super   kp-left)] '
 ;;lobal-set-key [(control meta  kp-left)] ' DO NOT USE
-(global-set-key [(control super kp-left)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
-(global-set-key [(meta    super kp-left)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
+(global-set-key [(control super kp-left)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
+(global-set-key [(meta    super kp-left)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
 ;;lobal-set-key [(control meta super kp-left)] '
 
 ;; ==================== kp-5/kp-begin ====================
 ;;
-(global-set-key [kp-5]           '(lambda () (interactive "*") (tjf:duplicate/syntax -5)))
+(global-set-key [kp-5]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -5)))
 ;;lobal-set-key [(control kp-5)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-5)] '(lambda () (interactive "*") (tjf:duplicate/syntax 5)))
+(global-set-key [(meta    kp-5)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 5)))
 ;;lobal-set-key [(super   kp-5)] '
 ;;lobal-set-key [(control meta  kp-5)] ' DO NOT USE
-(global-set-key [(control super kp-5)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
-(global-set-key [(meta    super kp-5)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
+(global-set-key [(control super kp-5)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
+(global-set-key [(meta    super kp-5)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
 ;;lobal-set-key [(control meta super kp-5)] '
 
-(global-set-key [kp-begin]           '(lambda () (interactive "*") (tjf:duplicate/syntax -5)))
+(global-set-key [kp-begin]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -5)))
 ;;lobal-set-key [(control kp-begin)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-begin)] '(lambda () (interactive "*") (tjf:duplicate/syntax 5)))
+(global-set-key [(meta    kp-begin)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 5)))
 ;;lobal-set-key [(super   kp-begin)] '
 ;;lobal-set-key [(control meta  kp-begin)] ' DO NOT USE
-(global-set-key [(control super kp-begin)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
-(global-set-key [(meta    super kp-begin)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
+(global-set-key [(control super kp-begin)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
+(global-set-key [(meta    super kp-begin)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
 ;;lobal-set-key [(control meta super kp-begin)] '
 
 ;; ==================== kp-6/kp-right ====================
 ;;
-(global-set-key [kp-6]           '(lambda () (interactive "*") (tjf:duplicate/syntax -6)))
+(global-set-key [kp-6]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -6)))
 ;;lobal-set-key [(control kp-6)] ' DO NOT USE ... digit argument
-(global-set-key [(meta kp-6)]    '(lambda () (interactive "*") (tjf:duplicate/syntax 6)))
+(global-set-key [(meta kp-6)]    #'(lambda () (interactive "*") (tjf:duplicate/syntax 6)))
 ;;lobal-set-key [(super   kp-6)] '
 ;;lobal-set-key [(control meta  kp-6)] ' DO NOT USE
-(global-set-key [(control super kp-6)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
-(global-set-key [(meta    super kp-6)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
+(global-set-key [(control super kp-6)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
+(global-set-key [(meta    super kp-6)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
 ;;lobal-set-key [(control meta super kp-6)] '
 
-(global-set-key [kp-right]           '(lambda () (interactive "*") (tjf:duplicate/syntax -6)))
+(global-set-key [kp-right]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -6)))
 ;;lobal-set-key [(control kp-right)] ' DO NOT USE ... digit argument
-(global-set-key [(meta kp-right)]    '(lambda () (interactive "*") (tjf:duplicate/syntax 6)))
+(global-set-key [(meta kp-right)]    #'(lambda () (interactive "*") (tjf:duplicate/syntax 6)))
 ;;lobal-set-key [(super   kp-right)] '
 ;;lobal-set-key [(control meta  kp-right)] ' DO NOT USE
-(global-set-key [(control super kp-right)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
-(global-set-key [(meta    super kp-right)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
+(global-set-key [(control super kp-right)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
+(global-set-key [(meta    super kp-right)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
 ;;lobal-set-key [(control meta super kp-right)] '
 
 ;; ==================== kp-7/kp-home ====================
 ;;
-(global-set-key [kp-7]           '(lambda () (interactive "*") (tjf:duplicate/syntax -7)))
+(global-set-key [kp-7]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -7)))
 ;;lobal-set-key [(control kp-7)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-7)] '(lambda () (interactive "*") (tjf:duplicate/syntax 7)))
+(global-set-key [(meta    kp-7)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 7)))
 ;;lobal-set-key [(super   kp-7)] '
 ;;lobal-set-key [(control meta  kp-7)] ' DO NOT USE
-(global-set-key [(control super kp-7)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
-(global-set-key [(meta    super kp-7)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
+(global-set-key [(control super kp-7)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
+(global-set-key [(meta    super kp-7)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
 ;;lobal-set-key [(control meta super kp-7)] '
 
-(global-set-key [kp-home]           '(lambda () (interactive "*") (tjf:duplicate/syntax -7)))
+(global-set-key [kp-home]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -7)))
 ;;lobal-set-key [(control kp-home)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-home)] '(lambda () (interactive "*") (tjf:duplicate/syntax 7)))
+(global-set-key [(meta    kp-home)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 7)))
 ;;lobal-set-key [(super   kp-home)] '
 ;;lobal-set-key [(control meta  kp-home)] ' DO NOT USE
-(global-set-key [(control super kp-home)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
-(global-set-key [(meta    super kp-home)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
+(global-set-key [(control super kp-home)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
+(global-set-key [(meta    super kp-home)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
 ;;lobal-set-key [(control meta super kp-home)] '
 
 ;; ==================== kp-8/kp-up ====================
 ;;
-(global-set-key [kp-8]           '(lambda () (interactive "*") (tjf:duplicate/syntax -8)))
+(global-set-key [kp-8]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -8)))
 ;;lobal-set-key [(control kp-8)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-8)] '(lambda () (interactive "*") (tjf:duplicate/syntax 8)))
+(global-set-key [(meta    kp-8)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 8)))
 ;;lobal-set-key [(super   kp-8)] '
 ;;lobal-set-key [(control meta  kp-8)] ' DO NOT USE
-(global-set-key [(control super kp-8)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
-(global-set-key [(meta    super kp-8)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
+(global-set-key [(control super kp-8)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
+(global-set-key [(meta    super kp-8)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
 ;;lobal-set-key [(control meta super kp-8)] '
 
-(global-set-key [kp-up]           '(lambda () (interactive "*") (tjf:duplicate/syntax -8)))
+(global-set-key [kp-up]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -8)))
 ;;lobal-set-key [(control kp-up)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-up)] '(lambda () (interactive "*") (tjf:duplicate/syntax 8)))
+(global-set-key [(meta    kp-up)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 8)))
 ;;lobal-set-key [(super   kp-up)] '
 ;;lobal-set-key [(control meta  kp-up)] ' DO NOT USE
-(global-set-key [(control super kp-up)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
-(global-set-key [(meta    super kp-up)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
+(global-set-key [(control super kp-up)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
+(global-set-key [(meta    super kp-up)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
 ;;lobal-set-key [(control meta super kp-up)] '
 
 ;; ==================== kp-9/kp-prior ====================
 ;;
-(global-set-key [kp-9]           '(lambda () (interactive "*") (tjf:duplicate/syntax -9)))
+(global-set-key [kp-9]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -9)))
 ;;lobal-set-key [(control kp-9)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-9)] '(lambda () (interactive "*") (tjf:duplicate/syntax 9)))
+(global-set-key [(meta    kp-9)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 9)))
 ;;lobal-set-key [(super   kp-9)] '
 ;;lobal-set-key [(control meta  kp-9)] ' DO NOT USE
-(global-set-key [(control super kp-9)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
-(global-set-key [(meta    super kp-9)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
+(global-set-key [(control super kp-9)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
+(global-set-key [(meta    super kp-9)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
 ;;lobal-set-key [(control meta super kp-9)] '
 
-(global-set-key [kp-prior]           '(lambda () (interactive "*") (tjf:duplicate/syntax -9)))
+(global-set-key [kp-prior]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -9)))
 ;;lobal-set-key [(control kp-prior)] ' DO NOT USE ... digit argument
-(global-set-key [(meta    kp-prior)] '(lambda () (interactive "*") (tjf:duplicate/syntax 9)))
+(global-set-key [(meta    kp-prior)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 9)))
 ;;lobal-set-key [(super   kp-prior)] '
 ;;lobal-set-key [(control meta  kp-prior)] ' DO NOT USE
-(global-set-key [(control super kp-prior)] '(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
-(global-set-key [(meta    super kp-prior)] '(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
+(global-set-key [(control super kp-prior)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
+(global-set-key [(meta    super kp-prior)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
 ;;lobal-set-key [(control meta super kp-prior)] '
 
 ;;; ================================================================================
@@ -1513,10 +1514,10 @@
 (global-set-key [mouse-8] 'scroll-up-command)
 (global-set-key [mouse-9] 'scroll-down-command)
 
-(global-set-key [(control shift mouse-1)] '(lambda (e) (interactive "e") (hs-minor-mode 1)(hs-mouse-toggle-hiding e)))
+(global-set-key [(control shift mouse-1)] #'(lambda (e) (interactive "e") (hs-minor-mode 1)(hs-toggle-hiding e)))
 (global-set-key [(control shift mouse-3)] 'ffap-at-mouse)
 
-(global-set-key [(meta    shift mouse-3)] '(lambda (e) (interactive "e")(let ((ffap-file-finder 'find-file-other-frame)) (ffap-at-mouse e))))
+(global-set-key [(meta    shift mouse-3)] #'(lambda (e) (interactive "e")(let ((ffap-file-finder 'find-file-other-frame)) (ffap-at-mouse e))))
 ;;
 ;; Mode Line Mouse
 ;;
