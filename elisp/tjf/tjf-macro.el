@@ -38,6 +38,8 @@
 ;;           17-Apr-2018 Added ‘diminish-modelist’
 ;;           27-Jun-2019 Added ‘append-to-list’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           11-Mar-2021 Added ‘looking-at-word-or-symbol’
+;;                       Updated ‘word-beginning-position’ and ‘word-end-position’ to look for variables and function names
 ;;
 
 ;;; Code:
@@ -181,16 +183,31 @@ when there is no mark set.
   (while (search-forward str (or point-end (point-max)) t)
       (replace-match replacement-string t)))
 
-(defsubst word-beginning-position ()
+(defvar word-symbol-syntax     "w_")
+(defvar not-word-symbol-syntax (concat "^" word-symbol-syntax))
+
+(defun looking-at-word-or-symbol ()
+  "Return t if character after point is a word character or a symbol character."
+  (let ((syntax (string (char-syntax (char-after)))))
+    (or (equal syntax "w") (equal syntax "_"))))
+
+(defun word-beginning-position ()
   "Return the character position of the first character of the current word."
+  (interactive)
   (save-excursion
-    (skip-chars-backward "[:alnum:]")
+    (if (looking-at-word-or-symbol)
+        (skip-syntax-backward word-symbol-syntax)
+      (skip-syntax-forward not-word-symbol-syntax))
     (point)))
 
-(defsubst word-end-position ()
+(defun word-end-position ()
   "Return the character position of the end of the current word."
+  (interactive)
   (save-excursion
-    (skip-chars-forward "[:alnum:]")
+    (if (looking-at-word-or-symbol)
+        (skip-syntax-forward word-symbol-syntax)
+      (skip-syntax-forward not-word-symbol-syntax)
+      (skip-syntax-forward word-symbol-syntax))
     (point)))
 
 ;;
