@@ -47,6 +47,7 @@
 *** mv .bashrc .basrc.sav
 *** ln -s ide/.bashrc
 *** ln -s ide/.emacs.el
+    NOTE: no longerusing .emacs
 *** ln -s ide/early-init.el
 *** ln -s ide/bin
 *** ln -s ide/elisp
@@ -59,9 +60,6 @@
 *** git config --global user.name "<user name>"
 *** git config --global user.email "<email address>"
 *** cd elisp
-*** mkdir packages
-*** cd packages
-*** git clone https://github.com/jaalto/project\-\-emacs-tiny-tools
 
 * sudo bash
 ** fc-cache -f -v
@@ -89,9 +87,14 @@
 ** mkdir backup
 
 ** emacs -Q -f elisp/package-install.el
+TODO: is this still necessary or does straight.el remove the need for
+this?
+
 ** Open elisp/usr/default.el and eval-buffer
 ** M-x package-install ergoemacs-mode
 ** cd elisp
+
+* OBSOLETE
 ** mkdir packages
 ** cd packages
 ** git clone https://github.com/jaalto/project--emacs-tiny-tools
