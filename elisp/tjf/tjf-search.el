@@ -44,6 +44,9 @@
   (require 'tjf-macro))
 
 ;;
+(defalias 'search-word-forward  'tjf:search/forward-word-at-point)
+(defalias 'search-word-backward 'tjf:search/backward-word-at-point)
+
 (defun tjf:search/all-files ()
   "Find matching text in all open files (i.e. `multi-occur') for text at point or region."
   (interactive)
@@ -84,6 +87,39 @@
       (buffer-substring-no-properties (region-beginning) (region-end))
     (or (thing-at-point 'symbol)
         (car regexp-history))))
+
+(defun tjf:search/word-at-point ()
+  "Return word (no properties) at point, otherwise return nil."
+  (when (looking-at-word-or-symbol)
+      (buffer-substring-no-properties (word-beginning-position) (word-end-position))))
+
+(defun tjf:search/match-word (word direction)
+  "Find the next match for WORD in DIRECTION."
+  (let ((regexp (concat "[^[:word:]]" word "[^[:word:]]")))
+    (if (eq direction 'forward)
+        (save-excursion
+          (search-forward-regexp regexp (point-max) t))
+      (save-excursion
+          (search-backward-regexp regexp (point-min) t)))))
+
+(defun tjf:search/goto-word-at-point (direction)
+  "Search in DIRECTION for the word at point."
+  (if (looking-at-word-or-symbol)
+      (let ((word (tjf:search/word-at-point)))
+        (if (tjf:navigate/match-word word direction)
+            (goto-char (+ 1 (match-beginning 0)))
+          (error (concat " ‘" word "’ not found"))))
+    (error "Word not grabbed")))
+
+(defun tjf:search/forward-word-at-point ()
+  "Search for the word at point."
+  (interactive)
+  (tjf:search/goto-word-at-point 'forward))
+
+(defun tjf:search/backward-word-at-point ()
+  "Search for the word at point."
+  (interactive)
+  (tjf:search/goto-word-at-point 'backward))
 
 (defvar tjf:search/menu
   '("Search"
