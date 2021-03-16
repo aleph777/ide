@@ -123,7 +123,7 @@ sub getInsert
   my $insert = join '','insert into ',$tableName,' ( ',join(', ',map { sprintf '[%s]',$_ } @{$tableKeys}),' )';
   my $select = defined $tableId ? join '','select',$tableId,'= @@Identity;' : undef;
 
-  @{$contents} =();
+  @{$contents} = ();
 
   foreach my $d (@{$data})
   {
