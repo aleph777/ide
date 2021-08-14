@@ -52,6 +52,7 @@
 ;;           22-Jan-2021 Added ‘what-cursor-position' to menu
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           08-May-2021 Fixed reset frame size menu entry
+;;           14-Aug-2021 Fixed ‘tjf:view/get-line-numbers’
 ;;
 
 ;;; Code:
@@ -92,8 +93,7 @@
 
 (defun tjf:view/get-line-numbers ()
   "Get line number setting from `display-line-numbers'."
-  (cond ((not (boundp display-line-numbers)) 'off)
-        ((eq display-line-numbers nil)       'off)
+  (cond ((eq display-line-numbers nil)       'off)
         ((eq display-line-numbers t)         'absolute)
         ((eq display-line-numbers 'absolute) 'absolute)
         ((eq display-line-numbers 'relative) 'relative)
