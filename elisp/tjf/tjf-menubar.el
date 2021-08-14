@@ -59,6 +59,7 @@
 ;;           14-Jan-2017 Added Bookmark menu
 ;;           22-Jul-2019 Moved Bookmark menu to Navigate
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           15-Jul-2021 Sorted Edit menu
 ;;
 
 ;;; Code:
@@ -76,38 +77,9 @@
 (require 'tjf-view)
 (require 'undo-tree)
 
-;;; overload
-(defun undo-tree-update-menu-bar ()
-  "Update `undo-tree-mode' Edit menu items."
-  (if undo-tree-mode
-      (progn
-	;; save old undo menu item, and install undo/redo menu items
-	(setq undo-tree-old-undo-menu-item
-	      (cdr (assq 'undo (lookup-key global-map [menu-bar Edit]))))
-	(define-key (lookup-key global-map [menu-bar Edit])
-	  [Undo] '(menu-item "Undo" undo-tree-undo
-			     :enable (and undo-tree-mode
-					  (not buffer-read-only)
-					  (not (eq t buffer-undo-list))
-					  (undo-tree-node-previous
-					   (undo-tree-current buffer-undo-tree)))
-			     :help "Undo last operation"))
-	(define-key-after (lookup-key global-map [menu-bar Edit])
-	  [Redo] '(menu-item "Redo" undo-tree-redo
-			     :enable (and undo-tree-mode
-					  (not buffer-read-only)
-					  (not (eq t buffer-undo-list))
-					  (undo-tree-node-next
-					   (undo-tree-current buffer-undo-tree)))
-			     :help "Redo last operation")
-	  'Undo))
-    ;; uninstall undo/redo menu items
-    (define-key (lookup-key global-map [menu-bar Edit]) [Undo] undo-tree-old-undo-menu-item)
-    (define-key (lookup-key global-map [menu-bar Edit]) [Redo] nil)))
-
 (define-key global-map [menu-bar] (make-sparse-keymap "menu-bar"))
 (define-key global-map [menu-bar buffer] (cons "Window" global-buffers-menu-map))
-(setq menu-bar-final-items '(buffer Help))
+(setq menu-bar-final-items '(buffer help))
 
 (easy-menu-define help-menu global-map "Help"
   '("Help"
@@ -154,15 +126,15 @@
 (define-key-after edit-menu [xxx1]      '(menu-item "--")                 'marker1)
 (define-key-after edit-menu [yank-menu] '("Select and Paste" . yank-menu) 'marker1)
 (define-key-after edit-menu [xxx2]      '(menu-item "--")                 'marker1)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-comment                   'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-indent                    'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-rectangle                 'marker2)
 (easy-menu-add-item nil '("Edit") tjf:edit/menu-align                     'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-whitespace                'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-delete                    'marker2)
-(easy-menu-add-item nil '("Edit") tjf:sort/menu                           'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-justify                   'marker2)
 (easy-menu-add-item nil '("Edit") tjf:edit/menu-case                      'marker2)
+(easy-menu-add-item nil '("Edit") tjf:edit/menu-comment                   'marker2)
+(easy-menu-add-item nil '("Edit") tjf:edit/menu-delete                    'marker2)
+(easy-menu-add-item nil '("Edit") tjf:edit/menu-indent                    'marker2)
+(easy-menu-add-item nil '("Edit") tjf:edit/menu-justify                   'marker2)
+(easy-menu-add-item nil '("Edit") tjf:edit/menu-rectangle                 'marker2)
+(easy-menu-add-item nil '("Edit") tjf:sort/menu                           'marker2)
+(easy-menu-add-item nil '("Edit") tjf:edit/menu-whitespace                'marker2)
 
 (easy-menu-define file-menu global-map "File" tjf:file/menu)
 

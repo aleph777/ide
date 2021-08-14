@@ -44,6 +44,7 @@
 ;;           18-Jan-2017 Updated ‘lisp-insert-skeleton’
 ;;           13-Jun-2020 Added FORCE to byte recompile directory menu entry
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           07-Apr-2021 Updated ‘tjf:lisp/insert-skeleton’
 ;;
 
 ;;; Code:
@@ -51,6 +52,8 @@
 (message "Loading tjf-lisp...")
 (require 'easymenu)
 (require 'tjf-date)
+(require 'tjf-edit)
+(message "Loading tjf-lisp...debug")
 
 ;;
 (defconst tjf:lisp/imenu-generic-expression
@@ -73,18 +76,10 @@
         (year   (format-time-string "%Y-%Y"))
         (author (user-full-name))
         (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
-    (save-excursion
-      (while (search-forward "<<<NAME>>>" (point-max) t)
-        (replace-match name t)))
-    (save-excursion
-      (search-forward "<<<YEAR>>>")
-      (replace-match year t)
-      (search-forward "<<<AUTHOR>>>")
-      (replace-match author t)
-      (search-forward "<<<AUTHOR>>>")
-      (replace-match author t)
-      (search-forward "<<<DATE>>>")
-      (replace-match date t))))
+    (tjf:edit/fill-skeleton "<<<NAME>>>"   name)
+    (tjf:edit/fill-skeleton "<<<YEAR>>>"   year)
+    (tjf:edit/fill-skeleton "<<<AUTHOR>>>" author)
+    (tjf:edit/fill-skeleton "<<<DATE>>>"   date)))
 
 (defun tjf:lisp/setup ()
   "Set up ‘lisp-mode’."
@@ -113,6 +108,7 @@
     ))
 
 ;;
+(message "Loading tjf-lisp...setting up minor mode menus...")
 (define-key lisp-mode-map             [menu-bar] nil)
 (define-key lisp-mode-shared-map      [menu-bar] nil)
 (define-key lisp-interaction-mode-map [menu-bar] nil)

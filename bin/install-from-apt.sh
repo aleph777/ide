@@ -22,13 +22,19 @@ installPackage()
 
 installPackage autoconf
 installPackage build-essential
+
+installPackage autotrace
+installPackage bear
+installPackage clangd
 installPackage cmake
 installPackage cpanminus
 installPackage cppcheck
 installPackage ffmpeg
 installPackage flex
-#installPackage git
+# installPackage git # -- if we have this script, then git has already been installed
 installPackage indent
+installPackage julia
+installPackage klatexformula
 installPackage libffi-dev
 installPackage libgconf2-dev
 installPackage libgdbm-dev
@@ -53,12 +59,15 @@ installPackage libtinfo-dev
 installPackage libxml2-dev
 installPackage libxpm-dev
 installPackage libyaml-dev
+installPackage makeinfo
 installPackage net-tools
 installPackage p7zip-full
 installPackage python-dev
 # installPackage ruby
 installPackage sdcv
 installPackage sloccount
+installPackage texinfo
+installPackage texlive-latex-base
 installPackage yasm
 installPackage zlib1g-dev
 

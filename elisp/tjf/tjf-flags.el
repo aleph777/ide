@@ -38,6 +38,7 @@
 ;;           14-Jan-2017 Added ‘is-bookmark?’
 ;;           17-Jan-2017 Changed ‘defvar’s to ‘defconst’s
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           02-Jul-2021 Reworked ‘tjf:flags/enable-undo-redo?’
 ;;
 
 ;;; Code:
@@ -46,8 +47,8 @@
 
 ;;
 (defvar tjf:flags/enable-enriched-modes '(fundamental-mode
-                                indented-text-mode
-                                text-mode))
+                                          indented-text-mode
+                                          text-mode))
 
 (defvar tjf:flags/enable-space-modes '(fundamental-mode
                                        indented-text-mode
@@ -95,7 +96,7 @@
   "Boolean: should comment functions on region be enabled?"
   (and mark-active comment-start (tjf:flags/is-rw?)))
 
-(defalias 'tjf:flags/enable-encoding? 'is-not-shell-mode-or-read-only?)
+(defalias 'tjf:flags/enable-encoding? 'tjf:flags/is-not-shell-mode-or-read-only?)
 
 (defun tjf:flags/enable-enriched-mode? ()
   "Boolean: should ‘enriched-mode’?"
@@ -114,11 +115,6 @@
             (cdr yank-menu)
           kill-ring))
        (not buffer-read-only)))
-
-(defun tjf:flags/enable-redo? ()
-  "Boolean: should ‘redo’ be enabled?"
-  (and (not buffer-read-only)
-       (not (eq t buffer-undo-list))))
 
 (defun tjf:flags/enable-revert? ()
   "Boolean: should ‘revert’ be enabled?"
@@ -141,10 +137,16 @@
   "Boolean: should ‘canonically-space-region’ be enabled?"
   (and mark-active (tjf:flags/is-rw?) (memq major-mode tjf:flags/enable-space-modes)))
 
-(defun tjf:flags/enable-undo? ()
-  "Boolean: should ‘undo’ be enabled?"
-  (and (not buffer-read-only)
-       (not (eq t buffer-undo-list))))
+(defun tjf:flags/enable-undo-redo? ()
+  "Boolean: should ‘undo/redo’ be enabled?"
+  (and undo-tree-mode (not buffer-read-only)))
+       ;; (not (eq t buffer-undo-list))
+       ;; (not (eq nil buffer-undo-tree))
+       ;; (undo-tree-node-previous
+       ;;  (undo-tree-current buffer-undo-tree))))
+  ;; (and undo-tree-mode
+  ;;      (not buffer-read-only))
+
 
 (defalias 'tjf:flags/enable-write? 'tjf:flags/is-rw?)
 
@@ -300,7 +302,6 @@ This depends on major mode having setup syntax table properly."
   "Get the current status of the LED mask from X."
   (with-temp-buffer
     (call-process "xset" nil t nil "q")
-
     ;; ignore the flycheck/flymake warnings below
     (let ((led-mask-string
            (->> (buffer-string)

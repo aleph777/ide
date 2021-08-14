@@ -1,0 +1,84 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+#         Copyright © 2021-2021 Tom Fontaine
+
+# Title:  genetic-1
+# Date:   18-Feb-2021
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+#
+# Purpose:
+#
+# Arguments:
+#
+# Revision:
+#
+
+use strict;
+use File::IO;
+use Math::NewGenetic;
+use Text::Hash;
+use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+sub cost
+{
+  my ($population,$data) = @_;
+
+  foreach my $p (@{$population})
+  {
+    $p->{COST} = 0;
+
+    for(@{$data})
+    {
+      my $x  = $_->{X};
+      my $x2 = $x*$x;
+      my $x3 = $x2*$x;
+      my $x4 = $x3*$x;
+      my $x5 = $x4*$x;
+      my $x6 = $x5*$x;
+      my $x7 = $x6*$x;
+
+      my $numerator   = 1;
+      my $denominator = $p->{d0} + $p->{d1}*$x + $p->{d2}*$x2 + $p->{d3}*$x3 + $p->{d4}*$x4 + $p->{d5}*$x5 + $p->{d6}*$x6 + $p->{d7}*$x7;
+
+      $p->{COST} += $denominator != 0 ? ($_->{FX} - $numerator/$denominator)**2 : 9999999;
+    }
+  }
+}
+
+my @traits = qw(d7 d6 d5 d4 d3 d2 d1 d0);
+
+my %specification = map { $_ => {FMT => '%3d',INT => 1,MAX => 10, MIN => -10, PRC => undef,NORMALIZE => 0} } @traits;
+
+my $th = Text::Hash->new(type => 'PREDEFINED',keys => [qw(X FX)],delimiter => ',');
+my $io = File::IO->new(processor => $th,chomp => 1);
+my $mg = Math::NewGenetic->new(costFunction => \&cost,specification => \%specification,traits => \@traits);
+
+my $file = defined $ARGV[0] && -f $ARGV[0] ? $ARGV[0] : "$ENV{HOME}/tmp/curve-data.csv";
+
+$th->configure(text => $io->contents,contents => $mg->data);
+$io->get(path => $file);
+$mg->solve(mutationRate => 0.5,generations => 99999,minimumDifference => 0.0005);

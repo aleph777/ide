@@ -33,6 +33,7 @@
 ;;           13-Jun-2018 Added ‘helpful-mode’ to ‘Help’ entry
 ;;           24-Jun-2019 Added ‘groovy’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           02-Jul-2021 Added ‘julia-mode’
 ;;
 
 ;;; Code:
@@ -125,6 +126,7 @@
                        ((eq major-mode 'java-mode)                                                 2090 "Java Files (%d)")
                        ((tjf:flags/is-javascript-mode?)                                            2091 "Javascript Files (%d)")
                        ((eq major-mode 'json-mode)                                                 2092 "JSON Files (%d)")
+                       ((eq major-mode 'julia-mode)                                                2093 "Julia Files (%d)")
                        ;; K 3000
                        ;; L 3010
                        ((eq major-mode 'latex-mode)                                                3010 "Latex Files (%d)")
@@ -140,7 +142,7 @@
                        ((eq major-mode 'org-mode)                                                  3040 "Org Files (%d)")
                        ;; P 3050
                        ((memq major-mode '(package-menu-mode paradox-menu-mode))                   3050 "Packages (%d)")
-                       ((eq major-mode 'pascal-mode)                                               3051 "Postscript Files (%d)")
+                       ((eq major-mode 'pascal-mode)                                               3051 "Pascal (%d)")
                        ((tjf:flags/is-perl-mode?)                                                  3052 "Perl Files (%d)")
                        ((eq major-mode 'perl6-mode)                                                3053 "Perl6 Files (%d)")
                        ((eq major-mode 'ps-mode)                                                   3054 "Postscript Files (%d)")

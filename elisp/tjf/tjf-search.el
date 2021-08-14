@@ -31,6 +31,7 @@
 
 ;; Revision: 16-Nov-2016 Fixed bug with `buffer-list'
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           02-Jul-2021 Added ‘tjf:search/add-to-isearch-search-ring’
 ;;
 
 ;;; Code:
@@ -106,9 +107,10 @@
   "Search in DIRECTION for the word at point."
   (if (looking-at-word-or-symbol)
       (let ((word (tjf:search/word-at-point)))
-        (if (tjf:navigate/match-word word direction)
+        (if (tjf:search/match-word word direction)
             (goto-char (+ 1 (match-beginning 0)))
-          (error (concat " ‘" word "’ not found"))))
+          (error (concat " ‘" word "’ not found")))
+        (tjf:search/add-to-isearch-search-ring word))
     (error "Word not grabbed")))
 
 (defun tjf:search/forward-word-at-point ()
@@ -121,27 +123,47 @@
   (interactive)
   (tjf:search/goto-word-at-point 'backward))
 
+(defun tjf:search/add-to-isearch-search-ring (isearch-string)
+  "Add ISEARCH-STRING to isearch ‘search-ring’."
+  (if (> (length isearch-string) 0)
+      ;; Update the ring data.
+      (if isearch-regexp
+          (if (or (null regexp-search-ring)
+                  (not (string= isearch-string (car regexp-search-ring))))
+              (progn
+                (setq regexp-search-ring
+                      (cons isearch-string regexp-search-ring))
+                (if (> (length regexp-search-ring) regexp-search-ring-max)
+                    (setcdr (nthcdr (1- search-ring-max) regexp-search-ring)
+                            nil))))
+        (if (or (null search-ring)
+                (not (string= isearch-string (car search-ring))))
+            (progn
+              (setq search-ring (cons isearch-string search-ring))
+              (if (> (length search-ring) search-ring-max)
+                  (setcdr (nthcdr (1- search-ring-max) search-ring) nil)))))))
+
 (defvar tjf:search/menu
   '("Search"
     ["Find..."                     tjf:search/occur       :active t]
     ["Find (All Files)..."         tjf:search/multi-occur :active t]
     "---"
-    ["Search Forward..."         search-forward         :active t]
-    ["Search Backward..."        search-backward        :active t]
-    ["Search Regexp Forward..."  search-forward-regexp  :active t]
-    ["Search Regexp Backward..." search-backward-regexp :active t]
+    ["Map Replace"        query-mapreplace        :enable (tjf:flags/enable-write?)]
+    ["Map Replace Regexp" query-mapreplace-regexp :enable (tjf:flags/enable-write?)]
     "---"
-    ["Repeat Search Forward"         nonincremental-repeat-search-forward     :active t]
     ["Repeat Search Backward"        nonincremental-repeat-search-backward    :active t]
-    ["Repeat Search Regexp Forward"  nonincremental-repeat-re-search-forward  :active t]
+    ["Repeat Search Forward"         nonincremental-repeat-search-forward     :active t]
     ["Repeat Search Regexp Backward" nonincremental-repeat-re-search-backward :active t]
+    ["Repeat Search Regexp Forward"  nonincremental-repeat-re-search-forward  :active t]
     "---"
     ["Replace..."        query-replace        :enable (tjf:flags/enable-write?)]
     ["Replace Regexp..." query-replace-regexp :enable (tjf:flags/enable-write?)]
     ["Perl Replace..."   tjf:query-replace/do :enable (tjf:flags/enable-write?)]
     "---"
-    ["Map Replace"        query-mapreplace        :enable (tjf:flags/enable-write?)]
-    ["Map Replace Regexp" query-mapreplace-regexp :enable (tjf:flags/enable-write?)]
+    ["Search Backward..."        search-backward        :active t]
+    ["Search Forward..."         search-forward         :active t]
+    ["Search Regexp Backward..." search-backward-regexp :active t]
+    ["Search Regexp Forward..."  search-forward-regexp  :active t]
     ))
 
 ;;

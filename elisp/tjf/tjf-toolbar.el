@@ -120,17 +120,17 @@
 ;;
 ;; Undo/Redo
 ;;
-(tool-bar-add-item "sg-undo" 'undo 'undo :label "" :help "Undo last operation" :enable '(tjf:flags/enable-undo?))
-(tool-bar-add-item "sg-redo" 'redo 'redo :label "" :help "Redo last undo"      :enable '(tjf:flags/enable-redo?))
+(tool-bar-add-item "sg-undo" 'undo 'undo :label "" :help "Undo last operation" :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
+(tool-bar-add-item "sg-redo" 'redo 'redo :label "" :help "Redo last undo"      :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
 
 ;; (define-key-after (default-value 'tool-bar-map) [separator-3] menu-bar-separator)
 
 ;;
 ;; Cut/Copy/Paste
 ;;
-(tool-bar-add-item "sg-cut"   'kill-region    'cut   :label "" :help "Cut/Cut Rectangle"     :enable '(tjf:flags/enable-modify-region?))
-(tool-bar-add-item "sg-copy"  'kill-ring-save 'copy  :label "" :help "Copy/Copy Rectangle"   :enable 'mark-active)
-(tool-bar-add-item "sg-paste" 'yank           'paste :label "" :help "Paste/Paste Rectangle" :enable '(tjf:flags/enable-paste?))
+(tool-bar-add-item "sg-cut"   'kill-region    'cut   :label ""  :visible '(tjf:flags/is-rw?) :help "Cut/Cut Rectangle"     :enable '(tjf:flags/enable-modify-region?))
+(tool-bar-add-item "sg-copy"  'kill-ring-save 'copy  :label ""                               :help "Copy/Copy Rectangle"   :enable 'mark-active)
+(tool-bar-add-item "sg-paste" 'yank           'paste :label ""  :visible '(tjf:flags/is-rw?) :help "Paste/Paste Rectangle" :enable '(tjf:flags/enable-paste?))
 
 (define-key-after (default-value 'tool-bar-map) [separator-4] menu-bar-separator)
 
@@ -165,7 +165,7 @@
 (tool-bar-add-item "sg-tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")
 
 (tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:flags/visible-shell?) :label "" :help "Previous input")
-(tool-bar-add-item "sg-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:flags/visible-shell?) :label "" :help "Next input")
+(tool-bar-add-item "mi-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:flags/visible-shell?) :label "" :help "Next input")
 (tool-bar-add-item "sg-cancel"   'comint-delete-output       'cancel     :visible '(tjf:flags/visible-shell?) :label "" :help "Flush output")
 
 ;;

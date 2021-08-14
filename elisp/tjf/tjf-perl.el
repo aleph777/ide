@@ -64,14 +64,16 @@
 ;;           03-Jul-2017 Set ‘flycheck-perl-include-path’ in ‘perl-setup’
 ;;           05-Oct-2020 Removed ‘perl-init-faces’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           07-Apr-2021 Updated ‘tjf:perl/fill-out-template’
 ;;
 
 ;;; Code:
 
 (message "Loading tjf-perl...")
 (require 'cperl-mode)
-(require 'tjf-frame)
 (require 'tjf-date)
+(require 'tjf-edit)
+(require 'tjf-frame)
 
 ;;; overload
 (defun cperl-define-key () nil)
@@ -97,16 +99,10 @@
          (year    (format-time-string "%Y-%Y"))
          (author  (user-full-name))
          (date    (tjf:date/today tjf:date/dd-mon-yyyy)))
-    (search-forward "<<<PACKAGE>>>")
-    (replace-match package t)
-    (search-forward "<<<YEAR>>>")
-    (replace-match year t)
-    (search-forward "<<<AUTHOR>>>")
-    (replace-match author t)
-    (search-forward "<<<DATE>>>")
-    (replace-match date t)
-    (if (search-forward "<<<PACKAGE>>>" (point-max) t)
-        (replace-match package t))))
+    (tjf:edit/fill-skeleton "<<<PACKAGE>>>" package)
+    (tjf:edit/fill-skeleton "<<<YEAR>>>"    year)
+    (tjf:edit/fill-skeleton "<<<AUTHOR>>>"  author)
+    (tjf:edit/fill-skeleton "<<<DATE>>>"    date)))
 
 (defun tjf:perl/indent-function ()
   "Indentation function for `perl-mode'."

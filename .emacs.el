@@ -35,19 +35,12 @@
 ;;
 (setq gc-cons-threshold (* 16 1024 1024))
 
-(let* ((packages (concat tjf:user/dir-elisp "packages/"))
-       (tiny     (concat packages "project--emacs-tiny-tools/lisp/")))
+(cl-pushnew (concat tjf:user/dir-elisp "ext/") load-path :test 'string=)
+(cl-pushnew (concat tjf:user/dir-elisp "tjf/") load-path :test 'string=)
 
-  (cl-pushnew (concat tiny "tiny/")  load-path :test 'string=)
-  (cl-pushnew (concat tiny "other/") load-path :test 'string=)
+(cl-pushnew (concat tjf:user/dir-elisp "images/") image-load-path :test 'string=)
 
-  (cl-pushnew (concat tjf:user/dir-elisp "ext/") load-path :test 'string=)
-  (cl-pushnew (concat tjf:user/dir-elisp "tjf/") load-path :test 'string=)
-
-  (cl-pushnew (concat tjf:user/dir-elisp "images/") image-load-path :test 'string=)
-
-  (setq custom-file (concat tjf:user/dir-elisp "custom.el"))
-  )
+(setq custom-file (concat tjf:user/dir-elisp "custom.el"))
 
 (setq custom-theme-directory tjf:user/dir-themes)
 

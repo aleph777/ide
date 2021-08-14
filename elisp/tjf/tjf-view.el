@@ -51,6 +51,7 @@
 ;;           21-Oct-2020 Fixed ‘is-line-numbers-absolute?' and ‘is-line-numbers-relative?'
 ;;           22-Jan-2021 Added ‘what-cursor-position' to menu
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           08-May-2021 Fixed reset frame size menu entry
 ;;
 
 ;;; Code:
@@ -331,7 +332,7 @@ is already narrowed."
      ["Make Window Invisible" make-frame-invisible :enable (delete-frame-enabled-p)]
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
      "---"
-     ["Reset Window Size"     reset-frame-size :enable (tjf:flags/is-not-fullscreen?)]
+     ["Reset Window Size"     tjf:frame/reset-size :enable (tjf:flags/is-not-fullscreen?)]
      ("Background Color"
       ["Set Background Color"  tjf:color/set-background-random]
 

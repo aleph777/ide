@@ -155,11 +155,11 @@ when there is no mark set.
 
 (defsubst diminish-mode-list (lighter &rest modes)
   "Set LIGHTER for  each one of MODES."
-  (dolist (mode modes) (diminish mode lighter)))
+  (dolist (mode modes t) (diminish mode lighter)))
 
 (defsubst hook-into-modes (func &rest modes)
   "Add FUNC to each one of MODES."
-  (dolist (mode-hook modes) (add-hook mode-hook func)))
+  (dolist (mode-hook modes t) (add-hook mode-hook func)))
 
 (defsubst paragraph-beginning-position ()
   "Return the character position of the first character of the current paragraph."

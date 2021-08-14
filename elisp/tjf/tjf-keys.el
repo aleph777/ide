@@ -111,12 +111,14 @@
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           16-Mar-2021 Removed ‘tinyeat-delete-whole-word’, ‘tinyeat-backward-preserve’, and ‘tinyeat-forward-preserve’
 ;;                       Fixed warnings on lambda functions
+;;           24-Mar-2021 Added ‘consult-outline’ to ‘C-M-o’
 
 ;;; Code:
 
 (message "Loading tjf-keys...")
 (require 'anzu)
 (require 'bm)
+(require 'consult)
 (require 'tjf-clipboard)
 (require 'tjf-duplicate)
 (require 'tjf-edit)
@@ -293,7 +295,7 @@
 (global-set-key [(control o)]            'find-file)
 ;;lobal-set-key [(meta    o)]            ' PREFIX
 ;;lobal-set-key [(super   o)]            ' DO NOT USE ... ???
-;;lobal-set-key [(control meta  o)]      '
+(global-set-key [(control meta  o)]      'consult-outline)
 ;;lobal-set-key [(control shift o)]      'find-file)
 (global-set-key [(control super o)]      'open-rectangle)
 ;;lobal-set-key [(meta    super o)]      '
@@ -858,10 +860,10 @@
 ;;lobal-set-key [TAB]           ' INDENT
 (global-set-key [(control tab)] 'tjf:color/set-background-random)
 (global-set-key [(meta    tab)] 'tjf:color/set-background-random)
-;;lobal-set-key [(super   tab)] '
+;;lobal-set-key [(super   tab)] ' DO  NOT USE
 ;;lobal-set-key [(control meta  tab)] ' DO  NOT USE
-(global-set-key [(control super tab)] 'clean-aindent--bsunindent)
-;;lobal-set-key [(meta    super tab)] '
+(global-set-key [(control super tab)] 'clean-ndent--bsunindent)
+;;lobal-set-key [(meta    super tab)] ')
 ;;lobal-set-key [(control meta super tab)] '
 
 ;;lobal-set-key [backtab] '
