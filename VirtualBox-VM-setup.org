@@ -15,18 +15,6 @@
 
 * Install Guest Additions
 
-* OBSOLETE: Set root password (to use update manager)
-  https://mintguide.org/system/248-reset-the-password-for-root-or-any-user-in-linux-mint.html
-
-* OBSOLETE: Set up user account
-** su (root password!!!)
-** usermod -G vboxsf fontaine
-** echo "fontaine ALL=(ALL) ALL" > /etc/sudoers.d/users
-** or
-** echo 'fontaine ALL=(ALL) NOPASSWD:ALL'
-
-* RESTART
-
 * Set up local /home environment
 ** TODO: this may be outdated for new environments
 ** rmdir Documents
@@ -47,7 +35,7 @@
 *** mv .bashrc .basrc.sav
 *** ln -s ide/.bashrc
 *** ln -s ide/.emacs.el
-    NOTE: no longerusing .emacs
+    NOTE: emacs 28 funkiness with .emacs.el *** ln -s ide/.emacs.el .emacs
 *** ln -s ide/early-init.el
 *** ln -s ide/bin
 *** ln -s ide/elisp
@@ -59,10 +47,9 @@
     NOTE:   ---V                ---V don't translate from web site
 *** git config --global user.name "<user name>"
 *** git config --global user.email "<email address>"
-*** cd elisp
 
 * sudo bash
-** fc-cache -f -v
+** fc-cache -f -v .fonts
 ** source bin/install-from-apt.sh -- NOTE: some distros may have libgnutls<VERSION>-dev
 ** source bin/install-from-cpan.sh
 ** exit
@@ -76,19 +63,18 @@
 ** git clone https://git.savannah.gnu.org/git/emacs.git
 ** cd emacs
 ** ./autogen.sh
-** ./configure --without-makeinfo
+** ./configure
 ** make -j4
 ** cd ../elisp
 ** ln -s ~/.emacs.d/elpa/
-** cd .config
+** cd ~/.config
 ** mkdir emacs
 ** cd emacs
 ** mkdir autosave
 ** mkdir backup
 
-** emacs -Q -f elisp/package-install.el
-TODO: is this still necessary or does straight.el remove the need for
-this?
+** OBSOLETE emacs -Q -f elisp/package-install.el
+
 
 ** Open elisp/usr/default.el and eval-buffer
 ** M-x package-install ergoemacs-mode
