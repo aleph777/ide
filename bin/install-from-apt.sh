@@ -23,7 +23,7 @@ installPackage()
 installPackage autoconf
 installPackage build-essential
 
-installPackage autotrace
+#installPackage autotrace
 installPackage bear
 installPackage clangd
 installPackage cmake
@@ -59,7 +59,7 @@ installPackage libtinfo-dev
 installPackage libxml2-dev
 installPackage libxpm-dev
 installPackage libyaml-dev
-installPackage makeinfo
+#installPackage makeinfo
 installPackage net-tools
 installPackage p7zip-full
 installPackage python-dev
