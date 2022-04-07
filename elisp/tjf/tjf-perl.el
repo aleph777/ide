@@ -81,7 +81,7 @@
 (defvar tjf:perl/lib         (getenv "PERLLIB"))
 (defvar tjf:perl/me          "use constant _ME_ => $0 =~ m=([^/]+)$=;\n\n")
 (defvar tjf:perl/min-version "5.010")
-(defvar tjf:perl/which       "/usr/bin/perl")
+(defvar tjf:perl/which       "/usr/bin/env perl")
 (defvar tjf:perl/shebang     (concat "#!" tjf:perl/which " -w    # -*-Perl-*-\n"))
 
 ;;;###autoload
