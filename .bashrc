@@ -26,6 +26,7 @@ export PROMPT_COMMAND="history -a; history -n"
 enable kill
 
 export IDE="$HOME/ide"
+export CINCO="$HOME/cinco"
 
 # aliases are resolved recursively
 #   alias hello="echo Hello"
@@ -35,8 +36,11 @@ alias perl='perl -Mv5.10'
 alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
 
+export CINCOPATH="$CINCO/bin"
+export CINCOLIB="$CINCO/lib"
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
+export PYTHONPATH="$CINCOLIB:$IDE/lib/python"
 
 # apt
 #
@@ -99,7 +103,7 @@ fi
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
 export SNAPBIN=/snap/bin
-export PATH=$($HOME/bin/clean-path $IDE/local/bin $IDE/local/homebin $IDE/bin $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $CINCOPATH $IDE/local/bin $IDE/local/homebin $IDE/bin $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
 # export LD_LIBRARY_PATH=$CLANGLIB
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
