@@ -50,8 +50,6 @@
 ;;
 (setq matlab-imenu-generic-expression '((nil "^function\\(\\s-+[^=\n]+\\s-*=\\s-*\\|\\s-+\\)\\(\\sw+\\)\\s-*(" 2)))
 
-(add-hook 'matlab-mode-hook 'matlab-setup)
-
 ;;
 (message "Loading tjf-matlab...done")
 (provide 'tjf-matlab)
