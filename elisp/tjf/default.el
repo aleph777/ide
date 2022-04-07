@@ -1,7 +1,7 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-no-byte-compile: t; -*- ;; -*-Emacs-Lisp-*-
 
 
-;;         Copyright © 2000-2021 Tom Fontaine
+;;         Copyright © 2000-2022 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Sep-2000
@@ -183,6 +183,8 @@
 ;;           01-Jul-2021 Added ‘-no-byte-compile’
 ;;                       Added ‘julia-mode’
 ;;                       Redid undo/redo enable for Edit menu
+;;           07-Mar-2022 Fixed ‘tjf-python’
+;;                       Removed ‘package-archives’ redundancies
 ;;
 
 ;;; Code:
@@ -207,10 +209,8 @@
 (if (> emacs-major-version 26)
     (enable-theme 'fontaine))
 
-(setq package-archives '(("gnu"          . "http://elpa.gnu.org/packages/")
-                         ("nongnu"       . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa-stable" . "http://stable.melpa.org/packages/")
-                         ("melpa"        . "http://melpa.org/packages/")))
+(add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
 (setq straight-use-package-by-default t)
 
@@ -493,13 +493,13 @@
   (setq company-idle-delay 0)
   ;; (setq company-ispell-dictionary (f-join tychoish-config-path "aspell-pws"))
   (setq company-minimum-prefix-length 2)
-  (setq company-show-numbers t)
+  (setq company-show-quick-access t)
   (setq company-tooltip-align-annotations t)
   (setq company-tooltip-limit 20)
 
   (add-to-list 'company-transformers #'company-sort-by-backend-importance))
 
-(use-package company-jedi          :after (company python-mode)
+(use-package company-jedi         :after (company python-mode)
   :if is-linux?
   :straight t)
 
@@ -834,29 +834,51 @@
 ;;   (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
 ;;     (setq mode-line-format nil)))
 
-(use-package lsp-mode             :commands lsp
+(use-package lsp-mode
   :straight t
-  :config
-  (setq lsp-clients-clangd-executable "/usr/bin/clangd")
-  (setq lsp-clients-clangd-args       nil)
+  :hook (python-mode . lsp-deferred)
+  :commands lsp)
 
-  ;; (lsp-prefer-flymake nil)
-
-  (hook-into-modes #'lsp
-                   'c++-mode-hook
-                   'c-mode-hook
-                   'python-mode-hook))
-
-(use-package lsp-ui               :commands lsp-ui-mode
+(use-package lsp-pyright
   :straight t
+  :hook (python-mode . (lambda () (require 'lsp-pyright)))
+  :init (when (executable-find "python3")
+          (setq lsp-pyright-python-executable-cmd "python3")))
+
+(use-package lsp-ui
+  :straight t
+  :commands lsp-ui-mode
   :config
-  (setq lsp-ui-sideline-show-diagnostics  nil)
-  (setq lsp-ui-sideline-show-hover        t)
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-doc-header t)
+  (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-doc-border (face-foreground 'default))
   (setq lsp-ui-sideline-show-code-actions t)
-  (setq lsp-ui-sideline-update-mode       'line)
-  (setq lsp-ui-sideline-delay             0.2)
-  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references]  #'lsp-ui-peek-find-references))
+  (setq lsp-ui-sideline-delay 0.05))
+
+;; (use-package lsp-mode             :commands lsp
+;;   :straight t
+;;   :config
+;;   (setq lsp-clients-clangd-executable "/usr/bin/clangd")
+;;   (setq lsp-clients-clangd-args       nil)
+
+;;   ;; (lsp-prefer-flymake nil)
+
+;;   (hook-into-modes #'lsp
+;;                    'c++-mode-hook
+;;                    'c-mode-hook
+;;                    'python-mode-hook))
+
+;; (use-package lsp-ui               :commands lsp-ui-mode
+;;   :straight t
+;;   :config
+;;   (setq lsp-ui-sideline-show-diagnostics  nil)
+;;   (setq lsp-ui-sideline-show-hover        t)
+;;   (setq lsp-ui-sideline-show-code-actions t)
+;;   (setq lsp-ui-sideline-update-mode       'line)
+;;   (setq lsp-ui-sideline-delay             0.2)
+;;   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+;;   (define-key lsp-ui-mode-map [remap xref-find-references]  #'lsp-ui-peek-find-references))
 
 (use-package lua-mode             :commands lua-mode
   :straight t
@@ -916,10 +938,7 @@
 
   :preface
   (eval-when-compile
-    (defvar package-archives))
-  :config
-  (add-to-list 'package-archives '("melpa-stable " . "http://stable.melpa.org/packages/"))
-  (add-to-list 'package-archives '("melpa"         . "http://melpa.org/packages/")))
+    (defvar package-archives)))
 
 (use-package plsense              :disabled t
   :if is-linux?
@@ -932,7 +951,7 @@
 (use-package powerline
   :straight t)
 
-(use-package powerthesaurus       :commands powerthesaurus-lookup-word
+(use-package powerthesaurus       :commands powerthesaurus-lookup
   :straight t)
 
 (use-package pretty-column        :commands (pretty-column pretty-rectangle)
@@ -954,6 +973,7 @@
                                              (and root (cons 'transient root))))))
 
 (use-package python               :commands python-mode
+  :straight t
   :mode "\\.py\\'")
 
 (use-package rainbow-delimiters   :commands rainbow-delimiters-mode
@@ -1182,11 +1202,13 @@
 
   (tjf:powerline/theme))
 
-(use-package tjf-python           :commands python-mode
-  :straight nil
-  :functions tjf:python/setup
-  :init
-  (add-hook 'python-mode-hook #'tjf:python/setup))
+;; (use-package tjf-python           :after python-mode
+;;   ;; :functions tjf:python/setup
+;;   :straight nil
+;;   :preface
+;;   (defun tjf:python/setup ())
+;;   :init
+;;   (add-hook 'python-mode-hook #'tjf:python/setup))
 
 (use-package tjf-query-replace    :commands tjf:query-replace/do
   :straight nil)
@@ -1407,6 +1429,13 @@
   (setq xref-search-program             'grep))
 
 ;; ================================================================================
+
+;; not sure why this is necessary
+;;
+(eval-after-load 'python
+  '(progn
+    (load-library "tjf-python")
+    (add-hook 'python-mode-hook #'tjf:python/setup)))
 
 ;;
 (message "default.el ...done")
