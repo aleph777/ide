@@ -150,8 +150,8 @@
 ;;
 ;; (tool-bar-add-item "00-hide"    'hs-hide-block             'hide :label "" :help "Hide block" :visible 'hs-minor-mode)
 ;; (tool-bar-add-item "00-show"    'hs-show-block             'show :label "" :help "Show block" :visible 'hs-minor-mode)
-(tool-bar-add-item "sg-search-up"   'search-word-backward 'backward :label "" :help "Search backward/Previous bookmark")
-(tool-bar-add-item "sg-search-down" 'search-word-forward  'forward  :label "" :help "Search forward/Next bookmark")
+(tool-bar-add-item "sg-search-up"   'search-word-backward 'backward :label "" :help "Search backward")
+(tool-bar-add-item "sg-search-down" 'search-word-forward  'forward  :label "" :help "Search forward")
 (tool-bar-add-item "sg-find"        'tjf:search/occur     'search   :label "" :help "Show matching lines...")
 (tool-bar-add-item "sg-replace"     'anzu-query-replace   'replace  :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
 
