@@ -69,16 +69,6 @@ use constant POPULATION_SCALE    => 20;
 use constant POPULATION_SIZE     => POPULATION_SCALE*(@genes - 1);
 use constant THREAD_COUNT        => $nproc;
 
-sub foo
-{
-  say irand(100);
-}
-
-sub bar
-{
-  say irand(100);
-}
-
 my $format = join ' ',(('%s') x @genes),'--',(COST_FORMAT) x 11;
 
 my @matingPD   = (0 .. POPULATION_SIZE-1); # uniform PDF for mating selections
@@ -274,7 +264,7 @@ sub getSurvivors
   }
 }
 
-my $path = @ARGV ? shift @ARGV : "$ENV{HOME}/Documents/Personal/tsp/map4.distances.csv";
+my $path = @ARGV ? shift @ARGV : "$ENV{HOME}/Documents/map4.distances.csv";
 
 die "_ME_: $path does not exist!!!\n" unless -e $path;
 die "_ME_: $path is a directory!!!\n" if     -d $path;
