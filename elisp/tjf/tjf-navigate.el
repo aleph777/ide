@@ -96,13 +96,16 @@
 
 (defun tjf:navigate/menu ()
   "Top portion of ‘Navigate’ menu."
-  (if (not (eq major-mode 'fundamental-mode))
+  (if (memq major-mode '(c-mode c++mode cperl-mode csharp-mode clips-mode cuda-mode emacs-lisp-mode fortran-mode f90-mode lisp-mode lisp-interaction-mode matlab-mode perl-mode python-mode))
       (progn
         (easy-menu-add-item nil '("Navigate") "---"                                                  "*Rescan*")
-        (easy-menu-add-item nil '("Navigate") ["Goto saved point" tjf:navigate/goto-saved-point   t] "---")
-        (easy-menu-add-item nil '("Navigate") ["Save point"       tjf:navigate/save-point         t] "Goto Saved Point")
-        (easy-menu-add-item nil '("Navigate") ["Go to line..."    goto-line                       t] "Undo scroll")
-        (easy-menu-add-item nil '("Navigate") tjf:bookmark/menu                                      "---"))
+        (easy-menu-add-item nil '("Navigate") ["End of function/class"   end-of-defun                    t] "---")
+        (easy-menu-add-item nil '("Navigate") ["Start of function/class" beginning-of-defun              t] "End of function/class")
+        (easy-menu-add-item nil '("Navigate") ["Goto saved point"        tjf:navigate/goto-saved-point   t] "Start of function/class")
+        (easy-menu-add-item nil '("Navigate") ["Save point"              tjf:navigate/save-point         t] "Goto Saved Point")
+        (easy-menu-add-item nil '("Navigate") ["Go to line..."           goto-line                       t] "Save Point")
+        (easy-menu-add-item nil '("Navigate") tjf:bookmark/menu                                      "---")
+        )
     ))
 
 (defun tjf:navigate/save-point ()
