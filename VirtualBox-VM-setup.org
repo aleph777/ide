@@ -86,7 +86,7 @@
 ** git clone https://github.com/jaalto/project--emacs-tiny-tools
 
 
-** If not a Foliage VM
+** If not a VM
 ** cd ~/Downloads
 ** wget https://s3.amazonaws.com/jsomers/dictionary.zip
 ** cd /tmp
