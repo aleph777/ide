@@ -24,7 +24,7 @@ for(@ARGV)
   {
     say $fn,': NO TAG';
 
-    $mp3->delete_tag('ID3v2') if exists $mp3->{ID3v2};
+    #$mp3->delete_tag('ID3v2') if exists $mp3->{ID3v2};
 
     my $tag = $mp3->new_tag('ID3v1');
 
