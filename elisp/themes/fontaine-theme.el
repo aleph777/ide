@@ -251,9 +251,9 @@
 
        (avenir-next (car (member "Avenir Next Rounded Pro" font-family-list)))
        (dejavu-sans (car (member "DejaVu Sans"             font-family-list)))
-       (open-sans   (car (member "Open Sans"               font-family-list)))
        (nimbus-sans (car (member "Nimbus Sans"             font-family-list)))
        (noto-sans   (car (member "Noto Sans"               font-family-list)))
+       (open-sans   (car (member "Open Sans"               font-family-list)))
        (roboto      (car (member "Roboto"                  font-family-list)))
        (segoe-ui    (car (member "Segoe UI"                font-family-list)))
        (source-sans (car (member "Source Sans Pro"         font-family-list)))
