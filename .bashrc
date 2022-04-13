@@ -35,7 +35,7 @@ export CINCO="$HOME/cinco"
 alias perl='perl -Mv5.10'
 alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
-
+alias sum="perl -e 'use List::Util qw(sum); say sum(@ARGV);'"
 export CINCOPATH="$CINCO/bin"
 export CINCOLIB="$CINCO/lib"
 export PERLLIB="$IDE/lib:$IDE/local/lib"
