@@ -1,4 +1,4 @@
-# Emacs-based IDE for regular humans (non-touch typists)
+# Emacs-based, GUI-oriented IDE
 
 ## Inspiration
 
@@ -74,4 +74,5 @@ I use a custom version of the *tabbar* package, making changes based on this art
 
 ### Screenshot
 
-<img src="readme.png">
+![emacs](https://user-images.githubusercontent.com/31519141/163678725-33f4a672-03b2-44dd-8d79-e389f23feecf.png)
+
