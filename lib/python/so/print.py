@@ -2,7 +2,7 @@
 
 #         Copyright © 2022-2022 Tom Fontaine
 
-# Title:  Print.py
+# Title:  print.py
 # Date:   09-Mar-2022
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,11 +27,10 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:  Print object for TSP optimizers
-#
+
 # Revision:
-#
+
 class Print:
     def __init__(self, goal):
         self._goal = goal
