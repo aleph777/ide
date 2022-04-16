@@ -3,7 +3,7 @@
 
 #         Copyright © 2022-2022 Tom Fontaine
 
-# Title:  RandomString.py
+# Title:  randomString.py
 # Date:   15-Mar-2022
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,13 +28,11 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:
-#
-# Arguments:
-#
+
 # Revision:
-#
+
+
 import os
 import random
 
@@ -50,8 +48,6 @@ class RandomString:
             self._chars.extend(self.__charRange__('A', 'Z'))
             self._chars.extend(self.__charRange__('a', 'z'))
             self._chars.extend(self.__charRange__('0', '9'))
-
-        random.seed(int.from_bytes(os.urandom(4), byteorder="big"))
 
 
     def __charRange__(self, c1, c2, n=1):

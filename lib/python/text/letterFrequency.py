@@ -3,7 +3,7 @@
 
 #         Copyright © 2022-2022 Tom Fontaine
 
-# Title:  LetterFrequency.py
+# Title:  letterFrequency.py
 # Date:   30-Mar-2022
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,13 +28,11 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:
-#
-# Arguments:
-#
+
 # Revision:
-#
+
+
 import os
 import sys
 

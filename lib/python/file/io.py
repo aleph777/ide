@@ -2,7 +2,7 @@
 
 #         Copyright © 2022-2022 Tom Fontaine
 
-# Title:  File.py
+# Title:  io.py
 # Date:   09-Mar-2022
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,13 +27,14 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
+
 # Purpose:  File object
 
 # Revision: 31-Mar-2022 Fixed bug with delimiter in ‘__put__’
 #                       Added ‘__str__’
 #           16-Apr-2022 fixed basename/basedir handling
 #                       changed put to be non-destructive
+
 
 import copy
 import sys

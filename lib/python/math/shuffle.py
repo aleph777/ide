@@ -3,7 +3,7 @@
 
 #         Copyright © 2022-2022 Tom Fontaine
 
-# Title:  Shuffle.py
+# Title:  shuffle.py
 # Date:   15-Mar-2022
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -28,13 +28,11 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:
-#
-# Arguments:
-#
+
 # Revision:
-#
+
+
 import os
 import random
 
@@ -42,7 +40,6 @@ class Shuffle:
     def __init__(self, items=[]):
         self._items = items
 
-        random.seed(int.from_bytes(os.urandom(4), byteorder="big"))
 
     def random(self):
         return random.sample(self._items, len(self._items))
