@@ -29,10 +29,13 @@
 
 #
 # Purpose:  File object
-#
+
 # Revision: 31-Mar-2022 Fixed bug with delimiter in ‘__put__’
 #                       Added ‘__str__’
-#
+#           16-Apr-2022 fixed basename/basedir handling
+#                       changed put to be non-destructive
+
+import copy
 import sys
 
 class File:
@@ -55,14 +58,13 @@ class File:
         self._delimiter = delimiter
 
         if self._path == None:
-            if basedir != None:
+            if basedir != None and basename != None:
                 if basedir[-1] != '/':
                     basedir += '/'
-                if basename != None:
-                    self._path = basedir + basename
+                self._path = basedir + basename
 
         if lines == None:
-            self.lines = []
+            self.lines = list()
 
         self._fh = None
 
@@ -75,19 +77,21 @@ class File:
             self._fh = sys.stdout
 
 
-    def __put__(self, newline, delimiter):
+    def __put__(self, lines, newline, delimiter):
         """Write lines to file."""
         if delimiter:
-            if type(self.lines[0]) == list:
-                self.lines = [delimiter.join(line) for line in self.lines]
+            if type(lines[0]) == list:
+                output = [delimiter.join(line) for line in lines]
             else:
-                self.lines = [delimiter.join(self.lines)]
+                output = [delimiter.join(lines)]
+        else:
+            output = copy.deepcopy(lines)
 
         if newline:
-            self.lines = list(map(lambda x: '{:s}\n'.format(x), self.lines))
+            output = list(map(lambda x: '{:s}\n'.format(x), output))
 
         with self._fh as f:
-            f.writelines(self.lines)
+            f.writelines(output)
 
 
     def __str__(self):
@@ -125,29 +129,20 @@ class File:
                 self._encoding = value
 
             if self._path == None:
-                if self._basedir != None:
+                if self._basedir != None and self._basename != None:
                     if self._basedir[-1] != '/':
                         self._basedir += '/'
-                    if self._basename != None:
-                        self._path = self._basedir + self._basename
+                    self._path = self._basedir + self._basename
 
 
     def append(self, text, newline=None, delimter=None):
         """Appends TEXT to file."""
         self.__open__('a')
-        self.lines.clear()
 
         dl = delimiter if delimiter else self._delimiter
         nl = newline   if newline   else self._newline
 
-        if type(text) == str:
-            self.lines.append(text)
-        elif type(text) == list:
-            self.lines = text
-        else:
-            print('Type {:s} not supported!!!'.format(str(type(text))))
-
-        self.__put__(nl, dl)
+        self.__put__(text, nl, dl)
 
 
     def get(self, strip=None, delimiter=None):
@@ -174,4 +169,4 @@ class File:
         dl = delimiter if delimiter else self._delimiter
         nl = newline   if newline   else self._newline
 
-        self.__put__(nl, dl)
+        self.__put__(self.lines, nl, dl)
