@@ -2,7 +2,7 @@
 
 #         Copyright © 2022-2022 Tom Fontaine
 
-# Title:  List.py
+# Title:  list.py
 # Date:   09-Mar-2022
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,11 +27,11 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
 # Purpose:
-#
+
 # Revision:
-#
+
+
 class List:
     def __init__(self, contents):
         self.contents = contents
