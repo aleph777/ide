@@ -40,6 +40,7 @@
 ;;           10-Jul-2019 Completed Greek alphabet
 ;;           19-Jul-2019 Added ‘open-new-shell’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           16-Apr-2022 Added menu entry for convert to python mode
 ;;
 
 ;;; Code:
@@ -413,7 +414,8 @@
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (tjf:flags/enable-write?)]
     ["Complete Word Spelling" ispell-complete-word               :enable (tjf:flags/enable-write?)]
     "---"
-    ["Initialize Perl Mode"   tjf:perl/convert :visible (tjf:flags/visible-convert-to-perl?) :key-sequence nil]
+    ["Initialize Perl Mode"   tjf:perl/convert   :visible (tjf:flags/visible-convert-to-perl?)   :key-sequence nil]
+    ["Initialize Python Mode" tjf:python/convert :visible (tjf:flags/visible-convert-to-python?) :key-sequence nil]
     "---"
     ["Adaptive Fill" filladapt-mode :style toggle :selected filladapt-mode]
     ["Enriched Text" enriched-mode  :style toggle :selected enriched-mode :enable (tjf:flags/enable-enriched-mode?)]

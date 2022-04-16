@@ -61,6 +61,7 @@
 ;;           20-Jul-2019 Changed tooltip on ‘view-file’ icon
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           10-Mar-2021 added SVG graphics
+;;           16-Apr-2022 added visibility control for ‘toggle-case’
 ;;
 
 ;;; Code:
@@ -158,8 +159,8 @@
 (define-key-after  (default-value 'tool-bar-map) [separator-6] menu-bar-separator)
 
 (tool-bar-add-item "sg-repeat"   'repeat-complex-command             'repeat   :label "" :help "Repeat Command...")
-(tool-bar-add-item "sg-case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case")
-(tool-bar-add-item "sg-bookmark" 'bm-toggle            'bookmark  :label "" :help "Bookmark toggle" :visible '(tjf:flags/visible-not-shell?))
+(tool-bar-add-item "sg-case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case"     :visible '(tjf:flags/is-rw?))
+(tool-bar-add-item "sg-bookmark" 'bm-toggle            'bookmark               :label "" :help "Bookmark toggle" :visible '(tjf:flags/visible-not-shell?))
 (tool-bar-add-item "sg-zoom-in"  'text-scale-increase                'zoom-in  :label "")
 (tool-bar-add-item "sg-zoom-out" 'text-scale-decrease                'zoom-out :label "")
 (tool-bar-add-item "sg-tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")

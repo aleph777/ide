@@ -31,6 +31,7 @@
 
 ;; Revision: 23-Jun-2016 Removed globally set `semantic-mode'
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           16-Apr-2022 Added ‘tjf:python/convert’
 ;;
 
 ;;; Code:
@@ -40,6 +41,12 @@
 (defvar tjf:python/shebang     "#!/usr/bin/env python3\n# -*-Python-*-\n\n")
 
 ;;
+(defun tjf:python/convert ()
+  "Convert the current file into Python."
+  (interactive "*")
+  (tjf:python/insert-module-skeleton)
+  (set-auto-mode))
+
 (defun tjf:python/insert-me ()
   "Insert the `_ME_' variable declaration."
   (interactive "*")
