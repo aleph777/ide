@@ -298,6 +298,8 @@ This depends on major mode having setup syntax table properly."
   "Boolean: should ‘convert-to-perl’ be visible?"
   (or (eq major-mode 'fundamental-mode) (tjf:flags/is-text-mode?)))
 
+(defalias 'tjf:flags/visible-convert-to-python? 'tjf:flags/visible-convert-to-perl?)
+
 (defun tjf:flags/x-led-mask ()
   "Get the current status of the LED mask from X."
   (with-temp-buffer

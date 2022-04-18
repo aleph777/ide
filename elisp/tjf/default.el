@@ -185,6 +185,7 @@
 ;;                       Redid undo/redo enable for Edit menu
 ;;           07-Mar-2022 Fixed ‘tjf-python’
 ;;                       Removed ‘package-archives’ redundancies
+;;           17-Apr-2022 Fixed python mode
 ;;
 
 ;;; Code:
@@ -522,7 +523,7 @@
 (use-package consult              :after selectrum-prescient
   :straight t)
 
-(use-package cperl-mode           :commands (convert-to-perl cperl-mode perl-mode)
+(use-package cperl-mode           :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
   :mode "\\.p\\(l\\|m\\)\\'"
   :init
   (defalias 'perl-mode 'cperl-mode)
@@ -614,6 +615,16 @@
   :init
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
   ;; :hook (emacs-lisp-mode-hook . eldoc-mode))
+
+(use-package elpy
+  :straight t
+  :init
+  (setq elpy-rpc-python-command "python3")
+  (advice-add 'python-mode :before 'elpy-enable)
+  :hook
+  (elpy-mode . (lambda () (add-hook 'before-save-hook 'elpy-format-code)))
+  :config
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules)))
 
 (use-package emojify              :commands emojify-mode
   :straight t)
@@ -768,6 +779,9 @@
   ;;             ("M-/" . isearch-complete))
   )
 
+(use-package jedi                 :after elpy
+  :straight t)
+
 (use-package json-mode            :mode "\\.json\\'"
   :straight t)
 
@@ -896,8 +910,9 @@
 (use-package mapreplace           :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp)
   :straight nil)
 
-(use-package matlab-mode          :mode "\\.m\\'"
-  :straight t)
+;; (use-package matlab-mode          :commands matlab-mode
+;;   :straight t
+;;   :mode "\\.m\\'")
 
 (use-package mic-paren            :after tjf-menubar
   :straight t
@@ -928,7 +943,7 @@
   :config
   (setq completion-styles '(orderless)))
 
-(use-package org-mode             :mode "\\.org\\'"
+(use-package org            :mode "\\.org\\'"
   :straight nil
   :init
   (add-hook 'org-mode-hook #'visual-line-mode))
@@ -972,9 +987,30 @@
                                            (let ((root (projectile-project-root dir)))
                                              (and root (cons 'transient root))))))
 
-(use-package python               :commands python-mode
+(use-package pyvenv              :after elpy
   :straight t
-  :mode "\\.py\\'")
+  :config
+  (pyvenv-mode t)
+
+  ;; Set correct Python interpreter
+  (setq pyvenv-post-activate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python3")))))
+  (setq pyvenv-post-deactivate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter "python3")))))
+
+;; (use-package python               :commands (python-mode tjf:python/convert)
+;;   :straight nil
+;;   :mode "\\.py\\'"
+;;   :init
+;;   (message "Loading python [use-package]...")
+;;   :preface
+;;   (defun python ()
+;;     (require 'python)
+;;     (message "I'm so confused!!!!!!!!!!!!"))
+;;   :config
+;;   (message "Loading python [use-package]...done"))
 
 (use-package rainbow-delimiters   :commands rainbow-delimiters-mode
   :straight t
@@ -1158,16 +1194,18 @@
 
 (use-package tjf-lisp             :after elisp-mode
   :straight nil
+  :preface
+  (defun tjf:lisp/setup ())
   :init
   (add-hook 'emacs-lisp-mode-hook #'tjf:lisp/setup))
 
 (use-package tjf-macro
   :straight nil)
 
-(use-package tjf-matlab           :after matlab
-  :straight nil
-  :config
-  (add-hook 'matlab-mode-hook #'tjf:matlab/setup))
+;; (use-package tjf-matlab           :after matlab
+;;   :straight nil
+;;   :config
+;;   (add-hook 'matlab-mode-hook #'tjf:matlab/setup))
 
 (use-package tjf-menubar          :after undo-tree
   :straight nil
@@ -1202,13 +1240,12 @@
 
   (tjf:powerline/theme))
 
-;; (use-package tjf-python           :after python-mode
-;;   ;; :functions tjf:python/setup
-;;   :straight nil
-;;   :preface
-;;   (defun tjf:python/setup ())
-;;   :init
-;;   (add-hook 'python-mode-hook #'tjf:python/setup))
+(use-package tjf-python           :after python
+  :straight nil
+  :preface
+  (defun tjf:python/setup ())
+  :init
+  (add-hook 'python-mode-hook #'tjf:python/setup))
 
 (use-package tjf-query-replace    :commands tjf:query-replace/do
   :straight nil)
@@ -1429,13 +1466,6 @@
   (setq xref-search-program             'grep))
 
 ;; ================================================================================
-
-;; not sure why this is necessary
-;;
-(eval-after-load 'python
-  '(progn
-    (load-library "tjf-python")
-    (add-hook 'python-mode-hook #'tjf:python/setup)))
 
 ;;
 (message "default.el ...done")

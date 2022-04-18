@@ -44,6 +44,7 @@ class Shuffle:
     def random(self):
         return random.sample(self._items, len(self._items))
 
+
     def perfect(self):
         length = int(len(self._items)/2)
 

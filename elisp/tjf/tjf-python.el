@@ -36,6 +36,10 @@
 
 ;;; Code:
 
+(require 'python)
+(require 'flycheck)
+(require 'smartparens-python)
+
 (message "Loading tjf-python...")
 
 (defvar tjf:python/shebang     "#!/usr/bin/env python3\n# -*-Python-*-\n\n")
@@ -104,15 +108,14 @@
 
 (defun tjf:python/setup ()
   "Set up Python mode."
-  (message "HELLO")
   (setq-local imenu-create-index-function #'python-imenu-create-index)
   (imenu-add-to-menubar "Navigate")
   (flycheck-mode))
 
-(defun tjf:perl/insert-usage ()
+(defun tjf:python/insert-usage ()
   "Insert the script usage code."
   (interactive "*")
-  (tjf:perl/insert-me)
+  (tjf:python/insert-me)
   (insert-file-contents (concat tjf:user/dir-elisp "templates/python-script-usage.py")))
 
 (easy-menu-define tjf:python/menu python-mode-map "Python Mode menu"
