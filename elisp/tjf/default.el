@@ -186,6 +186,7 @@
 ;;           07-Mar-2022 Fixed ‘tjf-python’
 ;;                       Removed ‘package-archives’ redundancies
 ;;           17-Apr-2022 Fixed python mode
+;;           26-Apr-2022 Removed ‘unicode-fonts-setup’
 ;;
 
 ;;; Code:
@@ -1000,18 +1001,6 @@
         (list (lambda ()
                 (setq python-shell-interpreter "python3")))))
 
-;; (use-package python               :commands (python-mode tjf:python/convert)
-;;   :straight nil
-;;   :mode "\\.py\\'"
-;;   :init
-;;   (message "Loading python [use-package]...")
-;;   :preface
-;;   (defun python ()
-;;     (require 'python)
-;;     (message "I'm so confused!!!!!!!!!!!!"))
-;;   :config
-;;   (message "Loading python [use-package]...done"))
-
 (use-package rainbow-delimiters   :commands rainbow-delimiters-mode
   :straight t
   :init
@@ -1402,7 +1391,7 @@
     (set-fontset-font t 'symbol "Noto Color Emoji")
     (set-fontset-font t 'symbol "Symbola" nil 'append))
   :config
-  (unicode-fonts-setup)
+  ;; (unicode-fonts-setup unicode-fonts-fontset-names nil)
   (tjf:unicode/emoji-fonts))
 
 (use-package uniquify             :after tjf-menubar
