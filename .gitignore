@@ -1,1 +1,7 @@
+**/*.~undo-tree~
+**/*.7z
+**/*.flake8
+**/setup.cfg
 **/*.elc
+__pycache__
+elpa
