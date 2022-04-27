@@ -12,7 +12,7 @@ import sys
 class Options:
     """"""
 
-    def __init__(self, option, shortarg, longarg):
+    def __init__(self, shortarg, longarg):
         self.option = dict()
 
         try:

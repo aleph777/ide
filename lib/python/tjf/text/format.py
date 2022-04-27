@@ -34,5 +34,3 @@ class Format:
 
         if newline:
             self.format += '\n'
-
-        return self.format

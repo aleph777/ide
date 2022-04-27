@@ -5,6 +5,7 @@
 # Title:  dice.py
 # Date:   20-Apr-2022
 
+
 import random
 
 
@@ -20,4 +21,8 @@ class Dice:
         """Just do it."""
         self.roll = list(map(lambda x: random.randrange(1, self._sides+1), range(self._dice)))
 
-        return sum(self.roll)
+        return self.roll
+
+    def throwTotal(self):
+        """Just sum it."""
+        return sum(self.throw())
