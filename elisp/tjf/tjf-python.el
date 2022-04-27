@@ -32,7 +32,10 @@
 ;; Revision: 23-Jun-2016 Removed globally set `semantic-mode'
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           16-Apr-2022 Added ‘tjf:python/convert’
+;;           20-Apr-2022 Added ‘tjf:python/insert-license’
+;;           21-Apr-2022 Updated ‘tjf:python/insert-me’
 ;;
+
 
 ;;; Code:
 
@@ -51,10 +54,15 @@
   (tjf:python/insert-module-skeleton)
   (set-auto-mode))
 
+(defun tjf:python/insert-license ()
+  "Insert the code license."
+  (interactive "*")
+  (insert-file-contents (concat tjf:user/dir-elisp "templates/license.py")))
+
 (defun tjf:python/insert-me ()
   "Insert the `_ME_' variable declaration."
   (interactive "*")
-  (insert "\n__me__ = os.path.basename(sys.argv[0])\n\n"))
+  (insert "\n__me__ = os.path.basename(__file__)\n\n"))
 
 (defun tjf:python/insert-script-header ()
   "Insert script boilerplate at point."
@@ -125,6 +133,7 @@
     ["Insert Script Header"   tjf:python/insert-script-header   :active (tjf:flags/is-rw?)]
     ["Insert Script Skeleton" tjf:python/insert-script-skeleton :active (tjf:flags/is-rw?)]
     ["Insert Module Skeleton" tjf:python/insert-module-skeleton :active (tjf:flags/is-rw?)]
+    ["Insert License"         tjf:python/insert-license         :active (tjf:flags/is-rw?)]
     ["Insert _ME_"            tjf:python/insert-me              :active (tjf:flags/is-rw?)]
     ["Insert Script Usage"    tjf:python/insert-usage           :active (tjf:flags/is-rw?)]
     "---"

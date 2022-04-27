@@ -1,4 +1,4 @@
-# -*-Python-*-
+# -*-coding: utf-8-*- ; -*-Python-*-
 
 
 #         Copyright © 2022-2022 Tom Fontaine
@@ -33,9 +33,6 @@
 # Revision:
 
 
-import os
-import sys
-
 frequency = {'a': 8.34,
              'b': 1.54,
              'c': 2.73,
@@ -62,3 +59,5 @@ frequency = {'a': 8.34,
              'x': 0.20,
              'y': 2.04,
              'z': 0.06}
+
+upfreq = dict(zip(map(lambda x: x.upper(), frequency.keys()), frequency.values()))

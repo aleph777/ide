@@ -1,4 +1,4 @@
-# -*-Python-*-
+# -*-coding: utf-8-*- ; -*-Python-*-
 
 #         Copyright © 2022-2022 Tom Fontaine
 
@@ -35,47 +35,40 @@
 import copy
 import random
 
+
 class PDF:
+    """"""
+
+    # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #
+    def __amount__(self, x, total):
+        """Return a list with the correct size for X."""
+        return [x]*max(int(self._size*self._dictionary[x]/total + 0.5), 1)
+
+
+    def __flatten__(self, lol):
+        """Returns a flattened list."""
+        return [item for sublist in lol for item in sublist]
+
+
     def __init__(self, dictionary={}, keys=None, size=100):
         self._dictionary = copy.deepcopy(dictionary)
         self._size       = size
-        self._pdf        = None
 
-        self._keys = copy.deepcopy(keys) if keys else self._dictionary.keys()
+        self._keys = copy.deepcopy(keys) if keys is not None else self._dictionary.keys()
 
-    def __flatten__(self, l):
-        """Returns a flattened list."""
-        return [item for sublist in l for item in sublist]
+        total = sum(self._dictionary.values())
+
+        self._pdf = self.__flatten__(list(map(lambda x: self.__amount__(x, total), self._keys)))
 
 
     def __str__(self):
         return ','.join(self._pdf)
 
 
-    def create(self):
-        """"""
-        s   = sum(map(lambda x: self._dictionary[x], self._keys))
-        pct = dict(zip(self._keys, list(map(lambda x: max(int(self._size*self._dictionary[x]/s + 0.5), 1), self._keys))))
-
-        self._pdf = self.__flatten__(list(map(lambda x: list(map(lambda y: x, range(pct[x]))), self._keys)))
-
-
-    def setItem(self, **kwargs):
-        """"""
-        global __me__
-
-        for key, value in kwargs.items():
-            if key == 'dictionary':
-                self._dictionary = copy.deepcopy(value)
-            elif key == 'keys':
-                self._keys = copy.deepcopy(value)
-            elif key == 'size':
-                self._size = value
-            else:
-                print('{:s}: unknown key - {:s}'.format(__me__, key))
-                exit()
-
-
     def get(self):
-        """"""
         return self._pdf[random.randrange(len(self._pdf))]
+
+
+    def show(self):
+        print(self.__str__)

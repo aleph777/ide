@@ -39,6 +39,7 @@
 import copy
 import sys
 
+
 class File:
     def __init__(self,
                  lines     = None,
@@ -50,6 +51,7 @@ class File:
                  encoding  = 'utf-8',
                  delimiter = None):
         self.lines      = lines
+        self.binary     = None
         self._path      = path
         self._basename  = basename
         self._basedir   = basedir
@@ -58,13 +60,13 @@ class File:
         self._encoding  = encoding
         self._delimiter = delimiter
 
-        if self._path == None:
-            if basedir != None and basename != None:
+        if self._path is None:
+            if basedir is not None and basename is not None:
                 if basedir[-1] != '/':
                     basedir += '/'
                 self._path = basedir + basename
 
-        if lines == None:
+        if lines is None:
             self.lines = list()
 
         self._fh = None
@@ -73,7 +75,10 @@ class File:
     def __open__(self, mode):
         """Open file in MODE."""
         if self._path and self._path != '-':
-            self._fh = open(self._path, encoding = self._encoding, mode=mode)
+            if mode == 'rb':
+                self._fh = open(self._path, mode=mode)
+            else:
+                self._fh = open(self._path, encoding=self._encoding, mode=mode)
         else:
             self._fh = sys.stdout
 
@@ -129,14 +134,14 @@ class File:
             elif key == 'delimiter':
                 self._encoding = value
 
-            if self._path == None:
-                if self._basedir != None and self._basename != None:
+            if self._path is None:
+                if self._basedir is not None and self._basename is not None:
                     if self._basedir[-1] != '/':
                         self._basedir += '/'
                     self._path = self._basedir + self._basename
 
 
-    def append(self, text, newline=None, delimter=None):
+    def append(self, text, newline=None, delimiter=None):
         """Appends TEXT to file."""
         self.__open__('a')
 
@@ -147,7 +152,7 @@ class File:
 
 
     def get(self, strip=None, delimiter=None):
-        """Read file."""
+        """Read file into LINES."""
         self.__open__('r')
 
         dl = delimiter if delimiter else self._delimiter
@@ -171,3 +176,11 @@ class File:
         nl = newline   if newline   else self._newline
 
         self.__put__(self.lines, nl, dl)
+
+
+    def read(self):
+        """Binary read."""
+        self.__open__('rb')
+
+        with self._fh as f:
+            self.binary = f.read()

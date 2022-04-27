@@ -1,10 +1,13 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
-*/__pycache__/
-*.py[cod]
 *$py.class
+**/*.7z
+**/*.elc
+**/*.flake8
+**/*.~undo-tree~
+**/setup.cfg
+*.AppImage
+*.py[cod]
 .DS_store
 .vscode
-**/*.elc
-
-*.AppImage
+__pycache__
+elpa
