@@ -112,6 +112,7 @@
 ;;           16-Mar-2021 Removed ‘tinyeat-delete-whole-word’, ‘tinyeat-backward-preserve’, and ‘tinyeat-forward-preserve’
 ;;                       Fixed warnings on lambda functions
 ;;           24-Mar-2021 Added ‘consult-outline’ to ‘C-M-o’
+;;           28-Apr-2022 Added ‘tjf:duplicate/tabs’
 
 ;;; Code:
 
@@ -1228,7 +1229,7 @@
 (global-set-key [kp-enter]           'tjf:duplicate/previous)
 ;;lobal-set-key [(control kp-enter)] ' DO NOT USE ... messes up C-enter
 (global-set-key [(meta    kp-enter)] 'tjf:edit/insert-newline-before)
-;;lobal-set-key [(super   kp-enter)] '
+(global-set-key [(super   kp-enter)] 'tjf:duplicate/tabs)
 ;;lobal-set-key [(control meta  kp-enter)]      ' DO NOT USE
 ;;lobal-set-key [(control super kp-enter)]      '
 ;;lobal-set-key [(meta    super kp-enter)]      '

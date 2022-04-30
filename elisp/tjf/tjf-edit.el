@@ -74,6 +74,7 @@
 ;;           11-Mar-2021 Removed ‘tjf:edit/delete-forward-whitespace’ and ‘tjf:edit/delete-backward-whitespace’
 ;;                       Updated ‘tjf:edit/capitalize’, ‘tjf:edit/downcase’, and ‘tjf:edit/upcase’
 ;;           07-Apr-2021 Added ‘tjf:edit/fill-skeleton’
+;;           28-Apr-2022 Changed ‘tjf:edit/cleanse-whitespace’ to use ‘tjf:flags/using-tabs’
 ;;
 
 ;;; Code:
@@ -122,7 +123,8 @@
 (defun tjf:edit/cleanse-whitespace ()
   "Untabify, then trim excess whitespace and compress all blank lines."
   (interactive "*")
-  (untabify (point-min) (point-max))
+  (unless tjf:flags/using-tabs
+      (untabify (point-min) (point-max)))
   (delete-trailing-whitespace)
   (xah-clean-whitespace))
 

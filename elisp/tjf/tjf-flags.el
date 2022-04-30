@@ -39,6 +39,7 @@
 ;;           17-Jan-2017 Changed ‘defvar’s to ‘defconst’s
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           02-Jul-2021 Reworked ‘tjf:flags/enable-undo-redo?’
+;;           28-Apr-2022 Added ‘tjf:flags/using-tabs’
 ;;
 
 ;;; Code:
@@ -82,6 +83,8 @@
 
 (defvar tjf:flags/text-modes '(text-mode
                                indented-text-mode))
+
+(defvar tjf:flags/using-tabs t)
 
 (defvar tjf:flags/xml-modes '(nxml-mode
                               xml-mode))
