@@ -44,7 +44,7 @@ class File:
     def __init__(self,
                  lines     = None,
                  path      = None,
-                 basename  = 'untitled.txt',
+                 basename  = '-',
                  basedir   = './',
                  strip     = False,
                  newline   = False,

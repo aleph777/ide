@@ -75,7 +75,7 @@ def makeColor(color):
     return colors['CSI'] + color + 'm'
 
 
-def makeText(text, color, bold):
+def makeColorText(text, color, bold):
     """"""
     colorText = makeColor(color)
 
