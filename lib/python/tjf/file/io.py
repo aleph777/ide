@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- ; -*-Python-*-
+# -*-coding: utf-8-*- ; -*-Python-*-
 
 #         Copyright © 2022-2022 Tom Fontaine
 

@@ -1,7 +1,13 @@
-**/*.~undo-tree~
+# Byte-compiled / optimized / DLL files
+*$py.class
 **/*.7z
-**/*.flake8
-**/setup.cfg
 **/*.elc
+**/*.flake8
+**/*.~undo-tree~
+**/setup.cfg
+*.AppImage
+*.py[cod]
+.DS_store
+.vscode
 __pycache__
 elpa
