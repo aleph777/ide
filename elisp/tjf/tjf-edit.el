@@ -75,6 +75,7 @@
 ;;                       Updated ‘tjf:edit/capitalize’, ‘tjf:edit/downcase’, and ‘tjf:edit/upcase’
 ;;           07-Apr-2021 Added ‘tjf:edit/fill-skeleton’
 ;;           28-Apr-2022 Changed ‘tjf:edit/cleanse-whitespace’ to use ‘tjf:flags/using-tabs’
+;;           02-May-2022 Restored ‘tjf:edit/copy-buffer’
 ;;
 
 ;;; Code:
@@ -195,6 +196,13 @@
   (let ((name (buffer-file-name)))
     (kill-new name)
     (message name)))
+
+(defun tjf:edit/copy-buffer ()
+  "Make a copy of the current buffer."
+  (interactive)
+  (let* ((copy-bufname (concat "copy of " (buffer-name)))
+         (copy-buffer (get-buffer-create copy-bufname)))
+    (copy-to-buffer copy-buffer (point-min) (point-max))))
 
 (defun tjf:edit/copy-buffer-name ()
   "Make a copy of the current ‘buffer-name’."
