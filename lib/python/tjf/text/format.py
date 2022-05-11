@@ -6,31 +6,31 @@
 # Date:   21-Apr-2022
 
 
-import os
-import sys
-
-
-class Format:
+def format(lines=None, left=None, usekeys=False, keys=None, delimiter=' ', newline=False):
     """"""
-    __me__ = os.path.basename(sys.argv[0])
+    if not lines or type(lines) != list or len(lines) == 0:
+        raise Exception("No content!!!")
 
-    def __init__(self, lines=None, left=None, usekeys=False, fmtkeys=None, delimiter=',', newline=False):
-        if lines is None:
-            print('{:s}:{_s}; no content!!!', list(Format.__me__, __name__))
+    if not keys or type(keys) != list or len(keys) == 0:
+        raise Exception("Invalid keys!!!")
 
-        if left is not None:
-            self._left = dict(zip(left, [1]*len(left)))
+    if not left or type(left) != list or len(left) == 0:
+        raise Exception("Invalid left keys!!!")
 
-        length = dict()
+    leftd = dict(zip(left, [1]*len(left)))
 
-        if usekeys:
-            for key in fmtkeys:
-                length[key] = max(len(key), max(map(lambda x: len(self.lines[x]), self.lines)))
+    length = dict()
+
+    if usekeys:
+        for key in keys:
+            length[key] = max(len(key), max(map(lambda x: len(x[key]), lines)))
         else:
-            for key in fmtkeys:
-                length[key] = max(map(lambda x: len(self.lines[x]), self.lines))
+            for key in keys:
+                length[key] = max(map(lambda x: len(x[key]), lines))
 
-        self.format = delimiter.join(map(lambda x: ''.join('{:<', length[x], '}') if x in left else ''.join('{:>', length[x], '}'), fmtkeys))
+    fmt = delimiter.join(map(lambda x: ''.join('{:<', length[x], '}') if x in leftd else ''.join('{:>', length[x], '}'), keys))
 
-        if newline:
-            self.format += '\n'
+    if newline:
+        fmt += '\n'
+
+    return fmt
