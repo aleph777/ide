@@ -39,6 +39,8 @@
 import copy
 import sys
 
+from tjf.list.utils import hashFirst, hashPredefined
+
 
 class File:
     def __init__(self,
@@ -49,8 +51,11 @@ class File:
                  strip     = False,
                  newline   = False,
                  encoding  = 'utf-8',
-                 delimiter = None):
+                 delimiter = None,
+                 hash      = None,
+                 keys      = None):
         self.lines      = lines
+        self.keys       = keys
         self.binary     = None
         self._path      = path
         self._basename  = basename
@@ -59,6 +64,7 @@ class File:
         self._newline   = newline
         self._encoding  = encoding
         self._delimiter = delimiter
+        self._hash      = hash.lower()
 
         if self._path is None:
             if basedir is not None and basename is not None:
@@ -165,7 +171,18 @@ class File:
             self.lines = [line.rstrip() for line in self.lines]
 
         if dl:
-            self.lines = [line.split(dl) for line in self.lines]
+            if self._hash:
+                if self._hash == 'first':
+                    self.keys, self.lines = hashFirst(self.lines, delimiter=dl)
+                elif self._hash == 'predefined':
+                    if self.keys:
+                        self.lines = hashPredefined(self.lines, self.keys, delimiter=dl)
+                    else:
+                        raise Exception("Predefined keys are undefined!!!")
+                else:
+                    raise Exception("Unknown hash option: {:s}".format(str(self._hash)))
+            else:
+                self.lines = [line.split(dl) for line in self.lines]
 
 
     def put(self, newline=None, delimiter=None):
