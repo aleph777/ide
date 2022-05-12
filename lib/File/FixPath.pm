@@ -1,6 +1,6 @@
 # File::FixPath --- Fixes problems in pathnames (e.g. spaces) by backslashing -*-Perl-*-
 
-#         Copyright © 2015-2021 Tom Fontaine
+#         Copyright © 2015-2022 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   31-Mar-2015

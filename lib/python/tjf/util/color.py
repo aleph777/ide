@@ -10,30 +10,30 @@ from math import sqrt
 
 hue = list()
 
-hue.extend([{'code': 0xff0000, 'name': 'red', 'type': 'red'}]*15)
-hue.extend([{'code': 0xff4000, 'name': 'vermilion', 'type': 'orange red'}]*15)
-hue.extend([{'code': 0xff8000, 'name': 'orange', 'type': 'orange'}]*15)
-hue.extend([{'code': 0xffbf00, 'name': 'golden yellow', 'type': 'khaki'}]*15)
-hue.extend([{'code': 0xfff000, 'name': 'yellow', 'type': 'yellow'}]*15)
+hue.extend([{'code': 0xff0000, 'name': 'red',             'type': 'red'}]*15)
+hue.extend([{'code': 0xff4000, 'name': 'vermilion',       'type': 'orange red'}]*15)
+hue.extend([{'code': 0xff8000, 'name': 'orange',          'type': 'orange'}]*15)
+hue.extend([{'code': 0xffbf00, 'name': 'golden yellow',   'type': 'khaki'}]*15)
+hue.extend([{'code': 0xfff000, 'name': 'yellow',          'type': 'yellow'}]*15)
 hue.extend([{'code': 0xbfff00, 'name': 'yellowish green', 'type': 'lime'}]*15)
-hue.extend([{'code': 0x80ff00, 'name': 'chartreuse', 'type': 'olive'}]*15)
-hue.extend([{'code': 0x40ff00, 'name': 'leaf green', 'type': 'grass green'}]*15)
-hue.extend([{'code': 0x00ff00, 'name': 'green', 'type': 'green'}]*15)
-hue.extend([{'code': 0x00ff40, 'name': 'cobalt green', 'type': 'bluish green'}]*15)
-hue.extend([{'code': 0x00ff80, 'name': 'emerald green', 'type': 'teal'}]*15)
+hue.extend([{'code': 0x80ff00, 'name': 'chartreuse',      'type': 'olive'}]*15)
+hue.extend([{'code': 0x40ff00, 'name': 'leaf green',      'type': 'grass green'}]*15)
+hue.extend([{'code': 0x00ff00, 'name': 'green',           'type': 'green'}]*15)
+hue.extend([{'code': 0x00ff40, 'name': 'cobalt green',    'type': 'bluish green'}]*15)
+hue.extend([{'code': 0x00ff80, 'name': 'emerald green',   'type': 'teal'}]*15)
 hue.extend([{'code': 0x00ffbf, 'name': 'turquoise green', 'type': 'greenish cyan'}]*15)
-hue.extend([{'code': 0x00ffff, 'name': 'turquoise blue', 'type': 'cyan'}]*15)
-hue.extend([{'code': 0x00bfff, 'name': 'cerulean blue', 'type': 'bluish cyan'}]*15)
-hue.extend([{'code': 0x0080ff, 'name': 'azure', 'type': 'blue'}]*15)
-hue.extend([{'code': 0x0040ff, 'name': 'cobalt blue', 'type': 'blue violet'}]*15)
-hue.extend([{'code': 0x0000ff, 'name': 'ultramarine', 'type': 'violet'}]*15)
-hue.extend([{'code': 0x4000ff, 'name': 'hyacinth', 'type': 'purple violet'}]*15)
-hue.extend([{'code': 0x8000ff, 'name': 'violet', 'type': 'purple'}]*15)
-hue.extend([{'code': 0xbf00ff, 'name': 'purple', 'type': 'purple magenta'}]*15)
-hue.extend([{'code': 0xff00ff, 'name': 'magenta', 'type': 'magenta'}]*15)
-hue.extend([{'code': 0xff00bf, 'name': 'reddish purple', 'type': 'crimson'}]*15)
-hue.extend([{'code': 0xff0080, 'name': 'ruby red', 'type': 'scarlet'}]*15)
-hue.extend([{'code': 0xff0040, 'name': 'carmine', 'type': 'scarlet red'}]*15)
+hue.extend([{'code': 0x00ffff, 'name': 'turquoise blue',  'type': 'cyan'}]*15)
+hue.extend([{'code': 0x00bfff, 'name': 'cerulean blue',   'type': 'bluish cyan'}]*15)
+hue.extend([{'code': 0x0080ff, 'name': 'azure',           'type': 'blue'}]*15)
+hue.extend([{'code': 0x0040ff, 'name': 'cobalt blue',     'type': 'blue violet'}]*15)
+hue.extend([{'code': 0x0000ff, 'name': 'ultramarine',     'type': 'violet'}]*15)
+hue.extend([{'code': 0x4000ff, 'name': 'hyacinth',        'type': 'purple violet'}]*15)
+hue.extend([{'code': 0x8000ff, 'name': 'violet',          'type': 'purple'}]*15)
+hue.extend([{'code': 0xbf00ff, 'name': 'purple',          'type': 'purple magenta'}]*15)
+hue.extend([{'code': 0xff00ff, 'name': 'magenta',         'type': 'magenta'}]*15)
+hue.extend([{'code': 0xff00bf, 'name': 'reddish purple',  'type': 'crimson'}]*15)
+hue.extend([{'code': 0xff0080, 'name': 'ruby red',        'type': 'scarlet'}]*15)
+hue.extend([{'code': 0xff0040, 'name': 'carmine',         'type': 'scarlet red'}]*15)
 
 
 def clean(value):
@@ -43,8 +43,6 @@ def clean(value):
         retval = value[1:]
     else:
         retval = value
-
-    print(value, retval)
 
     retval = int(retval, 16)
 
@@ -84,7 +82,7 @@ def rgb2hsl(rgb):
 
     maxColor = color[keys[0]]
     minColor = color[keys[-1]]
-    rng    = maxColor - minColor
+    rng      = maxColor - minColor
 
     l = int(500*(maxColor + minColor) + 0.5)/1000
 
@@ -168,14 +166,21 @@ def shade(value=None, vl=None):
     if l < 1/16:
         return 'black'
     elif l < 3/16:
-        return 'dark'
+        return 'very dark'
     elif l < 5/16:
-        return ''
+        return 'dim'
     elif l < 7/16:
+        return 'dark'
+    elif l < 9/16:
+        return 'medium'
+    elif l < 11/16:
         return 'light'
-    else:
+    elif l < 13/16:
+        return 'very light'
+    elif l < 15/16:
         return 'bright'
-
+    else:
+        return 'white'
 
 def invert(value=None, rgb=None):
     if value:

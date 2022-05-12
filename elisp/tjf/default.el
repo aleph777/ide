@@ -487,8 +487,7 @@
                            company-files
                            company-etags
                            company-elisp
-                           company-clang
-                           company-jedi))
+                           company-clang))
   (setq company-clang-executable "/usr/bin/clang")
   (setq company-dabbrev-downcase nil)
   (setq company-echo-delay 0)
@@ -503,7 +502,9 @@
 
 (use-package company-jedi         :after (company python-mode)
   :if is-linux?
-  :straight t)
+  :straight t
+  :config
+  (add-to-list 'company-backends 'company-jedi))
 
 (use-package company-lsp          :after (company lsp-mode)
   :straight t
@@ -514,10 +515,9 @@
   (setq company-lsp-enable-snippet      nil)
   (setq company-lsp-enable-recompletion t))
 
-(use-package company-plsense      :disabled
+(use-package company-plsense      :after (company plsense)  :disabled
   :if is-linux?
   :straight t
-  :after plsense
   :config
   (add-to-list 'company-backends 'company-plsense))
 
@@ -526,6 +526,7 @@
 
 (use-package cperl-mode           :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
   :mode "\\.p\\(l\\|m\\)\\'"
+  :straight nil
   :init
   (defalias 'perl-mode 'cperl-mode)
   :config
@@ -956,7 +957,7 @@
   (eval-when-compile
     (defvar package-archives)))
 
-(use-package plsense              :disabled t
+(use-package plsense              :disabled
   :if is-linux?
   :straight t
   :after cperl-mode
@@ -1064,6 +1065,7 @@
     (defvar sp-lisp-modes))
   :init
   (hook-into-modes #'smartparens-mode
+                   'cperl-mode-hook
                    'prog-mode-hook
                    'shell-mode-hook
                    'latex-mode-hook

@@ -1,6 +1,6 @@
 # Util::RandomString --- [description] -*-Perl-*-
 
-#         Copyright © 2020-2021 Tom Fontaine
+#         Copyright © 2020-2022 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   17-May-2020
