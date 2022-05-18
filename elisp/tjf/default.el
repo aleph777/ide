@@ -187,6 +187,7 @@
 ;;                       Removed ‘package-archives’ redundancies
 ;;           17-Apr-2022 Fixed python mode
 ;;           26-Apr-2022 Removed ‘unicode-fonts-setup’
+;;           18-May-2022 Removed dead code and reorganized
 ;;
 
 ;;; Code:
@@ -340,10 +341,10 @@
 
   (random t))
 
-;; =============================================================================
-
 (eval-when-compile
   (require 'tjf-macro))
+
+;; ================================== straight ==================================
 
 (use-package anzu
   :straight t
@@ -372,15 +373,6 @@
 (use-package async                :after tjf-menubar
   :straight t)
 
-(use-package autorevert
-  :diminish autorevert-mode
-  :config
-  (setq auto-revert-verbose t)
-  (global-auto-revert-mode))
-
-;; (use-package bazel                :mode "\\.bzl\\'"
-;;   :straight t)
-
 (use-package bm
   :straight t
   :functions (bm-buffer-save-all bm-repository-load bm-repository-save)
@@ -398,12 +390,6 @@
   (add-hook 'kill-buffer-hook  #'bm-buffer-save)
   (add-hook 'kill-emacs-hook   #'bm-buffer-save-all)
   (add-hook 'kill-emacs-hook   #'bm-repository-save)
-  ;; :hook
-  ;; (after-save       . bm-buffer-save)
-  ;; (after-revert     . bm-buffer-restore)
-  ;; (find-file        . bm-buffer-restore)
-  ;; (kill-buffer      . bm-buffer-save)
-  ;; (kill-emacs-hook  . (lambda nil (bm-buffer-save-all) (bm-repository-save)))
   :config
   (setq bm-highlight-style 'bm-highlight-only-fringe
         bm-cycle-all-buffers t)
@@ -424,13 +410,6 @@
   (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark)
   (message "Loading bm...done"))
 
-(use-package cc-mode              :commands (c-mode c++-mode)
-  :init
-  (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
-  (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode)))
-
-(use-package cl-macs :straight nil)
-
 (use-package clean-aindent-mode   :after tjf-menubar
   :straight t
   :functions clean-aindent-mode
@@ -441,14 +420,6 @@
   (electric-indent-mode -1)  ; no electric indent, auto-indent is sufficient
   (setq clean-aindent-is-simple-indent t)
   (define-key global-map (kbd "RET") 'newline-and-indent))
-
-(use-package clips-mode           :commands clips-mode
-  :straight t
-  :mode "\\.clips\\'"
-  :config
-  (message "Loading clips-mode...done"))
-
-(use-package color)
 
 (use-package company              :after tjf-menubar
   :if is-linux?
@@ -492,7 +463,6 @@
   (setq company-dabbrev-downcase nil)
   (setq company-echo-delay 0)
   (setq company-idle-delay 0)
-  ;; (setq company-ispell-dictionary (f-join tychoish-config-path "aspell-pws"))
   (setq company-minimum-prefix-length 2)
   (setq company-show-quick-access t)
   (setq company-tooltip-align-annotations t)
@@ -515,44 +485,8 @@
   (setq company-lsp-enable-snippet      nil)
   (setq company-lsp-enable-recompletion t))
 
-(use-package company-plsense      :after (company plsense)  :disabled
-  :if is-linux?
-  :straight t
-  :config
-  (add-to-list 'company-backends 'company-plsense))
-
 (use-package consult              :after selectrum-prescient
   :straight t)
-
-(use-package cperl-mode           :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
-  :mode "\\.p\\(l\\|m\\)\\'"
-  :straight nil
-  :init
-  (defalias 'perl-mode 'cperl-mode)
-  :config
-  ;;           (plsense-server-start)
-  (setq cperl-hairy t)
-
-  (setq cperl-indent-region-fix-constructs nil)
-  (setq cperl-style-alist (append cperl-style-alist '(("TJF"
-                                                       (cperl-indent-level               .  2)
-                                                       (cperl-brace-offset               .  0)
-                                                       (cperl-continued-brace-offset     . -2)
-                                                       (cperl-label-offset               . -2)
-                                                       (cperl-extra-newline-before-brace .  t)
-                                                       (cperl-merge-trailing-else        .  nil)
-                                                       (cperl-continued-statement-offset .  2)))))
-
-  (cperl-set-style "TJF")
-  (cperl-init-faces)
-
-  (define-key cperl-mode-map [menu-bar] nil)
-  (define-key cperl-mode-map [?\t]      #'(lambda nil (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
-  (define-key cperl-mode-map "{"        nil)
-  (define-key cperl-mode-map "("        nil)
-  (define-key cperl-mode-map "["        nil)
-
-  (message "Loading cperl-mode...done"))
 
 (use-package csharp-mode
   :straight t
@@ -560,62 +494,11 @@
   :config
   (message "Loading csharp-mode...done"))
 
-(use-package cua-base
-  :config
-  (cua-mode))
-
 (use-package consult
   :straight t)
 
-(use-package cuda-mode            :commands cuda-mode
-  :straight t
-  :mode "\\.cuda\'")
-
 (use-package dash
   :straight t)
-
-(use-package display-line-numbers
-  :ensure nil
-  :config
-  (hook-into-modes #'display-line-numbers-mode
-                   'org-mode-hook
-                   'prog-mode-hook
-                   'text-mode-hook))
-
-(use-package easymenu
-  :straight nil)
-
-(use-package ediff                :commands ediff
-  :preface
-  (eval-when-compile
-    (defvar ediff-merge-revisions-with-ancestor))
-  :config
-  (setq ediff-keep-variants                    nil)
-  (setq ediff-make-buffers-readonly-at-startup nil)
-  (setq ediff-merge-revisions-with-ancestor    t)
-  (setq ediff-show-clashes-only                t)
-  (setq ediff-split-window-function            'split-window-horizontally)
-  (setq ediff-window-setup-function            'ediff-setup-windows-plain))
-
-;; (use-package eglot
-;;   :if is-linux?
-;;   :straight t
-;;   :after company
-;;   :init
-;;   (hook-into-modes #'eglot-ensure 'c++-mode)
-
-;;   (with-eval-after-load 'project
-;;     (add-to-list 'project-find-functions
-;;                  #'(lambda (dir) (let ((root (projectile-project-root dir))) (and root (cons 'transient root)))))))
-  ;; :hook
-  ;; ((c++-mode . eglot-ensure)
-  ;;  (c++-mode . flycheck-mode)
-  ;;  ))
-
-(use-package eldoc
-  :diminish eldoc-mode
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
   ;; :hook (emacs-lisp-mode-hook . eldoc-mode))
 
 (use-package elpy                 :after python
@@ -631,63 +514,11 @@
 (use-package emojify              :commands emojify-mode
   :straight t)
 
-(use-package ergoemacs-functions  :commands (ergoemacs-backward-open-bracket
-                                             ergoemacs-extend-selection
-                                             ergoemacs-forward-open-bracket
-                                             ergoemacs-move-text-down
-                                             ergoemacs-move-text-up
-                                             ergoemacs-select-text-in-quote
-                                             ergoemacs-shrink-whitespaces)
-  :straight nil
-  :no-require t)
-
-;; (use-package ergoemacs-mode       :after tjf-menubar
 (use-package ergoemacs-mode       :defer
   :straight t)
 
-(use-package face-remap           :commands (buffer-face-mode text-scale-mode)
-  :diminish face-remap-mode
-  buffer-face-mode)
-
 (use-package filladapt            :commands filladapt-mode
   :straight t)
-
-;; (use-package flycheck
-;;   :after tjf-menubar
-;;   :diminish
-;;   :hook (after-init . global-flycheck-mode)
-;;   :commands (flycheck-add-mode)
-;;   :custom
-;;   (flycheck-global-modes
-;;    '(not outline-mode diff-mode shell-mode eshell-mode term-mode))
-;;   (flycheck-emacs-lisp-load-path 'inherit)
-;;   (flycheck-indication-mode (if (display-graphic-p) 'right-fringe 'right-margin))
-;;   :init
-;;   (if (display-graphic-p)
-;;       (use-package flycheck-posframe
-;;         :custom-face
-;;         (flycheck-posframe-face ((t (:foreground ,(face-foreground 'success)))))
-;;         (flycheck-posframe-info-face ((t (:foreground ,(face-foreground 'success)))))
-;;         :hook (flycheck-mode . flycheck-posframe-mode)
-;;         :custom
-;;         (flycheck-posframe-border-width 4)
-;;         (flycheck-posframe-inhibit-functions
-;;          '((lambda (&rest _) (bound-and-true-p company-backend)))))
-;;     (use-package flycheck-pos-tip
-;;       :defines flycheck-pos-tip-timeout
-;;       :hook (flycheck-mode . flycheck-pos-tip-mode)
-;;       :custom (flycheck-pos-tip-timeout 30)))
-;;   :config
-;;   (use-package flycheck-popup-tip
-;;     :hook (flycheck-mode . flycheck-popup-tip-mode))
-;;   (when (fboundp 'define-fringe-bitmap)
-;;     (define-fringe-bitmap 'flycheck-fringe-bitmap-double-arrow
-;;       [16 48 112 240 112 48 16] nil nil 'center))
-;;   (when (executable-find "vale")
-;;     (use-package flycheck-vale
-;;       :config
-;;       (flycheck-vale-setup)
-;;       (flycheck-add-mode 'vale 'latex-mode))))
 
 (use-package flycheck             :after tjf-menubar
   :straight t
@@ -724,23 +555,11 @@
   :config
   (flycheck-pos-tip-mode))
 
-(use-package frame
-  :straight nil
-  :config
-  (blink-cursor-mode)
-  (set-mouse-color (cdr (assoc 'mouse-color (frame-parameters))))
-  (on-gui
-   (set-background-color "gray95")))
-
 (use-package git-gutter           :after tjf-menubar
   :straight t
   :functions global-git-gutter-mode
   :config
   (global-git-gutter-mode t))
-
-(use-package groovy-mode          :commands groovy-mode
-  :straight t
-  :mode "\\.grv\\'")
 
 (use-package helpful              :after tjf-menubar
   :straight t
@@ -752,42 +571,10 @@
   (global-set-key (kbd "C-h   k") #'helpful-key)
   (global-set-key (kbd "C-h C-k") #'describe-key))
 
-(use-package hl-line
-  :config
-  (global-hl-line-mode))
-
-(use-package hideshow             :commands hs-minor-mode
-  :diminish hs-minor-mode
-  :init
-  (add-hook 'prog-mode-hook #'hs-minor-mode))
-  ;; :hook (prog-mode . hs-minor-mode))
-
-(use-package isearch
-  :straight nil
-  :diminish isearch-mode
-  :config
-  (setq isearch-allow-scroll          'unlimited)
-  (setq isearch-lax-whitespace        t)
-  (setq isearch-lazy-count            nil)
-  (setq isearch-lazy-highlight        t)
-  (setq isearch-regexp-lax-whitespace nil)
-  (setq isearch-yank-on-move          'shift)
-  ;; (setq lazy-count-prefix-format      nil)
-  ;; (setq lazy-count-suffix-format      " (%s/%s)")
-  (setq search-highlight              t)
-  (setq search-whitespace-regexp      "\s+?")
-  ;; :bind (:map isearch-mode-map
-  ;;             ("C-g" . isearch-cancel)
-  ;;             ("M-/" . isearch-complete))
-  )
-
 (use-package jedi                 :after elpy
   :straight t)
 
 (use-package json-mode            :mode "\\.json\\'"
-  :straight t)
-
-(use-package julia-mode           :mode "\\.jl\\'"
   :straight t)
 
 (use-package langtool             :commands langtool-check
@@ -801,54 +588,6 @@
 
 (use-package loccur               :commands loccur-current
   :straight t)
-
-;; (use-package lsp-mode
-;;   :after tjf-menubar
-;;   :commands lsp
-;;   :custom
-;;   (lsp-auto-guess-root nil)
-;;   (lsp-prefer-flymake nil) ; Use flycheck instead of flymake
-;;   (lsp-file-watch-threshold 2000)
-;;   (read-process-output-max (* 1024 1024))
-;;   (lsp-eldoc-hook nil)
-;;   :bind (:map lsp-mode-map ("C-c C-f" . lsp-format-buffer))
-;;   :hook ((java-mode python-mode go-mode
-;;           js-mode js2-mode typescript-mode web-mode
-;;           c-mode c++-mode objc-mode) . lsp))
-;; -LSPPac
-
-;; ;; LSPUI
-;; (use-package lsp-ui
-;;   :after lsp-mode
-;;   :diminish
-;;   :commands lsp-ui-mode
-;;   :custom-face
-;;   (lsp-ui-doc-background ((t (:background nil))))
-;;   (lsp-ui-doc-header ((t (:inherit (font-lock-string-face italic)))))
-;;   :bind
-;;   (:map lsp-ui-mode-map
-;;         ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-;;         ([remap xref-find-references] . lsp-ui-peek-find-references)
-;;         ("C-c u" . lsp-ui-imenu)
-;;         ("M-i" . lsp-ui-doc-focus-frame))
-;;   (:map lsp-mode-map
-;;         ("M-n" . forward-paragraph)
-;;         ("M-p" . backward-paragraph))
-;;   :custom
-;;   (lsp-ui-doc-header t)
-;;   (lsp-ui-doc-include-signature t)
-;;   (lsp-ui-doc-border (face-foreground 'default))
-;;   (lsp-ui-sideline-enable nil)
-;;   (lsp-ui-sideline-ignore-duplicate t)
-;;   (lsp-ui-sideline-show-code-actions nil)
-;;   :config
-;;   ;; Use lsp-ui-doc-webkit only in GUI
-;;   (if (display-graphic-p)
-;;       (setq lsp-ui-doc-use-webkit t))
-;;   ;; WORKAROUND Hide mode-line of the lsp-ui-imenu buffer
-;;   ;; https://github.com/emacs-lsp/lsp-ui/issues/243
-;;   (defadvice lsp-ui-imenu (after hide-lsp-ui-imenu-mode-line activate)
-;;     (setq mode-line-format nil)))
 
 (use-package lsp-mode
   :straight t
@@ -872,49 +611,8 @@
   (setq lsp-ui-sideline-show-code-actions t)
   (setq lsp-ui-sideline-delay 0.05))
 
-;; (use-package lsp-mode             :commands lsp
-;;   :straight t
-;;   :config
-;;   (setq lsp-clients-clangd-executable "/usr/bin/clangd")
-;;   (setq lsp-clients-clangd-args       nil)
-
-;;   ;; (lsp-prefer-flymake nil)
-
-;;   (hook-into-modes #'lsp
-;;                    'c++-mode-hook
-;;                    'c-mode-hook
-;;                    'python-mode-hook))
-
-;; (use-package lsp-ui               :commands lsp-ui-mode
-;;   :straight t
-;;   :config
-;;   (setq lsp-ui-sideline-show-diagnostics  nil)
-;;   (setq lsp-ui-sideline-show-hover        t)
-;;   (setq lsp-ui-sideline-show-code-actions t)
-;;   (setq lsp-ui-sideline-update-mode       'line)
-;;   (setq lsp-ui-sideline-delay             0.2)
-;;   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-;;   (define-key lsp-ui-mode-map [remap xref-find-references]  #'lsp-ui-peek-find-references))
-
-(use-package lua-mode             :commands lua-mode
-  :straight t
-  :mode "\\.lua\\'")
-
 (use-package magit                :commands magit-status
   :straight t)
-
-(use-package make-mode            :commands makefile-gmake-mode
-  :mode "\\.mk\\'"
-
-  :init
-  (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
-
-(use-package mapreplace           :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp)
-  :straight nil)
-
-;; (use-package matlab-mode          :commands matlab-mode
-;;   :straight t
-;;   :mode "\\.m\\'")
 
 (use-package mic-paren            :after tjf-menubar
   :straight t
@@ -935,20 +633,10 @@
   (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
   ;; :hook (c++-mode . modern-c++-font-lock-mode))
 
-(use-package msb
-  :config
-  (setq msb-display-invisible-buffers-p     t)
-  (setq msb-max-menu-items                  nil))
-
 (use-package orderless
   :straight t
   :config
   (setq completion-styles '(orderless)))
-
-(use-package org                  :mode "\\.org\\'"
-  :straight nil
-  :init
-  (add-hook 'org-mode-hook #'visual-line-mode))
 
 (use-package paradox              :commands paradox-list-packages
   :straight t
@@ -957,24 +645,11 @@
   (eval-when-compile
     (defvar package-archives)))
 
-(use-package plsense              :disabled
-  :if is-linux?
-  :straight t
-  :after cperl-mode
-  :config
-  (plsense-config-default)
-  (plsense-server-start))
-
 (use-package powerline
   :straight t)
 
 (use-package powerthesaurus       :commands powerthesaurus-lookup
   :straight t)
-
-(use-package pretty-column        :commands (pretty-column pretty-rectangle)
-  :straight nil
-  :config
-  (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
 (use-package projectile           :after project
   :straight t
@@ -988,9 +663,6 @@
   (add-to-list 'project-find-functions #'(lambda (dir)
                                            (let ((root (projectile-project-root dir)))
                                              (and root (cons 'transient root))))))
-
-(use-package python               :mode "\\.py\\'"
-  :straight nil)
 
 (use-package pyvenv               :after elpy
   :straight t
@@ -1015,26 +687,6 @@
 (use-package rainbow-mode         :commands rainbow-mode
   :straight t)
 
-(use-package recentf
-  :demand
-  :config
-  (setq recentf-auto-cleanup    'never)
-  (setq recentf-save-file       (concat tjf:user/dir-config "recentf"))
-  (setq recentf-max-menu-items  32)
-  (setq recentf-max-saved-items 200)
-  (setq recentf-menu-before     "Open in New Window...")
-  (setq recentf-exclude         '(".gz" ".xz" ".zip" "/elpa/"))
-
-  (add-hook 'after-init-hook #'recentf-mode))
-  ;; :hook (after-init-hook . recentf-mode))
-
-(use-package replace
-  :straight nil
-  :config
-  (add-hook 'occur-mode-hook #'(lambda ()
-                                 (make-local-variable 'which-function-mode)
-                                 (setq which-function-mode nil))))
-
 (use-package s
   :straight t)
 
@@ -1055,10 +707,6 @@
   (selectrum-prescient-mode +1)
   (prescient-persist-mode   +1))
 
-(use-package simple
-  :straight nil
-  :diminish auto-fill-function)
-
 (use-package smartparens          :commands smartparens-mode
   :straight t
   :diminish smartparens-mode
@@ -1078,244 +726,8 @@
   (sp-local-pair sp-lisp-modes "'" nil :actions nil)
   (sp-local-pair sp-lisp-modes "`" nil :actions nil))
 
-;; (use-package smerge-mode :commands smerge-mode)
-
 (use-package smooth-scrolling     :after tjf-menubar
   :straight t)
-
-(use-package so-long              :after tjf-menubar
-  :config
-  (global-so-long-mode 1))
-
-(use-package tetris               :commands tetris
-  :config
-  (setq tetris-score-file "/dev/null"))
-
-(use-package tex-mode             :mode "\\.tex\\'"
-  :config
-  (define-key latex-mode-map [(control return)] 'tjf:edit/insert-newline-after))
-
-(use-package text-mode            :commands text-mode
-  :straight nil
-  :init
-  (add-hook 'text-mode-hook #'turn-on-auto-fill))
-
-(use-package tjf-bookmark
-  :straight nil)
-
-(use-package tjf-c                :after tjf-cc
-  :straight nil
-  :init
-  (add-hook 'c-mode-hook #'tjf:c/setup)
-  :config
-  (define-key c-mode-map    [menu-bar]    nil)
-  (define-key c-mode-map    [(control d)] nil)
-
-  (easy-menu-define tjf-c-menu c-mode-map "C" (append '("C") tjf:cc/menu-text))
-  (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu))
-
-(use-package tjf-cc               :after cc-mode
-  :straight nil
-  :preface
-  (eval-when-compile
-    (defvar tjf:c/dialect)
-    (defvar tjf:cpp/dialect))
-  :config
-  (setq c-default-style "bsd")
-  (setq c-basic-offset  4)
-
-  (tjf:cc/set-dialect "c17")
-  (tjf:cc/set-dialect "c++17")
-
-  (c-set-offset 'case-label '+))
-
-(use-package tjf-cpp              :after tjf-cc
-  :straight nil
-  :init
-  (add-hook 'c++-mode-hook #'tjf:cpp/setup)
-  :config
-  (define-key c++-mode-map    [menu-bar]    nil)
-  (define-key c++-mode-map    [(control d)] nil)
-
-  (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
-  (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu))
-
-(use-package tjf-clips            :after clips-mode
-  :straight nil
-  :commands clips-mode
-  :functions tjf:clips/setup
-  :init
-  (add-hook 'clips-mode-hook #'tjf:clips/setup))
-
-(use-package tjf-color
-  :straight nil)
-
-(use-package tjf-clipboard
-  :straight nil)
-
-(use-package tjf-csharp           :after csharp-mode
-  :straight nil
-  :commands csharp-mode
-  :preface
-  (eval-when-compile
-    (defvar csharp-mode-map))
-  :init
-  (add-hook 'csharp-mode-hook #'tjf:csharp/setup))
-
-(use-package tjf-date
-  :straight nil)
-
-(use-package tjf-duplicate        :after undo-tree
-  :straight nil)
-
-(use-package tjf-edit
-  :straight nil)
-
-(use-package tjf-flags
-  :straight nil)
-
-(use-package tjf-file
-  :straight nil)
-
-(use-package tjf-keys             :after undo-tree
-  :straight nil)
-
-(use-package tjf-frame
-  :straight nil
-  :functions tjf:frame/reset-size
-  :config
-  (tjf:frame/reset-size))
-
-(use-package tjf-lisp             :after elisp-mode
-  :straight nil
-  :preface
-  (defun tjf:lisp/setup ())
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'tjf:lisp/setup))
-
-(use-package tjf-macro
-  :straight nil)
-
-;; (use-package tjf-matlab           :after matlab
-;;   :straight nil
-;;   :config
-;;   (add-hook 'matlab-mode-hook #'tjf:matlab/setup))
-
-(use-package tjf-menubar          :after undo-tree
-  :straight nil
-  :config
-  (setq recentf-menu-before "Open in New Window...")
-  (recentf-mode)
-  (add-hook 'menu-bar-update-hook 'tjf:navigate/menu))
-
-(use-package tjf-msb
-  :straight nil
-  :config
-  (msb-mode))
-
-(use-package tjf-navigate
-  :straight nil)
-
-(use-package tjf-perl             :after cperl-mode
-  :straight nil
-  :preface
-  (defun tjf:perl/setup ())
-  :init
-  (add-hook 'cperl-mode-hook #'tjf:perl/setup))
-
-(use-package tjf-powerline
-  :straight nil
-  :config
-  (add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
-
-  (alias-face powerline-red-face fontaine/powerline-red)
-
-  (setq powerline-default-separator 'wave)
-
-  (tjf:powerline/theme))
-
-(use-package tjf-python           :after python
-  :straight nil
-  :preface
-  (defun tjf:python/setup ())
-  :init
-  (add-hook 'python-mode-hook #'tjf:python/setup))
-
-(use-package tjf-query-replace    :commands tjf:query-replace/do
-  :straight nil)
-
-(use-package tjf-search
-  :straight nil)
-
-(use-package tjf-sort
-  :straight nil)
-
-(use-package tjf-tabline
-  :straight nil
-  :config
-  (tjf:tabline/mode 1)
-
-  (setq tjf:tabline/separator          '(0.0))
-  (setq tjf:tabline/tab-label-function #'tjf:tabline/label-function)
-  (setq tjf:tabline/use-images         nil))
-
-(use-package tjf-toolbar
-  :straight nil)
-
-(use-package tjf-tools
-  :straight nil)
-
-(use-package tjf-view
-  :straight nil)
-
-;; (use-package treemacs
-;;   :init
-;;   (with-eval-after-load 'winum
-;;     (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
-;;   :custom
-;;   (treemacs-collapse-dirs 3)
-;;   (treemacs-deferred-git-apply-delay 0.5)
-;;   (treemacs-display-in-side-window t)
-;;   (treemacs-file-event-delay 5000)
-;;   (treemacs-file-follow-delay 0.2)
-;;   (treemacs-follow-after-init t)
-;;   (treemacs-follow-recenter-distance 0.1)
-;;   (treemacs-git-command-pipe "")
-;;   (treemacs-goto-tag-strategy 'refetch-index)
-;;   (treemacs-indentation 2)
-;;   (treemacs-indentation-string " ")
-;;   (treemacs-is-never-other-window nil)
-;;   (treemacs-max-git-entries 5000)
-;;   (treemacs-no-png-images nil)
-;;   (treemacs-no-delete-other-windows t)
-;;   (treemacs-project-follow-cleanup nil)
-;;   (treemacs-persist-file (expand-file-name ".cache/treemacs-persist" user-emacs-directory))
-;;   (treemacs-recenter-after-file-follow nil)
-;;   (treemacs-recenter-after-tag-follow nil)
-;;   (treemacs-show-cursor nil)
-;;   (treemacs-show-hidden-files t)
-;;   (treemacs-silent-filewatch nil)
-;;   (treemacs-silent-refresh nil)
-;;   (treemacs-sorting 'alphabetic-desc)
-;;   (treemacs-space-between-root-nodes t)
-;;   (treemacs-tag-follow-cleanup t)
-;;   (treemacs-tag-follow-delay 1.5)
-;;   (treemacs-width 35)
-;;   :config
-;;   ;; The default width and height of the icons is 22 pixels. If you are
-;;   ;; using a Hi-DPI display, uncomment this to double the icon size.
-;;   ;;(treemacs-resize-icons 44)
-;;   (treemacs-follow-mode t)
-;;   (treemacs-filewatch-mode t)
-;;   (treemacs-fringe-indicator-mode t)
-;;   :bind
-;;   (("M-0"       . treemacs-select-window)
-;;    ("C-x t 1"   . treemacs-delete-other-windows)
-;;    ("C-x t t"   . treemacs)
-;;    ("C-x t B"   . treemacs-bookmark)
-;;    ("C-x t C-t" . treemacs-find-file)
-;;    ("C-x t M-t" . treemacs-find-tag))
-;;   (:map treemacs-mode-map ("C-p" . treemacs-previous-line)))
 
 (use-package treemacs             :commands treemacs
   :straight t
@@ -1399,42 +811,12 @@
   ;; (unicode-fonts-setup unicode-fonts-fontset-names nil)
   (tjf:unicode/emoji-fonts))
 
-(use-package uniquify             :after tjf-menubar
-  :straight nil
-  :config
-  (setq uniquify-buffer-name-style   'post-forward)
-  (setq uniquify-ignore-buffers-re   "^\\*")
-  (setq uniquify-strip-common-suffix t))
-
-(use-package vc                   :after tjf-menubar
-  :config
-  (setq vc-follow-symlinks t))
-
 (use-package volatile-highlights  :after tjf-menubar
   :straight t
   :diminish volatile-highlights-mode
   :functions volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
-
-(use-package whitespace           :commands whitespace-mode
-  :diminish whitespace-mode
-  :config
-  (setq whitespace-style (quote (tabs spaces space-before-tab newline indentation empty space-after-tab space-mark
-                                      tab-mark newline-mark))
-        whitespace-display-mappings '((space-mark 32 [183] [46])                     ; 32 SPACE     => "·" "."
-                                      (newline-mark 10 [182 10])                     ; 10 LINE FEED => "¶ <LINE FEED>"
-                                      (tab-mark 9 [9654 32 91 84 65 66 93 9] [92 9]) ;  9 TAB       => "▶ [TAB]<TAB>"
-                                      )))
-
-(use-package window
-  :straight nil
-  :config
-  (delete-other-windows))
-
-(use-package winner               :after tjf-menubar
-  :config
-  (winner-mode 1))
 
 (use-package ws-butler            :after tjf-menubar
   :straight t
@@ -1447,8 +829,340 @@
   :straight t
   :mode "\\.yaml\\'")
 
-(use-package xah
-  :straight nil)
+;; ================================================================================
+
+(use-package autorevert
+  :diminish autorevert-mode
+  :config
+  (setq auto-revert-verbose t)
+  (global-auto-revert-mode))
+
+(use-package cc-mode              :commands (c-mode c++-mode)
+  :init
+  (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
+  (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode)))
+
+(use-package cl-macs)
+
+(use-package color)
+
+(use-package cperl-mode           :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
+  :mode "\\.p\\(l\\|m\\)\\'"
+  :init
+  (defalias 'perl-mode 'cperl-mode)
+  :config
+  (setq cperl-hairy t)
+
+  (setq cperl-indent-region-fix-constructs nil)
+  (setq cperl-style-alist (append cperl-style-alist '(("TJF"
+                                                       (cperl-indent-level               .  2)
+                                                       (cperl-brace-offset               .  0)
+                                                       (cperl-continued-brace-offset     . -2)
+                                                       (cperl-label-offset               . -2)
+                                                       (cperl-extra-newline-before-brace .  t)
+                                                       (cperl-merge-trailing-else        .  nil)
+                                                       (cperl-continued-statement-offset .  2)))))
+
+  (cperl-set-style "TJF")
+  (cperl-init-faces)
+
+  (define-key cperl-mode-map [menu-bar] nil)
+  (define-key cperl-mode-map [?\t]      #'(lambda nil (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
+  (define-key cperl-mode-map "{"        nil)
+  (define-key cperl-mode-map "("        nil)
+  (define-key cperl-mode-map "["        nil)
+
+  (message "Loading cperl-mode...done"))
+
+(use-package cua-base
+  :config
+  (cua-mode))
+
+(use-package display-line-numbers
+  :config
+  (hook-into-modes #'display-line-numbers-mode
+                   'org-mode-hook
+                   'prog-mode-hook
+                   'text-mode-hook))
+
+(use-package easymenu)
+
+(use-package ediff                :commands ediff
+  :preface
+  (eval-when-compile
+    (defvar ediff-merge-revisions-with-ancestor))
+  :config
+  (setq ediff-keep-variants                    nil)
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-merge-revisions-with-ancestor    t)
+  (setq ediff-show-clashes-only                t)
+  (setq ediff-split-window-function            'split-window-horizontally)
+  (setq ediff-window-setup-function            'ediff-setup-windows-plain))
+
+(use-package eldoc
+  :diminish eldoc-mode
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
+
+(use-package ergoemacs-functions  :commands (ergoemacs-backward-open-bracket
+                                             ergoemacs-extend-selection
+                                             ergoemacs-forward-open-bracket
+                                             ergoemacs-move-text-down
+                                             ergoemacs-move-text-up
+                                             ergoemacs-select-text-in-quote
+                                             ergoemacs-shrink-whitespaces)
+  :no-require t)
+
+(use-package face-remap           :commands (buffer-face-mode text-scale-mode)
+  :diminish face-remap-mode
+  buffer-face-mode)
+
+(use-package frame
+  :config
+  (blink-cursor-mode)
+  (set-mouse-color (cdr (assoc 'mouse-color (frame-parameters))))
+  (on-gui
+   (set-background-color "gray95")))
+
+(use-package hl-line
+  :config
+  (global-hl-line-mode))
+
+(use-package hideshow             :commands hs-minor-mode
+  :diminish hs-minor-mode
+  :init
+  (add-hook 'prog-mode-hook #'hs-minor-mode))
+
+(use-package isearch
+  :diminish isearch-mode
+  :config
+  (setq isearch-allow-scroll          'unlimited)
+  (setq isearch-lax-whitespace        t)
+  (setq isearch-lazy-count            nil)
+  (setq isearch-lazy-highlight        t)
+  (setq isearch-regexp-lax-whitespace nil)
+  (setq isearch-yank-on-move          'shift)
+  (setq search-highlight              t)
+  (setq search-whitespace-regexp      "\s+?"))
+
+(use-package make-mode            :commands makefile-gmake-mode
+  :mode "\\.mk\\'"
+
+  :init
+  (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
+
+(use-package mapreplace           :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp))
+
+(use-package msb
+  :config
+  (setq msb-display-invisible-buffers-p     t)
+  (setq msb-max-menu-items                  nil))
+
+(use-package org                  :mode "\\.org\\'"
+  :init
+  (add-hook 'org-mode-hook #'visual-line-mode))
+
+(use-package pretty-column        :commands (pretty-column pretty-rectangle)
+  :config
+  (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
+
+(use-package python               :mode "\\.py\\'")
+
+(use-package recentf
+  :demand
+  :config
+  (setq recentf-auto-cleanup    'never)
+  (setq recentf-save-file       (concat tjf:user/dir-config "recentf"))
+  (setq recentf-max-menu-items  32)
+  (setq recentf-max-saved-items 200)
+  (setq recentf-menu-before     "Open in New Window...")
+  (setq recentf-exclude         '(".gz" ".xz" ".zip" "/elpa/"))
+
+  (add-hook 'after-init-hook #'recentf-mode))
+
+(use-package replace
+  :config
+  (add-hook 'occur-mode-hook #'(lambda ()
+                                 (make-local-variable 'which-function-mode)
+                                 (setq which-function-mode nil))))
+
+(use-package simple
+  :diminish auto-fill-function)
+
+(use-package so-long              :after tjf-menubar
+  :config
+  (global-so-long-mode 1))
+
+(use-package tetris               :commands tetris
+  :config
+  (setq tetris-score-file "/dev/null"))
+
+(use-package tex-mode             :mode "\\.tex\\'"
+  :config
+  (define-key latex-mode-map [(control return)] 'tjf:edit/insert-newline-after))
+
+(use-package text-mode            :commands text-mode
+  :init
+  (add-hook 'text-mode-hook #'turn-on-auto-fill))
+
+(use-package tjf-bookmark)
+
+(use-package tjf-c                :after tjf-cc
+  :init
+  (add-hook 'c-mode-hook #'tjf:c/setup)
+  :config
+  (define-key c-mode-map    [menu-bar]    nil)
+  (define-key c-mode-map    [(control d)] nil)
+
+  (easy-menu-define tjf-c-menu c-mode-map "C" (append '("C") tjf:cc/menu-text))
+  (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu))
+
+(use-package tjf-cc               :after cc-mode
+  :preface
+  (eval-when-compile
+    (defvar tjf:c/dialect)
+    (defvar tjf:cpp/dialect))
+  :config
+  (setq c-default-style "bsd")
+  (setq c-basic-offset  4)
+
+  (tjf:cc/set-dialect "c17")
+  (tjf:cc/set-dialect "c++17")
+
+  (c-set-offset 'case-label '+))
+
+(use-package tjf-cpp              :after tjf-cc
+  :init
+  (add-hook 'c++-mode-hook #'tjf:cpp/setup)
+  :config
+  (define-key c++-mode-map    [menu-bar]    nil)
+  (define-key c++-mode-map    [(control d)] nil)
+  (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
+  (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu))
+
+(use-package tjf-clips            :after clips-mode
+  :commands clips-mode
+  :functions tjf:clips/setup
+  :init
+  (add-hook 'clips-mode-hook #'tjf:clips/setup))
+
+(use-package tjf-color)
+
+(use-package tjf-clipboard)
+
+(use-package tjf-csharp           :after csharp-mode
+  :commands csharp-mode
+  :preface
+  (eval-when-compile
+    (defvar csharp-mode-map))
+  :init
+  (add-hook 'csharp-mode-hook #'tjf:csharp/setup))
+
+(use-package tjf-date)
+
+(use-package tjf-duplicate        :after undo-tree)
+
+(use-package tjf-edit)
+
+(use-package tjf-flags)
+
+(use-package tjf-file)
+
+(use-package tjf-keys             :after undo-tree)
+
+(use-package tjf-frame
+  :functions tjf:frame/reset-size
+  :config
+  (tjf:frame/reset-size))
+
+(use-package tjf-lisp             :after elisp-mode
+  :preface
+  (defun tjf:lisp/setup ())
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'tjf:lisp/setup))
+
+(use-package tjf-macro)
+
+(use-package tjf-menubar          :after undo-tree
+  :config
+  (setq recentf-menu-before "Open in New Window...")
+  (recentf-mode)
+  (add-hook 'menu-bar-update-hook 'tjf:navigate/menu))
+
+(use-package tjf-msb
+  :config
+  (msb-mode))
+
+(use-package tjf-navigate)
+
+(use-package tjf-perl             :after cperl-mode
+  :preface
+  (defun tjf:perl/setup ())
+  :init
+  (add-hook 'cperl-mode-hook #'tjf:perl/setup))
+
+(use-package tjf-powerline
+  :config
+  (add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
+  (alias-face powerline-red-face fontaine/powerline-red)
+  (setq powerline-default-separator 'wave)
+  (tjf:powerline/theme))
+
+(use-package tjf-python           :after python
+  :preface
+  (defun tjf:python/setup ())
+  :init
+  (add-hook 'python-mode-hook #'tjf:python/setup))
+
+(use-package tjf-query-replace    :commands tjf:query-replace/do)
+
+(use-package tjf-search)
+
+(use-package tjf-sort)
+
+(use-package tjf-tabline
+  :config
+  (tjf:tabline/mode 1)
+
+  (setq tjf:tabline/separator          '(0.0))
+  (setq tjf:tabline/tab-label-function #'tjf:tabline/label-function)
+  (setq tjf:tabline/use-images         nil))
+
+(use-package tjf-toolbar)
+
+(use-package tjf-tools)
+
+(use-package tjf-view)
+
+(use-package uniquify             :after tjf-menubar
+  :config
+  (setq uniquify-buffer-name-style   'post-forward)
+  (setq uniquify-ignore-buffers-re   "^\\*")
+  (setq uniquify-strip-common-suffix t))
+
+(use-package vc                   :after tjf-menubar
+  :config
+  (setq vc-follow-symlinks t))
+
+(use-package whitespace           :commands whitespace-mode
+  :diminish whitespace-mode
+  :config
+  (setq whitespace-style (quote (tabs spaces space-before-tab newline indentation empty space-after-tab space-mark
+                                      tab-mark newline-mark))
+        whitespace-display-mappings '((space-mark 32 [183] [46])                     ; 32 SPACE     => "·" "."
+                                      (newline-mark 10 [182 10])                     ; 10 LINE FEED => "¶ <LINE FEED>"
+                                      (tab-mark 9 [9654 32 91 84 65 66 93 9] [92 9]) ;  9 TAB       => "▶ [TAB]<TAB>"
+                                      )))
+
+(use-package window
+  :config
+  (delete-other-windows))
+
+(use-package winner               :after tjf-menubar
+  :config
+  (winner-mode 1))
+
+(use-package xah)
 
 (use-package xref                 :after tjf-menubar
   :functions xref-show-definitions-completing-read
