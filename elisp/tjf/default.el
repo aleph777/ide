@@ -500,7 +500,7 @@
 
   (add-to-list 'company-transformers #'company-sort-by-backend-importance))
 
-(use-package company-jedi         :after (company python-mode)
+(use-package company-jedi         :after (company python)
   :if is-linux?
   :straight t
   :config
@@ -618,7 +618,7 @@
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
   ;; :hook (emacs-lisp-mode-hook . eldoc-mode))
 
-(use-package elpy
+(use-package elpy                 :after python
   :straight t
   :init
   (setq elpy-rpc-python-command "python3")
@@ -945,7 +945,7 @@
   :config
   (setq completion-styles '(orderless)))
 
-(use-package org            :mode "\\.org\\'"
+(use-package org                  :mode "\\.org\\'"
   :straight nil
   :init
   (add-hook 'org-mode-hook #'visual-line-mode))
@@ -989,7 +989,10 @@
                                            (let ((root (projectile-project-root dir)))
                                              (and root (cons 'transient root))))))
 
-(use-package pyvenv              :after elpy
+(use-package python               :mode "\\.py\\'"
+  :straight nil)
+
+(use-package pyvenv               :after elpy
   :straight t
   :config
   (pyvenv-mode t)
@@ -1162,7 +1165,7 @@
 (use-package tjf-date
   :straight nil)
 
-(use-package tjf-duplicate
+(use-package tjf-duplicate        :after undo-tree
   :straight nil)
 
 (use-package tjf-edit
@@ -1174,7 +1177,7 @@
 (use-package tjf-file
   :straight nil)
 
-(use-package tjf-keys
+(use-package tjf-keys             :after undo-tree
   :straight nil)
 
 (use-package tjf-frame
