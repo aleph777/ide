@@ -26,7 +26,6 @@ export PROMPT_COMMAND="history -a; history -n"
 enable kill
 
 export IDE="$HOME/ide"
-export CINCO="$HOME/cinco"
 
 # aliases are resolved recursively
 #   alias hello="echo Hello"
@@ -36,20 +35,21 @@ alias perl='perl -Mv5.10'
 alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
 alias sum="perl -e 'use List::Util qw(sum); say sum(@ARGV);'"
-export CINCOPATH="$CINCO/bin"
-export CINCOLIB="$CINCO/lib"
+
+alias flake8='flake8 --ignore E221,E303,E501'
+
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
-export PYTHONPATH="$CINCOLIB:$IDE/lib/python"
+export PYTHONPATH="$IDE/lib/python"
 
 # apt
 #
-alias up='sudo apt update && sudo apt -y upgrade'
+alias up='sudo apt update && sudo apt upgrade'
 
 # Git
 #
 alias undo-commit='git reset --soft HEAD~1'
-# alias "git-reset-from-remote='git checkout origin/develop -- '"
+
 export BRANCH='git rev-parse --abbrev-ref HEAD'
 
 # Bash
@@ -69,18 +69,21 @@ alias psfind='ps u -C'
 # setting up video resolution
 #
 alias set1920x1080='xrandr --newmode $(cvt 1920 1080 | cut -d" " -f2- | tail -1) && xrandr --addmode Virtual1 "1920x1080_60.00"'
+alias newmode='xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync'
+alias addmode='xrandr --addmode Virtual1 "1920x1080_60.00"'
 
 # Emacs
 #
 export EDITOR='nano'
+
+export EMACSDIR=$HOME/emacs
+export EMACSBIN=$EMACSDIR/src/emacs
 export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
-export EMACSBIN=~/emacs/src/emacs
-#export EMACSVERSION=$(emacs --version | grep '\d$' | cut -d' ' -f3)
-export LISP="~/emacs/lisp"
+
 alias emacs="$EMACSBIN $EMACSARGS"
-# alias emacsclient='/usr/local/bin/emacsclient -n -c'
-# alias emacsdaemon='emacs --daemon'
-# alias emacsstop="/usr/local/bin/emacsclient --eval '(kill-emacs)'"
+alias emacsclient="$EMACSDIR/lib-src/emacsclient -n -c"
+alias emacsdaemon='emacs --daemon'
+alias emacsstop="emacsclient --eval '(kill-emacs)'"
 
 # Ignore these commands
 #
@@ -93,6 +96,7 @@ export COLUMNS=108
 # export CLANGBIN=$CLANG/bin
 # export CLANGLIB=$CLANG/lib
 # export CMAKEBIN=$CMAKE/bin
+# export LD_LIBRARY_PATH=$CLANGLIB
 
 # alias cmake="$CMAKEBIN/cmake"
 
@@ -102,10 +106,10 @@ fi
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
+export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$IDE/bin
 export SNAPBIN=/snap/bin
-export PATH=$($HOME/bin/clean-path $CINCOPATH $IDE/local/bin $IDE/local/homebin $IDE/bin $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
-# export LD_LIBRARY_PATH=$CLANGLIB
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
 export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
@@ -121,46 +125,38 @@ if [[ -z "$THIS_VERSIONID" ]]; then
     export THIS_VERSION_ID=$(grep '^VERSION_ID=' /etc/os-release | cut -d= -f2 | cut -d'"' -f2)
 fi
 
-# BLUE   = [34m$(1)[0m
-# CYAN   = [36m$(1)[0m
-# GREEN  = [32m$(1)[0m
-# PURPLE = [35m$(1)[0m
-# RED    = [31m$(1)[0m
-# YELLOW = [33m$(1)[0m
+BOLD="\[\033[1;"
+NORMAL="\[\033[0;"
 
-# BOLD_BLUE   = [34m[1m$(1)[0m
-# BOLD_CYAN   = [36m[1m$(1)[0m
-# BOLD_GREEN  = [32m[1m$(1)[0m
-# BOLD_PURPLE = [35m[1m$(1)[0m
-# BOLD_RED    = [31m[1m$(1)[0m
-# BOLD_YELLOW = [33m[1m$(1)[0m
+BLACK="30m\]"
+RED="31m\]"
+GREEN="32m\]"
+YELLOW="33m\]"
+BLUE="34m\]"
+MAGENTA="35m\]"
+CYAN="36m\]"
+WHITE="37m\]"
 
-# sub printGreenBold  { print STDERR "[32m[1m$_[0m" for @_; }
-# sub printPurpleBold { print STDERR "[35m[1m$_[0m" for @_; }
-# sub printYellowBold { print STDERR "[33m[1m$_[0m" for @_; }
-# sub sayGreenBold    { print STDERR "[32m[1m$_[0m" for @_; }
-# sub sayPurpleBold   { say   STDERR "[35m[1m$_[0m" for @_; }
-# sub sayYellowBold   { say   STDERR "[33m[1m$_[0m" for @_; }
-# RED="\[\033[0;31m\]"
+BOLD_BLACK=${BOLD}${BLACK}
+BOLD_RED=${BOLD}${RED}
+BOLD_GREEN=${BOLD}${GREEN}
+BOLD_YELLOW=${BOLD}${YELLOW}
+BOLD_BLUE=${BOLD}${BLUE}
+BOLD_MAGENTA=${BOLD}${MAGENTA}
+BOLD_CYAN=${BOLD}${CYAN}
+BOLD_WHITE=${BOLD}${WHITE}
 
-# LIGHT_RED="\[\033[1;31m\]"
-# ORANGE='\033[0;33m'
-# YELLOW="\[\033[1;33m\]"
-# GREEN="\[\033[0;32m\]"
-LIGHT_GREEN="\[\033[1;32m\]"
-# CYAN="\[\033[0;36m\]"
-# LIGHT_CYAN="\[\033[1;36m\]"
-# BLUE="\[\033[0;34m\]"
-LIGHT_BLUE="\[\033[1;34m\]"
-# PURPLE="\[\033[0;35m\]"
+NORMAL_BLACK=${NORMAL}${BLACK}
+NORMAL_RED=${NORMAL}${RED}
+NORMAL_GREEN=${NORMAL}${GREEN}
+NORMAL_YELLOW=${NORMAL}${YELLOW}
+NORMAL_BLUE=${NORMAL}${BLUE}
+NORMAL_MAGENTA=${NORMAL}${MAGENTA}
+NORMAL_CYAN=${NORMAL}${CYAN}
+NORMAL_WHITE=${NORMAL}${WHITE}
 
-# WHITE='\e[0;37m'
-# LIGHT_GRAY="\[\033[0;37m\]"
-# GRAY="\[\033[1;30m\]"
-# BLACK="\[\033[0;30m\]"
+NO_COLOR="\[\033[0m\]"
 
-NO_COLOUR="\[\033[0m\]"
-#
 # OLD STUFF (you never know)
 #
 # if [ $CLEARCASE_ROOT ];
@@ -170,8 +166,8 @@ NO_COLOUR="\[\033[0m\]"
 # export PS1=${LIGHT_GREEN}'\# [\h] \W> '${NO_COLOUR}
 
 if [[ "$THIS_ARCH" = "x86_64" ]]; then
-    PROMPT_COLOR=${LIGHT_GREEN}
+    PROMPT_COLOR=${BOLD_GREEN}
 else
-    PROMPT_COLOR=${LIGHT_BLUE}
+    PROMPT_COLOR=${BOLD_BLUE}
 fi
-export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOUR}
+export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOR}
