@@ -32,7 +32,7 @@
 ** sudo apt install build-essential git
 ** git clone https://github.com/aleph777/ide
 ** Pre-use IDE
-*** mv .bashrc .basrc.sav
+*** mv .bashrc .basrc_original
 *** ln -s ide/.bashrc
 *** ln -s ide/.emacs.el
     NOTE: emacs 28 funkiness with .emacs.el *** ln -s ide/.emacs.el .emacs
