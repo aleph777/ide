@@ -5,8 +5,9 @@
 # Title:  options.py
 # Date:   19-Apr-2022
 
-import getopt
 import sys
+
+from getopt import error, gnu_getopt
 
 
 class Options:
@@ -16,10 +17,12 @@ class Options:
         self.option = dict()
 
         try:
-            arguments, __ = getopt.getopt(sys.argv[1:], shortarg, longarg)
+            arguments, args = gnu_getopt(sys.argv[1:], shortarg, longarg)
+
+            self.args = args
 
             for currentArgument, currentValue in arguments:
                 self.option[currentArgument] = currentValue if currentValue != '' else True
 
-        except getopt.error as err:
+        except error as err:
             print(str(err))
