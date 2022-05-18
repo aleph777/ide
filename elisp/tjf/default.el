@@ -831,22 +831,22 @@
 
 ;; ================================================================================
 
-(use-package autorevert
+(use-package autorevert           :straight nil
   :diminish autorevert-mode
   :config
   (setq auto-revert-verbose t)
   (global-auto-revert-mode))
 
-(use-package cc-mode              :commands (c-mode c++-mode)
+(use-package cc-mode              :straight nil :commands (c-mode c++-mode)
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(C\\|H\\)\\'"       . c-mode))
   (add-to-list 'auto-mode-alist '("\\.\\(proto\\|tpp\\)\\'" . c++-mode)))
 
-(use-package cl-macs)
+(use-package cl-macs              :straight nil)
 
-(use-package color)
+(use-package color                :straight nil)
 
-(use-package cperl-mode           :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
+(use-package cperl-mode           :straight nil :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
   :mode "\\.p\\(l\\|m\\)\\'"
   :init
   (defalias 'perl-mode 'cperl-mode)
@@ -874,20 +874,20 @@
 
   (message "Loading cperl-mode...done"))
 
-(use-package cua-base
+(use-package cua-base             :straight nil
   :config
   (cua-mode))
 
-(use-package display-line-numbers
+(use-package display-line-numbers :straight nil
   :config
   (hook-into-modes #'display-line-numbers-mode
                    'org-mode-hook
                    'prog-mode-hook
                    'text-mode-hook))
 
-(use-package easymenu)
+(use-package easymenu             :straight nil)
 
-(use-package ediff                :commands ediff
+(use-package ediff                :straight nil :commands ediff
   :preface
   (eval-when-compile
     (defvar ediff-merge-revisions-with-ancestor))
@@ -899,41 +899,43 @@
   (setq ediff-split-window-function            'split-window-horizontally)
   (setq ediff-window-setup-function            'ediff-setup-windows-plain))
 
-(use-package eldoc
+(use-package eldoc                :straight nil
   :diminish eldoc-mode
   :init
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode))
 
-(use-package ergoemacs-functions  :commands (ergoemacs-backward-open-bracket
-                                             ergoemacs-extend-selection
-                                             ergoemacs-forward-open-bracket
-                                             ergoemacs-move-text-down
-                                             ergoemacs-move-text-up
-                                             ergoemacs-select-text-in-quote
-                                             ergoemacs-shrink-whitespaces)
+(use-package ergoemacs-functions  :straight nil
+  :commands
+  (ergoemacs-backward-open-bracket
+   ergoemacs-extend-selection
+   ergoemacs-forward-open-bracket
+   ergoemacs-move-text-down
+   ergoemacs-move-text-up
+   ergoemacs-select-text-in-quote
+   ergoemacs-shrink-whitespaces)
   :no-require t)
 
-(use-package face-remap           :commands (buffer-face-mode text-scale-mode)
+(use-package face-remap           :straight nil :commands (buffer-face-mode text-scale-mode)
   :diminish face-remap-mode
   buffer-face-mode)
 
-(use-package frame
+(use-package frame                :straight nil
   :config
   (blink-cursor-mode)
   (set-mouse-color (cdr (assoc 'mouse-color (frame-parameters))))
   (on-gui
    (set-background-color "gray95")))
 
-(use-package hl-line
+(use-package hl-line              :straight nil
   :config
   (global-hl-line-mode))
 
-(use-package hideshow             :commands hs-minor-mode
+(use-package hideshow             :straight nil :commands hs-minor-mode
   :diminish hs-minor-mode
   :init
   (add-hook 'prog-mode-hook #'hs-minor-mode))
 
-(use-package isearch
+(use-package isearch              :straight nil
   :diminish isearch-mode
   :config
   (setq isearch-allow-scroll          'unlimited)
@@ -945,30 +947,30 @@
   (setq search-highlight              t)
   (setq search-whitespace-regexp      "\s+?"))
 
-(use-package make-mode            :commands makefile-gmake-mode
+(use-package make-mode            :straight nil :commands makefile-gmake-mode
   :mode "\\.mk\\'"
-
   :init
   (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
 
-(use-package mapreplace           :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp))
+(use-package mapreplace           :straight nil :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp))
 
-(use-package msb
+(use-package msb                  :straight nil
   :config
   (setq msb-display-invisible-buffers-p     t)
   (setq msb-max-menu-items                  nil))
 
-(use-package org                  :mode "\\.org\\'"
+(use-package org                  :straight nil :mode "\\.org\\'"
   :init
   (add-hook 'org-mode-hook #'visual-line-mode))
 
-(use-package pretty-column        :commands (pretty-column pretty-rectangle)
+(use-package pretty-column        :straight nil :commands (pretty-column pretty-rectangle)
+  :straight nil
   :config
   (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
-(use-package python               :mode "\\.py\\'")
+(use-package python               :straight nil :mode "\\.py\\'")
 
-(use-package recentf
+(use-package recentf              :straight nil
   :demand
   :config
   (setq recentf-auto-cleanup    'never)
@@ -980,34 +982,34 @@
 
   (add-hook 'after-init-hook #'recentf-mode))
 
-(use-package replace
+(use-package replace              :straight nil
   :config
   (add-hook 'occur-mode-hook #'(lambda ()
                                  (make-local-variable 'which-function-mode)
                                  (setq which-function-mode nil))))
 
-(use-package simple
+(use-package simple               :straight nil
   :diminish auto-fill-function)
 
-(use-package so-long              :after tjf-menubar
+(use-package so-long              :straight nil :after tjf-menubar
   :config
   (global-so-long-mode 1))
 
-(use-package tetris               :commands tetris
+(use-package tetris               :straight nil :commands tetris
   :config
   (setq tetris-score-file "/dev/null"))
 
-(use-package tex-mode             :mode "\\.tex\\'"
+(use-package tex-mode             :straight nil :mode "\\.tex\\'"
   :config
   (define-key latex-mode-map [(control return)] 'tjf:edit/insert-newline-after))
 
-(use-package text-mode            :commands text-mode
+(use-package text-mode            :straight nil :commands text-mode
   :init
   (add-hook 'text-mode-hook #'turn-on-auto-fill))
 
-(use-package tjf-bookmark)
+(use-package tjf-bookmark         :straight nil)
 
-(use-package tjf-c                :after tjf-cc
+(use-package tjf-c                :straight nil :after tjf-cc
   :init
   (add-hook 'c-mode-hook #'tjf:c/setup)
   :config
@@ -1017,7 +1019,7 @@
   (easy-menu-define tjf-c-menu c-mode-map "C" (append '("C") tjf:cc/menu-text))
   (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu))
 
-(use-package tjf-cc               :after cc-mode
+(use-package tjf-cc               :straight nil :after cc-mode
   :preface
   (eval-when-compile
     (defvar tjf:c/dialect)
@@ -1031,26 +1033,27 @@
 
   (c-set-offset 'case-label '+))
 
-(use-package tjf-cpp              :after tjf-cc
+(use-package tjf-cpp              :straight nil :after tjf-cc
   :init
   (add-hook 'c++-mode-hook #'tjf:cpp/setup)
   :config
   (define-key c++-mode-map    [menu-bar]    nil)
   (define-key c++-mode-map    [(control d)] nil)
+
   (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
   (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu))
 
-(use-package tjf-clips            :after clips-mode
+(use-package tjf-clips            :straight nil :after clips-mode
   :commands clips-mode
   :functions tjf:clips/setup
   :init
   (add-hook 'clips-mode-hook #'tjf:clips/setup))
 
-(use-package tjf-color)
+(use-package tjf-color            :straight nil)
 
-(use-package tjf-clipboard)
+(use-package tjf-clipboard        :straight nil)
 
-(use-package tjf-csharp           :after csharp-mode
+(use-package tjf-csharp           :straight nil :after csharp-mode
   :commands csharp-mode
   :preface
   (eval-when-compile
@@ -1058,93 +1061,92 @@
   :init
   (add-hook 'csharp-mode-hook #'tjf:csharp/setup))
 
-(use-package tjf-date)
+(use-package tjf-date             :straight nil)
 
-(use-package tjf-duplicate        :after undo-tree)
+(use-package tjf-duplicate        :straight nil :after undo-tree)
 
-(use-package tjf-edit)
+(use-package tjf-edit             :straight nil)
 
-(use-package tjf-flags)
+(use-package tjf-flags            :straight nil)
 
-(use-package tjf-file)
+(use-package tjf-file             :straight nil)
 
-(use-package tjf-keys             :after undo-tree)
+(use-package tjf-keys             :straight nil :after undo-tree)
 
-(use-package tjf-frame
+(use-package tjf-frame            :straight nil
   :functions tjf:frame/reset-size
   :config
   (tjf:frame/reset-size))
 
-(use-package tjf-lisp             :after elisp-mode
+(use-package tjf-lisp             :straight nil :after elisp-mode
   :preface
   (defun tjf:lisp/setup ())
   :init
   (add-hook 'emacs-lisp-mode-hook #'tjf:lisp/setup))
 
-(use-package tjf-macro)
+(use-package tjf-macro            :straight nil)
 
-(use-package tjf-menubar          :after undo-tree
+(use-package tjf-menubar          :straight nil :after undo-tree
   :config
   (setq recentf-menu-before "Open in New Window...")
   (recentf-mode)
   (add-hook 'menu-bar-update-hook 'tjf:navigate/menu))
 
-(use-package tjf-msb
+(use-package tjf-msb              :straight nil
   :config
   (msb-mode))
 
-(use-package tjf-navigate)
+(use-package tjf-navigate         :straight nil)
 
-(use-package tjf-perl             :after cperl-mode
+(use-package tjf-perl             :straight nil :after cperl-mode
   :preface
   (defun tjf:perl/setup ())
   :init
   (add-hook 'cperl-mode-hook #'tjf:perl/setup))
 
-(use-package tjf-powerline
+(use-package tjf-powerline        :straight nil
   :config
   (add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
   (alias-face powerline-red-face fontaine/powerline-red)
   (setq powerline-default-separator 'wave)
   (tjf:powerline/theme))
 
-(use-package tjf-python           :after python
+(use-package tjf-python           :straight nil :after python
   :preface
   (defun tjf:python/setup ())
   :init
   (add-hook 'python-mode-hook #'tjf:python/setup))
 
-(use-package tjf-query-replace    :commands tjf:query-replace/do)
+(use-package tjf-query-replace    :straight nil :commands tjf:query-replace/do)
 
-(use-package tjf-search)
+(use-package tjf-search           :straight nil)
 
-(use-package tjf-sort)
+(use-package tjf-sort             :straight nil)
 
-(use-package tjf-tabline
+(use-package tjf-tabline          :straight nil
   :config
   (tjf:tabline/mode 1)
-
   (setq tjf:tabline/separator          '(0.0))
   (setq tjf:tabline/tab-label-function #'tjf:tabline/label-function)
   (setq tjf:tabline/use-images         nil))
 
-(use-package tjf-toolbar)
+(use-package tjf-toolbar          :straight nil)
 
-(use-package tjf-tools)
+(use-package tjf-tools            :straight nil)
 
-(use-package tjf-view)
+(use-package tjf-view             :straight nil)
 
-(use-package uniquify             :after tjf-menubar
+(use-package uniquify             :straight nil :after tjf-menubar
   :config
   (setq uniquify-buffer-name-style   'post-forward)
   (setq uniquify-ignore-buffers-re   "^\\*")
   (setq uniquify-strip-common-suffix t))
 
-(use-package vc                   :after tjf-menubar
+(use-package vc                   :straight nil :after tjf-menubar
   :config
   (setq vc-follow-symlinks t))
 
-(use-package whitespace           :commands whitespace-mode
+(use-package whitespace           :straight nil :commands whitespace-mode
   :diminish whitespace-mode
   :config
   (setq whitespace-style (quote (tabs spaces space-before-tab newline indentation empty space-after-tab space-mark
@@ -1154,17 +1156,17 @@
                                       (tab-mark 9 [9654 32 91 84 65 66 93 9] [92 9]) ;  9 TAB       => "▶ [TAB]<TAB>"
                                       )))
 
-(use-package window
+(use-package window               :straight nil
   :config
   (delete-other-windows))
 
-(use-package winner               :after tjf-menubar
+(use-package winner               :straight nil :after tjf-menubar
   :config
   (winner-mode 1))
 
-(use-package xah)
+(use-package xah                  :straight nil)
 
-(use-package xref                 :after tjf-menubar
+(use-package xref                 :straight nil :after tjf-menubar
   :functions xref-show-definitions-completing-read
   :config
   ;; All those have been changed for Emacs 28
