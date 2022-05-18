@@ -182,6 +182,29 @@ def shade(value=None, vl=None):
     else:
         return 'white'
 
+
+def gray(s):
+    return 'gray' if s < 0.1 else ''
+
+
+def name(value):
+    h, s, l = value2hsl(value)
+
+    sh = shade(vl=l)
+
+    if sh == 'black' or sh == 'white':
+        hu = ''
+        gr = ''
+    else:
+        hu = hue[int(h)]['name']
+        ty = hue[int(h)]['type']
+        gr = gray(s)
+
+    cn = ' '.join((sh, gr, hu)) if gr == 'gray' else ' '.join((sh, hu))
+
+    return cn, sh, gr, hu, ty
+
+
 def invert(value=None, rgb=None):
     if value:
         h, s, l = value2hsl(value)
