@@ -499,7 +499,6 @@
 
 (use-package dash
   :straight t)
-  ;; :hook (emacs-lisp-mode-hook . eldoc-mode))
 
 (use-package elpy                 :after python
   :straight t
@@ -967,8 +966,6 @@
   :straight nil
   :config
   (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
-
-(use-package python               :straight nil :mode "\\.py\\'")
 
 (use-package recentf              :straight nil
   :demand
