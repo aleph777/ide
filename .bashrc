@@ -41,7 +41,9 @@ alias flake8='flake8 --ignore E221,E303,E501'
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
 export PYTHONPATH="$IDE/lib/python"
-
+export NODEJSDIR=/opt/node-v16.15.0-linux-x64
+export ANDROIDDIR=/opt/android-studio
+export ANDROID_SDK=$HOME/Android/Sdk
 # apt
 #
 alias up='sudo apt update && sudo apt upgrade'
@@ -107,8 +109,9 @@ fi
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
 export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$IDE/bin
+export OPTPATH=$NODEJSDIR/bin:$ANDROIDDIR/bin
 export SNAPBIN=/snap/bin
-export PATH=$($HOME/bin/clean-path $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $OPTPATH $HOME/cinco/bin $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
