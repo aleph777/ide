@@ -499,7 +499,6 @@
 
 (use-package dash
   :straight t)
-  ;; :hook (emacs-lisp-mode-hook . eldoc-mode))
 
 (use-package elpy                 :after python
   :straight t
@@ -509,7 +508,13 @@
   :hook
   (elpy-mode . (lambda () (add-hook 'before-save-hook 'elpy-format-code)))
   :config
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules)))
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (setq python-shell-prompt-detect-failure-warning nil)
+  (setq python-indent-guess-indent-offset t)
+  (setq python-indent-guess-indent-offset-verbose nil)
+  (setq python-shell-interpreter "jupyter")
+  (setq python-shell-interpreter-args "-i")
+  (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter"))
 
 (use-package emojify              :commands emojify-mode
   :straight t)
@@ -967,8 +972,6 @@
   :straight nil
   :config
   (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
-
-(use-package python               :straight nil :mode "\\.py\\'")
 
 (use-package recentf              :straight nil
   :demand
