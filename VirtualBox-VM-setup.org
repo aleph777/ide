@@ -13,7 +13,10 @@
   e. User Interface
         i. Show at Top of Screen
 
+* sudo apt install buil-essential git
+* udo usermod -a -G vboxsf $USER
 * Install Guest Additions
+* reboot
 
 * Set up local /home environment
 ** TODO: this may be outdated for new environments
