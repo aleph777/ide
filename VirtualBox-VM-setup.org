@@ -62,6 +62,7 @@
 ** Disable screensaver lock
 
 * Emacs
+** git config --global http.sslverify false
 ** git clone https://git.savannah.gnu.org/git/emacs.git
 ** cd emacs
 ** ./autogen.sh
