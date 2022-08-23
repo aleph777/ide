@@ -13,7 +13,10 @@
   e. User Interface
         i. Show at Top of Screen
 
+* sudo apt install buil-essential git
+* sudo usermod -a -G vboxsf $USER
 * Install Guest Additions
+* reboot
 
 * Set up local /home environment
 ** TODO: this may be outdated for new environments
@@ -29,7 +32,6 @@
 ** ln -s <shared folder>/Videos
 
 * Set up IDE
-** sudo apt install build-essential git
 ** git clone https://github.com/aleph777/ide
 ** Pre-use IDE
 *** mv .bashrc .basrc_original
@@ -60,6 +62,7 @@
 ** Disable screensaver lock
 
 * Emacs
+** git config --global http.sslverify false
 ** git clone https://git.savannah.gnu.org/git/emacs.git
 ** cd emacs
 ** ./autogen.sh
