@@ -918,11 +918,11 @@ CALLBACK is passed the received mouse event."
   (let ((keymap (make-sparse-keymap)))
     ;; Pass mouse-1, mouse-2 and mouse-3 events to CALLBACK.
     (define-key keymap [tab-line down-mouse-1] 'ignore)
-    (define-key keymap [tab-line mouse-1] callback)
+    (define-key keymap [tab-line      mouse-1] callback)
     (define-key keymap [tab-line down-mouse-2] 'ignore)
-    (define-key keymap [tab-line mouse-2] callback)
+    (define-key keymap [tab-line      mouse-2] callback)
     (define-key keymap [tab-line down-mouse-3] 'ignore)
-    (define-key keymap [tab-line mouse-3] callback)
+    (define-key keymap [tab-line      mouse-3] callback)
     keymap))
 
 (defsubst tabbar-make-mouse-event (&optional type)
@@ -1835,9 +1835,9 @@ Return the the first group where the current buffer is."
 That is a pair (ENABLED . DISABLED), where ENABLED and DISABLED are
 respectively the appearance of the button when enabled and disabled.
 They are propertized strings which could display images, as specified
-by the variable `tabbar-button-label'.
+by the variable ‘tabbar-button-label’.
 When NAME is 'home, return a different ENABLED button if showing tabs
-or groups.  Call the function `tabbar-button-label' otherwise."
+or groups.  Call the function ‘tabbar-button-label’ otherwise."
   (let ((lab (tabbar-button-label name)))
     (when (eq name 'home)
       (let* ((btn tabbar-buffer-home-button)
