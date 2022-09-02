@@ -26,17 +26,17 @@ using Squares = vector<Square>;
 
 class Tour
 {
-    const Delta delta;
-
     Board board;
+
+    const Delta delta;
 
 public:
     Tour() :
+        board({}),
         delta({RowCol(-2, -1), RowCol(-2, 1),
                RowCol(-1, -2), RowCol(-1, 2),
                RowCol(1, -2),  RowCol(1,  2),
-               RowCol(2, -1),  RowCol(2,  1)}),
-        board({})
+               RowCol(2, -1),  RowCol(2,  1)})
         {
             board.reserve(DIMENSION_BOARD);
 
