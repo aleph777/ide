@@ -35,6 +35,8 @@
 
 (message "Loading tjf-cpp...")
 (require 'tjf-cc)
+(require 'tjf-macro)
+
 
 ;;
 (defvar tjf:cpp/compiler)
@@ -47,7 +49,7 @@
 (setq   tjf:cpp/optimization "-O")
 
 (defvar tjf:cpp/warnings)
-(setq   tjf:cpp/warnings "-Wall  -Wextra -Wconversion")
+(setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
 
 (defvar tjf:cpp/ldflags)
 (setq   tjf:cpp/ldflags "-lm -pthread")
@@ -58,18 +60,24 @@
 
 (defun tjf:cpp/compile-program ()
   "Compile and link the current file."
+  (interactive)
   (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags "-c" ,(basename) "-o" ,(basename-no-ext)))))
+
+(defun tjf:cpp/make ()
+  "Build using make."
+  (interactive)
+  (compile (join " " `("make" ,(concat "-j" (shell-command-to-string "nproc"))))))
 
 (defun tjf:cpp/flags ()
   "Return the compiler flags."
   (join " " `(,tjf:cpp/std ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
 
-(defun tjf:c/set-compiler ()
+(defun tjf:cpp/set-compiler ()
   "Allow the user to set ‘COMPILER’."
   (interactive)
-  (let ((compiler (read-shell-command "Compiler: " tjf:c/compiler)))
-    (unless (string= compiler tjf:c/compiler)
-      (setq tjf:c/compiler compiler))))
+  (let ((compiler (read-shell-command "Compiler: " tjf:cpp/compiler)))
+    (unless (string= compiler tjf:cpp/compiler)
+      (setq tjf:cpp/compiler compiler))))
 
 (defun tjf:cpp/set-debug ()
   "Allow the user to set ‘DEBUG’ level."
@@ -136,7 +144,7 @@
     ["Compile Program" tjf:cpp/compile-program t]
     "---"
     ["Make"    tjf:cpp/make t]
-    ["Make..." compile    t]
+    ["Make..." compile      t]
     "---"
     ["Set Compiler..."           tjf:cpp/set-compiler     t]
     ["Set Debug Level..."        tjf:cpp/set-debug        t]
@@ -147,6 +155,8 @@
     "---"
     ["Set Make Flags..." tjf:cpp/set-makeflags t]
     ))
+
+(easy-menu-define tjf:cpp/menu-build c++-mode-map "C++ Build" tjf:cpp/build-menu)
 
 ;;
 (message "Loading tjf-cpp...done")
