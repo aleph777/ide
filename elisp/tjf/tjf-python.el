@@ -67,7 +67,6 @@
 (defun tjf:python/insert-script-header ()
   "Insert script boilerplate at point."
   (interactive "*")
-  "Insert script boilerplate at point."
   (insert-file-contents (concat tjf:user/dir-elisp "templates/python-script-header.py"))
   (let* ((year   (format-time-string "%Y-%Y"))
          (author (user-full-name))
