@@ -212,6 +212,7 @@
 (if (> emacs-major-version 26)
     (enable-theme 'fontaine))
 
+(require 'package)
 (add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 

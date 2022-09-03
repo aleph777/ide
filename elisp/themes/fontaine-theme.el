@@ -55,6 +55,7 @@
 ;;                          rainbow-delimiters use wcag hue progression
 ;;              09-Feb-2021 Changed ‘variable-pitch’ font to Nimbus Sans
 ;;                          Fixed broken font lookups
+;;              29-Aug-2022 Updated ‘sh-heredoc’ face
 ;;
 
 ;; =============================================================================
@@ -218,7 +219,7 @@
 
 (let* ((themes-dir (if (bound-and-true-p tjf:user/dir-themes)
                        tjf:user/dir-themes
-                     (concate user-dir-home "elisp/themes/")))
+                     (concat user-dir-home "elisp/themes/")))
        (colors-dir (concat themes-dir "colors/")))
   (mapc #'load-file (file-expand-wildcards (concat colors-dir "*.el"))))
 
@@ -700,6 +701,7 @@
 ;;;;; shell-script-mode
    ;; `(sh-heredoc ((t :foreground ,blue-alt)))
    `(sh-quoted-exec ((t :foreground ,fontaine/execute)))
+   `(sh-heredoc ((t :foreground ,fontaine/string)))
 
    `(shadow ((t (:foreground ,fontaine/shadow))))
 

@@ -76,6 +76,7 @@
 ;;           07-Apr-2021 Added ‘tjf:edit/fill-skeleton’
 ;;           28-Apr-2022 Changed ‘tjf:edit/cleanse-whitespace’ to use ‘tjf:flags/using-tabs’
 ;;           02-May-2022 Restored ‘tjf:edit/copy-buffer’
+;;           29-Aug-2022 Fixed ‘tjf:edit/menu-justify’
 ;;
 
 ;;; Code:
@@ -291,20 +292,22 @@
   (newline 1))
 
 (defun tjf:edit/insert-newline-after-and-indent ()
-  "Insert a newline at the end of the current line and indent according to the major mode."
+  "Insert a newline at the end of the current line and indent."
   (interactive "*")
   (end-of-line)
   (newline-and-indent))
 
 (defun tjf:edit/insert-newline-before ()
-  "Insert a new-line at the beginning of the current line and positions the cursor prior to the inserted newline."
+  "Insert a newline at the beginning of the current line and positions
+the cursor prior to the inserted newline."
   (interactive "*")
   (beginning-of-line)
   (newline)
   (forward-line -1))
 
 (defun tjf:edit/insert-newline-before-and-indent ()
-  "Insert a new-line at the beginning of the current line and positions the cursor prior to the inserted newline."
+  "Insert a newline at the beginning of the current line and positions
+the cursor prior to the inserted newline."
   (interactive "*")
   (beginning-of-line)
   (newline-and-indent)
@@ -450,15 +453,15 @@
   '("Justify"
     ["Canonically Space Region" canonically-space-region :enable (tjf:flags/enable-space-region?)]
     "---"
-    ["Center Justify Paragraph" (justify-paragraph-or-region 'center) :enable (tjf:flags/enable-write?)]
-    ["Full Justify Paragraph"   (justify-paragraph-or-region 'full)   :enable (tjf:flags/enable-write?)]
-    ["Left Justify Paragraph"   (justify-paragraph-or-region 'left)   :enable (tjf:flags/enable-write?)]
-    ["Right Justify Paragraph"  (justify-paragraph-or-region 'right)  :enable (tjf:flags/enable-write?)]
+    ["Center Justify Paragraph" (tjf:edit/justify 'center) :enable (tjf:flags/enable-write?)]
+    ["Full Justify Paragraph"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-write?)]
+    ["Left Justify Paragraph"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-write?)]
+    ["Right Justify Paragraph"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-write?)]
     "---"
-    ["Center Justify Region" (justify-paragraph-or-region 'center) :enable (tjf:flags/enable-modify-region?)]
-    ["Full Justify Region"   (justify-paragraph-or-region 'full)   :enable (tjf:flags/enable-modify-region?)]
-    ["Left Justify Region"   (justify-paragraph-or-region 'left)   :enable (tjf:flags/enable-modify-region?)]
-    ["Right Justify Region"  (justify-paragraph-or-region 'right)  :enable (tjf:flags/enable-modify-region?)]
+    ["Center Justify Region" (tjf:edit/justify 'center) :enable (tjf:flags/enable-modify-region?)]
+    ["Full Justify Region"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-modify-region?)]
+    ["Left Justify Region"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-modify-region?)]
+    ["Right Justify Region"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-modify-region?)]
     "---"
     ["Set Fill Column..." set-fill-column]
     "---"

@@ -39,6 +39,7 @@
 ;;           10-Jul-2019 Added ‘require’ for ‘anzu’
 ;;           28-Oct-2020 Reworked because of ‘powerline' changes
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           29-Aug-2022 Using ‘%C’ for column format
 ;;
 
 ;;; Code:
@@ -89,7 +90,7 @@
 
 (defvar tjf:powerline/encoding-format '("" tjf:powerline/encoding ""))
 
-(defvar tjf:powerline/row-column-format '(" Ln: %l Col: " tjf:powerline/column " ")
+(defvar tjf:powerline/row-column-format '(" Ln: %l Col: %C ")
   "Format for displaying the column in the mode line.")
 
 (defvar tjf:powerline/word-count-format '("" tjf:powerline/bufreg-line-count "," tjf:powerline/bufreg-word-count "," tjf:powerline/bufreg-byte-count " ")
