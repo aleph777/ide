@@ -34,6 +34,7 @@ installPackage flex
 # installPackage git # -- if we have this script, then git has already been installed
 installPackage indent
 installPackage julia
+installPackage jupyter
 installPackage klatexformula
 installPackage libffi-dev
 installPackage libgconf2-dev
