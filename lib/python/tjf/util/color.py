@@ -10,30 +10,30 @@ from math import sqrt
 
 hue = list()
 
-hue.extend([{'code': 0xff0000, 'name': 'red',             'type': 'red'}]*15)
-hue.extend([{'code': 0xff4000, 'name': 'vermilion',       'type': 'orange red'}]*15)
-hue.extend([{'code': 0xff8000, 'name': 'orange',          'type': 'orange'}]*15)
-hue.extend([{'code': 0xffbf00, 'name': 'golden yellow',   'type': 'khaki'}]*15)
-hue.extend([{'code': 0xfff000, 'name': 'yellow',          'type': 'yellow'}]*15)
-hue.extend([{'code': 0xbfff00, 'name': 'yellowish green', 'type': 'lime'}]*15)
-hue.extend([{'code': 0x80ff00, 'name': 'chartreuse',      'type': 'olive'}]*15)
-hue.extend([{'code': 0x40ff00, 'name': 'leaf green',      'type': 'grass green'}]*15)
-hue.extend([{'code': 0x00ff00, 'name': 'green',           'type': 'green'}]*15)
-hue.extend([{'code': 0x00ff40, 'name': 'cobalt green',    'type': 'bluish green'}]*15)
-hue.extend([{'code': 0x00ff80, 'name': 'emerald green',   'type': 'teal'}]*15)
-hue.extend([{'code': 0x00ffbf, 'name': 'turquoise green', 'type': 'greenish cyan'}]*15)
-hue.extend([{'code': 0x00ffff, 'name': 'turquoise blue',  'type': 'cyan'}]*15)
-hue.extend([{'code': 0x00bfff, 'name': 'cerulean blue',   'type': 'bluish cyan'}]*15)
-hue.extend([{'code': 0x0080ff, 'name': 'azure',           'type': 'blue'}]*15)
-hue.extend([{'code': 0x0040ff, 'name': 'cobalt blue',     'type': 'blue violet'}]*15)
-hue.extend([{'code': 0x0000ff, 'name': 'ultramarine',     'type': 'violet'}]*15)
-hue.extend([{'code': 0x4000ff, 'name': 'hyacinth',        'type': 'purple violet'}]*15)
-hue.extend([{'code': 0x8000ff, 'name': 'violet',          'type': 'purple'}]*15)
-hue.extend([{'code': 0xbf00ff, 'name': 'purple',          'type': 'purple magenta'}]*15)
-hue.extend([{'code': 0xff00ff, 'name': 'magenta',         'type': 'magenta'}]*15)
-hue.extend([{'code': 0xff00bf, 'name': 'reddish purple',  'type': 'crimson'}]*15)
-hue.extend([{'code': 0xff0080, 'name': 'ruby red',        'type': 'scarlet'}]*15)
-hue.extend([{'code': 0xff0040, 'name': 'carmine',         'type': 'scarlet red'}]*15)
+hue.extend([{'code': 0xff0000, 'name': 'red',             'type': 'red'}]*15)              #   0-14
+hue.extend([{'code': 0xff4000, 'name': 'vermilion',       'type': 'orange red'}]*15)       #  15-29
+hue.extend([{'code': 0xff8000, 'name': 'orange',          'type': 'orange'}]*15)           #  30-44
+hue.extend([{'code': 0xffbf00, 'name': 'golden yellow',   'type': 'khaki'}]*15)            #  45-59
+hue.extend([{'code': 0xfff000, 'name': 'yellow',          'type': 'yellow'}]*15)           #  60-74
+hue.extend([{'code': 0xbfff00, 'name': 'yellowish green', 'type': 'lime'}]*15)             #  75-89
+hue.extend([{'code': 0x80ff00, 'name': 'chartreuse',      'type': 'olive'}]*15)            #  90-104
+hue.extend([{'code': 0x40ff00, 'name': 'leaf green',      'type': 'grass green'}]*15)      # 105-119
+hue.extend([{'code': 0x00ff00, 'name': 'green',           'type': 'green'}]*15)            # 120-134
+hue.extend([{'code': 0x00ff40, 'name': 'cobalt green',    'type': 'bluish green'}]*15)     # 135-149
+hue.extend([{'code': 0x00ff80, 'name': 'emerald green',   'type': 'teal'}]*15)             # 150-164
+hue.extend([{'code': 0x00ffbf, 'name': 'turquoise green', 'type': 'greenish cyan'}]*15)    # 165-179
+hue.extend([{'code': 0x00ffff, 'name': 'turquoise blue',  'type': 'cyan'}]*15)             # 180-194
+hue.extend([{'code': 0x00bfff, 'name': 'cerulean blue',   'type': 'bluish cyan'}]*15)      # 195-209
+hue.extend([{'code': 0x0080ff, 'name': 'azure',           'type': 'blue'}]*15)             # 210-224
+hue.extend([{'code': 0x0040ff, 'name': 'cobalt blue',     'type': 'blue violet'}]*15)      # 225-239
+hue.extend([{'code': 0x0000ff, 'name': 'ultramarine',     'type': 'violet'}]*15)           # 240-254
+hue.extend([{'code': 0x4000ff, 'name': 'hyacinth',        'type': 'purple violet'}]*15)    # 255-269
+hue.extend([{'code': 0x8000ff, 'name': 'violet',          'type': 'purple'}]*15)           # 270-284
+hue.extend([{'code': 0xbf00ff, 'name': 'purple',          'type': 'purple magenta'}]*15)   # 285-299
+hue.extend([{'code': 0xff00ff, 'name': 'magenta',         'type': 'magenta'}]*15)          # 300-314
+hue.extend([{'code': 0xff00bf, 'name': 'reddish purple',  'type': 'crimson'}]*15)          # 315-329
+hue.extend([{'code': 0xff0080, 'name': 'ruby red',        'type': 'scarlet'}]*15)          # 330-344
+hue.extend([{'code': 0xff0040, 'name': 'carmine',         'type': 'scarlet red'}]*15)      # 345-359
 
 
 def clean(value):
