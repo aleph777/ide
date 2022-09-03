@@ -43,6 +43,12 @@
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
 
+(defvar tjf:cpp/dialect)
+(setq   tjf:cpp/dialect "2a")
+
+(defvar tjf:cpp/makeflags)
+(setq   tjf:cpp/makeflags "")
+
 (defvar tjf:cpp/optimization)
 (setq   tjf:cpp/optimization "-O")
 
@@ -64,12 +70,12 @@
   "Return the compiler flags."
   (join " " `(,tjf:cpp/std ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
 
-(defun tjf:c/set-compiler ()
+(defun tjf:cpp/set-compiler ()
   "Allow the user to set ‘COMPILER’."
   (interactive)
-  (let ((compiler (read-shell-command "Compiler: " tjf:c/compiler)))
-    (unless (string= compiler tjf:c/compiler)
-      (setq tjf:c/compiler compiler))))
+  (let ((compiler (read-shell-command "Compiler: " tjf:cpp/compiler)))
+    (unless (string= compiler tjf:cpp/compiler)
+      (setq tjf:cpp/compiler compiler))))
 
 (defun tjf:cpp/set-debug ()
   "Allow the user to set ‘DEBUG’ level."
