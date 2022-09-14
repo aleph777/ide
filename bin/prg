@@ -166,7 +166,7 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {print $file,"\n"; last;}}
+        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {say $file; last;}}
       }
     }
     else
@@ -179,7 +179,7 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {print $file,"\n"; last;}}
+        for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {say $file; last;}}
       }
     }
   }
@@ -195,7 +195,7 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {print $file,"\n"; last;}}
+        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {say $file; last;}}
       }
     }
     else
@@ -208,7 +208,7 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {print $file,"\n"; last;}}
+        for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {say $file; last;}}
       }
     }
   }
@@ -236,7 +236,7 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        print "$count: $file\n" if $count;
+        say "$count: $file" if $count;
       }
     }
     else
@@ -253,7 +253,7 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        print "$count: $file\n" if $count;
+        say "$count: $file" if $count;
       }
     }
   }
@@ -273,7 +273,7 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        print "$count: $file\n" if $count;
+        say "$count: $file" if $count;
       }
     }
     else
@@ -290,7 +290,7 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        print "$count: $file\n" if $count;
+        say "$count: $file" if $count;
       }
     }
   }
