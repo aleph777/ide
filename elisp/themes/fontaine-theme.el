@@ -56,6 +56,7 @@
 ;;              09-Feb-2021 Changed ‘variable-pitch’ font to Nimbus Sans
 ;;                          Fixed broken font lookups
 ;;              29-Aug-2022 Updated ‘sh-heredoc’ face
+;;              12-Sep-2022 Added ‘fontaine/heredoc’
 ;;
 
 ;; =============================================================================
@@ -347,6 +348,7 @@
        (fontaine/execute            fontaine/fg-magenta-red)
        (fontaine/function           fontaine/fg-blue)
        (fontaine/hash               fontaine/fg-magenta)
+       (fontaine/heredoc            fontaine/fg-red-magenta)
        (fontaine/inactive-1         ibm/cool-gray-70)
        (fontaine/inactive-2         ibm/cool-gray-60)
        (fontaine/keyword            fontaine/fg-black)
@@ -416,45 +418,13 @@
   (message "Defining faces...")
 
   ;; (defface clips-constant-face '((t (:foreground ,fontaine/constant)))
-  ;;   "CLIPS constant face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-constant-face (make-face 'clips-constant-face))
-
   ;; (defface clips-control-face '((t (:foreground ,fontaine/builtin :weight bold)))
-  ;;   "CLIPS control face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-control-face (make-face 'clips-control-face))
-
   ;; (defface clips-declaration-face '((t (:foreground ,fontaine/non-overridable :weight bold)))
-  ;;   "CLIPS declaration face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-declaration-face (make-face 'clips-declaration-face))
-
   ;; (defface clips-function-face '((t (:foreground ,fontaine/function :weight bold)))
-  ;;   "CLIPS function face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-function-face (make-face 'clips-function-face))
-
   ;; (defface clips-global-variable-face '((t (:foreground ,fontaine/variable :weight bold)))
-  ;;   "CLIPS global variable face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-global-variable-face (make-face 'clips-global-variable-face))
-
   ;; (defface clips-logical-face '((t (:foreground ,fontaine/fg-yellow-red :weight bold)))
-  ;;   "CLIPS logical face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-logical-face (make-face 'clips-logical-face))
-
   ;; (defface clips-object-match-face '((t (:foreground ,fontaine/fg-magenta-blue :weight bold)))
-  ;;   "CLIPS global variable face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-object-match-face (make-face 'clips-object-match-face))
-
   ;; (defface clips-variable-face '((t (:foreground ,fontaine/variable)))
-  ;;   "CLIPS variable face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-variable-face (make-face 'clips-variable-face))
-
   ;; (defface clips-verb-face '((t(:foreground ,fontaine/fg-green :weight bold) ))
   ;;   "CLIPS verb face."
   ;;   :group 'font-lock-faces)
@@ -701,7 +671,7 @@
 ;;;;; shell-script-mode
    ;; `(sh-heredoc ((t :foreground ,blue-alt)))
    `(sh-quoted-exec ((t :foreground ,fontaine/execute)))
-   `(sh-heredoc ((t :foreground ,fontaine/string)))
+   `(sh-heredoc ((t :foreground ,fontaine/heredoc)))
 
    `(shadow ((t (:foreground ,fontaine/shadow))))
 
