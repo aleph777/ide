@@ -143,37 +143,37 @@ sub get
   while(@{$args})
   {
     my $tmp = shift @{$args};
-    say 'TMP:   ',$tmp;
+    # say 'TMP:   ',$tmp;
 
     if($reArg1 ne '^\b' && $tmp =~ /^-($reArg1)$/)
     {
       $option->{$1} = shift @{$args};
-      say "ARG1:   - $1 => $option->{$1}";
+      # say "ARG1:   - $1 => $option->{$1}";
     }
     elsif($reArg2 ne '^\b' && $tmp =~ /^--($reArg2)=([^\s]+)$/)
     {
       $option->{$1} = $2;
-      say "ARG2:  -- $1 => $option->{$1}";
+      # say "ARG2:  -- $1 => $option->{$1}";
     }
     elsif($reBare1 ne '^\b' && $tmp =~ /^-($reBare1)$/)
     {
       $option->{$1} = 1;
-      say 'BARE1:  - ',$1;
+      # say 'BARE1:  - ',$1;
     }
     elsif($reBare2 ne '^\b' && $tmp =~ /^--($reBare2)$/)
     {
       $option->{$1} = 1;
-      say 'BARE2: -- ',$1;
+      # say 'BARE2: -- ',$1;
     }
     elsif($reGroup ne '^\b' && $tmp =~ /^-($reGroup)$/)
     {
       @{$option}{split //,$1} = (1) x length($1);
-      say 'GROUP: - ',join ' ',split //,$1;
+      # say 'GROUP: - ',join ' ',split //,$1;
     }
     else
     {
       push @tmp,$tmp;
-      say 'ARGV:  ',$tmp;
+      # say 'ARGV:  ',$tmp;
     }
   }
   @{$args} = @tmp;
