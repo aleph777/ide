@@ -29,7 +29,8 @@
 
 ;;; Commentary:
 
-;; Revision:
+;; Revision: 13-Sep-2022 Added ‘clang-capf’
+;;           16-Sep-2022 Added ‘tjf:c/check’
 
 ;;; Code:
 
@@ -49,6 +50,17 @@
 
 (defvar tjf:c/makeflags "")
 
+(defun tjf:c/check ()
+  "Run ‘cppcheck’ on buffer."
+  (interactive)
+  (let ((tmp (join "/" `("/tmp" ,(basename))))
+        (buf (current-buffer)))
+        (message "%s" tmp)
+    (with-temp-buffer
+      (insert-buffer-substring buf)
+      (write-file tmp)
+      (compile (join " " `("cppcheck" ,tmp))))))
+
 (defun tjf:c/flags ()
   "Return the compiler flags."
   (join " " `(,tjf:c/std ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
@@ -62,7 +74,9 @@
   ;;
   (setq flycheck-gcc-language-standard tjf:c/dialect)
   (setq-local comment-start "// ")
-  (setq-local comment-end ""))
+  (setq-local comment-end "")
+  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
+  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions)))
 
 (defun tjf:c/syntax-check ()
   "Compile the current buffer (syntax check only)."
@@ -136,6 +150,7 @@
 (defvar tjf:c/build-menu
   '("Build"
     ["Syntax  Check"   tjf:c/syntax-check    t]
+    ["Static Analysis" tjf:c/check]
     ["Compile File"    tjf:c/compile-file    t]
     ["Compile Program" tjf:c/compile-program t]
     "---"
