@@ -114,7 +114,8 @@ if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:-(?:(?:-(?:h(?:elp)?|\?)|h(?:elp)?)$|\?
 my %option;
 
 my $f = File::FindWrapper->new();
-my $o = Util::GetOptNew->new(args => \@ARGV,option => \%option);
+my $o = Util::GetOptNew->new(option => \%option);
+
 
 my @arg1  = (@{$f->argSwitches},qw(b e m A B C exec));
 my @bare1 = (@{$f->switches},'l');
@@ -123,18 +124,22 @@ $o->get(arg1 => \@arg1, bare1 => \@bare1, group => 'cilnrv');
 
 my $regex = shift @ARGV;
 
-$option{'r'} = 1;
+$f->get(root => \@ARGV, option => \%option);
 
-if(exists $option{'r'})
-{
-  %{$f->option} = map { substr($_,1) => $option{$_} } keys %option; # re-map to old-style options
+@ARGV = grep { -e } @{$f->contents};
 
-  $f->option->{'no-dir'} = 1;
+# $option{'r'} = 1;
 
-  $f->get(root => \@ARGV);
+# if(exists $option{'r'})
+# {
+#   %{$f->option} = map { substr($_,1) => $option{$_} } keys %option; # re-map to old-style options
 
-  @ARGV = grep { -e } @{$f->contents};
-}
+#   $f->option->{'no-dir'} = 1;
+
+#   $f->get(root => \@ARGV);
+
+#   @ARGV = grep { -e } @{$f->contents};
+# }
 if(exists $option{'l'})
 {
   printFilesWithMatches();  # b e i v
@@ -154,6 +159,8 @@ sub printFilesWithMatches
 
   my $io = File::IO->new();
 
+  my @exec = exists $option{'exec'} ? split /\s+/,$option{'exec'} : ();
+
   if(exists $option{'i'})
   {
     if(exists $option{'v'})
@@ -166,7 +173,14 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {say $file; last;}}
+        if(exists $option{'exec'})
+        {
+          for(@{$io->contents}[$beg .. $end]) { system "@exec $file" unless /$regex/oi; last; }
+        }
+        else
+        {
+          for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {say $file; last;}}
+        }
       }
     }
     else
@@ -179,7 +193,14 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {say $file; last;}}
+        if(exists $option{'exec'})
+        {
+          for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) { system "@exec $file"; last; }}
+        }
+        else
+        {
+          for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {say $file; last;}}
+        }
       }
     }
   }
@@ -195,7 +216,14 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {say $file; last;}}
+        if(exists $option{'exec'})
+        {
+          for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) { system "@exec $file"; last; }}
+        }
+        else
+        {
+          for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {say $file; last;}}
+        }
       }
     }
     else
@@ -208,7 +236,14 @@ sub printFilesWithMatches
 
         next unless defined $beg;
 
-        for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {say $file; last;}}
+        if(exists $option{'exec'})
+        {
+          for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) { system "@exec $file"; last; }}
+        }
+        else
+        {
+          for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {say $file; last;}}
+        }
       }
     }
   }
@@ -219,6 +254,8 @@ sub countMatchingLines
   my ($beg,$end);
 
   my $io = File::IO->new();
+
+  my @exec = exists $option{'exec'} ? split /\s+/,$option{'exec'} : ();
 
   if(exists $option{'i'})
   {
@@ -236,7 +273,17 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {unless(/$regex/oi) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        say "$count: $file" if $count;
+        if($count)
+        {
+          if(exists $option{'exec'})
+          {
+            system "@exec $count: $file";
+          }
+          else
+          {
+            say "$count: $file";
+          }
+        }
       }
     }
     else
@@ -253,7 +300,17 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {if(/$regex/oi) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        say "$count: $file" if $count;
+        if($count)
+        {
+          if(exists $option{'exec'})
+          {
+            system "@exec $count: $file";
+          }
+          else
+          {
+            say "$count: $file";
+          }
+        }
       }
     }
   }
@@ -273,7 +330,17 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {unless(/$regex/o) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        say "$count: $file" if $count;
+        if($count)
+        {
+          if(exists $option{'exec'})
+          {
+            system "@exec $count: $file";
+          }
+          else
+          {
+            say "$count: $file";
+          }
+        }
       }
     }
     else
@@ -290,7 +357,17 @@ sub countMatchingLines
 
         for(@{$io->contents}[$beg .. $end]) {if(/$regex/o) {++$count;last if exists $option{'m'} && $count >= $option{'m'};}}
 
-        say "$count: $file" if $count;
+        if($count)
+        {
+          if(exists $option{'exec'})
+          {
+            system "@exec $count: $file";
+          }
+          else
+          {
+            say "$count: $file";
+          }
+        }
       }
     }
   }
@@ -302,6 +379,8 @@ sub printLinesWithMatches
   my $single = @ARGV == 1;
 
   my ($beg,$end);
+
+  my @exec = exists $option{'exec'} ? split /\s+/,$option{'exec'} : ();
 
   if(exists $option{'i'})
   {
@@ -329,24 +408,26 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
+              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
-              if($single)
+              if(exists $option{'exec'})
               {
-                print map { join ':',(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+                system "@exec $s";
               }
               else
               {
-                print map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
-              }
-              say '--';
+                print $s;
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+                say '--';
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
         }
       }
-      else
+      else  # !exists $option{'C'} || exists $option{'A'} || exists $option{'B'}
       {
         foreach my $file (@ARGV)
         {
@@ -362,23 +443,25 @@ sub printLinesWithMatches
           {
             unless(/$regex/oi)
             {
-              if($single)
+              my $s = join ':',single($$file),(exists $option{'n'} ? $i+1 : ()),$_;
+
+              if(exists $option{'exec'})
               {
-                print join ':',(exists $option{'n'} ? $i+1 : ()),$_;
+                system "@exec $s";
               }
               else
               {
-                print join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
-              }
+                print $s;
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
         }
       }
     }
-    else
+    else # ! exists $option{'v'}
     {
       if(exists $option{'C'} || exists $option{'A'} || exists $option{'B'})
       {
@@ -402,24 +485,26 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
+              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
-              if($single)
+              if(exists $option{'exec'})
               {
-                print map { join ':',(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+                system "@exec $s";
               }
               else
               {
-                print map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
-              }
-              say '--';
+                print $s;
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+                say '--';
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
         }
       }
-      else
+      else # ! exists $option{'C'} || exists $option{'A'} || exists $option{'B'}
       {
         foreach my $file (@ARGV)
         {
@@ -435,9 +520,18 @@ sub printLinesWithMatches
           {
             if(/$regex/oi)
             {
-              print join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join single($file),(exists $option{'n'} ? $i+1 : ()),$_;
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+              if(exists $option{'exec'})
+              {
+                system "@exec $s";
+              }
+              else
+              {
+                print $s;
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
@@ -445,7 +539,7 @@ sub printLinesWithMatches
       }
     }
   }
-  else
+  else # ! exists $option{'i'}
   {
     if(exists $option{'v'})
     {
@@ -471,18 +565,20 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
+              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
-              if($single)
+              if(exists $option{'exec'})
               {
-                print map { join ':',(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+                system "@exec $s";
               }
               else
               {
-                print map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
-              }
-              say '--';
+                print $s
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+                say '--';
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
@@ -504,10 +600,19 @@ sub printLinesWithMatches
           {
             unless(/$regex/o)
             {
-              print join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',single($file),(exists $option{'n'} ? $i+1 : ()),$_;
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
-            }
+              if(exists $option{'exec'})
+              {
+                system "@exec $s";
+              }
+              else
+              {
+                print $s;
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
+             }
             ++$i;
           }
         }
@@ -537,18 +642,20 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
+              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
-              if($single)
+              if(exists $option{'exec'})
               {
-                print map { join ':',(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+                system "@exec $s";
               }
               else
               {
-                print map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
-              }
-              say '--';
+                print $s
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+                  say '--';
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
@@ -570,9 +677,18 @@ sub printLinesWithMatches
           {
             if(/$regex/o)
             {
-              print join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',single($file),(exists $option{'n'} ? $i+1 : ()),$_;
 
-              last if exists $option{'m'} && ++$count >= $option{'m'};
+              if(exists $option{'exec'})
+              {
+                system "@exec $s";
+              }
+              else
+              {
+                print $s;
+
+                last if exists $option{'m'} && ++$count >= $option{'m'};
+              }
             }
             ++$i;
           }
@@ -660,4 +776,9 @@ sub getContext
   $aftContext = $size if $aftContext > $size;
 
   return ($befContext,$aftContext);
+}
+
+sub single
+{
+  return @ARGV == 1 ? () : shift;
 }
