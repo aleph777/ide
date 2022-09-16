@@ -46,6 +46,12 @@
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
 
+(defvar tjf:cpp/dialect)
+(setq   tjf:cpp/dialect "2a")
+
+(defvar tjf:cpp/makeflags)
+(setq   tjf:cpp/makeflags "")
+
 (defvar tjf:cpp/optimization)
 (setq   tjf:cpp/optimization "-O")
 

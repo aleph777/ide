@@ -88,35 +88,36 @@ def makeColorText(text, color, bold):
 
 
 def black(text, bold=False):
-    return makeText(text, colors['BLACK'], bold)
+    return makeColorText(text, colors['BLACK'], bold)
 
 
 def red(text, bold=False):
-    return makeText(text, colors['RED'], bold)
+    return makeColorText(text, colors['RED'], bold)
 
 
 def green(text, bold=False):
-    return makeText(text, colors['GREEN'], bold)
+    return makeColorText(text, colors['GREEN'], bold)
 
 
 def yellow(text, bold=False):
-    return makeText(text, colors['YELLOW'], bold)
+    return makeColorText(text, colors['YELLOW'], bold)
 
 
 def blue(text, bold=False):
-    return makeText(text, colors['BLUE'], bold)
+    return makeColorText(text, colors['BLUE'], bold)
 
 
 def magenta(text, bold=False):
-    return makeText(text, colors['MAGENTA'], bold)
+    return makeColorText(text, colors['MAGENTA'], bold)
 
 
 def cyan(text, bold=False):
-    return makeText(text, colors['CYAN'], bold)
+    return makeColorText(text, colors['CYAN'], bold)
 
 
 def white(text, bold=False):
-    return makeText(text, colors['WHITE'], bold)
+    return makeColorText(text, colors['WHITE'], bold)
+
 
 def testMatrix():
     return [[*charRange('A', 'E')], [*charRange('F', 'J')], [*charRange('K', 'O')], [*charRange('P', 'T')], [*charRange('U', 'Y')]]

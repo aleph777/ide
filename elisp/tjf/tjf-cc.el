@@ -68,9 +68,13 @@
 
 (defun tjf:cc/guard-symbol ()
   "Return the guard symbold for the current buffer."
+<<<<<<< HEAD
+  (concat "_" (upcase (basename-no-ext)) "_" (upcase (file-extension)) "_"))
+=======
   (let ((filename (upcase (s-replace "-" "_" (basename-no-ext))))
         (ext      (upcase (file-extension))))
     (concat "_" filename "_" ext "_")))
+>>>>>>> 227910e07a939ef9c8c67d62142543dec7d4ab96
 
 (defun tjf:cc/insert-boilerplate ()
   "Insert a C/C++ module boilerplate for ‘(basename)’."

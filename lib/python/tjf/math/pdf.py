@@ -45,30 +45,25 @@ class PDF:
         """Return a list with the correct size for X."""
         return [x]*max(int(self._size*self._dictionary[x]/total + 0.5), 1)
 
-
     def __flatten__(self, lol):
         """Returns a flattened list."""
         return [item for sublist in lol for item in sublist]
-
 
     def __init__(self, dictionary={}, keys=None, size=100):
         self._dictionary = copy.deepcopy(dictionary)
         self._size       = size
 
-        self._keys = copy.deepcopy(keys) if keys is not None else self._dictionary.keys()
+        self._keys = copy.deepcopy(keys) if keys else self._dictionary.keys()
 
         total = sum(self._dictionary.values())
 
         self._pdf = self.__flatten__(list(map(lambda x: self.__amount__(x, total), self._keys)))
 
-
     def __str__(self):
         return ','.join(self._pdf)
 
-
     def get(self):
         return self._pdf[random.randrange(len(self._pdf))]
-
 
     def show(self):
         print(self.__str__)
