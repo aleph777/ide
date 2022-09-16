@@ -638,7 +638,7 @@
 ;;lobal-set-key [(control    SPC)] 'cua-set-mark)
 ;;lobal-set-key [(meta       SPC)] ' KEY NOT REGISTERED
 ;;lobal-set-key [(super      SPC)] ' DO NOT USE
-;;lobal-set-key [(meta shift SPC)] 'just-one-space)
+(global-set-key [?\M-\S- ] 'just-one-space)
 (global-set-key [?\s- ]    'ergoemacs-shrink-whitespaces)  ;; autoloaded — [(super SPC)]
 ;;lobal-set-key [(control meta  SPC)] 'mark-sexp)
 (global-set-key [?\C-\s- ] 'ergoemacs-shrink-whitespaces)
