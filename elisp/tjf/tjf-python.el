@@ -34,6 +34,7 @@
 ;;           16-Apr-2022 Added ‘tjf:python/convert’
 ;;           20-Apr-2022 Added ‘tjf:python/insert-license’
 ;;           21-Apr-2022 Updated ‘tjf:python/insert-me’
+;;           13-Sep-2022 Added ‘python-completion-at-point’
 ;;
 
 
@@ -117,7 +118,9 @@
   "Set up Python mode."
   (setq-local imenu-create-index-function #'python-imenu-create-index)
   (imenu-add-to-menubar "Navigate")
-  (flycheck-mode))
+  (flycheck-mode)
+  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
+  (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions)))
 
 (defun tjf:python/insert-usage ()
   "Insert the script usage code."

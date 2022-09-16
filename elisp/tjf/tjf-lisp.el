@@ -45,6 +45,7 @@
 ;;           13-Jun-2020 Added FORCE to byte recompile directory menu entry
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           07-Apr-2021 Updated ‘tjf:lisp/insert-skeleton’
+;;           13-Sep-2022 Added ‘elisp-completion-at-point’
 ;;
 
 ;;; Code:
@@ -83,7 +84,8 @@
 
 (defun tjf:lisp/setup ()
   "Set up ‘lisp-mode’."
-  (imenu-add-to-menubar "Navigate"))
+  (imenu-add-to-menubar "Navigate")
+  (setq-local completion-at-point-functions (cons #'elisp-completion-at-point completion-at-point-functions)))
 
 (defvar tjf:lisp/build-menu-text
   '("Build"
