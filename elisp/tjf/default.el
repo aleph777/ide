@@ -188,6 +188,9 @@
 ;;           17-Apr-2022 Fixed python mode
 ;;           26-Apr-2022 Removed ‘unicode-fonts-setup’
 ;;           18-May-2022 Removed dead code and reorganized
+;;           12-Sep-2022 Added ‘bazel’
+;;           13-Sep-2022 Added ‘cape’ and ‘corfu’
+;;                       Removed ‘company’
 ;;
 
 ;;; Code:
@@ -296,7 +299,7 @@
   (setq         colon-double-space                  nil)
   (setq         comint-input-ignoredups             t)
   (setq         comint-input-ring-size              64)
-  (setq         comp-async-report-warnings-errors   nil)
+  (setq         completion-cycle-threshold          3)
   (setq-default cursor-type                         '(bar . 2))
   (setq         disabled-command-function           nil)
   (setq         echo-keystrokes                     0.25)
@@ -374,6 +377,11 @@
 (use-package async                :after tjf-menubar
   :straight t)
 
+(use-package bazel                :mode "\\.bz\\'"
+  :straight t
+  :init
+  (add-hook 'bazel-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'bazel-completion-at-point completion-at-point-functions)))))
+
 (use-package bm
   :straight t
   :functions (bm-buffer-save-all bm-repository-load bm-repository-save)
@@ -411,6 +419,17 @@
   (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark)
   (message "Loading bm...done"))
 
+(use-package cape                 :after tjf-menubar
+  :straight t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
+(use-package clang-capf           :after tjf-menubar
+  :straight t)
+
 (use-package clean-aindent-mode   :after tjf-menubar
   :straight t
   :functions clean-aindent-mode
@@ -422,81 +441,85 @@
   (setq clean-aindent-is-simple-indent t)
   (define-key global-map (kbd "RET") 'newline-and-indent))
 
-(use-package company              :after tjf-menubar
-  :if is-linux?
-  :straight t
-  :delight
-  :functions company-sort-by-backend-importance
-  :preface
-  (eval-when-compile
-    (defvar company-active-map)
-    (defvar company-backends)
-    (defvar company-clang-executable)
-    (defvar company-dabbrev-downcase)
-    (defvar company-echo-delay)
-    (defvar company-idle-delay)
-    (defvar company-ispell-dictionary)
-    (defvar company-minimum-prefix-length)
-    (defvar company-show-numbers)
-    (defvar company-tooltip-align-annotations)
-    (defvar company-tooltip-limit)
-    (defvar company-transformers)
-    )
-  :init
-  (add-hook 'prog-mode-hook 'company-mode)
-  (add-hook 'text-mode-hook 'company-mode)
-  :config
-  (eval-after-load 'c-mode
-    '(define-key c-mode-map (kbd "[tab]") 'company-complete))
-  (define-key company-active-map [return]    'company-complete-common)
-  (define-key company-active-map [tab]       'company-complete-selection)
-  (define-key company-active-map (kbd "RET") 'company-complete-common)
-  (define-key company-active-map (kbd "TAB") 'company-complete-selection)
+;; (use-package company              :after tjf-menubar
+;;   :if is-linux?
+;;   :straight t
+;;   :delight
+;;   :functions company-sort-by-backend-importance
+;;   :preface
+;;   (eval-when-compile
+;;     (defvar company-active-map)
+;;     (defvar company-backends)
+;;     (defvar company-clang-executable)
+;;     (defvar company-dabbrev-downcase)
+;;     (defvar company-echo-delay)
+;;     (defvar company-idle-delay)
+;;     (defvar company-ispell-dictionary)
+;;     (defvar company-minimum-prefix-length)
+;;     (defvar company-show-numbers)
+;;     (defvar company-tooltip-align-annotations)
+;;     (defvar company-tooltip-limit)
+;;     (defvar company-transformers)
+;;     )
+;;   :init
+;;   (add-hook 'prog-mode-hook 'company-mode)
+;;   (add-hook 'text-mode-hook 'company-mode)
+;;   :config
+;;   (eval-after-load 'c-mode
+;;     '(define-key c-mode-map (kbd "[tab]") 'company-complete))
+;;   (define-key company-active-map [return]    'company-complete-common)
+;;   (define-key company-active-map [tab]       'company-complete-selection)
+;;   (define-key company-active-map (kbd "RET") 'company-complete-common)
+;;   (define-key company-active-map (kbd "TAB") 'company-complete-selection)
 
-  (setq company-backends '(company-capf
-                           company-keywords
-                           company-semantic
-                           company-files
-                           company-etags
-                           company-elisp
-                           company-clang))
-  (setq company-clang-executable "/usr/bin/clang")
-  (setq company-dabbrev-downcase nil)
-  (setq company-echo-delay 0)
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 2)
-  (setq company-show-quick-access t)
-  (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 20)
+;;   (setq company-backends '(company-capf
+;;                            company-keywords
+;;                            company-semantic
+;;                            company-files
+;;                            company-etags
+;;                            company-elisp
+;;                            company-clang))
+;;   (setq company-clang-executable "/usr/bin/clang")
+;;   (setq company-dabbrev-downcase nil)
+;;   (setq company-echo-delay 0)
+;;   (setq company-idle-delay 0)
+;;   (setq company-minimum-prefix-length 2)
+;;   (setq company-show-quick-access t)
+;;   (setq company-tooltip-align-annotations t)
+;;   (setq company-tooltip-limit 20)
 
-  (add-to-list 'company-transformers #'company-sort-by-backend-importance))
+;;   (add-to-list 'company-transformers #'company-sort-by-backend-importance))
 
-(use-package company-jedi         :after (company python)
-  :if is-linux?
-  :straight t
-  :config
-  (add-to-list 'company-backends 'company-jedi))
+;; (use-package company-jedi         :after (company python)
+;;   :if is-linux?
+;;   :straight t
+;;   :config
+;;   (add-to-list 'company-backends 'company-jedi))
 
-(use-package company-lsp          :after (company lsp-mode)
-  :straight t
-  :config
-  (push 'company-lsp company-backends)
-  (setq company-lsp-cache-candidates    'auto)
-  (setq company-lsp-async               t)
-  (setq company-lsp-enable-snippet      nil)
-  (setq company-lsp-enable-recompletion t))
+;; (use-package company-lsp          :after (company lsp-mode)
+;;   :straight t
+;;   :config
+;;   (push 'company-lsp company-backends)
+;;   (setq company-lsp-cache-candidates    'auto)
+;;   (setq company-lsp-async               t)
+;;   (setq company-lsp-enable-snippet      nil)
+;;   (setq company-lsp-enable-recompletion t))
 
 (use-package consult              :after selectrum-prescient
   :straight t)
+
+(use-package corfu                :defer
+  :straight t
+  :init
+  (global-corfu-mode)
+  :config
+  (setq corfu-auto t))
 
 (use-package csharp-mode
   :straight t
   :mode "\\.cs\'"
   :config
   (message "Loading csharp-mode...done"))
-
-(use-package consult
-  :straight t)
 
 (use-package dash
   :straight t)
@@ -637,7 +660,6 @@
   :diminish modern-c++-font-lock-mode
   :init
   (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode))
-  ;; :hook (c++-mode . modern-c++-font-lock-mode))
 
 (use-package orderless
   :straight t
@@ -665,6 +687,8 @@
   ;;   (defun projectile-project-root))
   :init
   (add-hook 'prog-mode-hook #'projectile-mode)
+  :custom
+  (projectile-project-search-path '("~/ide" "~/Workdpace/"))
   :config
   (add-to-list 'project-find-functions #'(lambda (dir)
                                            (let ((root (projectile-project-root dir)))
@@ -801,10 +825,10 @@
   :functions global-undo-tree-mode
   :config
   (define-key (lookup-key global-map [menu-bar edit])
-    [undo] '(menu-item "Undo" undo-tree-undo :enable (and undo-tree-mode (not buffer-read-only)) :help "Undo last operation"))
+              [undo] '(menu-item "Undo" undo-tree-undo :enable (and undo-tree-mode (not buffer-read-only)) :help "Undo last operation"))
   (define-key-after (lookup-key global-map [menu-bar edit])
     [redo] '(menu-item "Redo" undo-tree-redo :enable (and undo-tree-mode (not buffer-read-only)) :help "Redo last operation")
-	  'undo)
+	'undo)
   (global-undo-tree-mode 1))
 
 (use-package unicode-fonts        :after tjf-menubar
@@ -851,6 +875,10 @@
 (use-package cl-macs              :straight nil)
 
 (use-package color                :straight nil)
+
+(use-package comint               :straight nil :commands (shell-mode eshell-mode tjf:tools/open-new-shell)
+  :init
+  (add-hook 'comint-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'comint-completion-at-point completion-at-point-functions)))))
 
 (use-package cperl-mode           :straight nil :commands (tjf:perl/convert-to-perl cperl-mode perl-mode)
   :mode "\\.p\\(l\\|m\\)\\'"
@@ -956,7 +984,12 @@
 (use-package make-mode            :straight nil :commands makefile-gmake-mode
   :mode "\\.mk\\'"
   :init
+  (add-hook 'makefile-gmake-mode #'(lambda () (setq-local completion-at-point-functions (cons #'makefile-completions-at-point completion-at-point-functions))))
   (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
+
+(use-package markdown-mode        :straight nil :commands markdown-mode
+  :init
+  (add-hook 'markdown-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'markdown-complete-at-point completion-at-point-functions)))))
 
 (use-package mapreplace           :straight nil :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp))
 
@@ -1014,6 +1047,9 @@
 (use-package tjf-bookmark         :straight nil)
 
 (use-package tjf-c                :straight nil :after tjf-cc
+  :preface
+  (eval-when-compile
+    (defvar c-mode-map))
   :init
   (add-hook 'c-mode-hook #'tjf:c/setup)
   :config
@@ -1026,14 +1062,16 @@
 (use-package tjf-cc               :straight nil :after cc-mode
   :preface
   (eval-when-compile
+    (defvar c-mode-map)
+    (defvar c++-mode-map)
     (defvar tjf:c/dialect)
     (defvar tjf:cpp/dialect))
   :config
   (setq c-default-style "bsd")
   (setq c-basic-offset  4)
 
-  (tjf:cc/set-dialect "c17")
-  (tjf:cc/set-dialect "c++17")
+  (tjf:cc/set-dialect "c18")
+  (tjf:cc/set-dialect "c++2a")
 
   (c-set-offset 'case-label '+))
 
