@@ -29,6 +29,8 @@
 
 #
 # Revision: 17-May-2020 use v5.10
+#           15-Sep-2022 fixed args handling
+#                       added ‘=’ handling
 #
 package Util::GetOptNew;
 
@@ -43,10 +45,10 @@ use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
 
 our $AUTOLOAD;
 
-my @AREF = qw(args group bare1 bare2 arg1 arg2);
+my @AREF = qw(group bare1 bare2 arg1 arg2);
 my @HREF = qw(option);
 
-my %fields = (args   => undef,
+my %fields = (args   => \@ARGV,
 
               option => undef,
 
@@ -138,45 +140,75 @@ sub get
   my $reArg1  = $raArg1->re;
   my $reArg2  = $raArg2->re;
 
-  my @tmp;
+  my @tmp = @{$args};
 
-  while(@{$args})
+  my $idx = 0;
+
+  while(@tmp)
   {
-    my $tmp = shift @{$args};
-    say 'TMP:   ',$tmp;
+    my $arg = shift @tmp;
 
-    if($reArg1 ne '^\b' && $tmp =~ /^-($reArg1)$/)
+    if($reArg1 ne '^\b' && $arg =~ /^-($reArg1)$/)
     {
-      $option->{$1} = shift @{$args};
-      say "ARG1:   - $1 => $option->{$1}";
+      # -p 1
+      #
+      $option->{$1} = shift @tmp;
+
+      splice @{$args},$idx,2;
     }
-    elsif($reArg2 ne '^\b' && $tmp =~ /^--($reArg2)=([^\s]+)$/)
+    elsif($reArg1 ne '^\b' && $arg =~ /^-($reArg1)=([^\s]+)$/)
     {
+      # -p=1
+      #
       $option->{$1} = $2;
-      say "ARG2:  -- $1 => $option->{$1}";
+
+      splice @{$args},$idx,1;
     }
-    elsif($reBare1 ne '^\b' && $tmp =~ /^-($reBare1)$/)
+    elsif($reArg2 ne '^\b' && $arg =~ /^--($reArg2)$/)
     {
+      # --param 1
+      #
+      $option->{$1} = shift @tmp;
+
+      splice @{$args},0,2;
+    }
+    elsif($reArg2 ne '^\b' && $arg =~ /^--($reArg2)=([^\s]+)$/)
+    {
+      # --param=1
+      #
+      $option->{$1} = $2;
+
+      splice @{$args},$idx,1;
+    }
+    elsif($reBare1 ne '^\b' && $arg =~ /^-($reBare1)$/)
+    {
+      # -p
+      #
       $option->{$1} = 1;
-      say 'BARE1:  - ',$1;
+
+      splice @{$args},$idx,1;
     }
-    elsif($reBare2 ne '^\b' && $tmp =~ /^--($reBare2)$/)
+    elsif($reBare2 ne '^\b' && $arg =~ /^--($reBare2)$/)
     {
+      # --param
+      #
       $option->{$1} = 1;
-      say 'BARE2: -- ',$1;
+
+      splice @{$args},$idx,1;
     }
-    elsif($reGroup ne '^\b' && $tmp =~ /^-($reGroup)$/)
+    elsif($reGroup ne '^\b' && $arg =~ /^-($reGroup)$/)
     {
+      # -rip
+      #
       @{$option}{split //,$1} = (1) x length($1);
-      say 'GROUP: - ',join ' ',split //,$1;
+
+      splice @{$args},$idx,1;
     }
     else
     {
-      push @tmp,$tmp;
-      say 'ARGV:  ',$tmp;
+      ++$idx;
     }
   }
-  @{$args} = @tmp;
 }
 
 1;

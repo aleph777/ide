@@ -29,7 +29,8 @@
 
 ;;; Commentary:
 
-;; Revision:
+;; Revision: 13-Sep-2022 Added ‘clang-capf’
+             16-Sep-2022 Added ‘tjf:cpp/check’
 
 ;;; Code:
 
@@ -60,9 +61,20 @@
 (defvar tjf:cpp/ldflags)
 (setq   tjf:cpp/ldflags "-lm -pthread")
 
+(defun tjf:cpp/check ()
+  "Run ‘cppcheck’ on buffer."
+  (interactive)
+  (let ((tmp (join "/" `("/tmp" ,(basename))))
+        (buf (current-buffer)))
+        (message "%s" tmp)
+    (with-temp-buffer
+      (insert-buffer-substring buf)
+      (write-file tmp)
+      (compile (join " " `("cppcheck" ,tmp))))))
+
 (defun tjf:cpp/compile-file ()
   "Compile current buffer."
-  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) "-c" ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
+  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
 
 (defun tjf:cpp/compile-program ()
   "Compile and link the current file."
@@ -136,7 +148,10 @@
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
-  (setq flycheck-gcc-language-standard tjf:cpp/dialect))
+  (setq flycheck-gcc-language-standard tjf:cpp/dialect)
+
+  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
+  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions)))
 
 (defun tjf:cpp/syntax-check ()
   "Compile current buffer (syntax check only)."
@@ -146,6 +161,7 @@
 (defvar tjf:cpp/build-menu
   '("Build"
     ["Syntax  Check"   tjf:cpp/syntax-check    t]
+    ["Static Analysis" tjf:cpp/check]
     ["Compile File"    tjf:cpp/compile-file    t]
     ["Compile Program" tjf:cpp/compile-program t]
     "---"
