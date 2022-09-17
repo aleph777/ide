@@ -37,6 +37,8 @@
 (require 'tjf-flags)
 
 ;;
+(defvar tjf:cc/nproc (shell-command-to-string "nproc"))
+
 (defvar tjf:c/dialect "c18")
 (defvar tjf:c/std (concat "-std=" tjf:c/dialect))
 
