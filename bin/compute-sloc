@@ -32,11 +32,11 @@
 #
 # Arguments: dir1|file1 [dir2|file2 .. dirN|fileN]
 #
-# Revision:
+# Revision: 18-Sep-2022 Using ‘Util::GetOptNew’
 #
 use File::SLOC;
 use List::Util qw(first);
-use Util::GetOpt;
+use Util::GetOptNew;
 use strict;
 use v5.10;
 
@@ -48,43 +48,38 @@ if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:-(?:(?:-(?:h(?:elp)?|\?)|h(?:elp)?)$|\?
 {
   say "\nUsage: ",_ME_," [switch1 .. switch4] dir1|file1 [dir2|file2 .. dirN|fileN]\n";
   say 'Switches:';
-  say '    --factor   <factor>        - COCOMO schedule factor';
+  say '    --spreadsheet, -s          - Generate output in spreadsheet format';
   say '    --exponent <exponent>      - COCOMO schedule exponent';
+  say '    --factor   <factor>        - COCOMO schedule factor';
+  say '    --outdir   <directory>     - Output directory for generated files';
   say "    --salary   <annual salary> - COCOMO personcost\n";
-  say '    -s, --spreadsheet          - Generate output in spreadsheet format';
-  say '    --outdir <directory>       - Output directory for generated files';
-  say '    --details <file>           - Name for SLOC details file';
-  say "    --summary <file>           - Name for SLOC summary file\n";
+  say '    --details  <file>          - Name for SLOC details file';
+  say "    --summary  <file>          - Name for SLOC summary file\n";
   exit;
 }
 my %option;
 
-my @switchesArg = qw(--factor --exponent --salary --outdir --details --summary);
+my $o = Util::GetOpt->new(option => \%option);
 
-my $o = Util::GetOpt->new(args => \@ARGV,option => \%option);
+my @arg2  = qw(factor exponent salary outdir details summary);
+my @bare1 = qw(s);
+my @bare2 = qw(spreadsheet);
 
-$o->get(switchesBare => [qw(-s --spreadsheet)],switchesArg => \@switchesArg);
+$o->get(bare1 => \@bare1,bare2 => \@bare2,arg2 => \@arg2);
 
 my $badswitch = first { substr($_,0,1) eq '-' } @ARGV;
 
 die _ME_,": $badswitch is not a recognized switch!!!\n" if defined $badswitch;
-die _ME_,": 'outdir' is not a directory!!!\n"           if exists $option{'--outdir'} && !-d $option{'--outdir'};
-
-my %fieldSwitch = ('--factor'   => 'factor',
-                   '--exponent' => 'exponent',
-                   '--salary'   => 'salary',
-                   '--outdir'   => 'outdir',
-                   '--details'  => 'fileDetails',
-                   '--summary'  => 'fileSummary',
-                  );
+die _ME_,": 'outdir' is not a directory!!!\n"           if exists $option{'outdir'} && !-d $option{'outdir'};
 
 my $sloc = File::SLOC->new(dirs => [grep { -d } @ARGV],files => [grep { -e && !-d } @ARGV]);
 
-$sloc->configure(map { $fieldSwitch{$_} => $option{$_} } grep { exists $option{$_} } @switchesArg);
+# $sloc->configure(map { $fieldSwitch{$_} => $option{$_} } grep { exists $option{$_} } @switchesArg);
+$sloc->configure($option{$_});
 
 $sloc->get;
 
-if(exists $option{'-s'} || exists $option{'--spreadsheet'})
+if(exists $option{'s'} || exists $option{'spreadsheet'})
 {
   $sloc->put;
 }
