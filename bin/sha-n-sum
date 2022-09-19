@@ -34,12 +34,13 @@
 #
 # Revision:  03-Apr-2015 Added Usage
 #            13-Apr-2015 use Regexp::Assemble
+#            18-Sep-2022 use Util::GetOptNew
 #
 use Digest::SHA;
 use File::Basename;
 use Regexp::Assemble;
 use Text::HexString;
-use Util::GetOpt;
+use Util::GetOptNew;
 use strict;
 use v5.10;
 
@@ -47,7 +48,7 @@ use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:--?h(?:elp)?|-?-?\?)$)/))
 {
-  say "\nUsage: ",_ME_," [-n] [-no-name] [-1|-224|-256|-384|-512|-512224|-512256] file1 [file2 … fileN]\n";
+  say "\nUsage: ",_ME_," [-1|-224|-256|-384|-512|-512224|-512256] [-n] [-no-name] file1 [file2 … fileN]\n";
 
   say "\t-n       - print checksum as a number";
   say "\t-no-name - do not print file name after checksum";
@@ -62,13 +63,17 @@ if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:--?h(?:elp)?|-?-?\?)$)/))
 }
 my $ra = Regexp::Assemble->new;
 
-$ra->add(map { join '','^--?(?:sha-?)?',$_,'$' } qw(1 224 256 256 384 384 512 512224 512256));
+my @bare = map { join '','(?:sha-?)?',$_ } qw(1 224 256 256 384 384 512 512224 512256);
+
+$ra->add(@bare);
 
 my $alg = $ra->re;
 
-my $opt = Util::GetOpt->new(switchesBare => [$alg,'-no-name','-n']);
+my $opt = Util::GetOptNew->new();
 
-$opt->get(args => \@ARGV);
+my @x = ('(?:sha-?)?1', '224', '256');
+
+$opt->get(bare1 => [@bare,'no-name','n'],bare2 => \@bare);
 
 my ($algorithm) = grep /$alg/o,keys %{$opt->option};
 
@@ -83,7 +88,7 @@ for(grep { -e && !-d } @ARGV)
 {
   $sha->addfile($_,'b');
 
-  my $checksum = exists $opt->{'-n'} ? uc $sha->hexdigest : $hxs->get(number => $sha->hexdigest);
+  my $checksum = exists $opt->option->{'n'} ? uc $sha->hexdigest : $hxs->get(number => $sha->hexdigest);
 
-  CORE::say exists $opt->{'-no-name'} ? $checksum : join ' ',$checksum,$_;
+  say exists $opt->option->{'no-name'} ? $checksum : join ' ',$checksum,$_;
 }

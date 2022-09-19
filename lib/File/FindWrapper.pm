@@ -100,6 +100,8 @@ my %fields = (root        => '.',
               absolute    => 0,
               switches    => \@switches,
               argSwitches => \@argswitches,
+              bare1       => \@switches,
+              arg1        => \@argswitches,
              );
 
 # BEGIN
