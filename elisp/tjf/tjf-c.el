@@ -31,10 +31,13 @@
 
 ;; Revision: 13-Sep-2022 Added ‘clang-capf’
 ;;           16-Sep-2022 Added ‘tjf:c/check’
+;;           27-Sep-2022 Added ‘eglot’
 
 ;;; Code:
 
 (message "Loading from tjf-c...")
+(require 'eglot)
+(require 'flycheck)
 (require 'tjf-cc)
 
 ;;
@@ -54,12 +57,12 @@
   "Run ‘cppcheck’ on buffer."
   (interactive)
   (let ((tmp (join "/" `("/tmp" ,(basename))))
-        (buf (current-buffer)))
-        (message "%s" tmp)
+        (buf (current-buffer))
+        (std (concat "-" tjf:c/std)))
     (with-temp-buffer
       (insert-buffer-substring buf)
       (write-file tmp)
-      (compile (join " " `("cppcheck" ,tmp))))))
+      (compile (join " " `("cppcheck" "--language=c" ,std ,tmp))))))
 
 (defun tjf:c/flags ()
   "Return the compiler flags."
@@ -73,10 +76,12 @@
   (imenu-add-to-menubar "Navigate")
   ;;
   (setq flycheck-gcc-language-standard tjf:c/dialect)
+  
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
   (setq-local comment-start "// ")
   (setq-local comment-end "")
-  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
-  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions)))
+  (eglot-ensure))
 
 (defun tjf:c/syntax-check ()
   "Compile the current buffer (syntax check only)."
@@ -86,12 +91,12 @@
 (defun tjf:c/compile-file ()
   "Compile the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-c" ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
 
 (defun tjf:c/compile-program ()
   "Compile and link the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,tjf:c/ldflags "-c" ,(basename) "-o" ,(basename-no-ext)))))
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,tjf:c/ldflags ,(basename) "-o" ,(basename-no-ext)))))
 
 (defun tjf:c/make ()
   "Make the current program."

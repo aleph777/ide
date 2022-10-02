@@ -30,11 +30,13 @@
 ;;; Commentary:
 
 ;; Revision: 13-Sep-2022 Added ‘clang-capf’
-             16-Sep-2022 Added ‘tjf:cpp/check’
+;;           16-Sep-2022 Added ‘tjf:cpp/check’
+;;           27-Sep-2022 Added ‘eglot’
 
 ;;; Code:
 
 (message "Loading tjf-cpp...")
+(require 'eglot)
 (require 'tjf-cc)
 (require 'tjf-macro)
 
@@ -45,9 +47,6 @@
 
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
-
-(defvar tjf:cpp/dialect)
-(setq   tjf:cpp/dialect "2a")
 
 (defvar tjf:cpp/makeflags)
 (setq   tjf:cpp/makeflags "")
@@ -65,12 +64,14 @@
   "Run ‘cppcheck’ on buffer."
   (interactive)
   (let ((tmp (join "/" `("/tmp" ,(basename))))
-        (buf (current-buffer)))
-        (message "%s" tmp)
+        (buf (current-buffer))
+        (std (concat "-" tjf:cpp/std)))
+    (if (string-equal tjf:cpp/dialect "c++2a")
+        (setq std "--std=c++20"))
     (with-temp-buffer
       (insert-buffer-substring buf)
       (write-file tmp)
-      (compile (join " " `("cppcheck" ,tmp))))))
+      (compile (join " " `("cppcheck" "--language=c++" ,std ,tmp))))))
 
 (defun tjf:cpp/compile-file ()
   "Compile current buffer."
@@ -79,7 +80,7 @@
 (defun tjf:cpp/compile-program ()
   "Compile and link the current file."
   (interactive)
-  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags "-c" ,(basename) "-o" ,(basename-no-ext)))))
+  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
 
 (defun tjf:cpp/make ()
   "Build using make."
@@ -107,7 +108,6 @@
 (defun tjf:cpp/set-dialect ()
   "Allow the user to set ‘DIALECT’."
   (interactive)
-  (message "Setting dialect...")
   (let ((dialect (read-shell-command "Dialect: " tjf:cpp/dialect)))
     (unless (string= dialect tjf:cpp/dialect)
       (tjf:cc/set-dialect dialect))))
@@ -142,16 +142,19 @@
 
 (defun tjf:cpp/setup ()
   "C++-mode setup function."
-  (message (format "Running tjf:cpp/setup...%s" tjf:cpp/dialect))
+  (message (format "Running tjf:cpp/setup... %s" tjf:cpp/dialect))
   (abbrev-mode -1)
   (flymake-mode -1)
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
+  (setq-local completion-at-point-functions
+              (mapcar #'cape-company-to-capf #'(company-capf)))
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
+  (add-hook 'completion-at-point-functions #'company-capf nil 'local)
   (setq flycheck-gcc-language-standard tjf:cpp/dialect)
-
-  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
-  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions)))
+  (eglot-ensure))
 
 (defun tjf:cpp/syntax-check ()
   "Compile current buffer (syntax check only)."
