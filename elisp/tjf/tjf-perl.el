@@ -65,6 +65,7 @@
 ;;           05-Oct-2020 Removed ‘perl-init-faces’
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           07-Apr-2021 Updated ‘tjf:perl/fill-out-template’
+;;           24-Sep-2022 Fixed ‘tjf:perl/which’
 ;;
 
 ;;; Code:
@@ -75,14 +76,20 @@
 (require 'tjf-edit)
 (require 'tjf-frame)
 
+(eval-when-compile
+  (require 'cape))
+
 ;;; overload
 (defun cperl-define-key () nil)
+
+(define-key cperl-mode-map [(control ?h) ?f] nil)
+(define-key cperl-mode-map [(control ?h) ?v] nil)
 
 (defvar tjf:perl/lib         (getenv "PERLLIB"))
 (defvar tjf:perl/me          "use constant _ME_ => $0 =~ m=([^/]+)$=;\n\n")
 (defvar tjf:perl/min-version "5.010")
-(defvar tjf:perl/which       "/usr/bin/env perl")
-(defvar tjf:perl/shebang     (concat "#!" tjf:perl/which " -w    # -*-Perl-*-\n"))
+(defvar tjf:perl/which       (shell-command-to-string "which perl"))
+(defvar tjf:perl/shebang     (concat "#!" tjf:perl/which " -w  # -*-Perl-*-\n"))
 
 ;;;###autoload
 (defun tjf:perl/convert ()
@@ -178,8 +185,9 @@
 
 (defun tjf:perl/setup()
   "Set up a buffer for ‘perl-mode’."
-  (imenu-add-to-menubar "Navigate")
   (abbrev-mode -1)
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (imenu-add-to-menubar "Navigate")
   (unless tjf:perl/lib
     (setq tjf:perl/lib (concat tjf:user/dir-home "lib:" tjf:user/dir-home "local/lib")))
   (setq flycheck-perl-include-path (split-string tjf:perl/lib ":"))
