@@ -40,6 +40,7 @@
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           11-Mar-2021 Added ‘looking-at-word-or-symbol’
 ;;                       Updated ‘word-beginning-position’ and ‘word-end-position’ to look for variables and function names
+;;           01-Oct-2022 Added ‘symbol-to-string’ and ‘string-to-symbol’
 ;;
 
 ;;; Code:
@@ -76,19 +77,22 @@
      ,@statements))
 
 (defmacro on-daemon (statement &rest statements)
-  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run as Emacs daemon."
+  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run
+as Emacs daemon."
   `(when is-daemon?
      ,statement
      ,@statements))
 
 (defmacro on-gnu/linux (statement &rest statements)
-  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GNU/Linux."
+  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run
+on GNU/Linux."
   `(when is-linux?
      ,statement
      ,@statements))
 
 (defmacro on-gnu/linux-gui (statement &rest statements)
-  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GNU/Linux."
+  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run
+on a GNU/Linux GUI."
   `(when is-linux-gui?
      ,statement
      ,@statements))
@@ -100,7 +104,8 @@
      ,@statements))
 
 (defmacro on-windows (statement &rest statements)
-  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on Microsoft Windows."
+  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run
+on Microsoft Windows."
   `(when is-windows
      ,statement
      ,@statements))
@@ -174,12 +179,14 @@ when there is no mark set.
     (point)))
 
 (defsubst replace-matches (regexp replacement-string &optional point-end)
-  "Replace all occurences of REGEXP with REPLACEMENT-STRING from point to POINT-END (defaults to ‘point-max’)."
+  "Replace all occurences of REGEXP with REPLACEMENT-STRING from point
+to POINT-END (defaults to ‘point-max’)."
   (while (re-search-forward regexp (or point-end (point-max)) t)
       (replace-match replacement-string t)))
 
 (defsubst replace-matches-nre (str replacement-string &optional point-end)
-  "Replace all occurences of STR with REPLACEMENT-STRING from point to POINT-END (defaults to ‘point-max’)."
+  "Replace all occurences of STR with REPLACEMENT-STRING from point to
+POINT-END (defaults to ‘point-max’)."
   (while (search-forward str (or point-end (point-max)) t)
       (replace-match replacement-string t)))
 
@@ -209,6 +216,14 @@ when there is no mark set.
       (skip-syntax-forward not-word-symbol-syntax)
       (skip-syntax-forward word-symbol-syntax))
     (point)))
+
+(defun string-to-symbol (string)
+  "Convert STRING to a symbol."
+  (intern string))
+
+(defun symbol-to-string (symbol)
+  "Convert SYMBOL to a string."
+  (symbol-name 'symbol))
 
 ;;
 (message "Loading tjf-macro...done")
