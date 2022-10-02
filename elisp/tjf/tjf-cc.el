@@ -1,6 +1,6 @@
 ;;; tjf-cc.el --- Common C/C++ major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2021 Tom Fontaine
+;;         Copyright © 2021-2022 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   09-Feb-2021
@@ -34,16 +34,23 @@
 ;;; Code:
 
 (message "Loading tjf-cc...")
+(require 'cc-mode)
 (require 'tjf-flags)
 
 ;;
 (defvar tjf:cc/nproc (shell-command-to-string "nproc"))
 
-(defvar tjf:c/dialect "c18")
-(defvar tjf:c/std (concat "-std=" tjf:c/dialect))
+(defvar tjf:c/dialect)
+(setq   tjf:c/dialect "c18")
 
-(defvar tjf:cpp/dialect "c++2a")
-(defvar tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
+(defvar tjf:c/std)
+(setq   tjf:c/std (concat "-std=" tjf:c/dialect))
+
+(defvar tjf:cpp/dialect)
+(setq   tjf:cpp/dialect "c++2a")
+
+(defvar tjf:cpp/std)
+(setq   tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
 
 (defun tjf:cc/docstring ()
   "Convert C++-style comments '^ *//' to a docstring."
@@ -70,13 +77,9 @@
 
 (defun tjf:cc/guard-symbol ()
   "Return the guard symbold for the current buffer."
-<<<<<<< HEAD
-  (concat "_" (upcase (basename-no-ext)) "_" (upcase (file-extension)) "_"))
-=======
   (let ((filename (upcase (s-replace "-" "_" (basename-no-ext))))
         (ext      (upcase (file-extension))))
     (concat "_" filename "_" ext "_")))
->>>>>>> 227910e07a939ef9c8c67d62142543dec7d4ab96
 
 (defun tjf:cc/insert-boilerplate ()
   "Insert a C/C++ module boilerplate for ‘(basename)’."
