@@ -217,11 +217,11 @@ POINT-END (defaults to ‘point-max’)."
       (skip-syntax-forward word-symbol-syntax))
     (point)))
 
-(defun string-to-symbol (string)
+(defsubst string-to-symbol (string)
   "Convert STRING to a symbol."
   (intern string))
 
-(defun symbol-to-string (symbol)
+(defsubst symbol-to-string (symbol)
   "Convert SYMBOL to a string."
   (symbol-name 'symbol))
 
