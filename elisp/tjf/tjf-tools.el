@@ -399,6 +399,8 @@
     "---"
     ["Git Status" magit-status]
     "---"
+    ["Open New Shell" tjf:tools/open-new-shell t]
+    "---"
     ["Check Language"             langtool-check             :enable (tjf:flags/enable-write?)]
     ["Insert Synonym..."          powerthesaurus-lookup-word :enable (tjf:flags/enable-write?)]
     ["Look up word definition..." sdcv-search                :active t]
