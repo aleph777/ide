@@ -28,9 +28,20 @@
 ;; Do not resize the frame at this early stage.
 (setq frame-inhibit-implied-resize t)
 
-;; Disable GUI elements
-(setq inhibit-splash-screen t)
-(setq use-dialog-box t)               ; only for mouse events
+(setq inhibit-splash-screen       t)
+(setq inhibit-startup-buffer-menu t)
+(setq inhibit-startup-screen      t)
+
+(setq use-dialog-box              t)
+
+(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 1.0)
+
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (setq gc-cons-threshold  (* 8 1024 1024))
+              (setq gc-cons-percentage 0.1)
+              (garbage-collect)))
 
 (setq gc-cons-threshold  most-positive-fixnum)   ;; Defer Garbage collection
 (setq gc-cons-percentage 1.0)

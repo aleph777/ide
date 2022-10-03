@@ -32,6 +32,7 @@
 ;; Revision: 02-Sep-2016 Changed `usr-exit-buffer-frame' to `exit-buffer-and-frame'
 ;;           19-Apr-2018 Removed ‘u-initial-major-mode’ from ‘new-empty-buffer’
 ;;           13-Jun-2018 Updated ‘require’ list
+;;           24-Sep-2022 Added ‘Rename’ to ‘tjf:edit/menu’
 ;;
 
 ;;; Code:
@@ -117,7 +118,9 @@ URI is the url for the file.  ACTION is ignored."
     "---"
     ["Save"                  save-buffer  :enable (tjf:flags/enable-save?)  ]
     ["Save As... "           write-file   :enable (tjf:flags/enable-saveas?)]
-    ["Save Selection As... " write-region :active mark-active]
+    ["Save Selection As... " write-region :active mark-active               ]
+    "---"
+    ["Rename..." tjf:file/rename-this-file-and-buffer :enable (tjf:flags/enable-saveas?)]
     "---"
     ["Close"        kill-this-buffer      :enable (kill-this-buffer-enabled-p)]
     ["Close Window" exit-buffer-and-frame :enable (delete-frame-enabled-p)    ]

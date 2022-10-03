@@ -40,6 +40,7 @@
 ;;           28-Oct-2020 Reworked because of ‘powerline' changes
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           29-Aug-2022 Using ‘%C’ for column format
+;;           02-Oct-2022 Removed ‘tjf:powerline/column’
 ;;
 
 ;;; Code:
@@ -63,10 +64,6 @@
 (defvar tjf:powerline/bufreg-word-count nil
   "String value of Buffer or Region word count.")
 (make-variable-buffer-local 'tjf:powerline/bufreg-word-count)
-
-(defvar tjf:powerline/column nil
-  "String value of current (1+) column.")
-(make-variable-buffer-local 'tjf:powerline/column)
 
 (defvar tjf:powerline/encoding-alist (list (cons 'prefer-utf-8-unix            "Unix")
                                            (cons 'prefer-utf-8-dos             "DOS")
@@ -132,12 +129,12 @@
     (setq tjf:powerline/bufreg-line-count (int-to-string (line-number-at-pos (point-max))))
     (setq tjf:powerline/bufreg-word-count (int-to-string (count-words-region (point-min) (point-max))))
     (setq tjf:powerline/bufreg-byte-count (int-to-string (point-max))))
-  (setq tjf:powerline/column    (int-to-string (1+ (current-column))))
   (setq tjf:powerline/encoding (tjf:powerline/encoding))
   (set-buffer-modified-p (buffer-modified-p)))
 
 (defun tjf:powerline/theme-lhs (mode-line face0 face1 face2)
-  "Create a list that defines the left-hand side of the modeline using MODE-LINE, FACE0, FACE1, and FACE2."
+  "Create a list that defines the left-hand side of the modeline
+using MODE-LINE, FACE0, FACE1, and FACE2."
   (list
    (when (and (boundp 'global-anzu-mode) global-anzu-mode)
      (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
@@ -157,7 +154,8 @@
    (funcall separator-left face1 face2)))
 
 (defun tjf:powerline/theme-rhs (mode-line face0 face1 face2)
-  "Create a list that defines the right-hand side of the modeline using MODE-LINE, FACE0, FACE1, and FACE2."
+  "Create a list that defines the right-hand side of the modeline
+using MODE-LINE, FACE0, FACE1, and FACE2."
   (list (powerline-raw global-mode-string face2 'r)
         (funcall separator-right face2 face1)
 	(powerline-raw tjf:powerline/row-column-format face1 'r)

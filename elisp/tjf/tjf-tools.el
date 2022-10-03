@@ -72,6 +72,7 @@
 
 (defun tjf:tools/open-new-shell ()
   "Open a new shell buffer."
+  (interactive)
   (let* ((shell-number 1)
          (shell-buffer-name "*shell <1>*"))
     (while (not (equal nil (get-buffer shell-buffer-name)))

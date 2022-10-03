@@ -46,7 +46,8 @@
 
 (message "Loading tjf-python...")
 
-(defvar tjf:python/shebang     "#!/usr/bin/env python3\n# -*-Python-*-\n\n")
+(defvar tjf:python/which   (shell-command-to-string "which python3"))
+(defvar tjf:python/shebang (concat "#!" tjf:python/which "  # -*-Python-*-\n\n"))
 
 ;;
 (defun tjf:python/convert ()
@@ -116,7 +117,9 @@
 
 (defun tjf:python/setup ()
   "Set up Python mode."
-  (setq-local imenu-create-index-function #'python-imenu-create-index)
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (add-hook 'completion-at-point-functions #'anaconda-mode-complete nil 'local)
+  (setq-local imenu-create-index-function #'python-imenu-create-index) ;; only language where this is defined
   (imenu-add-to-menubar "Navigate")
   (flycheck-mode)
   (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))

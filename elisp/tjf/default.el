@@ -191,6 +191,7 @@
 ;;           12-Sep-2022 Added ‘bazel’
 ;;           13-Sep-2022 Added ‘cape’ and ‘corfu’
 ;;                       Removed ‘company’
+;;           24-Sep-2022 Added ‘symbol-to-string’ and ‘string-to-symbol’
 ;;
 
 ;;; Code:
@@ -311,10 +312,8 @@
   (setq         imenu-sort-function                 'imenu--sort-by-name)
   (setq         indent-tabs-mode                    nil)
   (setq         inhibit-startup-echo-area-message   nil)
-  (setq         inhibit-startup-screen              t)
   (setq         initial-scratch-message             nil)
   (setq-default indent-tabs-mode                    nil)
-  (setq         inhibit-startup-buffer-menu         t)
   (setq         max-image-size                      256)
   (setq         mode-require-final-newline          'visit-save)
   (setq         mouse-drag-copy-region              t)
@@ -349,6 +348,11 @@
   (require 'tjf-macro))
 
 ;; ================================== straight ==================================
+
+(use-package anaconda-mode        :after python
+  :straight t
+  :init
+  (add-hook 'python-mode-hook 'anaconda-mode))
 
 (use-package anzu
   :straight t
@@ -419,15 +423,27 @@
   (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark)
   (message "Loading bm...done"))
 
-(use-package cape                 :after tjf-menubar
+(use-package cape
   :straight t
   :init
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (add-to-list 'completion-at-point-functions #'cape-history)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  )
+  ;; (setq completion-at-point-functions (remove 'tags-completion-at-point-function 'completion-at-point-functions))
+  ;; (add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;; (add-to-list 'completion-at-point-functions #'cape-history)
+  ;; (add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;; (add-to-list 'completion-at-point-functions #'cape-line)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
 
-(use-package clang-capf           :after tjf-menubar
+(use-package clang-capf           :after corfu
   :straight t)
 
 (use-package clean-aindent-mode   :after tjf-menubar
@@ -508,12 +524,15 @@
 (use-package consult              :after selectrum-prescient
   :straight t)
 
-(use-package corfu                :defer
+(use-package corfu                :after selectrum-prescient
   :straight t
   :init
   (global-corfu-mode)
   :config
-  (setq corfu-auto t))
+  (setq corfu-auto        t)
+  (setq corfu-auto-delay  0.25)
+  (setq corfu-auto-prefix 2)
+  (setq corfu-quit-no-match 'separator))
 
 (use-package csharp-mode
   :straight t
@@ -524,21 +543,24 @@
 (use-package dash
   :straight t)
 
-(use-package elpy                 :after python
-  :straight t
-  :init
-  (setq elpy-rpc-python-command "python3")
-  (advice-add 'python-mode :before 'elpy-enable)
-  :hook
-  (elpy-mode . (lambda () (add-hook 'before-save-hook 'elpy-format-code)))
-  :config
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (setq python-shell-prompt-detect-failure-warning nil)
-  (setq python-indent-guess-indent-offset t)
-  (setq python-indent-guess-indent-offset-verbose nil)
-  (setq python-shell-interpreter "jupyter")
-  (setq python-shell-interpreter-args "-i")
-  (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter"))
+(use-package eglot
+  :straight t)
+
+;; (use-package elpy                 :after python
+;;   :straight t
+;;   :init
+;;   (setq elpy-rpc-python-command "python3")
+;;   (advice-add 'python-mode :before 'elpy-enable)
+;;   :hook
+;;   (elpy-mode . (lambda () (add-hook 'before-save-hook 'elpy-format-code)))
+;;   :config
+;;   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;   (setq python-shell-prompt-detect-failure-warning nil)
+;;   (setq python-indent-guess-indent-offset t)
+;;   (setq python-indent-guess-indent-offset-verbose nil)
+;;   (setq python-shell-interpreter "jupyter")
+;;   (setq python-shell-interpreter-args "-i")
+;;   (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter"))
 
 (use-package emojify              :commands emojify-mode
   :straight t)
@@ -600,8 +622,9 @@
   (global-set-key (kbd "C-h   k") #'helpful-key)
   (global-set-key (kbd "C-h C-k") #'describe-key))
 
-(use-package jedi                 :after elpy
-  :straight t)
+;; (use-package jedi                 :after python
+;;   :straight t
+;;   )
 
 (use-package json-mode            :mode "\\.json\\'"
   :straight t)
@@ -618,27 +641,31 @@
 (use-package loccur               :commands loccur-current
   :straight t)
 
-(use-package lsp-mode
-  :straight t
-  :hook (python-mode . lsp-deferred)
-  :commands lsp)
+;; (use-package lsp-mode
+;;   :straight t
+;;   :hook
+;;   (python-mode . lsp-deferred)
+;;   (c-mode      . lsp-deferred)
+;;   (c++-mode    . lsp-deferred)
+;;   (emacs-lisp-mode . lsp-deferred)
+;;   :commands lsp)
 
-(use-package lsp-pyright
-  :straight t
-  :hook (python-mode . (lambda () (require 'lsp-pyright)))
-  :init (when (executable-find "python3")
-          (setq lsp-pyright-python-executable-cmd "python3")))
+;; (use-package lsp-pyright
+;;   :straight t
+;;   :hook (python-mode . (lambda () (require 'lsp-pyright)))
+;;   :init (when (executable-find "python3")
+;;           (setq lsp-pyright-python-executable-cmd "python3")))
 
-(use-package lsp-ui
-  :straight t
-  :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-doc-header t)
-  (setq lsp-ui-doc-include-signature t)
-  (setq lsp-ui-doc-border (face-foreground 'default))
-  (setq lsp-ui-sideline-show-code-actions t)
-  (setq lsp-ui-sideline-delay 0.05))
+;; (use-package lsp-ui
+;;   :straight t
+;;   :commands lsp-ui-mode
+;;   :config
+;;   (setq lsp-ui-doc-enable nil)
+;;   (setq lsp-ui-doc-header t)
+;;   (setq lsp-ui-doc-include-signature t)
+;;   (setq lsp-ui-doc-border (face-foreground 'default))
+;;   (setq lsp-ui-sideline-show-code-actions t)
+;;   (setq lsp-ui-sideline-delay 0.05))
 
 (use-package magit                :commands magit-status
   :straight t)
@@ -664,7 +691,10 @@
 (use-package orderless
   :straight t
   :config
-  (setq completion-styles '(orderless)))
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp))))
+  ;; (setq completion-styles '(orderless))
 
 (use-package paradox              :commands paradox-list-packages
   :straight t
@@ -679,33 +709,31 @@
 (use-package powerthesaurus       :commands powerthesaurus-lookup
   :straight t)
 
-(use-package projectile           :after project
-  :straight t
-  :diminish projectile-mode
-  ;; :preface
-  ;; (eval-when-compile
-  ;;   (defun projectile-project-root))
-  :init
-  (add-hook 'prog-mode-hook #'projectile-mode)
-  :custom
-  (projectile-project-search-path '("~/ide" "~/Workdpace/"))
-  :config
-  (add-to-list 'project-find-functions #'(lambda (dir)
-                                           (let ((root (projectile-project-root dir)))
-                                             (and root (cons 'transient root))))))
+;; (use-package projectile           :after project
+;;   :straight t
+;;   :diminish projectile-mode
+;;   ;; :preface
+;;   ;; (eval-when-compile
+;;   ;;   (defun projectile-project-root))
+;;   :init
+;;   (add-hook 'prog-mode-hook #'projectile-mode)
+;;   :config
+;;   (add-to-list 'project-find-functions #'(lambda (dir)
+;;                                            (let ((root (projectile-project-root dir)))
+;;                                              (and root (cons 'transient root))))))
 
-(use-package pyvenv               :after elpy
-  :straight t
-  :config
-  (pyvenv-mode t)
+;; (use-package pyvenv               :after elpy
+;;   :straight t
+;;   :config
+;;   (pyvenv-mode t)
 
-  ;; Set correct Python interpreter
-  (setq pyvenv-post-activate-hooks
-        (list (lambda ()
-                (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python3")))))
-  (setq pyvenv-post-deactivate-hooks
-        (list (lambda ()
-                (setq python-shell-interpreter "python3")))))
+;;   ;; Set correct Python interpreter
+;;   (setq pyvenv-post-activate-hooks
+;;         (list (lambda ()
+;;                 (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python3")))))
+;;   (setq pyvenv-post-deactivate-hooks
+;;         (list (lambda ()
+;;                 (setq python-shell-interpreter "python3")))))
 
 (use-package rainbow-delimiters   :commands rainbow-delimiters-mode
   :straight t
@@ -906,6 +934,8 @@
   (define-key cperl-mode-map "("        nil)
   (define-key cperl-mode-map "["        nil)
 
+  (add-to-list 'eglot-server-programs (cons cperl-mode '("perl" "-MPerl::LanguageServer" "-e" "Perl::LanguageServer::run")))
+
   (message "Loading cperl-mode...done"))
 
 (use-package cua-base             :straight nil
@@ -1007,6 +1037,10 @@
   :config
   (setq pcol-column-separator "[ \t]+" pcol-str-separator " "))
 
+(use-package python               :straight nil :commands python-mode
+  :config
+  (setq python-indent-guess-indent-offset-verbose nil))
+
 (use-package recentf              :straight nil
   :demand
   :config
@@ -1056,6 +1090,8 @@
   (define-key c-mode-map    [menu-bar]    nil)
   (define-key c-mode-map    [(control d)] nil)
 
+  (add-hook 'completion-at-point-functions #'clang-capf nil 'local)
+
   (easy-menu-define tjf-c-menu c-mode-map "C" (append '("C") tjf:cc/menu-text))
   (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu))
 
@@ -1081,6 +1117,8 @@
   :config
   (define-key c++-mode-map    [menu-bar]    nil)
   (define-key c++-mode-map    [(control d)] nil)
+
+  (add-hook 'completion-at-point-functions #'clang-capf nil 'local)
 
   (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
   (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu))
@@ -1124,7 +1162,8 @@
   :preface
   (defun tjf:lisp/setup ())
   :init
-  (add-hook 'emacs-lisp-mode-hook #'tjf:lisp/setup))
+  (add-hook 'emacs-lisp-mode-hook #'tjf:lisp/setup)
+  (add-hook 'lisp-mode-hook       #'tjf:lisp/setup))
 
 (use-package tjf-macro            :straight nil)
 
@@ -1157,6 +1196,7 @@
   :preface
   (defun tjf:python/setup ())
   :init
+  (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook #'tjf:python/setup))
 
 (use-package tjf-query-replace    :straight nil :commands tjf:query-replace/do)

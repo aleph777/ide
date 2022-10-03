@@ -31,11 +31,13 @@
 
 ;; Revision: 13-Sep-2022 Added ‘clang-capf’
 ;;           16-Sep-2022 Added ‘tjf:c/check’
+;;           27-Sep-2022 Added ‘eglot’
 
 ;;; Code:
 
 (message "Loading from tjf-c...")
-(require 's)
+(require 'eglot)
+(require 'flycheck)
 (require 'tjf-cc)
 
 ;;
@@ -66,14 +68,37 @@
 (defun tjf:c/check ()
   "Run ‘cppcheck’ on buffer."
   (interactive)
-  (let ((tmp (join "/" `("/tmp" ,(basename buffer-file-name))))
+  (let ((tmp (join "/" `("/tmp" ,(basename))))
         (buf (current-buffer))
         (std (concat "-" tjf:c/std)))
-        (message "%s" tjf:cpp/std)
     (with-temp-buffer
       (insert-buffer-substring buf)
       (write-file tmp)
-      (compile (join " " `("cppcheck --language=c" ,std ,tmp))))))
+      (compile (join " " `("cppcheck" "--language=c" ,std ,tmp))))))
+
+(defun tjf:c/flags ()
+  "Return the compiler flags."
+  (join " " `(,tjf:c/std ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
+
+(defun tjf:c/setup ()
+  "C-mode setup function."
+  (abbrev-mode -1)
+  (flymake-mode -1)
+  (flycheck-mode)
+  (imenu-add-to-menubar "Navigate")
+  ;;
+  (setq flycheck-gcc-language-standard tjf:c/dialect)
+  
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
+  (eglot-ensure))
+
+(defun tjf:c/syntax-check ()
+  "Compile the current buffer (syntax check only)."
+  (interactive)
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-fsyntax-only" ,(basename)))))
 
 (defun tjf:c/compile-file ()
   "Compile the current file."
@@ -84,10 +109,6 @@
   "Compile and link the current file."
   (interactive)
   (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,tjf:c/ldflags ,(basename) "-o" ,(basename-no-ext)))))
-
-(defun tjf:c/flags ()
-  "Return the compiler flags."
-  (join " " `(,tjf:c/std ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
 
 (defun tjf:c/make ()
   "Make the current program."

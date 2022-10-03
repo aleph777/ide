@@ -60,6 +60,7 @@
 ;;           22-Jul-2019 Moved Bookmark menu to Navigate
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           15-Jul-2021 Sorted Edit menu
+;;           27-Sep-2022 Added ‘tjf:menu-bar/feature’
 ;;
 
 ;;; Code:
@@ -81,6 +82,12 @@
 (define-key global-map [menu-bar buffer] (cons "Window" global-buffers-menu-map))
 (setq menu-bar-final-items '(buffer help))
 
+(defun tjf:menu-bar/feature (feature)
+  "Show message indicating that FEATURE is a feature."
+  (interactive "sFeature: ")
+  (let ((feature-symbol (intern feature)))
+    (message "FEATURE: %s" (featurep feature-symbol))))
+
 (easy-menu-define help-menu global-map "Help"
   '("Help"
     ["Apropos..."                apropos            :active t :key-sequence nil]
@@ -92,6 +99,8 @@
     ["Emacs Command Apropos... " command-apropos    :active t :key-sequence nil]
     ["Info"                      info               :active t :key-sequence [C-h i]]
     ["Unix Manpage…"             manual-entry       :active t :key-sequence nil]
+    "---"
+    ["Feature?..." tjf:menu-bar/feature :active t]
     ))
 
 (easy-menu-define tools-menu     global-map "Tools"     tjf:tools/menu)

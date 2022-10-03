@@ -1,6 +1,6 @@
 ;;; tjf-cc.el --- Common C/C++ major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2021 Tom Fontaine
+;;         Copyright © 2021-2022 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   09-Feb-2021
@@ -41,6 +41,18 @@
 
 ;;
 (defvar tjf:cc/nproc (shell-command-to-string "nproc"))
+
+(defvar tjf:c/dialect)
+(setq   tjf:c/dialect "c18")
+
+(defvar tjf:c/std)
+(setq   tjf:c/std (concat "-std=" tjf:c/dialect))
+
+(defvar tjf:cpp/dialect)
+(setq   tjf:cpp/dialect "c++2a")
+
+(defvar tjf:cpp/std)
+(setq   tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
 
 (defun tjf:cc/docstring ()
   "Convert C++-style comments '^ *//' to a docstring."

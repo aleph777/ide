@@ -54,7 +54,9 @@
 (require 'easymenu)
 (require 'tjf-date)
 (require 'tjf-edit)
-(message "Loading tjf-lisp...debug")
+
+(eval-when-compile
+  (require 'cape))
 
 ;;
 (defconst tjf:lisp/imenu-generic-expression
@@ -84,8 +86,9 @@
 
 (defun tjf:lisp/setup ()
   "Set up ‘lisp-mode’."
-  (imenu-add-to-menubar "Navigate")
-  (setq-local completion-at-point-functions (cons #'elisp-completion-at-point completion-at-point-functions)))
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (add-hook 'completion-at-point-functions #'cape-symbol nil 'local)
+  (imenu-add-to-menubar "Navigate"))
 
 (defvar tjf:lisp/build-menu-text
   '("Build"
