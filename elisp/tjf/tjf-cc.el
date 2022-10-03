@@ -34,16 +34,13 @@
 ;;; Code:
 
 (message "Loading tjf-cc...")
+(require 'cc-mode)
+(require 'f)
+(require 's)
 (require 'tjf-flags)
 
 ;;
 (defvar tjf:cc/nproc (shell-command-to-string "nproc"))
-
-(defvar tjf:c/dialect "c18")
-(defvar tjf:c/std (concat "-std=" tjf:c/dialect))
-
-(defvar tjf:cpp/dialect "c++2a")
-(defvar tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
 
 (defun tjf:cc/docstring ()
   "Convert C++-style comments '^ *//' to a docstring."
@@ -70,13 +67,9 @@
 
 (defun tjf:cc/guard-symbol ()
   "Return the guard symbold for the current buffer."
-<<<<<<< HEAD
-  (concat "_" (upcase (basename-no-ext)) "_" (upcase (file-extension)) "_"))
-=======
   (let ((filename (upcase (s-replace "-" "_" (basename-no-ext))))
         (ext      (upcase (file-extension))))
-    (concat "_" filename "_" ext "_")))
->>>>>>> 227910e07a939ef9c8c67d62142543dec7d4ab96
+    (concat "NAILPRO" "_" filename "_" ext "_")))
 
 (defun tjf:cc/insert-boilerplate ()
   "Insert a C/C++ module boilerplate for ‘(basename)’."
@@ -84,12 +77,12 @@
   (goto-char (point-min))
   (save-excursion
     (insert-file-contents (concat tjf:user/dir-elisp "templates/cc-skeleton.cpp")))
-  (let ((year (format-time-string "%Y-%Y")))
+  (let ((year (format-time-string "%Y - %Y")))
     (save-excursion
-      (search-forward "<<<FILENAME>>>" (point-max) t)
-      (replace-match (basename) t)
-      (search-forward "<<<CHOLDER>>>")
-      (replace-match tjf:user/copyright-holder t)
+      ;; (search-forward "<<<FILENAME>>>" (point-max) t)
+      ;; (replace-match (basename) t)
+      ;; (search-forward "<<<CHOLDER>>>")
+      ;; (replace-match tjf:user/copyright-holder t)
       (search-forward "<<<YEAR>>>")
       (replace-match year t))))
 
@@ -98,6 +91,7 @@
   (interactive "*")
   (let* ((guard (tjf:cc/guard-symbol)))
     (goto-char (point-min))
+    (insert "\n")
     (insert "#ifndef " guard "\n")
     (insert "#define " guard "\n")
     (goto-char (point-max))
@@ -107,8 +101,8 @@
   "Insert a header skeleton."
   (interactive "*")
   (goto-char (point-min))
-  (tjf:cc/insert-boilerplate)
-  (tjf:cc/insert-header-guard))
+  (tjf:cc/insert-header-guard)
+  (tjf:cc/insert-boilerplate))
 
 (defun tjf:cc/insert-source-skeleton ()
   "Insert a source file skeleton."

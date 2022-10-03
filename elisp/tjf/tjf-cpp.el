@@ -30,14 +30,14 @@
 ;;; Commentary:
 
 ;; Revision: 13-Sep-2022 Added ‘clang-capf’
-             16-Sep-2022 Added ‘tjf:cpp/check’
+;;           16-Sep-2022 Added ‘tjf:cpp/check’
 
 ;;; Code:
 
 (message "Loading tjf-cpp...")
+(require 's)
 (require 'tjf-cc)
 (require 'tjf-macro)
-
 
 ;;
 (defvar tjf:cpp/compiler)
@@ -49,28 +49,34 @@
 (defvar tjf:cpp/dialect)
 (setq   tjf:cpp/dialect "2a")
 
+(defvar tjf:cpp/ldflags)
+(setq   tjf:cpp/ldflags "-lm -pthread")
+
 (defvar tjf:cpp/makeflags)
 (setq   tjf:cpp/makeflags "")
 
 (defvar tjf:cpp/optimization)
 (setq   tjf:cpp/optimization "-O")
 
+(defvar tjf:cpp/std)
+(setq   tjf:cpp/std (concat "-std=c++" tjf:cpp/dialect))
+
 (defvar tjf:cpp/warnings)
 (setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
-
-(defvar tjf:cpp/ldflags)
-(setq   tjf:cpp/ldflags "-lm -pthread")
 
 (defun tjf:cpp/check ()
   "Run ‘cppcheck’ on buffer."
   (interactive)
-  (let ((tmp (join "/" `("/tmp" ,(basename))))
-        (buf (current-buffer)))
-        (message "%s" tmp)
+  (let ((tmp (join "/" `("/tmp" ,(basename buffer-file-name))))
+        (buf (current-buffer))
+        (std (concat "-" tjf:cpp/std)))
+    (if (string-equal std "--std=c++2a")
+        (setq std "--std=c++20"))
+        (message "%s" tjf:cpp/std)
     (with-temp-buffer
       (insert-buffer-substring buf)
       (write-file tmp)
-      (compile (join " " `("cppcheck" ,tmp))))))
+      (compile (join " " `("cppcheck --language=c++" ,std ,tmp))))))
 
 (defun tjf:cpp/compile-file ()
   "Compile current buffer."
@@ -81,14 +87,14 @@
   (interactive)
   (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags "-c" ,(basename) "-o" ,(basename-no-ext)))))
 
+(defun tjf:cpp/flags ()
+  "Return the compiler flags."
+  (join " " `(,tjf:cpp/std ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
+
 (defun tjf:cpp/make ()
   "Build using make."
   (interactive)
   (compile (join " " `("make" ,(concat "-j" (shell-command-to-string "nproc"))))))
-
-(defun tjf:cpp/flags ()
-  "Return the compiler flags."
-  (join " " `(,tjf:cpp/std ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
 
 (defun tjf:cpp/set-compiler ()
   "Allow the user to set ‘COMPILER’."
@@ -141,16 +147,13 @@
       (tjf:cc/set-warnings warnings))))
 
 (defun tjf:cpp/setup ()
-  "C++-mode setup function."
-  (message (format "Running tjf:cpp/setup...%s" tjf:cpp/dialect))
+  "C++ mode setup function."
   (abbrev-mode -1)
   (flymake-mode -1)
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
   (setq flycheck-gcc-language-standard tjf:cpp/dialect)
-
-  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
   (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions)))
 
 (defun tjf:cpp/syntax-check ()
@@ -161,7 +164,7 @@
 (defvar tjf:cpp/build-menu
   '("Build"
     ["Syntax  Check"   tjf:cpp/syntax-check    t]
-    ["Static Analysis" tjf:cpp/check]
+    ["Static Analysis" tjf:cpp/check           t]
     ["Compile File"    tjf:cpp/compile-file    t]
     ["Compile Program" tjf:cpp/compile-program t]
     "---"
@@ -177,8 +180,6 @@
     "---"
     ["Set Make Flags..." tjf:cpp/set-makeflags t]
     ))
-
-(easy-menu-define tjf:cpp/menu-build c++-mode-map "C++ Build" tjf:cpp/build-menu)
 
 ;;
 (message "Loading tjf-cpp...done")

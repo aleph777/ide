@@ -113,6 +113,7 @@
 ;;                       Fixed warnings on lambda functions
 ;;           24-Mar-2021 Added ‘consult-outline’ to ‘C-M-o’
 ;;           28-Apr-2022 Added ‘tjf:duplicate/tabs’
+;;           30-Sep-2022 Added mode-line bindings for ‘mouse-8’, ‘mouse-9’, and ‘C-mouse-3’
 
 ;;; Code:
 
@@ -1526,18 +1527,21 @@
 ;;
 ;;(global-set-key [mode-line mouse-1] 'mouse-drag-mode-line)
 (global-set-key [mode-line mouse-2] 'split-window-vertically)
-(global-set-key [mode-line mouse-3] 'balance-windows)
+(global-set-key [mode-line mouse-3] 'split-window-horizontally)
+(global-set-key [mode-line mouse-8] 'mouse-delete-window)
+(global-set-key [mode-line mouse-9] 'mouse-delete-other-windows)
 
+(global-set-key [mode-line (control mouse-3)] 'balance-windows)
 ;;
 ;; Fringe Mouse
 ;;
 (global-set-key [left-fringe  mouse-1] 'bm-toggle-mouse)
 (global-set-key [left-fringe  mouse-4] 'bm-previous-mouse)
 (global-set-key [left-fringe  mouse-5] 'bm-next-mouse)
-(global-set-key [right-fringe mouse-1] 'mouse-delete-other-windows)
-(global-set-key [right-fringe mouse-2] 'split-window-horizontally)
+;; (global-set-key [right-fringe mouse-1] 'mouse-delete-other-windows)
+;; (global-set-key [right-fringe mouse-2] 'split-window-horizontally)
 
-(global-set-key [right-fringe (control mouse-1)] 'mouse-delete-window)
+;; (global-set-key [right-fringe (control mouse-1)] 'mouse-delete-window)
 
 ;;
 ;; Secondary Selection

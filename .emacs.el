@@ -33,8 +33,6 @@
 (defvar tjf:user/dir-themes   (concat tjf:user/dir-elisp "themes/"))
 
 ;;
-(setq gc-cons-threshold (* 16 1024 1024))
-
 (cl-pushnew (concat tjf:user/dir-elisp "ext/") load-path :test 'string=)
 (cl-pushnew (concat tjf:user/dir-elisp "tjf/") load-path :test 'string=)
 

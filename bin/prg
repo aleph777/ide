@@ -408,7 +408,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -443,7 +443,7 @@ sub printLinesWithMatches
           {
             unless(/$regex/oi)
             {
-              my $s = join ':',single($$file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -485,7 +485,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -520,7 +520,7 @@ sub printLinesWithMatches
           {
             if(/$regex/oi)
             {
-              my $s = join single($file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -565,7 +565,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -573,7 +573,7 @@ sub printLinesWithMatches
               }
               else
               {
-                print $s
+                print $s;
 
                 say '--';
 
@@ -600,7 +600,7 @@ sub printLinesWithMatches
           {
             unless(/$regex/o)
             {
-              my $s = join ':',single($file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -642,7 +642,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -650,9 +650,9 @@ sub printLinesWithMatches
               }
               else
               {
-                print $s
+                print $s;
 
-                  say '--';
+                say '--';
 
                 last if exists $option{'m'} && ++$count >= $option{'m'};
               }
@@ -677,7 +677,7 @@ sub printLinesWithMatches
           {
             if(/$regex/o)
             {
-              my $s = join ':',single($file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -780,5 +780,7 @@ sub getContext
 
 sub single
 {
-  return @ARGV == 1 ? () : shift;
+  # return @ARGV == 1 ? () : shift;
+
+  return shift;
 }

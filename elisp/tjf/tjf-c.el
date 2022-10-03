@@ -35,63 +35,59 @@
 ;;; Code:
 
 (message "Loading from tjf-c...")
+(require 's)
 (require 'tjf-cc)
 
 ;;
-(defvar tjf:c/compiler "gcc")
+(defvar tjf:c/compiler)
+(setq   tjf:c/compiler "gcc")
 
-(defvar tjf:c/debug "-g")
+(defvar tjf:c/debug)
+(setq   tjf:c/debug "-g")
 
-(defvar tjf:c/optimization "-O")
+(defvar tjf:c/dialect)
+(setq   tjf:c/dialect "18")
 
+(defvar tjf:c/ldflags)
+(setq   tjf:c/ldflags "-lm -pthread")
+
+(defvar tjf:c/makeflags)
+(setq   tjf:c/makeflags "")
+
+(defvar tjf:c/optimization)
+(setq   tjf:c/optimization "-O")
+
+(defvar tjf:c/std)
+(setq   tjf:c/std (concat "-std=" tjf:c/dialect))
+
+(defvar tjf:c/warnings)
 (defvar tjf:c/warnings "-Wall -Wextra -Wconversion")
-
-(defvar tjf:c/ldflags "-lm -pthread")
-
-(defvar tjf:c/makeflags "")
 
 (defun tjf:c/check ()
   "Run ‘cppcheck’ on buffer."
   (interactive)
-  (let ((tmp (join "/" `("/tmp" ,(basename))))
-        (buf (current-buffer)))
-        (message "%s" tmp)
+  (let ((tmp (join "/" `("/tmp" ,(basename buffer-file-name))))
+        (buf (current-buffer))
+        (std (concat "-" tjf:c/std)))
+        (message "%s" tjf:cpp/std)
     (with-temp-buffer
       (insert-buffer-substring buf)
       (write-file tmp)
-      (compile (join " " `("cppcheck" ,tmp))))))
-
-(defun tjf:c/flags ()
-  "Return the compiler flags."
-  (join " " `(,tjf:c/std ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
-
-(defun tjf:c/setup ()
-  "C-mode setup function."
-  (abbrev-mode -1)
-  (flymake-mode -1)
-  (flycheck-mode)
-  (imenu-add-to-menubar "Navigate")
-  ;;
-  (setq flycheck-gcc-language-standard tjf:c/dialect)
-  (setq-local comment-start "// ")
-  (setq-local comment-end "")
-  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
-  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions)))
-
-(defun tjf:c/syntax-check ()
-  "Compile the current buffer (syntax check only)."
-  (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-fsyntax-only" ,(basename)))))
+      (compile (join " " `("cppcheck --language=c" ,std ,tmp))))))
 
 (defun tjf:c/compile-file ()
   "Compile the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-c" ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
 
 (defun tjf:c/compile-program ()
   "Compile and link the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,tjf:c/ldflags "-c" ,(basename) "-o" ,(basename-no-ext)))))
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,tjf:c/ldflags ,(basename) "-o" ,(basename-no-ext)))))
+
+(defun tjf:c/flags ()
+  "Return the compiler flags."
+  (join " " `(,tjf:c/std ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
 
 (defun tjf:c/make ()
   "Make the current program."
@@ -147,10 +143,29 @@
     (unless (string= warnings tjf:c/warnings)
       (tjf:cc/set-warnings warnings))))
 
+(defun tjf:c/setup ()
+  "C mode setup function."
+  (abbrev-mode -1)
+  (flymake-mode -1)
+  (flycheck-mode)
+  (imenu-add-to-menubar "Navigate")
+  ;;
+  (setq flycheck-gcc-language-standard tjf:c/dialect)
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
+  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions))
+  ;; (define-key c-mode-map [menu-bar]    nil)
+  (define-key c-mode-map [(control d)] nil))
+
+(defun tjf:c/syntax-check ()
+  "Compile the current buffer (syntax check only)."
+  (interactive)
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-fsyntax-only" ,(basename)))))
+
 (defvar tjf:c/build-menu
   '("Build"
     ["Syntax  Check"   tjf:c/syntax-check    t]
-    ["Static Analysis" tjf:c/check]
+    ["Static Analysis" tjf:c/check           t]
     ["Compile File"    tjf:c/compile-file    t]
     ["Compile Program" tjf:c/compile-program t]
     "---"
@@ -166,6 +181,7 @@
     "---"
     ["Set Make Flags..." tjf:c/set-makeflags t]
     ))
+
 
 ;;
 (message "Loading tjf-c...done")
