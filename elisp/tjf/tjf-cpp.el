@@ -47,14 +47,14 @@
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
 
+(defvar tjf:cpp/ldflags)
+(setq   tjf:cpp/ldflags "-lm -pthread")
+
 (defvar tjf:cpp/makeflags)
 (setq   tjf:cpp/makeflags "")
 
 (defvar tjf:cpp/optimization)
 (setq   tjf:cpp/optimization "-O")
-
-(defvar tjf:cpp/std)
-(setq   tjf:cpp/std (concat "-std=c++" tjf:cpp/dialect))
 
 (defvar tjf:cpp/warnings)
 (setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
@@ -79,6 +79,7 @@
 (defun tjf:cpp/compile-program ()
   "Compile and link the current file."
   (interactive)
+  ;; (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
   (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
 
 (defun tjf:cpp/flags ()

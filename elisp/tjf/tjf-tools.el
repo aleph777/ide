@@ -397,7 +397,9 @@
       ))
     ["Show Unicode Name" show-unicode-name-at-point t]
     "---"
-    ["Git Status" magit-status]
+    ["Git Status" magit-status t]
+    "---"
+    ["Open New Shell" tjf:tools/open-new-shell t]
     "---"
     ["Check Language"             langtool-check             :enable (tjf:flags/enable-write?)]
     ["Insert Synonym..."          powerthesaurus-lookup-word :enable (tjf:flags/enable-write?)]
