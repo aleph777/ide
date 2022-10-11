@@ -352,7 +352,8 @@
 (use-package anaconda-mode        :after python
   :straight t
   :init
-  (add-hook 'python-mode-hook 'anaconda-mode))
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
 
 (use-package anzu
   :straight t
@@ -1196,7 +1197,6 @@
   :preface
   (defun tjf:python/setup ())
   :init
-  (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook #'tjf:python/setup))
 
 (use-package tjf-query-replace    :straight nil :commands tjf:query-replace/do)

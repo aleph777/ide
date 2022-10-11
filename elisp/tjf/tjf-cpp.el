@@ -74,6 +74,7 @@
 
 (defun tjf:cpp/compile-file ()
   "Compile current buffer."
+  (interactive)
   (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
 
 (defun tjf:cpp/compile-program ()
