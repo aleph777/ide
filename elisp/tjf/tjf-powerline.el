@@ -1,6 +1,6 @@
 ;;; tjf-powerline.el --- Powerline setup -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2021 by Tom Fontaine
+;;         Copyright © 2016-2023 by Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   30-Mar-2016

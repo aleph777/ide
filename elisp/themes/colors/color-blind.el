@@ -1,6 +1,6 @@
 ;;; color-blind.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst color-blind/gold-20        "#ffb000")
 (defconst color-blind/indigo-50      "#785ef0")

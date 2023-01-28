@@ -1,6 +1,6 @@
 ;;; flat.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst flat/alizarin      "#e74c3c")
 (defconst flat/amethyst      "#9b59b6")

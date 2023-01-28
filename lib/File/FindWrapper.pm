@@ -1,6 +1,6 @@
 # File::FindWrapper --- Provides a ‘find’ object -*-Perl-*-
 
-#         Copyright © 2000-2022 Tom Fontaine
+#         Copyright © 2000-2023 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   28-Jun-2000

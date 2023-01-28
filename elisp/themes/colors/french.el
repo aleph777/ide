@@ -1,6 +1,6 @@
 ;;; french.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst french/aurora-green          "#78e08f")
 (defconst french/azraq-blue            "#4a69bd")

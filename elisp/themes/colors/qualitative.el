@@ -1,6 +1,6 @@
 ;;; qualitative.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst qualitative/aqua-20    "#71cddd")
 (defconst qualitative/blue-40    "#5392ff")

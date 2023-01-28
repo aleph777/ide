@@ -1,6 +1,6 @@
 # Util::GetOpt --- Provides command line option handling -*-Perl-*-
 
-#         Copyright © 2012-2022 Tom Fontaine
+#         Copyright © 2012-2023 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   25-Sep-2012

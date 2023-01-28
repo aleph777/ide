@@ -1,6 +1,6 @@
 # Math::RandomWalk --- Implements a random walk object -*-Perl-*-
 
-#         Copyright © 2017-2022 Tom Fontaine
+#         Copyright © 2017-2023 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   14-Aug-2015

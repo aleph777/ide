@@ -12,14 +12,26 @@ int main() {
     m.insert("paste", -2);
     m.insert("fudge", 17);
 
-    if (m.exists("fudge"))
-        COUT("fudge: " << m.get("fudge"));
+    std::string key = "fudge";
 
-    if (m.exists("spoon"))
-        COUT("fudge: " << m.get("spoon"));
+    if (m.exists(key))
+        COUT(key + ": " << m.get(key));
+    else
+        COUT("FAIL: " + key + " not found");
 
-    if (m.exists("spoon"))
-        COUT("how did I get spoon?");
+    key = "paste";
+
+    if (m.exists(key))
+        COUT(key + ": " << m.get(key));
+    else
+        COUT("FAIL: " + key + " not found");
+
+    key = "spoon";
+
+    if (m.exists(key))
+        COUT(key + ": " << m.get(key));
+    else
+        COUT(key + " not found");
 
     COUT("size: " << m.size());
 

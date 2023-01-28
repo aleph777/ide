@@ -1,6 +1,6 @@
 ;;; spanish.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst spanish/alameda-ochre       "#cc8e35")
 (defconst spanish/c64-purple          "#706fd3")

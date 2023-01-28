@@ -1,6 +1,6 @@
 ;;; tjf-search.el --- Search menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2021 Tom Fontaine
+;;         Copyright © 2016-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Feb-2016

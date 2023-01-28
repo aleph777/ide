@@ -1,6 +1,6 @@
 ;;; fontaine-theme.el --- Dark on light theme -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2021  Tom Fontaine
+;;         Copyright © 2016-2023  Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Aug-2016

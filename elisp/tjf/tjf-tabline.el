@@ -1,6 +1,6 @@
 ;;; tjf-tabline.el --- Display a tab bar in the tab-line -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*- ;; -*-no-byte-compile: t; -*-
 
-;;         Copyright © 2021-2021 Tom Fontaine
+;;         Copyright © 2021-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   03-Feb-2021

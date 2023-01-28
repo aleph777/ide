@@ -1,6 +1,6 @@
 # File::CSharp --- Provides a C# source code file object -*-Perl-*-
 
-#         Copyright © 2013-2022 Tom Fontaine
+#         Copyright © 2013-2023 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   22-Aug-2013
