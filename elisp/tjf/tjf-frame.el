@@ -54,6 +54,9 @@
 ;;           14-Jun-2018 Changed ‘alt-frame-width’ to 112 to accomodate toolbar
 ;;                       Added new major modes to ‘frame-mode-size-alist’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           09-Feb-2023 Added ‘tjf:frame/half-size’
+;;           15-Feb-2023 Changed ‘default-frame-width’ and ‘default-frame-height’ to use monitor settings
+;;                       fixed ‘tjf:frame/half-size’
 ;;
 
 ;;; Code:
@@ -72,8 +75,10 @@
 (defvar tjf:frame/format-font-modeline   "Font: %s")
 (defvar tjf:frame/format-font-properties "Font:        %s\n")
 
-(defvar tjf:frame/default-width  128)
-(defvar tjf:frame/default-height  56)
+(defvar tjf:frame/default-width)
+(defvar tjf:frame/default-height)
+(setq tjf:frame/default-width   (- (/ (x-display-pixel-width)  (frame-char-width) 4) 8))
+(setq tjf:frame/default-height  (- (/ (x-display-pixel-height) (frame-char-height) ) 10))
 
 (defvar tjf:frame/alt-width  128)
 (defvar tjf:frame/alt-height  40)
@@ -92,6 +97,7 @@
                                         (cons 'csharp-mode            tjf:frame/default-size)
                                         (cons 'c++-mode               tjf:frame/default-size)
                                         (cons 'clips-mode             tjf:frame/default-size)
+                                        (cons 'cmake-mode             tjf:frame/default-size)
                                         (cons 'clips-log-mode         tjf:frame/default-size)
                                         (cons 'comint-mode-map        tjf:frame/default-size)
                                         (cons 'cperl-mode             tjf:frame/default-size)
@@ -115,7 +121,7 @@
                                         (cons 'js-mode                tjf:frame/default-size)
                                         (cons 'js2-mode               tjf:frame/default-size)
                                         (cons 'json-mode              tjf:frame/default-size)
-                                        (cons 'latex-mode             tjf:frame/alt-size)
+                                        (cons 'latex-mode             tjf:frame/default-size)
                                         (cons 'lisp-mode              tjf:frame/default-size)
                                         (cons 'lisp-interaction-mode  tjf:frame/default-size)
                                         (cons 'log-mode               tjf:frame/default-size)
@@ -280,6 +286,22 @@ documentation for additional customization information."
         (toggle-frame-maximized)))
     (message "columns: %s, rows: %s" width height)
     (set-frame-size (current-frame) width height)))
+
+;; (x-display-pixel-width)   ∑monitors
+;; (x-display-pixel-height)
+;; (frame-char-width)
+;; (frame-char-height)
+;;
+(defun tjf:frame/half-size ()
+  "Set frame to occupy half (top to bottom) of the screen."
+  (interactive)
+  (if (tjf:flags/is-maxmized?)
+        (toggle-frame-maximized)
+      (if (tjf:flags/is-fullscreen?)
+          (toggle-frame-fullscreen)))
+    (modify-frame-parameters
+     (current-frame) (list (cons 'width  tjf:frame/default-width)
+                           (cons 'height tjf:frame/default-height))))
 
 ;;
 (message "Loading tjf-frame...done")

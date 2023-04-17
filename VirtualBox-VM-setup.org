@@ -75,6 +75,7 @@
 ** cd emacs
 ** mkdir autosave
 ** mkdir backup
+** mkdir undo-tree
 
 ** OBSOLETE emacs -Q -f elisp/package-install.el
 

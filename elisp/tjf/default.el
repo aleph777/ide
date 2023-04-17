@@ -176,31 +176,30 @@
 ;;                       removed defer constants (use let variables)
 ;;           24-Jan-2021 added ‘dash'
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           11-Mar-2021 removed ‘tinysearch’ and ‘tinyeat’
-;;           24-Mar-2021 added ‘orderless’, ‘selectrum’, and ‘selectrum-prescient’
-;;                       fixed loading sequence error
-;;           08-May-2021 using ‘straight’
-;;           01-Jul-2021 added ‘-no-byte-compile’
-;;                       added ‘julia-mode’
-;;                       redid undo/redo enable for edit menu
-;;           07-Mar-2022 fixed ‘tjf-python’
-;;                       removed ‘package-archives’ redundancies
-;;           17-Apr-2022 fixed python mode
-;;           26-Apr-2022 removed ‘unicode-fonts-setup’
-;;           18-May-2022 removed dead code and reorganized
-;;           12-Sep-2022 added ‘bazel’
-;;           13-Sep-2022 added ‘cape’ and ‘corfu’
-;;                       removed ‘company’
-;;           24-Sep-2022 added ‘symbol-to-string’ and ‘string-to-symbol’
-;;           15-Nov-2022 added ‘cmake-mode’
-;;           04-Jan-2023 fixed ‘tjf-c’ and ‘tjf-cpp’ usage
-;;           10-Jan-2023 added ‘csv-mode’
-;;           05-Apr-2023 changed from ‘straight’ to ‘elpaca’
-;;           06-Apr-2023 simplfied ‘auto-mode-alist’
-;;           10-Apr-2023 use built-in ‘eglot’
-;;                       separated completion setup
-;;                       changed from ‘selectrum’ to ‘vertico’
-;;           16-Apr-2023 added ‘tree-sitter’ support
+;;           11-Mar-2021 Removed ‘tinysearch’ and ‘tinyeat’
+;;           24-Mar-2021 Added ‘orderless’, ‘selectrum’, and ‘selectrum-prescient’
+;;                       Fixed loading sequence error
+;;           08-May-2021 Using ‘straight’
+;;           01-Jul-2021 Added ‘-no-byte-compile’
+;;                       Added ‘julia-mode’
+;;                       Redid undo/redo enable for Edit menu
+;;           07-Mar-2022 Fixed ‘tjf-python’
+;;                       Removed ‘package-archives’ redundancies
+;;           17-Apr-2022 Fixed python mode
+;;           26-Apr-2022 Removed ‘unicode-fonts-setup’
+;;           18-May-2022 Removed dead code and reorganized
+;;           12-Sep-2022 Added ‘bazel’
+;;           13-Sep-2022 Added ‘cape’ and ‘corfu’
+;;                       Removed ‘company’
+;;           24-Sep-2022 Added ‘symbol-to-string’ and ‘string-to-symbol’
+;;           15-Nov-2022 Added ‘cmake-mode’
+;;           04-Jan-2023 Fixed ‘tjf-c’ and ‘tjf-cpp’ usage
+;;           10-Jan-2023 Added ‘csv-mode’
+;;           05-Apr-2023 Changed from ‘straight’ to ‘elpaca’
+;;           06-Apr-2023 Simplfied ‘auto-mode-alist’
+;;           10-Apr-2023 Use built-in ‘eglot’
+;;                       Separated completion setup
+;;                       Changed from ‘selectrum’ to ‘vertico’
 ;;
 
 ;;; Code:
@@ -499,7 +498,7 @@
   (setq vertico-prescient-enable-filtering t)
   (vertico-mode +1)
   (vertico-prescient-mode +1)
-  (prescient-persist-mode   +1))
+  (prescient-persist-mode +1))
 
 (elpaca-wait)
 
@@ -585,9 +584,7 @@
   (setq clean-aindent-is-simple-indent t)
   (define-key global-map (kbd "RET") 'newline-and-indent))
 
-(use-package cmake-mode           :elpaca t   :commands cmake-mode
-  :config
-  (treesit-install-language-grammar 'cmake))
+(use-package cmake-mode           :elpaca t   :commands cmake-mode)
 
 (use-package csv-mode             :elpaca t   :commands csv-mode
   :config
@@ -808,9 +805,7 @@
   :config
   (ws-butler-global-mode))
 
-(use-package yaml-mode            :elpaca t   :commands yaml-mode
-  :config
-  (treesit-install-language-grammar 'yaml))
+(use-package yaml-mode            :elpaca t   :commands yaml-mode)
 
 (elpaca-wait)
 
@@ -957,9 +952,7 @@
 
 (use-package markdown-mode        :elpaca nil :commands markdown-mode
   :init
-  (add-hook 'markdown-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'markdown-complete-at-point completion-at-point-functions))))
-  :config
-  (treesit-install-language-grammar 'markdown))
+  (add-hook 'markdown-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'markdown-complete-at-point completion-at-point-functions)))))
 
 (use-package msb                  :elpaca nil
   :config
@@ -1025,9 +1018,7 @@
   :preface
   (defun tjf:c/setup ())
   :init
-  (add-hook 'c-mode-hook #'tjf:c/setup)
-  :config
-  (treesit-install-language-grammar 'c))
+  (add-hook 'c-mode-hook #'tjf:c/setup))
 
 (use-package tjf-cc               :elpaca nil :after cc-mode
   :preface
@@ -1050,9 +1041,7 @@
   :preface
   (defun tjf:cpp/setup ())
   :init
-  (add-hook 'c++-mode-hook #'tjf:cpp/setup)
-  :config
-  (treesit-install-language-grammar 'cpp))
+  (add-hook 'c++-mode-hook #'tjf:cpp/setup))
 
 (use-package tjf-csharp           :elpaca nil :after csharp-mode
   :preface
