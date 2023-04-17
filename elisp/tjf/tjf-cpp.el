@@ -29,17 +29,20 @@
 
 ;;; Commentary:
 
-;; Revision: 13-Sep-2022 Added ‘clang-capf’
-;;           16-Sep-2022 Added ‘tjf:cpp/check’
-;;           27-Sep-2022 Added ‘eglot’
-
+;; Revision: 13-Sep-2022 added ‘clang-capf’
+;;           16-Sep-2022 added ‘tjf:cpp/check’
+;;           27-Sep-2022 added ‘eglot’
+;;           20-Oct-2022 added ‘tjf:cpp/includes’ to ‘tjf:cpp/flags’
+;;           21-Oct-2022 added key definition for ‘tjf:cc/insert-docstring’
+;;                       added ‘tjf:cpp/set-includes’
+;;           04-Jan-2023 fixed ‘tjf:cpp/setup’
+;;           13-Apr-2023 removed ‘company-mode’ from completions
 ;;; Code:
 
 (message "Loading tjf-cpp...")
 (require 'eglot)
 (require 'tjf-cc)
 (require 'tjf-macro)
-
 
 ;;
 (defvar tjf:cpp/compiler)
@@ -48,17 +51,35 @@
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
 
+(defvar tjf:cpp/dialect)
+(setq   tjf:cpp/dialect "c++17")
+
+(defvar tjf:cpp/includes)
+(setq   tjf:cpp/includes "-I.")
+
+(defvar tjf:cpp/ldflags)
+(setq   tjf:cpp/ldflags "-lm -pthread")
+
 (defvar tjf:cpp/makeflags)
 (setq   tjf:cpp/makeflags "")
 
 (defvar tjf:cpp/optimization)
 (setq   tjf:cpp/optimization "-O")
 
+(defvar tjf:cpp/std)
+(setq   tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
+
 (defvar tjf:cpp/warnings)
 (setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
 
-(defvar tjf:cpp/ldflags)
-(setq   tjf:cpp/ldflags "-lm -pthread")
+;; (defun tjf:cpp/build-sh ()
+;;   "Run ‘build.sh’."
+;;   (interactive)
+;;   (let* ((dir (concat tjf:user/dir-home "Workspace/tenbeauty"))
+;;          (cmd (concat "cd " dir " && ./build.sh")))
+;;     (compile cmd)
+;; !
+;; ))
 
 (defun tjf:cpp/check ()
   "Run ‘cppcheck’ on buffer."
@@ -81,16 +102,17 @@
 (defun tjf:cpp/compile-program ()
   "Compile and link the current file."
   (interactive)
+  ;; (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
   (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
+
+(defun tjf:cpp/flags ()
+  "Return the compiler flags."
+  (join " " `(,tjf:cpp/std ,tjf:cpp/includes ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
 
 (defun tjf:cpp/make ()
   "Build using make."
   (interactive)
   (compile (join " " `("make" ,(concat "-j" (shell-command-to-string "nproc"))))))
-
-(defun tjf:cpp/flags ()
-  "Return the compiler flags."
-  (join " " `(,tjf:cpp/std ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
 
 (defun tjf:cpp/set-compiler ()
   "Allow the user to set ‘COMPILER’."
@@ -110,8 +132,15 @@
   "Allow the user to set ‘DIALECT’."
   (interactive)
   (let ((dialect (read-shell-command "Dialect: " tjf:cpp/dialect)))
-    (unless (string= dialect tjf:cpp/dialect)
-      (tjf:cc/set-dialect dialect))))
+    (setq tjf:cpp/dialect dialect)
+    (setq tjf:cpp/std (concat "-std=" dialect))))
+
+(defun tjf:cpp/set-includes ()
+  "Allow the user to set -I flags."
+  (interactive)
+  (let ((flags (read-shell-command "Include flags: " tjf:cpp/includes)))
+    (unless (string= flags tjf:cpp/includes)
+      (setq tjf:cpp/includes flags))))
 
 (defun tjf:cpp/set-ldflags ()
   "Allow the user to set ‘LDFLAGS’."
@@ -142,18 +171,22 @@
       (tjf:cc/set-warnings warnings))))
 
 (defun tjf:cpp/setup ()
-  "C++-mode setup function."
-  (message (format "Running tjf:cpp/setup... %s" tjf:cpp/dialect))
+  "C++ mode setup function."
   (abbrev-mode -1)
   (flymake-mode -1)
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
-  (setq-local completion-at-point-functions
-              (mapcar #'cape-company-to-capf #'(company-capf)))
-  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
-  (add-hook 'completion-at-point-functions #'company-capf nil 'local)
+  (c-set-style "gnu")
+  (c-set-offset 'case-label '+)
+
+  (define-key c++-mode-map [menu-bar]    nil)
+  (define-key c++-mode-map [(control d)] nil)
+  (define-key c++-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
+
+  (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
+  (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu)
+  ;;
   (setq flycheck-gcc-language-standard tjf:cpp/dialect)
   (eglot-ensure))
 
@@ -165,7 +198,7 @@
 (defvar tjf:cpp/build-menu
   '("Build"
     ["Syntax  Check"   tjf:cpp/syntax-check    t]
-    ["Static Analysis" tjf:cpp/check]
+    ["Static Analysis" tjf:cpp/check           t]
     ["Compile File"    tjf:cpp/compile-file    t]
     ["Compile Program" tjf:cpp/compile-program t]
     "---"
@@ -181,8 +214,6 @@
     "---"
     ["Set Make Flags..." tjf:cpp/set-makeflags t]
     ))
-
-(easy-menu-define tjf:cpp/menu-build c++-mode-map "C++ Build" tjf:cpp/build-menu)
 
 ;;
 (message "Loading tjf-cpp...done")

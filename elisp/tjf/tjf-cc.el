@@ -29,28 +29,19 @@
 
 ;;; Commentary:
 
-;; Revision:
+;; Revision: 21-Oct-2022 Added ‘tjf:cc/insert-docstring’
+;;           02-Feb-2023 Fixed ‘tjf:cc/insert-source-skeleton’
 
 ;;; Code:
 
 (message "Loading tjf-cc...")
 (require 'cc-mode)
+(require 'f)
+(require 's)
 (require 'tjf-flags)
 
 ;;
 (defvar tjf:cc/nproc (shell-command-to-string "nproc"))
-
-(defvar tjf:c/dialect)
-(setq   tjf:c/dialect "c18")
-
-(defvar tjf:c/std)
-(setq   tjf:c/std (concat "-std=" tjf:c/dialect))
-
-(defvar tjf:cpp/dialect)
-(setq   tjf:cpp/dialect "c++2a")
-
-(defvar tjf:cpp/std)
-(setq   tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
 
 (defun tjf:cc/docstring ()
   "Convert C++-style comments '^ *//' to a docstring."
@@ -79,7 +70,7 @@
   "Return the guard symbold for the current buffer."
   (let ((filename (upcase (s-replace "-" "_" (basename-no-ext))))
         (ext      (upcase (file-extension))))
-    (concat "_" filename "_" ext "_")))
+    (concat "NAILPRO" "_" filename "_" ext "_")))
 
 (defun tjf:cc/insert-boilerplate ()
   "Insert a C/C++ module boilerplate for ‘(basename)’."
@@ -87,20 +78,27 @@
   (goto-char (point-min))
   (save-excursion
     (insert-file-contents (concat tjf:user/dir-elisp "templates/cc-skeleton.cpp")))
-  (let ((year (format-time-string "%Y-%Y")))
+  (let ((year (format-time-string "%Y - %Y")))
     (save-excursion
-      (search-forward "<<<FILENAME>>>" (point-max) t)
-      (replace-match (basename) t)
-      (search-forward "<<<CHOLDER>>>")
-      (replace-match tjf:user/copyright-holder t)
+      ;; (search-forward "<<<FILENAME>>>" (point-max) t)
+      ;; (replace-match (basename) t)
+      ;; (search-forward "<<<CHOLDER>>>")
+      ;; (replace-match tjf:user/copyright-holder t)
       (search-forward "<<<YEAR>>>")
       (replace-match year t))))
+
+(defun tjf:cc/insert-docstring ()
+  "Insert a docstring template at the beginning of the function at point."
+  (interactive "*")
+  (beginning-of-defun)
+  (insert-file-contents (concat tjf:user/dir-elisp "templates/cc-docstring.h")))
 
 (defun tjf:cc/insert-header-guard ()
   "Insert a header guard."
   (interactive "*")
   (let* ((guard (tjf:cc/guard-symbol)))
     (goto-char (point-min))
+    (insert "\n")
     (insert "#ifndef " guard "\n")
     (insert "#define " guard "\n")
     (goto-char (point-max))
@@ -110,27 +108,19 @@
   "Insert a header skeleton."
   (interactive "*")
   (goto-char (point-min))
-  (tjf:cc/insert-boilerplate)
-  (tjf:cc/insert-header-guard))
+  (tjf:cc/insert-header-guard)
+  (tjf:cc/insert-boilerplate))
 
 (defun tjf:cc/insert-source-skeleton ()
   "Insert a source file skeleton."
   (interactive "*")
   (goto-char (point-min))
   (let* ((ccext    (file-extension))
-         (ext      (if (string= ccext ".c") ".h" ".hpp"))
+         (ext      (if (string= ccext ".c") ".h" ".h"))
          (inc-file (concat (basename-no-ext) ext)))
     (tjf:cc/insert-boilerplate)
+    (goto-char (point-max))
     (insert (concat "#include \"" inc-file "\"\n\n"))))
-
-(defun tjf:cc/set-dialect (dialect)
-  "Set the C/C++ dialect to DIALECT."
-  (if (string= (substring dialect 0 2) "c++")
-      (progn
-        (setq tjf:cpp/dialect dialect)
-        (setq tjf:cpp/dialect (concat "-std=" tjf:cpp/dialect)))
-    (setq tjf:c/dialect dialect)
-    (setq tjf:c/std (concat "-std=" tjf:c/dialect))))
 
 (defvar tjf:cc/menu-text
   '(
@@ -138,6 +128,7 @@
     ["Insert Source File Skeleton" tjf:cc/insert-source-skeleton :active (tjf:flags/is-rw?)]
     ["Insert Boilerplate"          tjf:cc/insert-boilerplate     :active (tjf:flags/is-rw?)]
     ["Insert Header Guard"         tjf:cc/insert-header-guard    :active (tjf:flags/is-rw?)]
+    ["Insert Docstring Template"   tjf:cc/insert-docstring       :active (tjf:flags/is-rw?)]
     ["Format File"                 eglot-format                  :active (tjf:flags/is-rw?)]
     "---"
     ["Go to Definition" xref-find-definitions]
