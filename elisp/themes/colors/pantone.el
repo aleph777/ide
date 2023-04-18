@@ -1,6 +1,6 @@
 ;;; pantone.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst pantone/137c           "#ffa300")
 (defconst pantone/1655c          "#fc4c02")

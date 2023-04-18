@@ -1,6 +1,6 @@
 ;;; swedish.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2021  Tom Fontaine
+;;         Copyright © 2020-2023  Tom Fontaine
 
 (defconst swedish/black-pearl          "#1e272e")
 (defconst swedish/chrome-yellow        "#ffa801")

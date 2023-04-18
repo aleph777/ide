@@ -30,151 +30,151 @@
 
 ;;; Commentary:
 
-;; Revision: 01-Mar-2001 Revised to support Emacs and Xemacs
-;;           05-Apr-2001 Changed autoload for new version of ‘tinysearch’
-;;           29-Nov-2001 Changed ‘message-log-max’ from 50 to 512
-;;           03-Dec-2001 Added ‘usr-toolbar’
-;;           06-Dec-2001 Removed ‘ishl’ (now included as ‘isearch-lazy-highlight’) and fixed ‘isearch’ faces
-;;                       Removed ‘show-paren-mode’ that conflicted with ‘mic-paren’
-;;           04-Feb-2005 Added comint hook for ‘usr-comint-setup’
-;;                       Added ‘eval-after-load’ for ‘comint’ (usr-comint)
-;;           21-Mar-2007 Reworked mouse set up
-;;           09-Sep-2009 Added ‘develock’
-;;           02-Feb-2010 Removed ‘develock’
-;;           11-Feb-2011 Removed ‘redo’ - added ‘redo+’
-;;                       Added ‘recentf-mode’
-;;                       Updated default setting for Emacs 22 changes (many obsolete settings removed)
-;;           30-Aug-2012 Removed ‘c-mode-hook’ and ‘c++-mode-hook’ (usr-cc-setup)
-;;                       Added ".cpp" to ‘auto-mode-alist’
-;;           26-Dec-2012 Added ‘eshell-mode-hook’
-;;           13-Aug-2013 Added ‘csharp-mode’ support
-;;           26-Sep-2013 Moved mouse button definitions to ‘keys.el’
-;;           21-Oct-2013 Added ‘csharp-mode’ to ‘msb-menu-cond’
-;;           19-Feb-2014 Added ‘matlab-mode’ support
-;;                       Added ‘matlab-mode’ to ‘msb-menu-cond’
-;;                       Added loading messages for elisp/ext files
-;;                       Added xz support to ‘jka-compr-compression-info-list’
-;;           03-Mar-2014 Added ‘clips-mode’ support
-;;                       Added ‘clips-mode’ to ‘msb-menu-cond’
-;;           09-Apr-2014 Added .proto to c++ ‘auto-mode-alist’ entry
-;;           02-May-2014 Added python to ‘msb-menu-cond’, sorted mode specific buffers
-;;           06-May-2014 Added ‘log-mode’ support
-;;                       Added ‘log-mode’ to ‘msb-menu-cond’
-;;           09-May-2014 Added ‘nxml-mode’ to ‘msb-menu-cond’
-;;           23-May-2014 Added ‘cua-mode’ minor mode
-;;                       Removed .pl, .pm and sh-mode entries from ‘auto-mode-alist’
-;;                       Added ‘undo-tree’
-;;           24-May-2014 Added ‘rainbow-delimiters’
-;;           25-May-2014 Added ‘uniquify’
-;;           27-May-2014 Removed ‘scroll-in-place’ in favor of setting ‘scroll-preserve-screen-position’
-;;                       Added ‘electric-pair-mode’
-;;                       Added ‘scroll-error-top-bottom’
-;;                       Added ‘smooth-scrolling’
-;;           30-May-2014 Changed ‘rainbow-delimiters’ to use specific mode hooks
-;;           13-Jun-2014 Changed to ‘usr-clips-mode’
-;;           07-Jul-2014 Removed ‘rainbow-delimiters’ from cperl-mode-hook
-;;                       Added .debug as a suffix for log-mode in ‘auto-mode-alist’
-;;           31-Jul-2014 Added .proto as a suffix for c++-mode in ‘auto-mode-alist’
-;;           01-Aug-2014 Added ‘before-save-hook’ to untabify buffer
-;;           17-Sep-2014 Added .xaml to nxml ‘auto-mode-alist’ entry
-;;                       Added ‘eval-after-load’ for ‘flymake’ to ‘csharp-mode’
-;;           13-Nov-2014 Added ‘atim-unscroll’
-;;           26-Mar-2015 Added Java entry to ‘msb-menu-cond’
-;;           27-Mar-2015 Now using aliases in place of ‘usr-cc-setup’
-;;           01-Apr-2015 Set ‘left-fringe’ and ‘right-fringe’ to 1 in ‘after-make-frame-functions’
-;;           02-Apr-2015 Cleaned up loading messages
-;;           10-Apr-2015 Added Ruby support
-;;                       Added ‘folding-mode’ support
-;;           17-Apr-2015 Added ‘haskell-mode’ but Haskell support is incomplete
-;;           22-Apr-2015 Updated ‘after-make-frame-functions’
-;;           12-May-2015 Changed ‘eval-after-load’ for ‘csharp-mode’ to require ‘usr-csharp’
-;;           01-Jul-2015 Added ‘js-mode’ to ‘msb-menu-cond’
-;;           18-Aug-2015 Added ‘tabbar’ support
-;;           12-Jan-2016 Added ‘eval-after-load’ for ‘smart-compile’
-;;           13-Jan-2016 Added ‘eval-after-load’ for ‘whitespace’
-;;                       Added ‘eval-after-load’ for ‘hideshow’
-;;           03-Feb-2016 Reorganized variables - used available customizations
-;;                       Fixed errors in ‘msb-menu-cond’
-;;                       Added ".tpp" to c++ ‘auto-mode-alist’
-;;                       Added ‘isearch-mode-map’ keys
-;;                       Removed ‘ffap-file-finder setting’
-;;           08-Feb-2016 Reworked auto-mode code
-;;                       Added ‘php-mode’
-;;           22-Feb-2016 Fixed error with sh-script autoload/add-hook wrt ‘rainbow-delimiters’
-;;           25-Feb-2016 Used ‘u-require’
-;;           28-Feb-2016 Fixed ‘msb-menu-cond’
-;;           29-Feb-2016 Changed from ‘usr-’ to ‘u-’
-;;           01-Mar-2016 Removed face proprty settings in favor of customization set in .emacs
-;;           02-Mar-2016 Added autoloads for ‘buffer-face-mode’, ‘text-scale-mode’, and ‘ergoemacs-select-text-in-quote’
-;;           03-Mar-2016 Added HTML modes to ‘msb-menu-cond’
-;;                       Added more javascript modes to ‘msb-menu-cond’
-;;                       Removed ‘filladapt’
-;;           30-Mar-2016 Removed ‘u-mode-line’ in favor of u-powerline'
-;;           08-Apr-2016 Major revision for ‘use-package’
-;;           14-Apr-2016 Added "(fset 'yes-or-no-p #'y-or-n-p)"
-;;           15-Apr-2016 Fixed package usage
-;;           19-Apr-2016 Added ‘flycheck’
-;;                       Added ‘smartparens’
-;;           26-Apr-2016 Added ‘shift-number’
-;;           27-Apr-2016 Added ‘flycheck-pos-tip’
-;;           28-Apr-2016 Added ‘jedi’ (python autocomplete)
-;;           01-May-2016 Added ‘paradox’ support
-;;           22-Jun-2016 Removed ‘lib-complete’
-;;                       Using ‘global-hl-line-mode’
-;;                       Added ‘u-msb’
-;;           23-Jun-2016 Converted to rigorous usage of ‘use-package’
-;;           14-Aug-2016 Added ‘ac-lang’
-;;           12-Sep-2016 Removed ‘hideshow’
-;;                       Added ‘origami’
-;;           14-Sep-2016 Added ‘async’
-;;           15-Sep-2016 Added ‘ac-dabbrev’
-;;           27-Sep-2016 Added org-mode hook for ‘visual-line-mode’
-;;           16-Nov-2016 Added ‘cperl-mode’ to ‘autopair’
-;;           05-Dec-2016 Added ‘linum-relative’
-;;           12-Jan-2017 Added ‘plsense-server-start’ to ‘cperl’ config
-;;                       Added ‘winner-mode’
-;;           13-Jan-2017 Added ‘fancy-narrow’ and ‘loccur’
-;;                       Added ‘bm’
-;;           14-Jan-2017 Added check for ‘window-system’
-;;                       Added ‘global-auto-revert-mode’
-;;           16-Jan-2017 Added ‘langtool’
-;;                       Removed ‘tinysearch-*’
-;;           17-Jan-2017 Added ‘web-mode’
-;;           19-Jan-2017 Disabled ‘fancy-narrow’ and ‘origami’
-;;                       Added ‘hideshow’
-;;                       Added ‘flycheck-emacs-lisp-load-path’ to flycheck
-;;           21-Jan-2017 Added ‘ssh’
-;;           29-Jun-2017 Added ‘ycmd’, ‘company-ycmd’, and ‘flycheck-ycmd’
-;;           19-Sep-2017 Added ‘sdcv’
-;;           09-Jan-2018 Removed ‘timestamp’
-;;           09-Feb-2018 Added ‘treemacs’
-;;           16-Mar-2018 Removed ‘jedi’
-;;                       Fixed ‘cperl-mode’/‘smartparens’ conflict
-;;           02-Apr-2018 Disabled ‘nlinum’ and ‘nlinum-relative’
-;;                       Added ‘display-line-numbers’
-;;           12-Apr-2018 Added ‘helpful’
-;;           17-Apr-2018 Changed ‘lisp-mode’ to ‘elisp-mode’
-;;           13-Jun-2018 Updated for performance
-;;           20-Jun-2018 Changed some minor-modes to use :hook
-;;           16-Jan-2019 Added ‘clang-format’
-;;           24-Jan-2019 Changed from ‘ycmd’ to ‘eglot’ (still need omnisharp server for C#?)
-;;           30-Apr-2019 Added ‘treemacs-magit’
-;;           18-Jun-2019 Added ‘rtags’, ‘company-rtags’, and ‘flycheck-rtags’
-;;           24-Jun-2019 Added ‘groovy’
-;;           10-Jul-2019 Fixed compiler warnings
-;;                       Added ‘clean-aindent’
-;;           13-Jul-2019 Added ‘centaur-tabs’
-;;           20-Jul-2019 Added conditional for Emacs 27
-;;                       Added ‘filladapt’
-;;           09-Aug-2019 Added ‘git-gutter’, ‘git-gutter-fringe’, ‘fringe-helper’, and ‘ws-butler’
-;;           28-Aug-2019 Added ‘u-cpp’
-;;           03-Sep-2019 Added ‘minions’
-;;           05-Oct-2020 Added ‘rainbow-mode’ and ‘display-line-numbers’
-;;           28-Oct-2020 Fixed ‘tabbar' and ‘powerline' initialization relationship
-;;           10-Nov-2020 Added ‘emojify' and ‘unicode-fonts'
-;;           15-Dec-2020 Moved defconts to .emacs
-;;                       Removed defer constants (use let variables)
-;;           24-Jan-2021 Added ‘dash'
+;; Revision: 01-Mar-2001 revised to support emacs and xemacs
+;;           05-Apr-2001 changed autoload for new version of ‘tinysearch’
+;;           29-Nov-2001 changed ‘message-log-max’ from 50 to 512
+;;           03-Dec-2001 added ‘usr-toolbar’
+;;           06-Dec-2001 removed ‘ishl’ (now included as ‘isearch-lazy-highlight’) and fixed ‘isearch’ faces
+;;                       removed ‘show-paren-mode’ that conflicted with ‘mic-paren’
+;;           04-Feb-2005 added comint hook for ‘usr-comint-setup’
+;;                       added ‘eval-after-load’ for ‘comint’ (usr-comint)
+;;           21-Mar-2007 reworked mouse set up
+;;           09-Sep-2009 added ‘develock’
+;;           02-Feb-2010 removed ‘develock’
+;;           11-Feb-2011 removed ‘redo’ - added ‘redo+’
+;;                       added ‘recentf-mode’
+;;                       updated default setting for emacs 22 changes (many obsolete settings removed)
+;;           30-Aug-2012 removed ‘c-mode-hook’ and ‘c++-mode-hook’ (usr-cc-setup)
+;;                       added ".cpp" to ‘auto-mode-alist’
+;;           26-Dec-2012 added ‘eshell-mode-hook’
+;;           13-Aug-2013 added ‘csharp-mode’ support
+;;           26-Sep-2013 moved mouse button definitions to ‘keys.el’
+;;           21-Oct-2013 added ‘csharp-mode’ to ‘msb-menu-cond’
+;;           19-Feb-2014 added ‘matlab-mode’ support
+;;                       added ‘matlab-mode’ to ‘msb-menu-cond’
+;;                       added loading messages for elisp/ext files
+;;                       added xz support to ‘jka-compr-compression-info-list’
+;;           03-Mar-2014 added ‘clips-mode’ support
+;;                       added ‘clips-mode’ to ‘msb-menu-cond’
+;;           09-Apr-2014 added .proto to c++ ‘auto-mode-alist’ entry
+;;           02-May-2014 added python to ‘msb-menu-cond’, sorted mode specific buffers
+;;           06-May-2014 added ‘log-mode’ support
+;;                       added ‘log-mode’ to ‘msb-menu-cond’
+;;           09-May-2014 added ‘nxml-mode’ to ‘msb-menu-cond’
+;;           23-May-2014 added ‘cua-mode’ minor mode
+;;                       removed .pl, .pm and sh-mode entries from ‘auto-mode-alist’
+;;                       added ‘undo-tree’
+;;           24-May-2014 added ‘rainbow-delimiters’
+;;           25-May-2014 added ‘uniquify’
+;;           27-May-2014 removed ‘scroll-in-place’ in favor of setting ‘scroll-preserve-screen-position’
+;;                       added ‘electric-pair-mode’
+;;                       added ‘scroll-error-top-bottom’
+;;                       added ‘smooth-scrolling’
+;;           30-May-2014 changed ‘rainbow-delimiters’ to use specific mode hooks
+;;           13-Jun-2014 changed to ‘usr-clips-mode’
+;;           07-Jul-2014 removed ‘rainbow-delimiters’ from cperl-mode-hook
+;;                       added .debug as a suffix for log-mode in ‘auto-mode-alist’
+;;           31-Jul-2014 added .proto as a suffix for c++-mode in ‘auto-mode-alist’
+;;           01-Aug-2014 added ‘before-save-hook’ to untabify buffer
+;;           17-Sep-2014 added .xaml to nxml ‘auto-mode-alist’ entry
+;;                       added ‘eval-after-load’ for ‘flymake’ to ‘csharp-mode’
+;;           13-Nov-2014 added ‘atim-unscroll’
+;;           26-Mar-2015 added java entry to ‘msb-menu-cond’
+;;           27-Mar-2015 now using aliases in place of ‘usr-cc-setup’
+;;           01-Apr-2015 set ‘left-fringe’ and ‘right-fringe’ to 1 in ‘after-make-frame-functions’
+;;           02-Apr-2015 cleaned up loading messages
+;;           10-Apr-2015 added ruby support
+;;                       added ‘folding-mode’ support
+;;           17-Apr-2015 added ‘haskell-mode’ but haskell support is incomplete
+;;           22-Apr-2015 updated ‘after-make-frame-functions’
+;;           12-May-2015 changed ‘eval-after-load’ for ‘csharp-mode’ to require ‘usr-csharp’
+;;           01-Jul-2015 added ‘js-mode’ to ‘msb-menu-cond’
+;;           18-Aug-2015 added ‘tabbar’ support
+;;           12-Jan-2016 added ‘eval-after-load’ for ‘smart-compile’
+;;           13-Jan-2016 added ‘eval-after-load’ for ‘whitespace’
+;;                       added ‘eval-after-load’ for ‘hideshow’
+;;           03-Feb-2016 reorganized variables - used available customizations
+;;                       fixed errors in ‘msb-menu-cond’
+;;                       added ".tpp" to c++ ‘auto-mode-alist’
+;;                       added ‘isearch-mode-map’ keys
+;;                       removed ‘ffap-file-finder setting’
+;;           08-Feb-2016 reworked auto-mode code
+;;                       added ‘php-mode’
+;;           22-Feb-2016 fixed error with sh-script autoload/add-hook wrt ‘rainbow-delimiters’
+;;           25-Feb-2016 used ‘u-require’
+;;           28-Feb-2016 fixed ‘msb-menu-cond’
+;;           29-Feb-2016 changed from ‘usr-’ to ‘u-’
+;;           01-Mar-2016 removed face proprty settings in favor of customization set in .emacs
+;;           02-Mar-2016 added autoloads for ‘buffer-face-mode’, ‘text-scale-mode’, and ‘ergoemacs-select-text-in-quote’
+;;           03-Mar-2016 added html modes to ‘msb-menu-cond’
+;;                       added more javascript modes to ‘msb-menu-cond’
+;;                       removed ‘filladapt’
+;;           30-Mar-2016 removed ‘u-mode-line’ in favor of u-powerline'
+;;           08-Apr-2016 major revision for ‘use-package’
+;;           14-Apr-2016 added "(fset 'yes-or-no-p #'y-or-n-p)"
+;;           15-Apr-2016 fixed package usage
+;;           19-Apr-2016 added ‘flycheck’
+;;                       added ‘smartparens’
+;;           26-Apr-2016 added ‘shift-number’
+;;           27-Apr-2016 added ‘flycheck-pos-tip’
+;;           28-Apr-2016 added ‘jedi’ (python autocomplete)
+;;           01-May-2016 added ‘paradox’ support
+;;           22-Jun-2016 removed ‘lib-complete’
+;;                       using ‘global-hl-line-mode’
+;;                       added ‘u-msb’
+;;           23-Jun-2016 converted to rigorous usage of ‘use-package’
+;;           14-Aug-2016 added ‘ac-lang’
+;;           12-Sep-2016 removed ‘hideshow’
+;;                       added ‘origami’
+;;           14-Sep-2016 added ‘async’
+;;           15-Sep-2016 added ‘ac-dabbrev’
+;;           27-Sep-2016 added org-mode hook for ‘visual-line-mode’
+;;           16-Nov-2016 added ‘cperl-mode’ to ‘autopair’
+;;           05-Dec-2016 added ‘linum-relative’
+;;           12-Jan-2017 added ‘plsense-server-start’ to ‘cperl’ config
+;;                       added ‘winner-mode’
+;;           13-Jan-2017 added ‘fancy-narrow’ and ‘loccur’
+;;                       added ‘bm’
+;;           14-Jan-2017 added check for ‘window-system’
+;;                       added ‘global-auto-revert-mode’
+;;           16-Jan-2017 added ‘langtool’
+;;                       removed ‘tinysearch-*’
+;;           17-Jan-2017 added ‘web-mode’
+;;           19-Jan-2017 disabled ‘fancy-narrow’ and ‘origami’
+;;                       added ‘hideshow’
+;;                       added ‘flycheck-emacs-lisp-load-path’ to flycheck
+;;           21-Jan-2017 added ‘ssh’
+;;           29-Jun-2017 added ‘ycmd’, ‘company-ycmd’, and ‘flycheck-ycmd’
+;;           19-Sep-2017 added ‘sdcv’
+;;           09-Jan-2018 removed ‘timestamp’
+;;           09-Feb-2018 added ‘treemacs’
+;;           16-Mar-2018 removed ‘jedi’
+;;                       fixed ‘cperl-mode’/‘smartparens’ conflict
+;;           02-Apr-2018 disabled ‘nlinum’ and ‘nlinum-relative’
+;;                       added ‘display-line-numbers’
+;;           12-Apr-2018 added ‘helpful’
+;;           17-Apr-2018 changed ‘lisp-mode’ to ‘elisp-mode’
+;;           13-Jun-2018 updated for performance
+;;           20-Jun-2018 changed some minor-modes to use :hook
+;;           16-Jan-2019 added ‘clang-format’
+;;           24-Jan-2019 changed from ‘ycmd’ to ‘eglot’ (still need omnisharp server for c#?)
+;;           30-Apr-2019 added ‘treemacs-magit’
+;;           18-Jun-2019 added ‘rtags’, ‘company-rtags’, and ‘flycheck-rtags’
+;;           24-Jun-2019 added ‘groovy’
+;;           10-Jul-2019 fixed compiler warnings
+;;                       added ‘clean-aindent’
+;;           13-Jul-2019 added ‘centaur-tabs’
+;;           20-Jul-2019 added conditional for emacs 27
+;;                       added ‘filladapt’
+;;           09-Aug-2019 added ‘git-gutter’, ‘git-gutter-fringe’, ‘fringe-helper’, and ‘ws-butler’
+;;           28-Aug-2019 added ‘u-cpp’
+;;           03-Sep-2019 added ‘minions’
+;;           05-Oct-2020 added ‘rainbow-mode’ and ‘display-line-numbers’
+;;           28-Oct-2020 fixed ‘tabbar' and ‘powerline' initialization relationship
+;;           10-Nov-2020 added ‘emojify' and ‘unicode-fonts'
+;;           15-Dec-2020 moved defconts to .emacs
+;;                       removed defer constants (use let variables)
+;;           24-Jan-2021 added ‘dash'
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           11-Mar-2021 Removed ‘tinysearch’ and ‘tinyeat’
 ;;           24-Mar-2021 Added ‘orderless’, ‘selectrum’, and ‘selectrum-prescient’
@@ -222,12 +222,16 @@
 
 ;;
 (enable-theme   'fontaine)
-(unload-feature 'package)
+(if (featurep 'package)
+	(unload-feature 'package))
 
 (defvar elpaca-installer-version 0.3)
-(defvar elpaca-directory        (expand-file-name "elpaca/" "/home/fontaine/.config/emacs"))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory  (expand-file-name "repos/"  elpaca-directory))
+(defvar elpaca-directory)
+(defvar elpaca-builds-directory)
+(defvar elpaca-repos-directory)
+(setq elpaca-directory        (expand-file-name "elpaca/" (concat tjf:user/dir-home ".config/emacs/")))
+(setq elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(setq elpaca-repos-directory  (expand-file-name "repos/"  elpaca-directory))
 
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :ref nil
@@ -494,7 +498,7 @@
   (setq vertico-prescient-enable-filtering t)
   (vertico-mode +1)
   (vertico-prescient-mode +1)
-  (prescient-persist-mode   +1))
+  (prescient-persist-mode +1))
 
 (elpaca-wait)
 
@@ -699,7 +703,7 @@
   (eval-when-compile
     (defvar sp-lisp-modes))
   :init
-  (hook-into-modes #'smartparens-mode
+  (hook-into-modes #'(smartparens-mode 1)
                    'cperl-mode-hook
                    'prog-mode-hook
                    'shell-mode-hook
@@ -833,6 +837,7 @@
   :init
   (defalias 'perl-mode 'cperl-mode)
   :config
+  (treesit-install-language-grammar 'perl)
   (setq cperl-hairy t)
 
   (setq cperl-indent-region-fix-constructs nil)
@@ -963,6 +968,7 @@
 
 (use-package python               :elpaca nil :commands python-mode
   :config
+  (treesit-install-language-grammar 'python)
   (setq python-indent-guess-indent-offset-verbose nil))
 
 (use-package recentf              :elpaca nil
@@ -998,6 +1004,7 @@
 
 (use-package tex-mode             :elpaca nil :commands tex-mode
   :config
+  (treesit-install-language-grammar 'latex)
   (define-key latex-mode-map [(control return)] 'tjf:edit/insert-newline-after))
 
 (use-package text-mode            :elpaca nil :commands text-mode
@@ -1115,6 +1122,24 @@
 (use-package tjf-tools            :elpaca nil)
 
 (use-package tjf-view             :elpaca nil)
+
+(use-package treesit              :elpaca nil :defer :disabled
+  :config
+  (setq treesit-language-source-alist
+        '((bash       . ("https://github.com/tree-sitter/tree-sitter-bash"       "release"))
+          (c          . ("https://github.com/tree-sitter/tree-sitter-c"          "release"))
+          (c-sharp    . ("https://github.com/tree-sitter/tree-sitter-c-sharp"    "release"))
+          (cmake      . ("https://github.com/uyha/tree-sitter-cmake"             "release"))
+          (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"        "release"))
+          (css        . ("https://github.com/tree-sitter/tree-sitter-css"        "release"))
+          (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "release"))
+          (json       . ("https://github.com/tree-sitter/tree-sitter-json"       "release"))
+          (latex      . ("https://github.com/latex-lsp/tree-sitter-latex"        "release"))
+          (make       . ("https://github.com/alemuller/tree-sitter-make"         "release"))
+          (markdown   . ("https://github.com/MDeiml/tree-sitter-markdown"        "release"))
+          (perl       . ("https://github.com/tree-sitter-perl/tree-sitter-perl"  "release"))
+          (python     . ("https://github.com/tree-sitter/tree-sitter-python"     "release"))
+          (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"          "release")))))
 
 (use-package uniquify             :elpaca nil :after tjf-menubar
   :config
