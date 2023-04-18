@@ -1,6 +1,6 @@
 ;;; tjf-c.el --- C major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2021 Tom Fontaine
+;;         Copyright © 2021-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   09-Feb-2021
@@ -32,6 +32,10 @@
 ;; Revision: 13-Sep-2022 Added ‘clang-capf’
 ;;           16-Sep-2022 Added ‘tjf:c/check’
 ;;           27-Sep-2022 Added ‘eglot’
+;;           20-Oct-2022 Added ‘tjf:c/includes’ to ‘tjf:c/flags’
+;;           21-Oct-2022 Added key definition for ‘tjf:cc/insert-docstring’
+;;                       Added ‘tjf:c/set-includes’
+;;           04-Jan-2023 Fixed ‘tjf:c/setup’
 
 ;;; Code:
 
@@ -48,7 +52,10 @@
 (setq   tjf:c/debug "-g")
 
 (defvar tjf:c/dialect)
-(setq   tjf:c/dialect "18")
+(setq   tjf:c/dialect "c18")
+
+(defvar tjf:c/includes)
+(setq   tjf:c/includes "-I.")
 
 (defvar tjf:c/ldflags)
 (setq   tjf:c/ldflags "-lm -pthread")
@@ -78,27 +85,7 @@
 
 (defun tjf:c/flags ()
   "Return the compiler flags."
-  (join " " `(,tjf:c/std ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
-
-(defun tjf:c/setup ()
-  "C-mode setup function."
-  (abbrev-mode -1)
-  (flymake-mode -1)
-  (flycheck-mode)
-  (imenu-add-to-menubar "Navigate")
-  ;;
-  (setq flycheck-gcc-language-standard tjf:c/dialect)
-  
-  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
-  (setq-local comment-start "// ")
-  (setq-local comment-end "")
-  (eglot-ensure))
-
-(defun tjf:c/syntax-check ()
-  "Compile the current buffer (syntax check only)."
-  (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-fsyntax-only" ,(basename)))))
+  (join " " `(,tjf:c/std ,tjf:cpp/includes ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
 
 (defun tjf:c/compile-file ()
   "Compile the current file."
@@ -108,7 +95,7 @@
 (defun tjf:c/compile-program ()
   "Compile and link the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,tjf:c/ldflags ,(basename) "-o" ,(basename-no-ext)))))
+  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,(basename) "-o" ,(basename-no-ext)))))
 
 (defun tjf:c/make ()
   "Make the current program."
@@ -133,8 +120,15 @@
   "Allow the user to set ‘DIALECT’."
   (interactive)
   (let ((dialect (read-shell-command "Dialect: " tjf:c/dialect)))
-    (unless (string= dialect tjf:c/dialect)
-      (tjf:cc/set-dialect dialect))))
+    (setq tjf:c/dialect dialect)
+    (setq tjf:c/std (concat "-std=" dialect))))
+
+(defun tjf:c/set-includes ()
+  "Allow the user to set -I flags."
+  (interactive)
+  (let ((flags (read-shell-command "Include flags: " tjf:c/includes)))
+    (unless (string= flags tjf:c/includes)
+      (setq tjf:c/includes flags))))
 
 (defun tjf:c/set-ldflags ()
   "Allow the user to set ‘LDFLAGS’."
@@ -165,18 +159,29 @@
       (tjf:cc/set-warnings warnings))))
 
 (defun tjf:c/setup ()
-  "C mode setup function."
+  "C-mode setup function."
   (abbrev-mode -1)
   (flymake-mode -1)
   (flycheck-mode)
   (imenu-add-to-menubar "Navigate")
   ;;
+  (c-set-style "gnu")
+  (c-set-offset 'case-label '+)
+
+  (define-key c-mode-map [menu-bar]    nil)
+  (define-key c-mode-map [(control d)] nil)
+  (define-key c-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
+
+  (easy-menu-define tjf-c-menu   c-mode-map "C" (append '("C") tjf:cc/menu-text))
+  (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu)
+  ;;
   (setq flycheck-gcc-language-standard tjf:c/dialect)
+
+  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
   (setq-local comment-start "// ")
   (setq-local comment-end "")
-  (setq-local completion-at-point-functions (cons #'clang-capf completion-at-point-functions))
-  ;; (define-key c-mode-map [menu-bar]    nil)
-  (define-key c-mode-map [(control d)] nil))
+  (eglot-ensure))
 
 (defun tjf:c/syntax-check ()
   "Compile the current buffer (syntax check only)."
@@ -202,7 +207,6 @@
     "---"
     ["Set Make Flags..." tjf:c/set-makeflags t]
     ))
-
 
 ;;
 (message "Loading tjf-c...done")

@@ -1,6 +1,6 @@
 ;;; tjf-flags.el --- Defintion of boolean flags used in menus and toolbars -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;          Copyright © 2016-2021 Tom Fontaine
+;;          Copyright © 2016-2023 Tom Fontaine
 
 ;; Author:  Tom Fontaine
 ;; Date:    26-Jan-2016
@@ -40,6 +40,7 @@
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           02-Jul-2021 Reworked ‘tjf:flags/enable-undo-redo?’
 ;;           28-Apr-2022 Added ‘tjf:flags/using-tabs’
+;;           10-Apr-2023 Added ‘is-feature?’
 ;;
 
 ;;; Code:
@@ -160,6 +161,11 @@
 (defun tjf:flags/is-caps-lock-on? (led-mask)
   "Return t if LED-MASK indicates caps lock is on."
   (eq (logand led-mask 1) 1))
+
+(defun is-feature? (sym)
+  "Prints message showing if SYM is a feature."
+  (interactive "Mfeature: ")
+  (message "%s is %s" sym (if (featurep (intern sym)) "a feature" "NOT a feature")))
 
 (defun tjf:flags/is-fullscreen? ()
   "Boolean: is the current frame fullscreen?"

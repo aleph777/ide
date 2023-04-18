@@ -1,6 +1,6 @@
 # Util::Time --- [description] -*-Perl-*-
 
-#         Copyright © 2022-2022 Tom Fontaine
+#         Copyright © 2022-2023 Tom Fontaine
 
 # Date:   16-Sep-2022
 

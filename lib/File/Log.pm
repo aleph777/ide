@@ -1,6 +1,6 @@
 # File::Log --- Provides a log-file object -*-Perl-*-
 
-#         Copyright © 2007-2022 Tom Fontaine
+#         Copyright © 2007-2023 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   31-Jan-2007
@@ -37,11 +37,12 @@
 #
 package File::Log;
 
-require 5.008;
 use Carp;
 use strict;
+use v5.10;
+
 use File::IO;
-use Util::Time;
+use Util::DateTime;
 use IO::Handle;
 
 # use constant FOO => 'BAR';
@@ -56,12 +57,14 @@ my %fields = (path      => undef,
               basedir   => undef,
 
               clobber   => 1,
+              delimiter => ' ',
               timestamp => 0,
               echo      => 0,
 
               who       => undef,
              );
 
+my $delimiter;
 my $logfile;
 my $ts;
 my $timestamp;
@@ -159,10 +162,11 @@ sub open
   $open = 1;
 
   $logfile = File::IO->new(path => $filename,newline => 1,append  => 1);
-  $ts      = Util::Time->new(style => 'LOG');
+  $ts      = Util::DateTime->new(format => 'LOG');
 
   open STDERR,'>>',$filename;
 }
+
 sub close
 {
   $timestamp = undef;
@@ -174,6 +178,7 @@ sub close
 
   STDERR->fdopen($stderr,'w');
 }
+
 sub append
 {
   my $this = shift;
@@ -181,6 +186,7 @@ sub append
 
   $msg .= $text;
 }
+
 sub prepend
 {
   my $this = shift;
@@ -188,6 +194,7 @@ sub prepend
 
   $msg = join '',$text,$msg;
 }
+
 sub put
 {
   my $this = shift;
@@ -198,12 +205,13 @@ sub put
     print "Logfile is not OPEN!!!\n";
     exit;
   }
-  $who  = exists $parm{who}  ? $parm{who}  : $who;
-  $echo = exists $parm{echo} ? $parm{echo} : $echo;
+  $who       = exists $parm{who}       ? $parm{who}       : $who;
+  $echo      = exists $parm{echo}      ? $parm{echo}      : $echo;
+  $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $delimiter;
 
   my $time = $timestamp ? getTimestamp() : undef;
 
-  $msg = join ' ',grep { defined } $time,$who,"$msg$parm{text}";
+  $msg = join $delimiter,grep { defined } $time,$who,"$msg$parm{text}";
 
   $logfile->put(contents => $msg);
 
@@ -211,11 +219,10 @@ sub put
 
   $msg = '';
 }
+
 sub getTimestamp
 {
-  $ts->get();
-
-  return $ts->timestamp;
+  return $ts->now;
 }
 
 1;

@@ -15,8 +15,8 @@ fi
 
 # Append to the history file, don't overwrite it.
 #
-shopt -s histappend
-export HISTCONTROL=ignoreboth
+# shopt -s histappend
+export HISTCONTROL=ignoreboth:erasedups
 export HISTIGNORE="bg:cd:exit:fg:hg:history:ls"
 export HISTSIZE=999
 export PROMPT_COMMAND="history -a; history -n"
@@ -36,14 +36,14 @@ alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
 alias sum="perl -e 'use List::Util qw(sum); say sum(@ARGV);'"
 
+alias ten="cd ~/Workspace/tenbeauty/"
+
 alias flake8='flake8 --ignore E221,E303,E501'
 
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
 export PYTHONPATH="$IDE/lib/python"
-export NODEJSDIR=/opt/node-v16.15.0-linux-x64
-export ANDROIDDIR=/opt/android-studio
-export ANDROID_SDK=$HOME/Android/Sdk
+
 # apt
 #
 alias up='sudo apt update && sudo apt upgrade'
@@ -86,6 +86,7 @@ alias emacs="$EMACSBIN $EMACSARGS"
 alias emacsclient="$EMACSDIR/lib-src/emacsclient -n -c"
 alias emacsdaemon='emacs --daemon'
 alias emacsstop="emacsclient --eval '(kill-emacs)'"
+alias emacsclone='git clone https://git.savannah.gnu.org/git/emacs.git'
 
 # Ignore these commands
 #
@@ -174,3 +175,19 @@ else
     PROMPT_COLOR=${BOLD_BLUE}
 fi
 export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOR}
+
+# ==============================================================================
+
+export LOCAL_INSTALL_DIR=$(clean-path $LOCAL_INSTALL_DIR:/home/fontaine/.local)
+export PATH=$(clean-path $PATH:$LOCAL_INSTALL_DIR/bin)
+export LD_LIBRARY_PATH=$(clean-path $LD_LIBRARY_PATH:$LOCAL_INSTALL_DIR/lib:/usr/local/lib)
+
+ppverbosefunc() {
+    cd ~/Workspace/tenbeauty/build/path_planner_cpp/src
+    export GLOG_alsologtostderr=true
+    export GLOG_stderrthreshold=0
+    export GLOG_v="$1"
+}
+
+export CMAKE_PREFIX_PATH=$(clean-path $CMAKE_PREFIX_PATH:/usr/aarch64-linux-gnu)
+export AARCH64GCC_DIR=/usr

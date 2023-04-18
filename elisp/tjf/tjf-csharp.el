@@ -1,6 +1,6 @@
 ;;; tjf-csharp.el --- CSharp major mode -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2015-2021 Tom Fontaine
+;;         Copyright © 2015-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   12-May-2015
@@ -72,11 +72,11 @@
   "Return a list of local project files for this buffer."
   (tjf:csharp/search-path "*.csproj"))
 
-(defun tjf:csharp/build-menu ()
-  "Create a Build menu."
-  (let ((sln-list  (tjf:csharp/find-sln))
-        (proj-list (tjf:csharp/find-proj)))
-    ))
+;; (defun tjf:csharp/build-menu ()
+;;   "Create a Build menu."
+;;   (let ((sln-list  (tjf:csharp/find-sln))
+;;         (proj-list (tjf:csharp/find-proj)))
+;;     ))
 
 (defun tjf:csharp/setup()
   "C#-mode setup function"

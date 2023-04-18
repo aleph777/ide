@@ -32,14 +32,18 @@
 
 (defvar tjf:user/dir-themes   (concat tjf:user/dir-elisp "themes/"))
 
+(defvar tjf:user/dir-elisp-ext    (concat tjf:user/dir-elisp "ext/"))
+(defvar tjf:user/dir-elisp-images (concat tjf:user/dir-elisp "images/"))
+(defvar tjf:user/dir-elisp-tjf    (concat tjf:user/dir-elisp "tjf/"))
+
 ;;
-(cl-pushnew (concat tjf:user/dir-elisp "ext/") load-path :test 'string=)
-(cl-pushnew (concat tjf:user/dir-elisp "tjf/") load-path :test 'string=)
+(cl-pushnew tjf:user/dir-elisp-ext load-path :test 'string=)
+(cl-pushnew tjf:user/dir-elisp-tjf load-path :test 'string=)
 
-(cl-pushnew (concat tjf:user/dir-elisp "images/") image-load-path :test 'string=)
+(cl-pushnew tjf:user/dir-elisp-images image-load-path :test 'string=)
 
+(setq user-emacs-directory tjf:user/dir-config)
 (setq custom-file (concat tjf:user/dir-elisp "custom.el"))
-
 (setq custom-theme-directory tjf:user/dir-themes)
 
 (load custom-file)

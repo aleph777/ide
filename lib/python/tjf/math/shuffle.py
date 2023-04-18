@@ -1,7 +1,7 @@
 # -*-coding: utf-8-*- ; -*-Python-*-
 
 
-#         Copyright © 2022-2022 Tom Fontaine
+#         Copyright © 2022-2023 Tom Fontaine
 
 # Title:  shuffle.py
 # Date:   15-Mar-2022

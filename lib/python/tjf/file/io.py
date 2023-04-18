@@ -1,6 +1,6 @@
 # -*-coding: utf-8-*- ; -*-Python-*-
 
-#         Copyright © 2022-2022 Tom Fontaine
+#         Copyright © 2022-2023 Tom Fontaine
 
 # Title:  io.py
 # Date:   09-Mar-2022

@@ -1,7 +1,7 @@
 ;;; tjf-keys.el --- Global key definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
 
-;;         Copyright © 1999-2021 Tom Fontaine
+;;         Copyright © 1999-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -125,6 +125,7 @@
 (require 'tjf-duplicate)
 (require 'tjf-edit)
 (require 'tjf-file)
+(require 'tjf-frame)
 (require 'tjf-navigate)
 (require 'tjf-search)
 (require 'tjf-tools)
@@ -216,7 +217,7 @@
 ;;
 ;;lobal-set-key [(control h)]            '...HELP...
 ;;lobal-set-key [(meta    h)]            'mark-paragraph)
-;;lobal-set-key [(super   h)]            '
+;;lobal-set-key [(super   h)]            'DO NOT USE
 ;;lobal-set-key [(control meta  h)]      '
 (global-set-key [(control shift h)]      'anzu-query-replace)
 (global-set-key [(control super h)]      'hs-hide-block)
@@ -530,7 +531,7 @@
 ;;lobal-set-key [(meta    /)] 'dabbrev-expand)
 ;;lobal-set-key [(super   /)] '
 ;;lobal-set-key [(control meta  /)]      '
-;;lobal-set-key [(control super /)]      '
+(global-set-key [(control super /)]      'tjf:frame/half-size)
 ;;lobal-set-key [(meta    super /)]      '
 ;;lobal-set-key [(control meta super /)] '
 
@@ -560,7 +561,7 @@
 ;;lobal-set-key [(meta    2)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   2)] ' DO NOT USE
 ;;lobal-set-key [(control meta  2)]      '
-;;lobal-set-key [(control super 2)]      '
+;;lobal-set-key [(control super 2)]      'DO NOT USE
 ;;lobal-set-key [(meta    super 2)]      '
 ;;lobal-set-key [(control meta super 2)] '
 
@@ -1188,7 +1189,7 @@
 ;;lobal-set-key [(meta    kp-divide)] 'dabbrev-expand)
 ;;lobal-set-key [(super   kp-divide)] '
 ;;lobal-set-key [(control meta  kp-divide)]      '
-;;lobal-set-key [(control super kp-divide)]      '
+(global-set-key [(control super kp-divide)]      'tjf:frame/half-size)
 ;;lobal-set-key [(meta    super kp-divide)]      '
 ;;lobal-set-key [(control meta super kp-divide)] 'tjf:edit/
 

@@ -1,6 +1,6 @@
 ;;; fontaine-theme.el --- Dark on light theme -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2021  Tom Fontaine
+;;         Copyright © 2016-2023  Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Aug-2016
@@ -57,6 +57,7 @@
 ;;                          Fixed broken font lookups
 ;;              29-Aug-2022 Updated ‘sh-heredoc’ face
 ;;              12-Sep-2022 Added ‘fontaine/heredoc’
+;;              26-Oct-2022 Added ‘eglot-highlight-symbol-face’
 ;;
 
 ;; =============================================================================
@@ -519,6 +520,7 @@
 
 ;;;;; eglot
    ;; `(eglot-mode-line ((t :inherit fontaine-theme-bold :foreground ,magenta-active)))
+   `(eglot-highlight-symbol-face ((t (:weight bold :background ,fontaine/bg-magenta-red))))
 
    `(error ((t (:foreground ,fontaine/error :weight bold))))
 

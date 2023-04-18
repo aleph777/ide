@@ -1,6 +1,6 @@
 ;;; tjf-tools.el --- Tools menu definition and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2021 Tom Fontaine
+;;         Copyright © 2016-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016
@@ -41,6 +41,8 @@
 ;;           19-Jul-2019 Added ‘open-new-shell’
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           16-Apr-2022 Added menu entry for convert to python mode
+;;           10-Nov-2022 Added ‘tjf:tools/insert-che’ and ‘tjf:tools/insert-chs
+;;                       Fixed menu entries
 ;;
 
 ;;; Code:
@@ -69,6 +71,16 @@
               (= ?< (elt name 0)))
       (setq name (get-char-code-property char-code 'old-name)))
     name))
+
+(defun tjf:tools/insert-che ()
+  "Insert closing \"cut here end\" snippet."
+  (interactive "*")
+  (insert "--8<---------------cut here---------------end--------------->8---\n"))
+
+(defun tjf:tools/insert-chs ()
+  "Insert opening \"cut here start\" snippet."
+  (interactive "*")
+  (insert "--8<---------------cut here---------------start------------->8---\n"))
 
 (defun tjf:tools/open-new-shell ()
   "Open a new shell buffer."
@@ -401,15 +413,13 @@
     "---"
     ["Open New Shell" tjf:tools/open-new-shell t]
     "---"
-    ["Open New Shell" tjf:tools/open-new-shell t]
-    "---"
     ["Check Language"             langtool-check             :enable (tjf:flags/enable-write?)]
     ["Insert Synonym..."          powerthesaurus-lookup-word :enable (tjf:flags/enable-write?)]
     ["Look up word definition..." sdcv-search                :active t]
     "---"
-    ["Insert ‘Cut Here’ Start" insert-chs       :enable (tjf:flags/enable-write?)]
-    ["Insert ‘Cut Here’ End"   insert-che       :enable (tjf:flags/enable-write?)]
-    ["Update Copyright"        copyright-update :enable (tjf:flags/enable-write?)]
+    ["Insert ‘Cut Here’ Start" tjf:tools/insert-chs :enable (tjf:flags/enable-write?)]
+    ["Insert ‘Cut Here’ End"   tjf:tools/insert-che :enable (tjf:flags/enable-write?)]
+    ["Update Copyright"        copyright-update     :enable (tjf:flags/enable-write?)]
     "---"
     ["Read from URL..." declutter :active t]
     "---"

@@ -1,6 +1,6 @@
 ;;; tjf-tabline.el --- Display a tab bar in the tab-line -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*- ;; -*-no-byte-compile: t; -*-
 
-;;         Copyright © 2021-2021 Tom Fontaine
+;;         Copyright © 2021-2023 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   03-Feb-2021
@@ -1789,7 +1789,7 @@ That is a pair (ENABLED . DISABLED), where ENABLED and DISABLED are
 respectively the appearance of the button when enabled and disabled.
 They are propertized strings which could display images, as specified
 by the variable `tjf:tabline/button-label'.
-When NAME is 'home, return a different ENABLED button if showing tabs
+When NAME is ‘home’, return a different ENABLED button if showing tabs
 or groups.  Call the function `tjf:tabline/button-label' otherwise."
   (let ((lab (tjf:tabline/button-label name)))
     (when (eq name 'home)

@@ -93,7 +93,6 @@ public:
             board[x1][y1] = 0;
         }
         return false;
-
     }
 
     void show()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*-Python-*-
 
-#         Copyright © 2022-2022  Tom Fontaine
+#         Copyright © 2022-2023  Tom Fontaine
 
 import copy
 import os

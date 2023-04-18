@@ -37,6 +37,7 @@ installPackage julia
 installPackage jupyter
 installPackage klatexformula
 installPackage libffi-dev
+installPackage libgccjit-dev
 installPackage libgconf2-dev
 installPackage libgdbm-dev
 installPackage libgif-dev
