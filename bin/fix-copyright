@@ -36,37 +36,52 @@
 #            .
 #            $N is file N to check
 #
-# Revision:
+# Revision: 03-May-2023 changed to ‘Time::Piece’
 #
 use File::IO;
-use DateTime;
+use Time::Piece;
 use strict;
 use v5.10;
 
-my $dt = DateTime->now;
-
-my $year = $dt->year;
+my $year = gmtime->year;
 
 for(grep { -e } @ARGV)
 {
   my $io = File::IO->new(path => $_);
 
+  my $put = 0;
+
   $io->get();
 
   say '===== ',$_;
 
-  for(grep /^(?:;;|#) +Copyright /,@{$io->contents})
+  # Copyright © 2022 - 2022 -  NailPro INC.  All Rights Reserved.
+
+  for(grep /^.+ Copyright /,@{$io->contents})
   {
-    if(/^(?:;;|#) +Copyright .+ (?:\d{4}-)(\d{4})/)
+    if(my ($y1,$sp,$y2) = /^.+ Copyright .+ (\d{4})( *- *)(\d{4})/)
     {
-      s/-$1/-$year/;
+      if($y2 != $year)
+      {
+        s/$y1$sp$y2/$y1$sp$year/;
+
+        $put = 1;
+      }
     }
-    elsif(my ($c) = /^(?:;;|#) +Copyright .+ (\d{4})/)
+    elsif(my ($c) = /^.+ Copyright .+ (\d{4})[^-]+/)
     {
-      s/$c/$c-$year/;
+      s/$c/$c - $year/;
+
+      $put = 1;
+    }
+    if(/\(c\)/i)
+    {
+      s/\(c\)/©/i;
+
+      $put = 1;
     }
     say $_;
     last;
   }
-  $io->put();
+  $io->put() if $put == 1;
 }
