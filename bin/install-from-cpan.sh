@@ -17,8 +17,7 @@ cpanm install List::MoreUtils
 cpanm install Log::Log4Perl
 # cpanm install Mouse
 # cpanm install Any::Moose
-cpanm install MP3::Info
-cpanm install MP3::Tag
+cpanm install MP3::Mplib
 cpanm install Math::Random::Secure
 cpanm install Perl::Critic
 cpanm install Perl::MinimumVersion
