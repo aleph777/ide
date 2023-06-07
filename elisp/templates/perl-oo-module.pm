@@ -1,6 +1,6 @@
 # <<<PACKAGE>>> --- [description] -*-Perl-*-
 
-#         Copyright © <<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © <<<YEAR>>>-<<<YEAR>>> <<<AUTHOR>>>
 
 # Date:   <<<DATE>>>
 
@@ -33,8 +33,7 @@
 package <<<PACKAGE>>>;
 
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 # use Foo::Bar;
 

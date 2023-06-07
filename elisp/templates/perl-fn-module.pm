@@ -34,8 +34,7 @@ package <<<PACKAGE>>>;
 
 use Exporter 'import';
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 our @EXPORT_OK = qw();
 
