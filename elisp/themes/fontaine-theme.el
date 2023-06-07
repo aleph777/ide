@@ -392,8 +392,10 @@
        (fontaine/mode-line-inactive-bg fontaine/bg-black)
        (fontaine/mode-line-inactive-fg fontaine/fg-white)
 
-       (fontaine/powerline-active0-bg   mint-y/green)
-       (fontaine/powerline-active1-bg   mint-y/green-2)
+       ;; (fontaine/powerline-active0-bg   mint-y/green)
+       ;; (fontaine/powerline-active1-bg   mint-y/green-2)
+       (fontaine/powerline-active0-bg   material/light-green-300)
+       (fontaine/powerline-active1-bg   material/light-green-200)
        (fontaine/powerline-active2-bg   fontaine/mode-line-active-bg)
 
        (fontaine/powerline-active0-fg   fontaine/fg-black)
@@ -432,8 +434,9 @@
   ;; (defvar clips-verb-face (make-face 'clips-verb-face))
 
 
-  (defface fontaine/mode-line-base `((t (:inherit variable-pitch :box (:line-width 1 :color ,fontaine/mode-line-box)))) "" :group 'font-lock-faces)
-  (defface fontaine/powerline-red  `((t (:inherit variable-pitch :foreground ,fontaine/warning))) "" :group 'font-lock-faces)
+  (defface fontaine/mode-line-base `((t (:inherit variable-pitch :weight bold :box (:line-width 1 :color ,fontaine/mode-line-box)))) "" :group 'font-lock-faces)
+  ;; (defface fontaine/powerline-red  `((t (:inherit variable-pitch :foreground ,fontaine/warning))) "" :group 'font-lock-faces)
+  (defface fontaine/powerline-red  `((t (:inherit variable-pitch :foreground "white"))) "" :group 'font-lock-faces)
   (defface fontaine/tabline-base   `((t (:inherit default        :family ,fontaine/variable-pitch-family :height 0.8))) "" :group 'font-lock-faces)
 
   (message "Defining faces...done")
@@ -465,6 +468,8 @@
    ;; `(annotate-highlight ((t :background ,blue-nuanced-bg :underline ,blue-intense)))
    ;; `(annotate-highlight-secondary ((t :background ,green-nuanced-bg :underline ,green-intense)))
 
+   '(blamer-face ((t :foreground ,fontaine/bg-black :background nil :italic t)))
+
    `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :foreground ,fontaine/match :weight bold))))
 
    `(bm-face                   ((t :background "hotpink" :foreground "blue" :extend t)))
@@ -472,28 +477,6 @@
    `(bm-fringe-persistent-face ((t :background ,fontaine/bookmark-bg :foreground ,fontaine/bookmark-fg )))
 
 ;; (set-face-attribute 'bm-fringe-persistent-face nil :foreground "white" :background material/fg-orange-800))
-
-;;;;; company-mode
-   ;; `(company-echo-common ((t :foreground ,magenta-alt-other)))
-   ;; `(company-preview ((t :background ,bg-dim :foreground ,fg-dim)))
-   ;; `(company-preview-common ((t :foreground ,blue-alt)))
-   ;; `(company-preview-search ((t :inherit fontaine-theme-special-calm)))
-   ;; `(company-scrollbar-bg ((t :background ,bg-active)))
-   ;; `(company-scrollbar-fg ((t :background ,fg-active)))
-   ;; `(company-template-field ((t :inherit fontaine-theme-intense-magenta)))
-   ;; `(company-tooltip ((t :background ,bg-alt :foreground ,fg-alt)))
-   ;; `(company-tooltip-annotation ((t :inherit fontaine-theme-slant :foreground ,fg-special-cold)))
-   ;; `(company-tooltip-annotation-selection ((t :inherit bold :foreground ,fg-main)))
-   ;; `(company-tooltip-common ((t :inherit bold :foreground ,blue-alt)))
-   ;; `(company-tooltip-common-selection ((t :foreground ,fg-main)))
-   ;; `(company-tooltip-mouse ((t :inherit fontaine-theme-intense-blue)))
-   ;; `(company-tooltip-search ((t :inherit (fontaine-theme-refine-cyan bold))))
-   ;; `(company-tooltip-search-selection ((t :inherit (fontaine-theme-intense-green bold) :underline t)))
-   ;; `(company-tooltip-selection ((t :inherit (fontaine-theme-subtle-cyan bold))))
-;;;;; company-posframe
-   ;; `(company-posframe-active-backend-name ((t :inherit bold :background ,bg-active :foreground ,blue-active)))
-   ;; `(company-posframe-inactive-backend-name ((t :background ,bg-active :foreground ,fg-active)))
-   ;; `(company-posframe-metadata ((t :background ,bg-inactive :foreground ,fg-inactive)))
 
 ;;;;; compilation
    ;; `(compilation-column-number ((t :foreground ,magenta-alt-other)))
@@ -568,49 +551,6 @@
    ;; `(line-number-major-tick ((t :inherit (bold default) :background ,yellow-nuanced-bg :foreground ,yellow-nuanced-fg)))
    ;; `(line-number-minor-tick ((t :inherit (bold default) :background ,bg-inactive :foreground ,fg-inactive)))
 
-;;;;; lsp-mode
-   ;; `(lsp-face-highlight-read ((t :inherit fontaine-theme-subtle-blue :underline t)))
-   ;; `(lsp-face-highlight-textual ((t :inherit fontaine-theme-subtle-blue)))
-   ;; `(lsp-face-highlight-write ((t :inherit (fontaine-theme-refine-blue bold))))
-   ;; `(lsp-face-semhl-constant ((t :foreground ,blue-alt-other)))
-   ;; `(lsp-face-semhl-deprecated
-   ;;   ((,(append '((supports :underline (:style wave))) class)
-   ;;     :foreground ,yellow :underline (:style wave))
-   ;;    (t :foreground ,yellow :underline t)))
-   ;; `(lsp-face-semhl-enummember ((t :foreground ,blue-alt-other)))
-   ;; `(lsp-face-semhl-field ((t :foreground ,cyan-alt)))
-   ;; `(lsp-face-semhl-field-static ((t :inherit fontaine-theme-slant :foreground ,cyan-alt)))
-   ;; `(lsp-face-semhl-function ((t :foreground ,magenta)))
-   ;; `(lsp-face-semhl-method ((t :foreground ,magenta)))
-   ;; `(lsp-face-semhl-namespace ((t :inherit fontaine-theme-bold :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-preprocessor ((t :foreground ,red-alt-other)))
-   ;; `(lsp-face-semhl-static-method ((t :inherit fontaine-theme-slant :foreground ,magenta)))
-   ;; `(lsp-face-semhl-type-class ((t :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-enum ((t :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-primitive ((t :inherit fontaine-theme-slant :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-template ((t :inherit fontaine-theme-slant :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-type-typedef ((t :inherit fontaine-theme-slant :foreground ,magenta-alt)))
-   ;; `(lsp-face-semhl-variable ((t :foreground ,cyan)))
-   ;; `(lsp-face-semhl-variable-local ((t :foreground ,cyan)))
-   ;; `(lsp-face-semhl-variable-parameter ((t :foreground ,cyan-alt-other)))
-   ;; `(lsp-lens-face ((t :height 0.8 :foreground ,fg-alt)))
-   ;; `(lsp-lens-mouse-face ((t :height 0.8 :foreground ,blue-alt-other :underline t)))
-   ;; `(lsp-ui-doc-background ((t :background ,bg-alt)))
-   ;; `(lsp-ui-doc-header ((t :background ,bg-header :foreground ,fg-header)))
-   ;; `(lsp-ui-doc-url ((t :inherit button)))
-   ;; `(lsp-ui-peek-filename ((t :foreground ,fg-special-warm)))
-   ;; `(lsp-ui-peek-footer ((t :background ,bg-header :foreground ,fg-header)))
-   ;; `(lsp-ui-peek-header ((t :background ,bg-header :foreground ,fg-header)))
-   ;; `(lsp-ui-peek-highlight ((t :inherit fontaine-theme-subtle-blue)))
-   ;; `(lsp-ui-peek-line-number ((t :inherit shadow)))
-   ;; `(lsp-ui-peek-list ((t :background ,bg-dim)))
-   ;; `(lsp-ui-peek-peek ((t :background ,bg-alt)))
-   ;; `(lsp-ui-peek-selection ((t :inherit fontaine-theme-subtle-cyan)))
-   ;; `(lsp-ui-sideline-code-action ((t :foreground ,yellow)))
-   ;; `(lsp-ui-sideline-current-symbol ((t :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-main)))
-   ;; `(lsp-ui-sideline-symbol ((t :inherit bold :height 0.99 :box (:line-width -1 :style nil) :foreground ,fg-alt)))
-   ;; `(lsp-ui-sideline-symbol-info ((t :inherit italic :height 0.99)))
-
 ;;;;; make-mode (makefiles)
    ;; `(makefile-makepp-perl ((t :background ,cyan-nuanced-bg)))
    ;; `(makefile-space ((t :background ,magenta-nuanced-bg)))
@@ -624,29 +564,15 @@
 
    `(next-error ((t (:background ,fontaine/bg-red :foreground ,fontaine/default-fg))))
 
-;;;;; paradox
-   ;; `(paradox-archive-face ((t :foreground ,fg-special-mild)))
-   ;; `(paradox-comment-face ((t :inherit font-lock-comment-face)))
-   ;; `(paradox-commit-tag-face ((t :inherit fontaine-theme-refine-magenta :box t)))
-   ;; `(paradox-description-face ((t :foreground ,fg-special-cold)))
-   ;; `(paradox-description-face-multiline ((t :foreground ,fg-special-cold)))
-   ;; `(paradox-download-face ((t :inherit fontaine-theme-bold :foreground ,blue-alt-other)))
-   ;; `(paradox-highlight-face ((t :inherit fontaine-theme-bold :foreground ,cyan-alt-other)))
-   ;; `(paradox-homepage-button-face ((t :foreground ,magenta-alt-other :underline t)))
-   ;; `(paradox-mode-line-face ((t :inherit bold :foreground ,cyan-active)))
-   ;; `(paradox-name-face ((t :foreground ,blue :underline t)))
-   ;; `(paradox-star-face ((t :foreground ,magenta)))
-   ;; `(paradox-starred-face ((t :foreground ,magenta-alt)))
-
    `(paren-face-match    ((t (:background ,fontaine/match))))
    `(paren-face-mismatch ((t (:background ,fontaine/paren-mismatch-bg :foreground ,fontaine/paren-mismatch-fg))))
    `(paren-face-no-match ((t (:background ,fontaine/paren-no-match-bg :foreground ,fontaine/paren-no-match-fg))))
 
-   `(powerline-active0   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active0-bg   :foreground ,fontaine/powerline-active0-fg :weight bold))))
+   `(powerline-active0   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active0-bg   :foreground ,fontaine/powerline-active0-fg))))
    `(powerline-active1   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active1-bg   :foreground ,fontaine/powerline-active1-fg))))
    `(powerline-active2   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active2-bg   :foreground ,fontaine/powerline-active2-fg))))
 
-   `(powerline-inactive0 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive0-bg :foreground ,fontaine/powerline-inactive0-fg :weight bold))))
+   `(powerline-inactive0 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive0-bg :foreground ,fontaine/powerline-inactive0-fg))))
    `(powerline-inactive1 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive1-bg :foreground ,fontaine/powerline-inactive1-fg))))
    `(powerline-inactive2 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive2-bg :foreground ,fontaine/powerline-inactive2-fg))))
 
