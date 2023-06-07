@@ -18,6 +18,7 @@
  '(custom-enabled-themes '(fontaine))
  '(custom-safe-themes t)
  '(flycheck-flake8-maximum-line-length 200)
+ '(native-comp-async-report-warnings-errors nil)
  '(paradox-github-token t)
  '(powerline-gui-use-vcs-glyph t)
  '(rainbow-x-colors nil)
@@ -31,7 +32,7 @@
               1 'font-lock-variable-name-face)))
      (enable-local-variables: . all)))
  '(tab-width 4)
- '(undo-tree-history-directory-alist '(("~undo-tree~" . "~/.config/emacs/undo-tree"))))
+ '(undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo-tree/"))))
 
 (message "setting faces...")
 
