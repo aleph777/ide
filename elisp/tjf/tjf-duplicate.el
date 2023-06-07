@@ -43,6 +43,7 @@
 
 (message "Loading tjf-duplicate...")
 (require 'tjf-flags)
+(require 'tjf-macro)
 (require 'tjf-tools)
 (require 'undo-tree)
 
@@ -67,10 +68,10 @@ as a comment for reference."
   "Duplicate the current line or region."
   (interactive "*")
   (with-line-or-region (beg end)
-   (let ((reg (buffer-substring-no-properties beg end))
-         (deactivate-mark nil))
-     (goto-char end)
-     (insert reg))))
+    (let ((reg (buffer-substring-no-properties beg end))
+          (deactivate-mark nil))
+      (goto-char end)
+      (insert reg))))
 
 (defun tjf:duplicate/previous ()
   "Duplicates a word of the previous line's text starting from the current
