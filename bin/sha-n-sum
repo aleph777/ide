@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
 
 #         Copyright © 2013-2023 Tom Fontaine
 
@@ -32,15 +32,16 @@
 #
 # Arguments: [-n] [-no-name] [-1|-224|-256|-384|-512|-512224|-512256] file1 [file2 … fileN]
 #
-# Revision:  03-Apr-2015 Added Usage
+# Revision:  03-Apr-2015 added Usage
 #            13-Apr-2015 use Regexp::Assemble
-#            18-Sep-2022 use Util::GetOptNew
+#            18-Sep-2022 use ‘Util::GetOptNew’
+#            03-May-2023 ‘Util::GetOpt’
 #
 use Digest::SHA;
 use File::Basename;
 use Regexp::Assemble;
 use Text::HexString;
-use Util::GetOptNew;
+use Util::GetOpt;
 use strict;
 use v5.10;
 
@@ -69,7 +70,7 @@ $ra->add(@bare);
 
 my $alg = $ra->re;
 
-my $opt = Util::GetOptNew->new();
+my $opt = Util::GetOpt->new();
 
 my @x = ('(?:sha-?)?1', '224', '256');
 

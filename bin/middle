@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
 
 #         Copyright © 1998-2023 Tom Fontaine
 

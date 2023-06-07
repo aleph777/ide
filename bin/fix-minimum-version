@@ -1,7 +1,5 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
-#
-# Time-stamp: <27-May-2015 09:54:19 EDT, modified by Tom Fontaine>
-#
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
+
 # Title:  check-minimum-version
 # Author: Tom Fontaine
 # Date:   25-Mar-2015

@@ -2,26 +2,23 @@
 #
 # This should perhaps be a non-fancy Perl script
 #
-cpanm install CPAN
-cpanm install YAML
-cpanm reload CPAN
-cpanm install Archive::Tar
-cpanm install DateTime
-cpanm install Digest::SHA
-cpanm install File::HTTP
-cpanm install File::Which
-cpanm install Gtk2
-cpanm install IO::Compress::Xz
-cpanm install IO::Uncompress::UnXz
-cpanm install List::MoreUtils
-cpanm install Log::Log4Perl
-# cpanm install Mouse
-# cpanm install Any::Moose
-cpanm install MP3::Info
-cpanm install MP3::Tag
-cpanm install Math::Random::Secure
-cpanm install Perl::Critic
-cpanm install Perl::MinimumVersion
-cpanm install Regexp::Assemble
-cpanm install Scalar::Util
-cpanm install Text::Balanced
+cpan install CPAN
+cpan install YAML
+cpan reload CPAN
+cpan install Archive::Tar
+cpan install Digest::SHA
+cpan install File::HTTP
+cpan install File::Which
+cpan install Gtk2
+cpan install IO::Compress::Xz
+cpan install IO::Uncompress::UnXz
+cpan install List::MoreUtils
+cpan install Log::Log4Perl
+cpan install MP3::Mplib
+cpan install Math::Random::Secure
+cpan install Perl::Critic
+cpan install Perl::LanguageServer
+cpan install Perl::MinimumVersion
+cpan install Regexp::Assemble
+cpan install Scalar::Util
+cpan install Text::Balanced

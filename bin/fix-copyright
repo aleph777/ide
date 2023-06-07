@@ -1,7 +1,7 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
-#
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
+
 #         Copyright © 2019-2023 Tom Fontaine
-#
+
 # Title:  fix-copyright
 # Author: Tom Fontaine
 # Date:   05-May-2019
@@ -36,16 +36,14 @@
 #            .
 #            $N is file N to check
 #
-# Revision:
+# Revision: 03-May-2023 changed to ‘Time::Piece’
 #
 use File::IO;
-use DateTime;
+use Time::Piece;
 use strict;
 use v5.10;
 
-my $dt = DateTime->now;
-
-my $year = $dt->year;
+my $year = gmtime->year;
 
 for(grep { -e } @ARGV)
 {

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2000-2023 Tom Fontaine
 
@@ -32,26 +32,32 @@
 #
 # Arguments: [switch [arg] ...] dir1 [dir2 ... dirN]
 #
-# Revision:  12-May-2008 Using ‘File::FindWrapper’
-#                        Using ‘Util::Options’
-#                        use strict
-#            07-Jul-2014 Added -suffix, -no-suffix, -dirname, and -no-dirname
-#            25-Mar-2015 Removed -tty and -no-tty
-#            18-Sep-2022 Using ‘Util::GetOptNew’
+# Revision: 12-May-2008 using ‘File::FindWrapper’
+#                       using ‘Util::Options’
+#                       use strict
+#           07-Jul-2014 added -suffix, -no-suffix, -dirname, and -no-dirname
+#           25-Mar-2015 removed -tty and -no-tty
+#           18-Sep-2022 using ‘Util::GetOptNew’
+#           03-May-2023 using ‘Util::GetOpt’
+#           02-Jun-2023 use Modern::Perl
+#                       new shebang
 #
-use File::FindWrapper;
-use Util::GetOptNew;
-use v5.10;
-use strict;
+use Modern::Perl;
+
+use Util::Find;
+use Util::GetOpt;
 
 my %option;
 
-my $f = File::FindWrapper->new();
-my $o = Util::GetOptNew->new(option => \%option);
+my $f = Util::Find->new();
+my $o = Util::GetOpt->new(option => \%option);
 
-$o->get(bare1 => [@{$f->bare1},'help'],arg1 => [@{$f->arg1},'exec']);
+push @{$f->bare1},'help';
+push @{$f->args1},'exec';
 
-if(exists $option{'help'})
+$o->get(args1 => $f->args1, args2 => $f->args1,bare1 => $f->bare1, bare2 => $f->bare1);
+
+if(@ARGV == 0 || exists $option{'help'})
 {
   print "\nUsage:  ",($0 =~ m=([^/]+)$=)," [switch [arg] ...] dir1 [dir2 ... dirN]\n\n";
   print "Switches:\n";
