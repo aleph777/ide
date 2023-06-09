@@ -29,35 +29,37 @@
 
 ;;; Commentary:
 
-;; Revision:    16-Nov-2016 Added vhl/default-face
-;;              04-Jan-2017 Added material colors
-;;              05-Jan-2017 Converting from blue to Mint
-;;              25-Apr-2017 Added flat  colors
-;;              19-Jun-2018 Added multiple palettes
-;;              02-Apr-2019 Changed font-family selection method
-;;                          Added ‘Hack’ and made it the default font
-;;                          Added ‘Source Code Pro’
-;;              04-Apr-2019 Added ‘Cousine’
-;;                          Added ‘CamingoCode’
-;;                          Added ‘Fantasque’
-;;              09-Jun-2019 Added ‘Nord’ colors
-;;                          Added ‘Srcsery’ colors
-;;              09-Jul-2019 Added ‘Victor’ font
-;;              21-Jan-2020 Added ‘JetBrains’ font
-;;              28-Jan-2020 Added ‘Iosevka’ and ‘IosevkaSlab’ font
-;;              23-Sep-2020 Added ‘canva’ colors
-;;                          Cleaned up mint definitions
-;;              05-Oct-2020 Major overhaul
-;;              20-Oct-2020 Added variable pitch fonts
-;;              26-Oct-2020 Added ‘Segoe UI' font
-;;              14-Jan-2021 Fixed copyright
+;; Revision:    16-Nov-2016 added vhl/default-face
+;;              04-Jan-2017 added material colors
+;;              05-Jan-2017 converting from blue to Mint
+;;              25-Apr-2017 added flat  colors
+;;              19-Jun-2018 added multiple palettes
+;;              02-Apr-2019 changed font-family selection method
+;;                          added ‘Hack’ and made it the default font
+;;                          added ‘Source Code Pro’
+;;              04-Apr-2019 added ‘Cousine’
+;;                          added ‘CamingoCode’
+;;                          added ‘Fantasque’
+;;              09-Jun-2019 added ‘Nord’ colors
+;;                          added ‘Srcsery’ colors
+;;              09-Jul-2019 added ‘Victor’ font
+;;              21-Jan-2020 added ‘JetBrains’ font
+;;              28-Jan-2020 added ‘Iosevka’ and ‘IosevkaSlab’ font
+;;              23-Sep-2020 added ‘canva’ colors
+;;                          cleaned up mint definitions
+;;              05-Oct-2020 major overhaul
+;;              20-Oct-2020 added variable pitch fonts
+;;              26-Oct-2020 added ‘Segoe UI' font
+;;              14-Jan-2021 fixed copyright
 ;;                          load colors programmatically
 ;;                          rainbow-delimiters use wcag hue progression
-;;              09-Feb-2021 Changed ‘variable-pitch’ font to Nimbus Sans
-;;                          Fixed broken font lookups
-;;              29-Aug-2022 Updated ‘sh-heredoc’ face
-;;              12-Sep-2022 Added ‘fontaine/heredoc’
-;;              26-Oct-2022 Added ‘eglot-highlight-symbol-face’
+;;              09-Feb-2021 changed ‘variable-pitch’ font to Nimbus Sans
+;;                          fixed broken font lookups
+;;              29-Aug-2022 updated ‘sh-heredoc’ face
+;;              12-Sep-2022 added ‘fontaine/heredoc’
+;;              26-Oct-2022 added ‘eglot-highlight-symbol-face’
+;;              08-Jun-2023 added ‘blamer’ faces
+;;              09-Jun-2023 added ‘elpaca’ faces
 ;;
 
 ;; =============================================================================
@@ -448,7 +450,6 @@
    `(fixed-pitch    ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg))))
    `(variable-pitch ((t (:family ,fontaine/variable-pitch-family :height ,fontaine/variable-pitch-height :foreground ,fontaine/default-fg))))
 
-
    `(bold   ((t :weight bold)))
    `(italic ((t :slant  italic)))
 
@@ -468,9 +469,15 @@
    ;; `(annotate-highlight ((t :background ,blue-nuanced-bg :underline ,blue-intense)))
    ;; `(annotate-highlight-secondary ((t :background ,green-nuanced-bg :underline ,green-intense)))
 
-   '(blamer-face ((t :foreground ,fontaine/bg-black :background nil :italic t)))
-
    `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :foreground ,fontaine/match :weight bold))))
+
+;;;;; blamer
+   `(blamer-face ((t :foreground ,fontaine/comment :italic t)))
+
+   `(blamer-pretty-border-face          ((t :foreground "black" :weight bold)))
+   `(blamer-pretty-commit-message-face  ((t :foreground ,fontaine/string :italic t)))
+   `(blamer-pretty-meta-data-face       ((t :foreground ,fontaine/comment)))
+   `(blamer-pretty-meta-keywords-face   ((t :foreground ,fontaine/prompt :weight bold)))
 
    `(bm-face                   ((t :background "hotpink" :foreground "blue" :extend t)))
    `(bm-fringe-face            ((t :background "yellow" :foreground "red" )))
@@ -490,6 +497,7 @@
 
    `(cursor ((t (:background ,fontaine/cursor))))
 
+;;;;; comint
    `(comint-highlight-input  ((t (:inherit bold))))
    `(comint-highlight-prompt ((t (:inherit bold :foreground ,fontaine/prompt))))
 
@@ -504,6 +512,14 @@
 ;;;;; eglot
    ;; `(eglot-mode-line ((t :inherit fontaine-theme-bold :foreground ,magenta-active)))
    `(eglot-highlight-symbol-face ((t (:weight bold :background ,fontaine/bg-magenta-red))))
+
+;;;;; elpaca
+   `(elpaca-blocked  ((t (:weight bold :foreground ,fontaine/fg-yellow))))
+   `(elpaca-busy     ((t (:weight bold :foreground ,fontaine/fg-yellow-red))))
+   `(elpaca-finished ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
+   `(elpaca-finished ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
+
+   `(elpaca-ui-marked-package ((t (:weight bold :foreground ,fontaine/fg-magenta))))
 
    `(error ((t (:foreground ,fontaine/error :weight bold))))
 
@@ -527,7 +543,7 @@
    `(font-lock-variable-name-face     ((t (:inherit bold        :foreground ,fontaine/variable))))
    `(font-lock-warning-face           ((t (:inherit bold        :foreground ,fontaine/warning))))
 
-   `(fringe  ((t (:background nil))))
+   `(fringe  ((t (:background unspecified))))
 
    `(git-gutter:added    ((t (:foreground ,fontaine/added    :weight bold))))
    `(git-gutter:deleted  ((t (:foreground ,fontaine/deleted  :weight bold))))
