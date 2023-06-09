@@ -1,4 +1,4 @@
-# Util::DateTime --- Date/Time object -*-Perl-*-
+# Util::DateTime --- [OBSOLETE] Date/Time object -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
