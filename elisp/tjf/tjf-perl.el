@@ -29,50 +29,53 @@
 
 ;;; Commentary:
 
-;; Revision: 22-Jun-2000 Deleted ‘usr-perl-menu’ defvar and used ‘easy-menu-define’ instead of ‘easy-menu-add-item’
-;;           23-Jun-2000 Added ‘usr-perl-shebang’, ‘usr-perl-insert-shebang’, changed defun names to ‘usr-perl-...’
-;;           26-Jun-2000 Modified ‘usr-perl-insert-script-version’ to use trailing \n for used modules
-;;           17-Feb-2005 Modified ‘usr-perl-insert-script-version’ to use TJF instead of ACC
-;;           18-Apr-2006 Changed ‘usr-perl-shebang’ to use /local/bin/perl
-;;           01-Jun-2006 Changed ‘usr-perl-insert-script-version’ to use MDC instead of TJF
-;;           22-Jun-2006 Added ‘usr-perl-bin’
-;;                       Changed ‘usr-perl-shebang’ to use ‘usr-perl-bin’
-;;           25-Aug-2006 Changed ‘usr-perl-insert-shebang’ to detect for remote file name and adjust shebang
-;;           02-Feb-2010 Added exit message
-;;           25-Mar-2015 Updated ‘usr-perl-insert’ functions and associated menu entries
-;;           03-Apr-2015 Added ‘usr-perl-insert-me’ and associated menu entry
-;;                       Updated ‘usr-perl-insert-usage’ to use ‘usr-perl-insert-me’
-;;           14-Apr-2015 Added ‘usr-perl-insert-oo-module-template’ and ‘usr-perl-insert-fn-module-template’
-;;                       Revised associated menu entries
-;;           21-Apr-2015 Fixed regex in ‘usr-perl-insert-usage’
-;;                       Updated ‘usr-perl-insert-me’ to use ‘$__ME__’
-;;           09-Dec-2015 Set TAB to ‘indent-for-tab-command’
-;;           17-Jan-2016 Updated for new standard user interface
-;;           02-Feb-2016 Added ‘neotree’
-;;           23-Feb-2016 Added ‘cperl-init-faces’
-;;                       Removed ‘neotree’
-;;           28-Feb-2016 Refactored as ‘tjf-perl’
-;;           03-Mar-2016 Updated to use ‘yasnippet’
-;;           09-Mar-2016 Added use ‘v5.10’ to ‘perl-insert-script-header’
-;;           18-Apr-2016 Updated for ‘use-package’
-;;           23-Jun-2016 Removed globally set ‘semantic-mode’
-;;           07-Sep-2016 Added ‘plsense’ support
-;;           14-Nov-2016 Added ‘perl-init-faces’ to fix syntax highlighting
-;;           18-Jan-2017 Removed ‘plsense’ support
-;;                       Updated header formats
-;;           19-Jan-2017 Disabled ‘abbrev-mode’
-;;           03-Jul-2017 Set ‘flycheck-perl-include-path’ in ‘perl-setup’
-;;           05-Oct-2020 Removed ‘perl-init-faces’
+;; Revision: 22-Jun-2000 deleted ‘usr-perl-menu’ defvar and used ‘easy-menu-define’ instead of ‘easy-menu-add-item’
+;;           23-Jun-2000 added ‘usr-perl-shebang’, ‘usr-perl-insert-shebang’, changed defun names to ‘usr-perl-...’
+;;           26-Jun-2000 modified ‘usr-perl-insert-script-version’ to use trailing \n for used modules
+;;           17-Feb-2005 modified ‘usr-perl-insert-script-version’ to use TJF instead of ACC
+;;           18-Apr-2006 changed ‘usr-perl-shebang’ to use /local/bin/perl
+;;           01-Jun-2006 changed ‘usr-perl-insert-script-version’ to use MDC instead of TJF
+;;           22-Jun-2006 added ‘usr-perl-bin’
+;;                       changed ‘usr-perl-shebang’ to use ‘usr-perl-bin’
+;;           25-Aug-2006 changed ‘usr-perl-insert-shebang’ to detect for remote file name and adjust shebang
+;;           02-Feb-2010 added exit message
+;;           25-Mar-2015 updated ‘usr-perl-insert’ functions and associated menu entries
+;;           03-Apr-2015 added ‘usr-perl-insert-me’ and associated menu entry
+;;                       updated ‘usr-perl-insert-usage’ to use ‘usr-perl-insert-me’
+;;           14-Apr-2015 added ‘usr-perl-insert-oo-module-template’ and ‘usr-perl-insert-fn-module-template’
+;;                       revised associated menu entries
+;;           21-Apr-2015 fixed regex in ‘usr-perl-insert-usage’
+;;                       updated ‘usr-perl-insert-me’ to use ‘$__ME__’
+;;           09-Dec-2015 set TAB to ‘indent-for-tab-command’
+;;           17-Jan-2016 updated for new standard user interface
+;;           02-Feb-2016 added ‘neotree’
+;;           23-Feb-2016 added ‘cperl-init-faces’
+;;                       removed ‘neotree’
+;;           28-Feb-2016 refactored as ‘tjf-perl’
+;;           03-Mar-2016 updated to use ‘yasnippet’
+;;           09-Mar-2016 added use ‘v5.10’ to ‘perl-insert-script-header’
+;;           18-Apr-2016 updated for ‘use-package’
+;;           23-Jun-2016 removed globally set ‘semantic-mode’
+;;           07-Sep-2016 added ‘plsense’ support
+;;           14-Nov-2016 added ‘perl-init-faces’ to fix syntax highlighting
+;;           18-Jan-2017 removed ‘plsense’ support
+;;                       updated header formats
+;;           19-Jan-2017 disabled ‘abbrev-mode’
+;;           03-Jul-2017 set ‘flycheck-perl-include-path’ in ‘perl-setup’
+;;           05-Oct-2020 removed ‘perl-init-faces’
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           07-Apr-2021 Updated ‘tjf:perl/fill-out-template’
-;;           24-Sep-2022 Fixed ‘tjf:perl/which’
+;;           07-Apr-2021 updated ‘tjf:perl/fill-out-template’
+;;           24-Sep-2022 fixed ‘tjf:perl/which’
+;;           02-Jun-2023 major clean up
+;;           06-Jun-2023 changed from ‘tjf:perl/setup’ to ‘tjf:perl/hook’ and ‘tjf:perl/config’
 ;;
 
 ;;; Code:
 
 (message "Loading tjf-perl...")
 (require 'cperl-mode)
-(require 'tjf-date)
+(require 'flycheck)
+(require 's)
 (require 'tjf-edit)
 (require 'tjf-frame)
 
@@ -82,116 +85,110 @@
 ;;; overload
 (defun cperl-define-key () nil)
 
-(define-key cperl-mode-map [(control ?h) ?f] nil)
-(define-key cperl-mode-map [(control ?h) ?v] nil)
+(defvar tjf:perl/lib)
+(setq   tjf:perl/lib (getenv "PERLLIB"))
 
-(defvar tjf:perl/lib         (getenv "PERLLIB"))
-(defvar tjf:perl/me          "use constant _ME_ => $0 =~ m=([^/]+)$=;\n\n")
-(defvar tjf:perl/min-version "5.010")
-(defvar tjf:perl/which       (shell-command-to-string "which perl"))
-(defvar tjf:perl/shebang     (concat "#!" tjf:perl/which " -w  # -*-Perl-*-\n"))
+(defvar tjf:perl/me)
+(setq   tjf:perl/me "use constant _ME_ => $0 =~ m=([^/]+)$=;")
+
+(defvar tjf:perl/shebang)
+(setq   tjf:perl/shebang "#!/usr/bin/env -S perl -w   # -*-Perl-*-")
+
+(defvar tjf:perl/template-file-script-header-home)
+(setq   tjf:perl/template-file-script-header-home (concat tjf:user/dir-elisp "templates/perl-script-header-home.pl"))
+
+(defvar tjf:perl/template-file-script-header-work)
+(setq   tjf:perl/template-file-script-header-work (concat tjf:user/dir-elisp "templates/perl-script-header-work.pl"))
+
+(defvar tjf:perl/template-file-fn-module)
+(defvar tjf:perl/template-file-fn-module (concat tjf:user/dir-elisp "templates/perl-fn-module.pm"))
+
+(defvar tjf:perl/template-file-oo-module)
+(defvar tjf:perl/template-file-oo-module (concat tjf:user/dir-elisp "templates/perl-oo-module.pm"))
+
+;; (defvar tjf:perl/template-script-usage)
+;; (setq   tjf:perl/template-script-usage (concat tjf:user/dir-elisp "templates/perl-script-usage.pl"))
+
+(defvar tjf:perl/which)
+(setq   tjf:perl/which (string-trim-right (shell-command-to-string "which perl")))
+
+(defun tjf:perl/check-minimum-version ()
+  "Check the minimum required version of the current file."
+  (interactive)
+  (message (substring (shell-command-to-string (concat "check-minimum-version " (buffer-file-name))) 0 -1)))
 
 ;;;###autoload
 (defun tjf:perl/convert ()
   "Convert the current file into a Perl script."
   (interactive "*")
-  (tjf:perl/insert-script-skeleton)
+  (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)
   (set-auto-mode))
 
-(defun tjf:perl/fill-out-template ()
-  "Replace template fields with the associated data."
-  (let* ((dirbase (file-name-nondirectory (directory-file-name default-directory)))
-         (modbase (replace-regexp-in-string ".pm$" "" (file-name-nondirectory (buffer-file-name))))
-         (package (if (not (string= dirbase "lib")) (concat dirbase "::" modbase) modbase))
-         (year    (format-time-string "%Y-%Y"))
-         (author  (user-full-name))
-         (date    (tjf:date/today tjf:date/dd-mon-yyyy)))
-    (tjf:edit/fill-skeleton "<<<PACKAGE>>>" package)
-    (tjf:edit/fill-skeleton "<<<YEAR>>>"    year)
-    (tjf:edit/fill-skeleton "<<<AUTHOR>>>"  author)
-    (tjf:edit/fill-skeleton "<<<DATE>>>"    date)))
-
-(defun tjf:perl/indent-function ()
-  "Indentation function for `perl-mode'."
+(defun tjf:perl/insert-fn-module-template ()
+  "Insert a template for a Functional module."
   (interactive "*")
+  (goto-char (point-min))
   (save-excursion
-    (beginning-of-defun)
-    (cperl-indent-exp)))
+    (insert-file-contents tjf:perl/template-file-fn-module))
+  (tjf:perl/fill-out-template))
 
 (defun tjf:perl/insert-me ()
   "Insert the `_ME_' variable declaration."
   (interactive "*")
-  (insert "use constant _ME_ => $0 =~ m=([^/]+)$=;\n\n"))
-
-(defun tjf:perl/insert-fn-module-template ()
-  "Insert a template for an Functional module."
-  (interactive "*")
-  (goto-char (point-min))
-  (save-excursion
-    (insert-file-contents (concat tjf:user/dir-elisp "templates/perl-fn-module.pm")))
-  (tjf:perl/fill-out-template))
-
-(defun tjf:perl/insert-module-header ()
-  "Insert a header for a Perl module."
-  (interactive "*")
-  (save-excursion
-    (insert-file-contents (concat tjf:user/dir-elisp "templates/perl-module-header.pm")))
-  (tjf:perl/fill-out-template))
+  (insert (concat tjf:perl/me "\n\n")))
 
 (defun tjf:perl/insert-oo-module-template ()
   "Insert a template for an Object-Oriented module."
   (interactive "*")
   (goto-char (point-min))
   (save-excursion
-    (insert-file-contents (concat tjf:user/dir-elisp "templates/perl-oo-module.pm")))
+    (insert-file-contents tjf:perl/template-file-oo-module))
   (tjf:perl/fill-out-template))
-
-(defun tjf:perl/insert-script-header ()
-  "Insert script boilerplate at point."
-  (interactive "*")
-  (insert-file-contents (concat tjf:user/dir-elisp "templates/perl-script-header.pl"))
-  (let* ((year   (format-time-string "%Y-%Y"))
-         (author (user-full-name))
-         (title  (file-name-nondirectory (buffer-name)))
-         (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
-    (save-excursion
-      (search-forward "<<<YEAR>>>")
-      (replace-match year t)
-      (search-forward "<<<AUTHOR>>>")
-      (replace-match author t)
-      (search-forward "<<<TITLE>>>")
-      (replace-match title t)
-      (search-forward "<<<DATE>>>")
-      (replace-match date t))))
-
-(defun tjf:perl/insert-script-skeleton ()
-  "Insert the perl shebang and script boilerplate at the top of the file."
-  (interactive "*")
-  (save-excursion
-    (tjf:perl/insert-shebang)
-    (tjf:perl/insert-script-header)))
 
 (defun tjf:perl/insert-shebang ()
   "Insert the perl shebang at the top of the file."
   (interactive "*")
   (goto-char (point-min))
-  (insert tjf:perl/shebang))
+  (insert (concat tjf:perl/shebang "\n")))
 
-(defun tjf:perl/insert-usage ()
-  "Insert the script usage code."
+(defun tjf:perl/insert-script-skeleton (header)
+  "Insert HEADER script boilerplate at point."
   (interactive "*")
-  (tjf:perl/insert-me)
-  (insert-file-contents (concat tjf:user/dir-elisp "templates/perl-script-usage.pl")))
+  (insert-file-contents header)
+  (let ((author (user-full-name))
+        (title  (file-name-nondirectory (buffer-name)))
+        (date   (format-time-string "%d-%b-%Y"))
+        (year   (format-time-string "%Y")))
+    (tjf:edit/fill-skeleton "<<<SHEBANG>>>" tjf:perl/shebang)
+    (tjf:edit/fill-skeleton "<<<YEAR>>>"    year)
+    (tjf:edit/fill-skeleton "<<<AUTHOR>>>"  (user-full-name))
+    (tjf:edit/fill-skeleton "<<<TITLE>>>"   title)
+    (tjf:edit/fill-skeleton "<<<DATE>>>"    date)
+    (tjf:edit/fill-skeleton "<<<ME>>>"      tjf:perl/me)))
 
-(defun tjf:perl/setup()
-  "Set up a buffer for ‘perl-mode’."
+;; (defun tjf:perl/insert-usage ()
+;;   "Insert the script usage code."
+;;   (interactive "*")
+;;   (insert-file-contents tjf:perl/template-script-usage))
+
+(defun tjf:perl/hook ()
+  "Perl mode hook function."
   (abbrev-mode -1)
-  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-  (imenu-add-to-menubar "Navigate")
-  (unless tjf:perl/lib
-    (setq tjf:perl/lib (concat tjf:user/dir-home "lib:" tjf:user/dir-home "local/lib")))
-  (setq flycheck-perl-include-path (split-string tjf:perl/lib ":"))
-  (flycheck-mode))
+  (eglot-ensure)
+  (setq-local completion-at-point-functions (cons #'eglot-completion-at-point completion-at-point-functions))
+  (imenu-add-to-menubar "Navigate"))
+
+(defun tjf:perl/config ()
+  "Perl mode config function."
+  (define-key cperl-mode-map [(control ?h) ?f] nil)
+  (define-key cperl-mode-map [(control ?h) ?v] nil)
+
+  (if tjf:perl/lib
+      (setq flycheck-perl-include-path (split-string tjf:perl/lib ":"))
+    (let ((lib-home  (concat tjf:user/dir-home "lib"))
+          (lib-local (concat tjf:user/dir-home "local/lib")))
+      (setq flycheck-perl-include-path '(lib-home lib-local))
+      (setq tjf:perl/lib (join ":" `(lib-home lib-local))))))
 
 ;;
 (easy-menu-define tjf:perl/menu cperl-mode-map "tjf-Perl"
@@ -200,17 +197,16 @@
     ["End Of Function"       end-of-defun      ]
     ["Mark Function"         mark-defun        ]
     "---"
-    ["Insert Shebang"         tjf:perl/insert-shebang        ]
-    ["Insert Script Header"   tjf:perl/insert-script-header  ]
-    ["Insert Script Skeleton" tjf:perl/insert-script-skeleton]
-    ["Insert _ME_"            tjf:perl/insert-me             ]
-    ["Insert Script Usage"    tjf:perl/insert-usage          ]
+    ["Insert Home Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-home)]
+    ["Insert Work Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)]
+    ["Insert Shebang"      tjf:perl/insert-shebang]
+    ["Insert _ME_"         tjf:perl/insert-me     ]
+    ;; ["Insert Script Usage" tjf:perl/insert-usage  ]
     "---"
     ["Insert OO Module Template" tjf:perl/insert-oo-module-template]
     ["Insert FN Module Template" tjf:perl/insert-fn-module-template]
-    ["Insert Module Header"      tjf:perl/insert-module-header     ]
     "---"
-    ["Check Minimum Perl Version" (message (substring (shell-command-to-string (concat "check-minimum-version " (buffer-file-name))) 0 -1))]
+    ["Check Minimum Perl Version" tjf:perl/check-minimum-version]
     ))
 
 (easy-menu-define tjf:perl/menu-build cperl-mode-map "Perl Build"

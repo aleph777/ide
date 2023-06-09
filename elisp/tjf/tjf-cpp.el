@@ -37,12 +37,14 @@
 ;;                       added ‘tjf:cpp/set-includes’
 ;;           04-Jan-2023 fixed ‘tjf:cpp/setup’
 ;;           13-Apr-2023 removed ‘company-mode’ from completions
+;;           06-Jun-2023 changed from ‘tjf:cpp/setup’ to ‘tjf:cpp/hook’ and ‘tjf:cpp/config’
+
 ;;; Code:
 
 (message "Loading tjf-cpp...")
-(require 'eglot)
-(require 'tjf-cc)
-(require 'tjf-macro)
+;; (require 'eglot)
+;; (require 'tjf-cc)
+;; (require 'tjf-macro)
 
 ;;
 (defvar tjf:cpp/compiler)
@@ -71,15 +73,6 @@
 
 (defvar tjf:cpp/warnings)
 (setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
-
-;; (defun tjf:cpp/build-sh ()
-;;   "Run ‘build.sh’."
-;;   (interactive)
-;;   (let* ((dir (concat tjf:user/dir-home "Workspace/tenbeauty"))
-;;          (cmd (concat "cd " dir " && ./build.sh")))
-;;     (compile cmd)
-;; !
-;; ))
 
 (defun tjf:cpp/check ()
   "Run ‘cppcheck’ on buffer."
@@ -170,25 +163,33 @@
     (unless (string= warnings tjf:cpp/warnings)
       (tjf:cc/set-warnings warnings))))
 
-(defun tjf:cpp/setup ()
-  "C++ mode setup function."
-  (abbrev-mode -1)
-  (flymake-mode -1)
-  (flycheck-mode)
-  (imenu-add-to-menubar "Navigate")
-  ;;
-  (c-set-style "gnu")
-  (c-set-offset 'case-label '+)
+(defun tjf:cpp/config ()
+  "C++ mode config function."
+  (message "tjf:cpp/config...")
+  (define-key c++-ts-mode-map [menu-bar]    nil)
+  (define-key c++-ts-mode-map [(control d)] nil)
+  (define-key c++-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
 
-  (define-key c++-mode-map [menu-bar]    nil)
-  (define-key c++-mode-map [(control d)] nil)
-  (define-key c++-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
+  (easy-menu-define tjf-cpp-menu   c++-ts-mode-map "C++" (append '("C++") tjf:cc/menu-text))
+  (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build" tjf:cpp/build-menu)
+  (message "tjf:cpp/config...done"))
 
-  (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu-text))
-  (easy-menu-define cpp-build-menu c++-mode-map "C++ Build" tjf:cpp/build-menu)
-  ;;
-  (setq flycheck-gcc-language-standard tjf:cpp/dialect)
-  (eglot-ensure))
+(defun tjf:cpp/hook ()
+  "C++ mode hook function."
+  (setq-local completion-at-point-functions (cons #'eglot-completion-at-point completion-at-point-functions))
+  (setq-local completion-at-point-functions (cons #'clang-capf                completion-at-point-functions))
+
+  (abbrev-mode   -1)
+  (flycheck-mode -1)
+
+  (flymake-mode)
+
+  ;; (setq flycheck-gcc-language-standard   tjf:cpp/dialect)
+  ;; (setq flycheck-clang-language-standard tjf:cpp/dialect)
+
+  (eglot-ensure)
+
+  (imenu-add-to-menubar "Navigate"))
 
 (defun tjf:cpp/syntax-check ()
   "Compile current buffer (syntax check only)."

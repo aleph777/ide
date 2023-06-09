@@ -29,23 +29,24 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Feb-2010 Major overhaul
-;;           25-Mar-2015 Changed obsolete eval-current-buffer to eval-buffer
-;;           14-Apr-2015 Added menu "-defun" functions to menu
-;;           20-Oct-2015 Changed obsolete lisp-complete-symbol to completion-at-point
-;;           02-Feb-2016 Added neotree
-;;                       Fixed byte-recompile-directory menu entry
-;;           28-Feb-2016 Refactored as ‘u-lisp’
-;;           03-Mar-2016 Updated to use ‘yasnippet’
-;;           18-Apr-2016 Updated for ‘use-package’
-;;           23-Jun-2016 Removed globally set ‘semantic-mode’
-;;           30-Dec-2016 Modified header line in ‘lisp-insert-skeleton’
-;;           02-Jan-2017 Added ‘u-lisp-imenu-generic-expression’
-;;           18-Jan-2017 Updated ‘lisp-insert-skeleton’
-;;           13-Jun-2020 Added FORCE to byte recompile directory menu entry
+;; Revision: 02-Feb-2010 major overhaul
+;;           25-Mar-2015 changed obsolete eval-current-buffer to eval-buffer
+;;           14-Apr-2015 added menu "-defun" functions to menu
+;;           20-Oct-2015 changed obsolete lisp-complete-symbol to completion-at-point
+;;           02-Feb-2016 added neotree
+;;                       fixed byte-recompile-directory menu entry
+;;           28-Feb-2016 refactored as ‘u-lisp’
+;;           03-Mar-2016 updated to use ‘yasnippet’
+;;           18-Apr-2016 updated for ‘use-package’
+;;           23-Jun-2016 removed globally set ‘semantic-mode’
+;;           30-Dec-2016 modified header line in ‘lisp-insert-skeleton’
+;;           02-Jan-2017 added ‘u-lisp-imenu-generic-expression’
+;;           18-Jan-2017 updated ‘lisp-insert-skeleton’
+;;           13-Jun-2020 added foRCE to byte recompile directory menu entry
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           07-Apr-2021 Updated ‘tjf:lisp/insert-skeleton’
-;;           13-Sep-2022 Added ‘elisp-completion-at-point’
+;;           07-Apr-2021 updated ‘tjf:lisp/insert-skeleton’
+;;           13-Sep-2022 added ‘elisp-completion-at-point’
+;;           06-Jun-2023 changed from ‘tjf:lisp/setup’ to ‘tjf:lisp/hook’ and ‘tjf:lisp/config’
 ;;
 
 ;;; Code:
@@ -84,11 +85,29 @@
     (tjf:edit/fill-skeleton "<<<AUTHOR>>>" author)
     (tjf:edit/fill-skeleton "<<<DATE>>>"   date)))
 
-(defun tjf:lisp/setup ()
-  "Set up ‘lisp-mode’."
-  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-  (add-hook 'completion-at-point-functions #'cape-symbol nil 'local)
+(defun tjf:lisp/hook ()
+  "Lisp mode hook function."
+  (setq-local completion-at-point-functions '(elisp-completion-at-point
+                                              cape-symbol
+                                              eglot-completion-at-point
+                                              cape-keyword
+                                              cape-dabbrev
+                                              cape-file
+                                              consult-history))
   (imenu-add-to-menubar "Navigate"))
+
+(defun tjf:lisp/config ()
+  "Lisp mode config function."
+  (define-key lisp-mode-map             [menu-bar] nil)
+  (define-key lisp-mode-shared-map      [menu-bar] nil)
+  (define-key lisp-interaction-mode-map [menu-bar] nil)
+  (define-key emacs-lisp-mode-map       [menu-bar] nil)
+  ;;
+  (easy-menu-define tjf:lisp/menu       emacs-lisp-mode-map       "Lisp"  tjf:lisp/mode-menu-text)
+  (easy-menu-define tjf:lisp/menu       lisp-interaction-mode-map "Lisp"  tjf:lisp/mode-menu-text)
+  (easy-menu-define tjf:lisp/build-menu emacs-lisp-mode-map       "Build" tjf:lisp/build-menu-text)
+
+  (setq lisp-imenu-generic-expression tjf:lisp/imenu-generic-expression))
 
 (defvar tjf:lisp/build-menu-text
   '("Build"
@@ -101,6 +120,8 @@
 
 (defvar tjf:lisp/mode-menu-text
   '("Lisp"
+    ["Complete Symbol" completion-at-point :active t]
+    "---"
     ["Beginning Of Defun" beginning-of-defun :active t]
     ["End Of Defun"       end-of-defun       :active t]
     ["Mark Defun"         mark-defun         :active t]
@@ -109,22 +130,11 @@
     ["Evaluate Buffer" eval-buffer :active t          ]
     ["Evaluate Region" eval-region :active mark-active]
     "---"
-    ["Insert Skeleton"   tjf:lisp/insert-skeleton :enable (buffer-file-name)]
+    ["Insert Skeleton" tjf:lisp/insert-skeleton :enable (buffer-file-name)]
     ))
 
 ;;
 (message "Loading tjf-lisp...setting up minor mode menus...")
-(define-key lisp-mode-map             [menu-bar] nil)
-(define-key lisp-mode-shared-map      [menu-bar] nil)
-(define-key lisp-interaction-mode-map [menu-bar] nil)
-(define-key emacs-lisp-mode-map       [menu-bar] nil)
-;;
-(easy-menu-define tjf:lisp/menu       emacs-lisp-mode-map       "Lisp"  tjf:lisp/mode-menu-text)
-(easy-menu-define tjf:lisp/build-menu emacs-lisp-mode-map       "Build" tjf:lisp/build-menu-text)
-(easy-menu-define tjf:lisp/menu       lisp-interaction-mode-map "Lisp"  tjf:lisp/mode-menu-text)
-(easy-menu-define tjf:lisp/build-menu lisp-interaction-mode-map "Build" tjf:lisp/build-menu-text)
-
-(setq lisp-imenu-generic-expression tjf:lisp/imenu-generic-expression)
 
 ;;
 (message "Loading tjf-lisp...done")

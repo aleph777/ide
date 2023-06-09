@@ -29,14 +29,15 @@
 
 ;;; Commentary:
 
-;; Revision: 23-Jun-2016 Removed globally set `semantic-mode'
+;; Revision: 23-Jun-2016 removed globally set `semantic-mode'
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           16-Apr-2022 Added ‘tjf:python/convert’
-;;           20-Apr-2022 Added ‘tjf:python/insert-license’
-;;           21-Apr-2022 Updated ‘tjf:python/insert-me’
-;;           13-Sep-2022 Added ‘python-completion-at-point’
+;;           16-Apr-2022 added ‘tjf:python/convert’
+;;           20-Apr-2022 added ‘tjf:python/insert-license’
+;;           21-Apr-2022 updated ‘tjf:python/insert-me’
+;;           13-Sep-2022 added ‘python-completion-at-point’
+;;           06-Jun-2023 changed from ‘tjf:python/setup’ to ‘tjf:python/hook’ and ‘tjf:python/config’
+;;                       fixed shebang
 ;;
-
 
 ;;; Code:
 
@@ -46,8 +47,7 @@
 
 (message "Loading tjf-python...")
 
-(defvar tjf:python/which   (shell-command-to-string "which python3"))
-(defvar tjf:python/shebang (concat "#!" tjf:python/which "  # -*-Python-*-\n\n"))
+(defvar tjf:python/shebang "#!/usr/bin/env -S  # -*-Python-*-\n\n")
 
 ;;
 (defun tjf:python/convert ()
@@ -115,15 +115,34 @@
   (goto-char (point-min))
   (insert tjf:python/shebang))
 
-(defun tjf:python/setup ()
-  "Set up Python mode."
-  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-  (add-hook 'completion-at-point-functions #'anaconda-mode-complete nil 'local)
+(defun tjf:python/hook ()
+  "Python mode hook function."
+  (setq-local completion-at-point-functions '(eglot-completion-at-point
+                                              anaconda-mode-complete
+                                              python-completion-at-point
+                                              cape-keyword
+                                              cape-dabbrev
+                                              cape-file
+                                              cape-history))
+
+  (flycheck-mode -1)
+  (python-ts-mode)
+
   (setq-local imenu-create-index-function #'python-imenu-create-index) ;; only language where this is defined
-  (imenu-add-to-menubar "Navigate")
-  (flycheck-mode)
-  (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
-  (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions)))
+  (imenu-add-to-menubar "Navigate"))
+
+(defun tjf:python/config ()
+  "Python mode config function.")
+
+;; (defun tjf:python/setup ()
+;;   "Set up Python mode."
+;;   (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
+;;   (add-hook 'completion-at-point-functions #'anaconda-mode-complete nil 'local)
+;;   (setq-local imenu-create-index-function #'python-imenu-create-index) ;; only language where this is defined
+;;   (imenu-add-to-menubar "Navigate")
+;;   (flycheck-mode)
+;;   (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
+;;   (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions)))
 
 (defun tjf:python/insert-usage ()
   "Insert the script usage code."
