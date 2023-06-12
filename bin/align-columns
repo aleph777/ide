@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
 
 #         Copyright © 2006-2023 Tom Fontaine
 
@@ -32,8 +32,9 @@
 #
 # Arguments: None
 #
-# Revision:  12-May-2008 use strict;
-#            06-Sep-2012 Changed to allow blank lines in region
+# Revision: 12-May-2008 use strict;
+#           06-Sep-2012 changed to allow blank lines in region
+#           02-Jun-2023 new shebang
 #
 use List::Util qw(max);
 use strict;
