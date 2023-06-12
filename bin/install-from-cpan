@@ -1,0 +1,32 @@
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
+
+use strict;
+use v5.10;
+
+use constant _CPAN_ => 'cpan';
+
+my @modules1 = qw(CPAN
+                  YAML);
+
+my @modules2 = qw(Archive::Tar
+                  Digest::SHA
+                  File::HTTP
+                  File::Which
+                  Gtk2
+                  IO::Compress::Xz
+                  IO::Uncompress::UnXz
+                  List::MoreUtils
+                  Log::Log4Perl
+                  Modern::Perl
+                  MP3::Mplib
+                  Math::Random::Secure
+                  Perl::Critic
+                  Perl::LanguageServer
+                  Perl::MinimumVersion
+                  Regexp::Assemble
+                  Scalar::Util
+                  Text::Balanced);
+
+system join '',_CPAN_," install $_"   for @modules1;
+system join '',_CPAN_,' reload CPAN';
+system join '',_CPAN_," install $_"   for @modules2;
