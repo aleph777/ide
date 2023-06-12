@@ -28,36 +28,44 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 17-May-2020 use v5.10
+#           15-Sep-2022 fixed args handling
+#                       added ‘=’ handling
+#           03-May-2023 moved from ‘Util::GetOptNew’
 #
 package Util::GetOpt;
 
 require 5.006;
 use Carp;
 use strict;
+use v5.10;
 
-# use constant FOO => 'BAR';
+use Regexp::Assemble;
+
+use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
 
 our $AUTOLOAD;
 
-my @AREF = qw(args);
+my @AREF = qw(group bare1 bare2 arg1 arg2);
 my @HREF = qw(option);
 
-my %fields = (args           => undef,
-              option         => undef,
-              switchesGroup  => undef,
-              delimiterGroup => '--?',
-              switchesArg    => undef,
-              switchesBare   => undef,
-             );
+my %fields = (args   => \@ARGV,
 
-my $__ME__ = join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
+              option => undef,
+
+              group  => undef,
+
+              bare1  => undef,
+              bare2  => undef,
+              args1  => undef,
+              args2  => undef,
+             );
 
 # BEGIN
 # {
 # }
-# END
 
+# END
 # {
 # }
 
@@ -100,51 +108,108 @@ sub configure
 
   @{$this}{keys %parm} = values %parm;
 }
+
 sub get
 {
   my $this = shift;
   my %parm = @_;
 
-  my $args     = exists $parm{args}           ? $parm{args}           : $this->{args};
-  my $option   = exists $parm{option}         ? $parm{option}         : $this->{option};
-  my $swGroup  = exists $parm{switchesGroup}  ? $parm{switchesGroup}  : $this->{switchesGroup};
-  my $delim    = exists $parm{delimiterGroup} ? $parm{delimiterGroup} : $this->{delimiterGroup};
-  my $swArg    = exists $parm{switchesArg}    ? $parm{switchesArg}    : $this->{switchesArg};
-  my $swBare   = exists $parm{switchesBare}   ? $parm{switchesBare}   : $this->{switchesBare};
+  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
 
-  my $reDelimiterGroup = ref $delim  eq 'ARRAY' ? join('|',@{$delim})  : $delim;
-  my $reSwitchesBare   = ref $swBare eq 'ARRAY' ? join('|',@{$swBare}) : $swBare;
-  my $reSwitchesArg    = ref $swArg  eq 'ARRAY' ? join('|',@{$swArg})  : $swArg;
+  my $args   = exists $parm{args}   ? $parm{args}   : $this->{args};
+  my $option = exists $parm{option} ? $parm{option} : $this->{option};
+  my $group  = exists $parm{group}  ? $parm{group}  : $this->{group};
+  my $bare1  = exists $parm{bare1}  ? $parm{bare1}  : $this->{bare1};
+  my $bare2  = exists $parm{bare2}  ? $parm{bare2}  : $this->{bare2};
+  my $args1  = exists $parm{args1}  ? $parm{args1}  : $this->{args1};
+  my $args2  = exists $parm{args2}  ? $parm{args2}  : $this->{args2};
 
-  my @tmp;
+  my $reGroup = defined $group && $group ? "[$group]+" : '^\b';
 
-  while(@{$args})
+  my $raBare1 = Regexp::Assemble->new;
+  my $raBare2 = Regexp::Assemble->new;
+  my $raArgs1 = Regexp::Assemble->new;
+  my $raArgs2 = Regexp::Assemble->new;
+
+  $raBare1->add(ref $bare1 ? @{$bare1} : $bare1);
+  $raBare2->add(ref $bare2 ? @{$bare2} : $bare2);
+  $raArgs1->add(ref $args1 ? @{$args1} : $args1);
+  $raArgs2->add(ref $args2 ? @{$args2} : $args2);
+
+  my $reBare1 = $raBare1->re;
+  my $reBare2 = $raBare2->re;
+  my $reArgs1 = $raArgs1->re;
+  my $reArgs2 = $raArgs2->re;
+
+  my @tmp = @{$args};
+
+  my $idx = 0;
+
+  while(@tmp)
   {
-    my $tmp = shift @{$args};
+    my $arg = shift @tmp;
 
-    if(defined $swGroup && $tmp =~ /^($reDelimiterGroup)([$swGroup]+)$/o)
+    if($reArgs1 ne '^\b' && $arg =~ /^-($reArgs1)$/)
     {
-      @{$option}{map { "$1$_" } split //,$2} = (1) x length($2);
+      # -p 1
+      #
+      $option->{$1} = shift @tmp;
+
+      splice @{$args},$idx,2;
     }
-    elsif(defined $swBare && $tmp =~ /^($reSwitchesBare)$/o)
+    elsif($reArgs1 ne '^\b' && $arg =~ /^-($reArgs1)=([^\s]+)$/)
     {
-      $option->{$1} = 1;
-    }
-    elsif(defined $swArg && $tmp =~ /^($reSwitchesArg)$/o)
-    {
-      $option->{$1} = shift @{$args};
-    }
-    elsif(defined $swArg && $tmp =~ /^($reSwitchesArg)(.+)$/o)
-    {
+      # -p=1
+      #
       $option->{$1} = $2;
+
+      splice @{$args},$idx,1;
+    }
+    elsif($reArgs2 ne '^\b' && $arg =~ /^--($reArgs2)$/)
+    {
+      # --param 1
+      #
+      $option->{$1} = shift @tmp;
+
+      splice @{$args},$idx,2;
+    }
+    elsif($reArgs2 ne '^\b' && $arg =~ /^--($reArgs2)=([^\s]+)$/)
+    {
+      # --param=1
+      #
+      $option->{$1} = $2;
+
+      splice @{$args},$idx,1;
+    }
+    elsif($reBare1 ne '^\b' && $arg =~ /^-($reBare1)$/)
+    {
+      # -p
+      #
+      $option->{$1} = 1;
+
+      splice @{$args},$idx,1;
+    }
+    elsif($reBare2 ne '^\b' && $arg =~ /^--($reBare2)$/)
+    {
+      # --param
+      #
+      $option->{$1} = 1;
+
+      splice @{$args},$idx,1;
+    }
+    elsif($reGroup ne '^\b' && $arg =~ /^-($reGroup)$/)
+    {
+      # -rip
+      #
+      @{$option}{split //,$1} = (1) x length($1);
+
+      splice @{$args},$idx,1;
     }
     else
     {
-      push @tmp,$tmp;
+      ++$idx;
     }
-    @{$this}{keys %{$option}} = values %{$option};
   }
-  @{$args} = @tmp;
 }
 
 1;
