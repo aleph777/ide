@@ -1,5 +1,6 @@
+<<<SHEBANG>>>
 
-#         Copyright © <<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © <<<YEAR>>>-<<<YEAR>>> <<<AUTHOR>>>
 
 # Title:  <<<TITLE>>>
 # Date:   <<<DATE>>>
@@ -33,8 +34,6 @@
 #
 # Revision:
 #
-use strict;
-use v5.10;
+use Modern::Perl;
 
-use constant _ME_ => $0 =~ m=([^/]+)$=;
-
+<<<ME>>>
