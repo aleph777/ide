@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
 
 #         Copyright © 2016-2023 Tom Fontaine
 
@@ -32,7 +32,7 @@
 #
 # Arguments: None
 #
-# Revision:
+# Revision: 02-Jun-2023 new shebang
 #
 use List::Util qw(max);
 use strict;
