@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl    # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -37,22 +37,33 @@
 #            .
 #            $N is a path to search
 #
-# Revision:  25-Mar-2015 Removed -tty and -no-tty
-#            31-Mar-2015 Removed pathname fix (moved to File::FindWrapper)
-#            21-Apr-2015 Updated usage detection
-#            18-Sep-2016 Default to '-r'
-#            14-Sep-2022 Switched to ‘GetOptNew’
+# Revision: 25-Mar-2015 removed -tty and -no-tty
+#           31-Mar-2015 removed pathname fix (moved to File::FindWrapper)
+#           21-Apr-2015 updated usage detection
+#           18-Sep-2016 default to '-r'
+#           14-Sep-2022 switched to ‘Util::GetOptNew’
+#           03-May-2023 ‘Util::GetOpt’ and ‘Util::Find’
+#           02-Jun-2023 use Modern::Perl
+#                       new shebang
 #
-use File::FindWrapper;
+use Modern::Perl;
 use File::IO;
-use Util::GetOptNew;
-require 5.013006;
-use v5.10;
-use strict;
+use Util::Find;
+use Util::GetOpt;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:-(?:(?:-(?:h(?:elp)?|\?)|h(?:elp)?)$|\?)|\?$))/))
+my %option;
+
+my $f = Util::Find->new();
+my $o = Util::GetOpt->new(option => \%option);
+
+push @{$f->args1},qw(b e m A B C exec);
+push @{$f->bare1},qw(l);
+
+$o->get(args1 => $f->args1, args2 => $f->args1,bare1 => $f->bare1, bare2 => $f->bare1,group => 'cilnrv');
+
+if((@ARGV == 0) || exists $option{'help'})
 {
   print "\nUsage: ",_ME_," <perl_regexp> [switch [arg] ...] dir ...\n\n";
   print "Switches:\n";
@@ -111,35 +122,12 @@ if((@ARGV == 0) || ($ARGV[0] =~ /(?^:^(?:-(?:(?:-(?:h(?:elp)?|\?)|h(?:elp)?)$|\?
   printf "%17s days - find files of inode change time less than or equal days\n\n",'-inode-le';
   exit;
 }
-my %option;
-
-my $f = File::FindWrapper->new();
-my $o = Util::GetOptNew->new(option => \%option);
-
-
-my @arg1  = (@{$f->argSwitches},qw(b e m A B C exec));
-my @bare1 = (@{$f->switches},'l');
-
-$o->get(arg1 => \@arg1, bare1 => \@bare1, group => 'cilnrv');
-
 my $regex = shift @ARGV;
 
 $f->get(root => \@ARGV, option => \%option);
 
 @ARGV = grep { -e } @{$f->contents};
 
-# $option{'r'} = 1;
-
-# if(exists $option{'r'})
-# {
-#   %{$f->option} = map { substr($_,1) => $option{$_} } keys %option; # re-map to old-style options
-
-#   $f->option->{'no-dir'} = 1;
-
-#   $f->get(root => \@ARGV);
-
-#   @ARGV = grep { -e } @{$f->contents};
-# }
 if(exists $option{'l'})
 {
   printFilesWithMatches();  # b e i v
@@ -408,7 +396,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -443,7 +431,7 @@ sub printLinesWithMatches
           {
             unless(/$regex/oi)
             {
-              my $s = join ':',single($$file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -485,7 +473,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -520,7 +508,7 @@ sub printLinesWithMatches
           {
             if(/$regex/oi)
             {
-              my $s = join single($file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -565,7 +553,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -573,7 +561,7 @@ sub printLinesWithMatches
               }
               else
               {
-                print $s
+                print $s;
 
                 say '--';
 
@@ -600,7 +588,7 @@ sub printLinesWithMatches
           {
             unless(/$regex/o)
             {
-              my $s = join ':',single($file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -642,7 +630,7 @@ sub printLinesWithMatches
               ($bef,$aft) = getContext($i,$#{$io->contents});
 
               my $n = $bef;
-              my $s = map { join ':',single($file),(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
+              my $s = map { join ':',$file,(exists $option{'n'} ? ++$n : ()),$_ } @{$io->contents}[$bef .. $aft];
 
               if(exists $option{'exec'})
               {
@@ -650,9 +638,9 @@ sub printLinesWithMatches
               }
               else
               {
-                print $s
+                print $s;
 
-                  say '--';
+                say '--';
 
                 last if exists $option{'m'} && ++$count >= $option{'m'};
               }
@@ -677,7 +665,7 @@ sub printLinesWithMatches
           {
             if(/$regex/o)
             {
-              my $s = join ':',single($file),(exists $option{'n'} ? $i+1 : ()),$_;
+              my $s = join ':',$file,(exists $option{'n'} ? $i+1 : ()),$_;
 
               if(exists $option{'exec'})
               {
@@ -780,5 +768,7 @@ sub getContext
 
 sub single
 {
-  return @ARGV == 1 ? () : shift;
+  # return @ARGV == 1 ? () : shift;
+
+  return shift;
 }
