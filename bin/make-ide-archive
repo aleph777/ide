@@ -1,0 +1,63 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+#         Copyright © 2023-2023 Tom Fontaine
+
+# Title:  make-ide-archive
+# Date:   03-May-2023
+
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software",
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+
+# Except as contained in this notice, the name(s of the above copyright
+# holders shall not be used in advertising or otherwise to promote the sale,
+# use or other dealings in this Software without prior written authorization.
+
+# The software is provided "As Is", without warranty of any kind, express or
+# implied, including but not limited to the warranties of merchantability,
+# fitness for a particular purpose and noninfringement. In no event shall
+# the authors or copyright holders be liable for any claim, damages or other
+# liability, whether in an action of contract, tort or otherwise, arising
+# from, out of or in connection with the software or the use or other
+# dealings in the software.
+
+# Purpose:   creates a compressed tar archive of the ide
+#
+# Arguments: n/a
+#
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
+#
+use Modern::Perl;
+use Util::GetOpt;
+use Time::Piece;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+if(@ARGV && $ARGV[0] =~ /(?^:^(?:--?h(?:elp)?|-?-?\?)$)/)
+{
+  print "\nUsage: ",_ME_," [-g|-x|--gz|--xz]\n\n";
+  exit;
+}
+my $opt = Util::GetOpt->new();
+
+$opt->get(bare1 => [qw(g x)],bare2 => [qw(gz xz)]);
+
+my ($suffix,$switches) = exists $opt->option->{'g'} || exists $opt->option->{'gz'} ? ('tar.gz','czvf') : ('tar.xz','cJvf');
+
+chdir $ENV{HOME};
+
+my $file  = join '','ide-',localtime->strftime('%Y%m%d%H%M%S'),'.',$suffix;
+my @files = sort qx(pfind ide -no-dir -no-suffix elc -no-name '(git|obsolete)');
+
+chomp @files;
+
+system "purge ide/";
+
+system "tar $switches $file ide/.git/config @files";
