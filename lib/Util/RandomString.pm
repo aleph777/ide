@@ -1,4 +1,4 @@
-# Util::RandomString --- [description] -*-Perl-*-
+# Util::RandomString --- creates random strings of characters -*-Perl-*-
 
 #         Copyright © 2020-2023 Tom Fontaine
 
@@ -31,16 +31,16 @@
 # Revision:
 #
 
+# Code:
+
 package Util::RandomString;
 
-require 5.008;
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 use Math::Random::Secure qw(irand);
 
-use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -119,7 +119,7 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $chars   = exists $parm{chars}   ? $parm{chars}   : $this->{chars};
   my $n       = exists $parm{n}       ? $parm{n}       : $this->{n};

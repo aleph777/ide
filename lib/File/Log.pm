@@ -34,6 +34,7 @@
 #           25-Mar-2015 removed usage of bareword file handles
 #                       require 5.008
 #           21-Apr-2015 changed to 3 argument open from critique
+#           04-May-2023 use Time::Piece
 #
 package File::Log;
 
@@ -42,10 +43,10 @@ use strict;
 use v5.10;
 
 use File::IO;
-use Util::DateTime;
+use Time::Piece;
 use IO::Handle;
 
-# use constant FOO => 'BAR';
+use constant TIMESTAMP => '%Y%m%d%H%M%S';
 
 our $AUTOLOAD;
 
@@ -56,9 +57,11 @@ my %fields = (path      => undef,
               basename  => undef,
               basedir   => undef,
 
+              utc       => 1,
+
               clobber   => 1,
               delimiter => ' ',
-              timestamp => 0,
+              timestamp => 1,
               echo      => 0,
 
               who       => undef,
@@ -162,7 +165,6 @@ sub open
   $open = 1;
 
   $logfile = File::IO->new(path => $filename,newline => 1,append  => 1);
-  $ts      = Util::DateTime->new(format => 'LOG');
 
   open STDERR,'>>',$filename;
 }
@@ -208,21 +210,25 @@ sub put
   $who       = exists $parm{who}       ? $parm{who}       : $who;
   $echo      = exists $parm{echo}      ? $parm{echo}      : $echo;
   $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $delimiter;
+  my $utc    = exists $parm{utc}       ? $parm{utc}       : $this->{utc};
 
-  my $time = $timestamp ? getTimestamp() : undef;
+  my $time = $timestamp ? getTimestamp($utc) : undef;
 
   $msg = join $delimiter,grep { defined } $time,$who,"$msg$parm{text}";
 
   $logfile->put(contents => $msg);
 
-  print $msg,"\n" if $echo;
+  say $msg if $echo;
 
   $msg = '';
 }
 
 sub getTimestamp
 {
-  return $ts->now;
+  my $utc = shift;
+  my $now = defined $utc && $utc ? gmtime : localtime;
+
+  return $now->strftime(TIMESTAMP);
 }
 
 1;
