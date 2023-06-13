@@ -1,4 +1,4 @@
-# File::IO --- Provides a file object -*-Perl-*-
+# File::IO --- Provides a file object   -*-Perl-*-
 
 #         Copyright © 2007-2023 Tom Fontaine
 
@@ -33,21 +33,22 @@
 #           10-Jan-2013 added support for UTF8
 #           25-Mar-2015 removed usage of bareword file handles
 #                       require 5.008
-#           30-Mar-2015 Added auto-support for .gz and .xz files
-#           13-Apr-2015 Use List::Util
-#           20-Jul-2019 Added dependency injection for text conversion
+#           30-Mar-2015 added auto-support for .gz and .xz files
+#           13-Apr-2015 use List::Util
+#           20-Jul-2019 added dependency injection for text conversion
 #           17-Feb-2021 use v5.10
+#           02-Jun-2023 use Modern::Perl
 #
 package File::IO;
 
 use Carp;
+use Modern::Perl;
+
 use IO::Compress::Gzip;
 use IO::Compress::Xz;
 use IO::Uncompress::Gunzip;
 use IO::Uncompress::UnXz;
 use List::Util qw(max);
-use strict;
-use v5.10;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
