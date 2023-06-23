@@ -68,6 +68,7 @@
 ;;           24-Sep-2022 fixed ‘tjf:perl/which’
 ;;           02-Jun-2023 major clean up
 ;;           06-Jun-2023 changed from ‘tjf:perl/setup’ to ‘tjf:perl/hook’ and ‘tjf:perl/config’
+;;           12-Jun-2023 fixed ‘tjf:perl/shebang’
 ;;
 
 ;;; Code:
@@ -92,7 +93,7 @@
 (setq   tjf:perl/me "use constant _ME_ => $0 =~ m=([^/]+)$=;")
 
 (defvar tjf:perl/shebang)
-(setq   tjf:perl/shebang "#!/usr/bin/env -S perl -w   # -*-Perl-*-")
+(setq   tjf:perl/shebang "#!/usr/bin/env -S perl   # -*-Perl-*-")
 
 (defvar tjf:perl/template-file-script-header-home)
 (setq   tjf:perl/template-file-script-header-home (concat tjf:user/dir-elisp "templates/perl-script-header-home.pl"))
@@ -163,8 +164,7 @@
     (tjf:edit/fill-skeleton "<<<YEAR>>>"    year)
     (tjf:edit/fill-skeleton "<<<AUTHOR>>>"  (user-full-name))
     (tjf:edit/fill-skeleton "<<<TITLE>>>"   title)
-    (tjf:edit/fill-skeleton "<<<DATE>>>"    date)
-    (tjf:edit/fill-skeleton "<<<ME>>>"      tjf:perl/me)))
+    (tjf:edit/fill-skeleton "<<<DATE>>>"    date)))
 
 ;; (defun tjf:perl/insert-usage ()
 ;;   "Insert the script usage code."
