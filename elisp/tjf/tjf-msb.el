@@ -29,19 +29,21 @@
 
 ;;; Commentary:
 
-;; Revision: 26-Sep-2016 Added `clips-log-mode'
-;;           13-Jun-2018 Added ‘helpful-mode’ to ‘Help’ entry
-;;           24-Jun-2019 Added ‘groovy’
+;; Revision: 26-Sep-2016 added `clips-log-mode'
+;;           13-Jun-2018 added ‘helpful-mode’ to ‘Help’ entry
+;;           24-Jun-2019 added ‘groovy’
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           02-Jul-2021 Added ‘julia-mode’
-;;           10-Jan-2023 Added ‘cmake-mode’ and ‘csv-mode’
+;;           02-Jul-2021 added ‘julia-mode’
+;;           10-Jan-2023 added ‘cmake-mode’ and ‘csv-mode’
+;;           06-Jun-2023 added ‘c-ts-mode’ and ‘c++-ts-mode’
+;;           07-Jun-2023 added remaining ts-modes
+;;                       removed ‘tjf-flags’ dependency
 ;;
 
 ;;; Code:
 
 (message "Loading tjf-msb...")
 (require 'msb)
-(require 'tjf-flags)
 
 ;;; overload
 (with-eval-after-load 'msb
@@ -87,99 +89,135 @@
                             (cdr buffers-menu))
                    buffers-menu))))))
 
+(defsubst tjf:msb/is-mode? (mode-or-list)
+  "Check if ‘MODE-OR-LIST’ is ‘major-mode’."
+  (interactive)
+  (if (listp mode-or-list)
+      (memq major-mode mode-or-list)
+    (eq major-mode mode-or-list)))
+
+(defconst tjf:msb/bibtext-mode    '(bibtex-mode bibtex-style-mode))
+(defconst tjf:msb/c-mode          '(c-ts-mode c-mode))
+(defconst tjf:msb/c++-mode        '(c++-ts-mode c++-mode))
+(defconst tjf:msb/cmake-mode      '(cmake-ts-mode cmake-mode))
+(defconst tjf:msb/conf-mode       '(conf-mode conf-unix-mode))
+(defconst tjf:msb/fortran-mode    '(fortran-mode f90-mode))
+(defconst tjf:msb/go-mode         '(go-ts-mode go-mode))
+(defconst tjf:msb/help-mode       '(help-mode helpful-mode))
+(defconst tjf:msb/html-mode       '(html-ts-mode html-mode html-helper-mode nxhtml-mode))
+(defconst tjf:msb/java-mode       '(java-ts-mode java-mode))
+(defconst tjf:msb/javascript-mode '(espresso-mode javascript-mode js-mode js2-mode))
+(defconst tjf:msb/json-mode       '(json-ts-mode json-mode))
+(defconst tjf:msb/julia-mode      '(julia-ts-mode julia-mode))
+(defconst tjf:msb/make-mode       '(makefile-gmake-mode makefile-mode makefile-automake-mode makefile-bsdmake-mode makefile-imake-mode makefile-makepp-mode))
+(defconst tjf:msb/package-mode    '(package-menu-mode paradox-menu-mode))
+(defconst tjf:msb/perl-mode       '(cperl-mode perl-mode))
+(defconst tjf:msb/ruby-mode       '(ruby-ts-mode ruby-mode))
+(defconst tjf:msb/rust-mode       '(rust-ts-mode rust-mode))
+(defconst tjf:msb/sh-script-mode  '(sh-mode shell-script-mode))
+(defconst tjf:msb/text-mode       '(text-mode indented-text-mode))
+(defconst tjf:msb/text-mode       '(nxml-mode xml-mode))
+(defconst tjf:msb/yaml-mode       '(yaml-ts-mode yaml-mode))
+
 (defvar msb--u-menus)
-(setq msb--u-menus '(((and (boundp 'server-buffer-clients) server-buffer-clients 'multi)         1010 "Clients (%d)")
-                     ((and (get-buffer-process (current-buffer))                 'multi)         1020 "Processes (%d)")
-                     ((and (boundp 'vc-mode) vc-mode                             'multi)         1030 "Version Control (%d)")
-                     ((and buffer-file-name (buffer-modified-p)                  'multi)         1040 "Changed files (%d)")
-                     ;; A 2000
-                     ((eq major-mode 'ada-mode)                                                  2000 "Ada Files (%d)")
-                     ((eq major-mode 'archive-mode)                                              2001 "Archive Files (%d)")
-                     ((eq major-mode 'asm-mode)                                                  2002 "Assembly Files (%d)")
-                     ((eq major-mode 'awk-mode)                                                  2003 "Awk Files (%d)")
-                     ;; B 2010
-                     ((eq major-mode 'bat-mode)                                                  2010 "Batch Files (%d)")
-                     ((memq major-mode '(bibtex-mode bibtex-style-mode))                         2011 "Bibtex Files (%d)")
-                     ;; C 2020
-                     ((eq major-mode 'c-mode)                                                    2020 "C Files  (%d)")
-                     ((eq major-mode 'csharp-mode)                                               2021 "C# Files  (%d)")
-                     ((eq major-mode 'c++-mode)                                                  2022 "C++ Files  (%d)")
-                     ((eq major-mode 'clips-mode)                                                2023 "CLIPS Files  (%d)")
-                     ((eq major-mode 'clips-log-mode)                                            2024 "CLIPS LogFiles  (%d)")
-                     ((eq major-mode 'cmake-mode)                                                2025 "CMake Files  (%d)")
-                     ((memq major-mode '(conf-mode conf-unix-mode))                              2026 "Configuration Files  (%d)")
-                     ((eq major-mode 'css-mode)                                                  2027 "CSS Files  (%d)")
-                     ((eq major-mode 'csv-mode)                                                  2028 "CSV Files  (%d)")
-                     ((eq major-mode 'Custom-mode)                                               2029 "Custimization (%d)")
-                     ;; D 2030
-                     ((eq major-mode 'doctex-mode)                                               2030 "Doctex Files (%d)")
-                     ;; E 2040
-                     ((eq major-mode 'emacs-lisp-mode)                                           2040 "Elisp Files (%d)")
-                     ;; F 2050
-                     ((memq major-mode '(fortran-mode f90-mode))                                 2050 "Fortran Files (%d)")
-                     ;; G 2060
-                     ((eq major-mode 'groovy-mode)                                               2060 "Groovy Files (%d)" )
-                     ;; H 2070
-                     ((memq major-mode '(help-mode helpful-mode))                                2070 "Help Files (%d)")
-                     ((tjf:flags/is-html-mode?)                                                  2071 "HTML Files (%d)")
-                     ;; I 2080
-                     ((eq major-mode 'icon-mode)                                                 2080 "Icon Files (%d)")
-                     ((eq major-mode 'idl-mode)                                                  2081 "IDL Files (%d)")
-                     ((eq major-mode 'image-mode)                                                2082 "Image Files (%d)")
-                     ;; J 2090
-                     ((eq major-mode 'java-mode)                                                 2090 "Java Files (%d)")
-                     ((tjf:flags/is-javascript-mode?)                                            2091 "Javascript Files (%d)")
-                     ((memq major-mode '(json-mode json-ts-mode))                                2092 "JSON Files (%d)")
-                     ((eq major-mode 'julia-mode)                                                2093 "Julia Files (%d)")
-                     ;; K 3000
-                     ;; L 3010
-                     ((eq major-mode 'latex-mode)                                                3010 "Latex Files (%d)")
-                     ((eq major-mode 'lisp-mode)                                                 3011 "Lisp Files (%d)")
-                     ((eq major-mode 'log-mode)                                                  3012 "Log Files (%d)")
-                     ((eq major-mode 'lua-mode)                                                  3013 "Lua Files (%d)")
-                     ;; M 3020
-                     ((tjf:flags/is-make-mode?)                                                  3020 "Make Files (%d)")
-                     ((eq major-mode 'Man-mode)                                                  3021 "Manuals (%d)")
-                     ((eq major-mode 'matlab-mode)                                               3022 "MATLAB Files (%d)")
-                     ;; N 3030
-                     ;; O 3040
-                     ((eq major-mode 'org-mode)                                                  3040 "Org Files (%d)")
-                     ;; P 3050
-                     ((memq major-mode '(package-menu-mode paradox-menu-mode))                   3050 "Packages (%d)")
-                     ((eq major-mode 'pascal-mode)                                               3051 "Pascal (%d)")
-                     ((tjf:flags/is-perl-mode?)                                                  3052 "Perl Files (%d)")
-                     ((eq major-mode 'perl6-mode)                                                3053 "Perl6 Files (%d)")
-                     ((eq major-mode 'ps-mode)                                                   3054 "Postscript Files (%d)")
-                     ((eq major-mode 'python-mode)                                               3055 "Python Files (%d)")
-                     ;; Q 3060
-                     ;; R 3070
-                     ((eq major-mode 'ruby-mode)                                                 3070 "Ruby Files (%d)")
-                     ;; S 3080
-                     ((eq major-mode 'scheme-mode)                                               3080 "Scheme Files (%d)")
-                     ((tjf:flags/is-shell-script-mode?)                                          3082 "Shell Scripts (%d)")
-                     ((eq major-mode 'sql-mode)                                                  3083 "SQL Scripts (%d)")
-                     ;; T 3090
-                     ((eq major-mode 'tar-mode)                                                  3090 "Tar Files (%d)")
-                     ((eq major-mode 'tcl-mode)                                                  3091 "Tcl Files (%d)")
-                     ((eq major-mode 'texinfo-mode)                                              3092 "Texinfo Files (%d)")
-                     ((tjf:flags/is-text-mode?)                                                  3093 "Text Files (%d)")
-                     ;; U 4000
-                     ;; V 4010
-                     ((eq major-mode 'vhdl-mode)                                                 4010 "VHDL Files (%d)")
-                     ;; W 4020
-                     ;; X 4030
-                     ((tjf:flags/is-xml-mode?)                                                   4030 "XML Files (%d)")
-                     ;; Y 4040
-                     ((eq major-mode 'yaml-mode)                                                 4040 "YAML Files (%d)")
-                     ;; Z 4050
-                     ;; OTHER 5000
-                     ((and buffer-file-name (string-match "^\\.[^/]*$" (buffer-name)) 'no-multi) 5000 "Hidden Files (%d)")
-                     ((and buffer-file-name 'no-multi)                                           5001 "Other Files (%d)")
-                     ((and (string-match "^copy of " (buffer-name)) 'no-multi)                   5002 "Copy Buffers (%d)")
-                     ((and (eq major-mode 'compilation-mode) 'no-multi)                          5010 "Compilation Log (%d)")
-                     ((and msb-display-invisible-buffers-p (msb-invisible-buffer-p) 'no-multi)   5020 "Invisible Buffers (%d)")
-                     ;; Catchup for all non-file buffers
-                     ('no-multi                                                                  5099 "Other Buffers (%d)")))
+(setq msb--u-menus
+      '(;; - 1000
+        ((and (boundp 'server-buffer-clients) server-buffer-clients 'multi) 1010 "Clients (%d)")
+        ((and (get-buffer-process (current-buffer))                 'multi) 1020 "Processes (%d)")
+        ((and (boundp 'vc-mode) vc-mode                             'multi) 1030 "Version Control (%d)")
+        ((and buffer-file-name (buffer-modified-p)                  'multi) 1040 "Changed files (%d)")
+
+        ;; A 2000
+        ((tjf:msb/is-mode? 'ada-mode)                  2000 "Ada Files (%d)")
+        ((tjf:msb/is-mode? 'archive-mode)              2001 "Archive Files (%d)")
+        ((tjf:msb/is-mode? 'asm-mode)                  2002 "Assembly Files (%d)")
+        ((tjf:msb/is-mode? 'awk-mode)                  2003 "Awk Files (%d)")
+        ;; B 2010
+        ((tjf:msb/is-mode? 'bat-mode)                  2010 "Batch Files (%d)")
+        ((tjf:msb/is-mode? 'tjf:msb/bibtext-mode)      2011 "Bibtex Files (%d)")
+        ;; C 2020
+        ((tjf:msb/is-mode? 'tjf:msb/c-mode)            2020 "C Files  (%d)")
+        ((tjf:msb/is-mode? 'csharp-mode)               2021 "C# Files  (%d)")
+        ((tjf:msb/is-mode? tjf:msb/c++-mode)           2022 "C++ Files  (%d)")
+        ((tjf:msb/is-mode? 'clips-mode)                2023 "CLIPS Files  (%d)")
+        ((tjf:msb/is-mode? 'clips-log-mode)            2024 "CLIPS LogFiles  (%d)")
+        ((tjf:msb/is-mode? 'tjf:msb/cmake-mode)        2025 "CMake Files  (%d)")
+        ((tjf:msb/is-mode? 'tjf:msb/conf-mode)         2026 "Configuration Files  (%d)")
+        ((tjf:msb/is-mode? 'css-mode)                  2027 "CSS Files  (%d)")
+        ((tjf:msb/is-mode? 'csv-mode)                  2028 "CSV Files  (%d)")
+        ((tjf:msb/is-mode? 'Custom-mode)               2029 "Custimization (%d)")
+        ;; D 2030
+        ((tjf:msb/is-mode? 'doctex-mode)               2030 "Doctex Files (%d)")
+        ;; E 2040
+        ((tjf:msb/is-mode? 'emacs-lisp-mode)           2040 "Elisp Files (%d)")
+        ;; F 2050
+        ((tjf:msb/is-mode? tjf:msb/fortran-mode)       2050 "Fortran Files (%d)")
+        ;; G 2060
+        ((tjf:msb/is-mode? tjf:msb/go-mode)            2060 "Go Files (%d)" )
+        ((tjf:msb/is-mode? 'groovy-mode)               2061 "Groovy Files (%d)" )
+        ;; H 2070
+        ((tjf:msb/is-mode? tjf:msb/help-mode)          2070 "Help Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/html-mode)          2071 "HTML Files (%d)")
+        ;; I 2080
+        ((tjf:msb/is-mode? 'icon-mode)                 2080 "Icon Files (%d)")
+        ((tjf:msb/is-mode? 'idl-mode)                  2081 "IDL Files (%d)")
+        ((tjf:msb/is-mode? 'image-mode)                2082 "Image Files (%d)")
+        ;; J 2090
+        ((tjf:msb/is-mode? tjf:msb/java-mode)          2090 "Java Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/javascript-mode)    2091 "Javascript Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/json-mode)          2092 "JSON Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/julia-mode)         2093 "Julia Files (%d)")
+        ;; K 3000
+        ;; L 3010
+        ((tjf:msb/is-mode? 'latex-mode)                3010 "Latex Files (%d)")
+        ((tjf:msb/is-mode? 'lisp-mode)                 3011 "Lisp Files (%d)")
+        ((tjf:msb/is-mode? 'log-mode)                  3012 "Log Files (%d)")
+        ((tjf:msb/is-mode? 'lua-mode)                  3013 "Lua Files (%d)")
+        ;; M 3020
+        ((tjf:msb/is-mode? tjf:msb/make-mode)          3020 "Make Files (%d)")
+        ((tjf:msb/is-mode? 'Man-mode)                  3021 "Manuals (%d)")
+        ((tjf:msb/is-mode? 'matlab-mode)               3022 "MATLAB Files (%d)")
+        ;; N 3030
+        ;; O 3040
+        ((tjf:msb/is-mode? 'org-mode)                  3040 "Org Files (%d)")
+        ;; P 3050
+        ((tjf:msb/is-mode? tjf:msb/package-mode)       3050 "Packages (%d)")
+        ((tjf:msb/is-mode? 'pascal-mode)               3051 "Pascal (%d)")
+        ((tjf:msb/is-mode? tjf:msb/perl-mode)          3052 "Perl Files (%d)")
+        ((tjf:msb/is-mode? 'perl6-mode)                3053 "Rakudo Files (%d)")
+        ((tjf:msb/is-mode? 'ps-mode)                   3054 "Postscript Files (%d)")
+        ((tjf:msb/is-mode? 'python-mode)               3055 "Python Files (%d)")
+        ;; Q 3060
+        ;; R 3070
+        ((tjf:msb/is-mode? tjf:msb/ruby-mode)          3070 "Ruby Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/rust-mode)          3071 "Rust Files (%d)")
+        ;; S 3080
+        ((tjf:msb/is-mode? 'scheme-mode)               3080 "Scheme Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/sh-script-mode)     3082 "Shell Scripts (%d)")
+        ((tjf:msb/is-mode? 'sql-mode)                  3083 "SQL Scripts (%d)")
+        ;; T 3090
+        ((tjf:msb/is-mode? 'tar-mode)                  3090 "Tar Files (%d)")
+        ((tjf:msb/is-mode? 'tcl-mode)                  3091 "Tcl Files (%d)")
+        ((tjf:msb/is-mode? 'texinfo-mode)              3092 "Texinfo Files (%d)")
+        ((tjf:msb/is-mode? tjf:msb/text-mode)          3093 "Text Files (%d)")
+        ;; U 4000
+        ;; V 4010
+        ((tjf:msb/is-mode? 'vhdl-mode)                 4010 "VHDL Files (%d)")
+        ;; W 4020
+        ;; X 4030
+        ((tjf:msb/is-mode? tjf:msb/text-mode)          4030 "XML Files (%d)")
+        ;; Y 4040/
+        ((tjf:msb/is-mode? tjf:msb/yaml-mode)          4040 "YAML Files (%d)")
+        ;; Z 4050
+
+        ;; OTHER 5000
+        ((and buffer-file-name (string-match "^\\.[^/]*$" (buffer-name)) 'no-multi) 5000 "Hidden Files (%d)")
+        ((and buffer-file-name 'no-multi)                                           5001 "Other Files (%d)")
+        ((and (string-match "^copy of " (buffer-name)) 'no-multi)                   5002 "Copy Buffers (%d)")
+        ((and (eq major-mode 'compilation-mode) 'no-multi)                          5010 "Compilation Log (%d)")
+        ((and msb-display-invisible-buffers-p (msb-invisible-buffer-p) 'no-multi)   5020 "Invisible Buffers (%d)")
+        ;; Catchup for all non-file buffers
+        ('no-multi                                                                  5099 "Other Buffers (%d)")))
 
 (msb-mode)
 
