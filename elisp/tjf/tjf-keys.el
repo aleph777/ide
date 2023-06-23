@@ -30,90 +30,92 @@
 
 ;;; Commentary:
 
-;; Revision: 22-Mar-2007 Major revision/overhaul
-;;           16-May-2008 Update for Emacs 22
-;;           11-Feb-2011 Removed ‘redo’ - added ‘redo+’
-;;           13-Sep-2012 Update for Emacs 24
-;;           26-Sep-2013 Added mouse definitions from default.el
-;;           27-Sep-2013 Removed entries for Sun function keys
-;;           13-Jun-2014 Added ‘usr-tab-close-paren’
-;;           24-Mar-2015 Bound ‘usr-open-line’ to M-return
-;;           25-Mar-2015 Added ‘usr-capitalize-word’, ‘usr-downcase-word’, and ‘usr-upcase-word’
-;;           26-Mar-2015 Fixed [mode-line C-mouse-2] definition
-;;                       Removed [super tab] definition
-;;                       Found problems in mode-line mouse bindings (not fixed!!!)
-;;           01-Apr-2015 Fixed mode-line mouse bindings
-;;                       Added secondary selection to ‘C-M-mouse-’
-;;           02-Apr-2015 Added loading messages
-;;           04-May-2015 Added ‘usr-move-line-down’
-;;           06-May-2015 Changed ‘kp-N’ and ‘M-kp-N’ bindings to use lambda functions
-;;           03-Dec-2015 Changed ‘M-kp-.’ to ‘completion-at-point’
-;;                       Added ‘S-SPC’
-;;                       Added ‘Scroll_Lock’ as ‘completion-at-point’
-;;           05-Jan-2016 Added ‘tinyeat’, removed C-delete
-;;           18-Jan-2016 Updated for new user interface
-;;           29-Jan-2016 Added ‘eval-after-load’ for isearch definitions
-;;           03-Feb-2016 Updated for more ergo
-;;                       Added ‘xah-search-current-word’ for ‘C-f’
-;;           04-Feb-2016 Added ‘usr-newline-and-indent’ for ‘C-S-return’
-;;           06-Feb-2016 Added ‘usr-end-of-line’ and ‘usr-beginning-of-line’
-;;           23-Feb-2016 Added ‘usr-occur’ and ‘usr-moccur’
-;;           25-Feb-2016 Added ‘text-scale-increase’ and ‘text-scale-decrease’
-;;           26-Feb-2016 Added ‘C-b’
-;;                       Added ‘C-d’ as ‘duplicate-line-or-region’
-;;           28-Feb-2016 Replaced ‘usr-’ functions with ‘u-’ functions
-;;           02-Mar-2016 Changed ‘f6’ to ‘capitalize-word-or-region’
-;;           03-Mar-2016 Removed ‘M-f’
-;;                       Added ‘s-f1’ as ‘u-forward-symbol’
-;;                       Added ‘s-f2’ as ‘backward-symbol’
-;;                       Added ‘C-f1’ as ‘forward-word’
-;;                       Added ‘kp-divide’ as ‘toggle-fill-paragraph-or-region’
-;;           19-Apr-2016 Added ‘mouse-delete-window’ to "control left-fringe" and "control right-fringe"
-;;           21-Apr-2016 Removed ‘modeline’ ‘mouse-1’" binding
-;;                       Changed ‘modeline’ ‘C-mouse-1’ to delete-window
-;;                       Changed ‘modeline’ ‘C-mouse-3’ to delete-other-windows
-;;                       Changed ‘s-f6’ to ‘xah-toggle-letter-case’
-;;           26-Apr-2016 Changed ‘C-e’ to ‘ergoemacs-extend-selection’ lambda function
-;;                       Changed ‘C-kp-+’ to ‘shift-number-up’
-;;                       Changed ‘C-kp--’ to ‘shift-number-down’
-;;           27-Apr-2016 Changed ‘C-p’ to ‘pop-to-mark-command’
-;;           28-Apr-2016 Changed ‘insert’ to ‘u-paste-clipboard’
-;;                       Added ‘C-insert’ as ‘overwrite-mode’
-;;                       Added ‘C-S-d’ as ‘duplicate-as-comment’
-;;           14-Aug-2016 Added ‘M-insert’ as ‘insert-dd-mon-yyyy’
-;;                       Added ‘s-insert’ as ‘insert-month-day-year’
-;;           25-Aug-2016 Added ‘C-S-n’ as ‘narrow-or-widen-dwim’
-;;           29-Aug-2016 Added ‘s-(’ as ‘xah-insert-paren’
-;;                       Added ‘s-[’ as ‘xah-insert-bracket’
-;;                       Added ‘s-{’ as ‘xah-insert-brace’
-;;                       Added ‘s-\`’ as ‘xah-insert-emacs-quote’
-;;                       Added ‘s-\’' as ‘xah-insert-single-quote’
-;;                       Added ‘s-\"’ as ‘xah-insert-double-quote’
-;;                       Added ‘C-i’ as ‘indent-region’
-;;           21-Sep-2016 Added ‘s-r’ as ‘cua-rectangle-mark-mode’
-;;           12-Oct-2016 Changed ‘s-r’ to ‘rectangle-mark-mode’
-;;           16-Dec-2016 Changed ‘C-i’ to either ‘indent-region’ or ‘indent-for-tab-command’
-;;           13-Jan-2017 Changed ‘C-N’ to ‘fancy-narrow-or-widen-dwim’
-;;                       Added ‘C-L’ as ‘loccur-current’
-;;                       Added ‘S-<’ as ‘xah-insert-lt’
-;;                       Added ‘S->’ as ‘xah-insert-tag’
-;;                       Changed ‘C-b’ to ‘bm-toggle’
-;;           16-Jan-2017 Removed ‘tinysearch-search-word-*’
-;;           18-Jan-2017 Changed ‘C-f1' to ‘insert-chs’
-;;                       Added ‘C-f2’ as ‘insert-che’
-;;           19-Jan-2017 Changed ‘C-N’ to ‘narrow-or-widen-dwim’
-;;                       Added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
-;;           19-Sep-2017 Added ‘M-pause’ as ‘sdcv-search’
-;;           16-Jan-2019 Added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
-;;           16-Jun-2019 Reformatted/reorganized
-;;           03-Sep-2019 Added ‘C-S-mouse-3’ as ‘minions-minor-modes-menu’
-;;           15-Dec-2020 Added ‘kp-*' for non-numlocked keypad keys
+;; Revision: 22-Mar-2007 major revision/overhaul
+;;           16-May-2008 update for Emacs 22
+;;           11-Feb-2011 removed ‘redo’ - added ‘redo+’
+;;           13-Sep-2012 update for Emacs 24
+;;           26-Sep-2013 added mouse definitions from default.el
+;;           27-Sep-2013 removed entries for Sun function keys
+;;           13-Jun-2014 added ‘usr-tab-close-paren’
+;;           24-Mar-2015 bound ‘usr-open-line’ to M-return
+;;           25-Mar-2015 added ‘usr-capitalize-word’, ‘usr-downcase-word’, and ‘usr-upcase-word’
+;;           26-Mar-2015 fixed [mode-line C-mouse-2] definition
+;;                       removed [super tab] definition
+;;                       found problems in mode-line mouse bindings (not fixed!!!)
+;;           01-Apr-2015 fixed mode-line mouse bindings
+;;                       added secondary selection to ‘C-M-mouse-’
+;;           02-Apr-2015 added loading messages
+;;           04-May-2015 added ‘usr-move-line-down’
+;;           06-May-2015 changed ‘kp-N’ and ‘M-kp-N’ bindings to use lambda functions
+;;           03-Dec-2015 changed ‘M-kp-.’ to ‘completion-at-point’
+;;                       added ‘S-SPC’
+;;                       added ‘Scroll_Lock’ as ‘completion-at-point’
+;;           05-Jan-2016 added ‘tinyeat’, removed C-delete
+;;           18-Jan-2016 updated for new user interface
+;;           29-Jan-2016 added ‘eval-after-load’ for isearch definitions
+;;           03-Feb-2016 updated for more ergo
+;;                       added ‘xah-search-current-word’ for ‘C-f’
+;;           04-Feb-2016 added ‘usr-newline-and-indent’ for ‘C-S-return’
+;;           06-Feb-2016 added ‘usr-end-of-line’ and ‘usr-beginning-of-line’
+;;           23-Feb-2016 added ‘usr-occur’ and ‘usr-moccur’
+;;           25-Feb-2016 added ‘text-scale-increase’ and ‘text-scale-decrease’
+;;           26-Feb-2016 added ‘C-b’
+;;                       added ‘C-d’ as ‘duplicate-line-or-region’
+;;           28-Feb-2016 replaced ‘usr-’ functions with ‘u-’ functions
+;;           02-Mar-2016 changed ‘f6’ to ‘capitalize-word-or-region’
+;;           03-Mar-2016 removed ‘M-f’
+;;                       added ‘s-f1’ as ‘u-forward-symbol’
+;;                       added ‘s-f2’ as ‘backward-symbol’
+;;                       added ‘C-f1’ as ‘forward-word’
+;;                       added ‘kp-divide’ as ‘toggle-fill-paragraph-or-region’
+;;           19-Apr-2016 added ‘mouse-delete-window’ to "control left-fringe" and "control right-fringe"
+;;           21-Apr-2016 removed ‘modeline’ ‘mouse-1’" binding
+;;                       changed ‘modeline’ ‘C-mouse-1’ to delete-window
+;;                       changed ‘modeline’ ‘C-mouse-3’ to delete-other-windows
+;;                       changed ‘s-f6’ to ‘xah-toggle-letter-case’
+;;           26-Apr-2016 changed ‘C-e’ to ‘ergoemacs-extend-selection’ lambda function
+;;                       changed ‘C-kp-+’ to ‘shift-number-up’
+;;                       changed ‘C-kp--’ to ‘shift-number-down’
+;;           27-Apr-2016 changed ‘C-p’ to ‘pop-to-mark-command’
+;;           28-Apr-2016 changed ‘insert’ to ‘u-paste-clipboard’
+;;                       added ‘C-insert’ as ‘overwrite-mode’
+;;                       added ‘C-S-d’ as ‘duplicate-as-comment’
+;;           14-Aug-2016 added ‘M-insert’ as ‘insert-dd-mon-yyyy’
+;;                       added ‘s-insert’ as ‘insert-month-day-year’
+;;           25-Aug-2016 added ‘C-S-n’ as ‘narrow-or-widen-dwim’
+;;           29-Aug-2016 added ‘s-(’ as ‘xah-insert-paren’
+;;                       added ‘s-[’ as ‘xah-insert-bracket’
+;;                       added ‘s-{’ as ‘xah-insert-brace’
+;;                       added ‘s-\`’ as ‘xah-insert-emacs-quote’
+;;                       added ‘s-\’' as ‘xah-insert-single-quote’
+;;                       added ‘s-\"’ as ‘xah-insert-double-quote’
+;;                       added ‘C-i’ as ‘indent-region’
+;;           21-Sep-2016 added ‘s-r’ as ‘cua-rectangle-mark-mode’
+;;           12-Oct-2016 changed ‘s-r’ to ‘rectangle-mark-mode’
+;;           16-Dec-2016 changed ‘C-i’ to either ‘indent-region’ or ‘indent-for-tab-command’
+;;           13-Jan-2017 changed ‘C-N’ to ‘fancy-narrow-or-widen-dwim’
+;;                       added ‘C-L’ as ‘loccur-current’
+;;                       added ‘S-<’ as ‘xah-insert-lt’
+;;                       added ‘S->’ as ‘xah-insert-tag’
+;;                       changed ‘C-b’ to ‘bm-toggle’
+;;           16-Jan-2017 removed ‘tinysearch-search-word-*’
+;;           18-Jan-2017 changed ‘C-f1' to ‘insert-chs’
+;;                       added ‘C-f2’ as ‘insert-che’
+;;           19-Jan-2017 changed ‘C-N’ to ‘narrow-or-widen-dwim’
+;;                       added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
+;;           19-Sep-2017 added ‘M-pause’ as ‘sdcv-search’
+;;           16-Jan-2019 added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
+;;           16-Jun-2019 reformatted/reorganized
+;;           03-Sep-2019 added ‘C-S-mouse-3’ as ‘minions-minor-modes-menu’
+;;           15-Dec-2020 added ‘kp-*' for non-numlocked keypad keys
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           16-Mar-2021 Removed ‘tinyeat-delete-whole-word’, ‘tinyeat-backward-preserve’, and ‘tinyeat-forward-preserve’
-;;                       Fixed warnings on lambda functions
-;;           24-Mar-2021 Added ‘consult-outline’ to ‘C-M-o’
-;;           28-Apr-2022 Added ‘tjf:duplicate/tabs’
-;;           30-Sep-2022 Added mode-line bindings for ‘mouse-8’, ‘mouse-9’, and ‘C-mouse-3’
+;;           16-Mar-2021 removed ‘tinyeat-delete-whole-word’, ‘tinyeat-backward-preserve’, and ‘tinyeat-forward-preserve’
+;;                       fixed warnings on lambda functions
+;;           24-Mar-2021 added ‘consult-outline’ to ‘C-M-o’
+;;           28-Apr-2022 added ‘tjf:duplicate/tabs’
+;;           30-Sep-2022 added mode-line bindings for ‘mouse-8’, ‘mouse-9’, and ‘C-mouse-3’
+;;           07-Jun-2023 added ‘blamer-show-commit-info’ to ‘s-b’
+;;           15-Jun-2023 added ‘tjf:duplicate/spaces’ to ‘C-s-<Fn>’ and ‘M-s-<Fn>’
 
 ;;; Code:
 
@@ -152,7 +154,7 @@
 ;;
 (global-set-key [(control b)]            'bm-toggle)
 ;;lobal-set-key [(meta    b)]            'backward-word)
-;;lobal-set-key [(super   b)]            '
+(global-set-key [(super   b)]            'blamer-show-commit-info)
 ;;lobal-set-key [(control meta  b)]      '
 ;;lobal-set-key [(control shift b)]      '
 ;;lobal-set-key [(control super b)]      '
@@ -265,7 +267,7 @@
 ;;lobal-set-key [(super   l)]            ' DO NOT USE ... locks computer
 ;;lobal-set-key [(control meta  l)]      '
 (global-set-key [(control shift l)]      'loccur-current)
-;;lobal-set-key [(control super l)]      '
+(global-set-key [(control super l)]      'consult-line)
 ;;lobal-set-key [(meta    super l)]      '
 ;;lobal-set-key [(control meta super l)] '
 (define-key help-map [(control k)]       'describe-key)
@@ -299,7 +301,7 @@
 ;;lobal-set-key [(meta    o)]            ' PREFIX
 ;;lobal-set-key [(super   o)]            ' DO NOT USE ... ???
 (global-set-key [(control meta  o)]      'consult-outline)
-;;lobal-set-key [(control shift o)]      'find-file)
+(global-set-key [(control shift o)]      'consult-outline)
 (global-set-key [(control super o)]      'open-rectangle)
 ;;lobal-set-key [(meta    super o)]      '
 ;;lobal-set-key [(control meta super o)] '
@@ -551,8 +553,8 @@
 ;;lobal-set-key [(meta    1)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   1)] ' DO NOT USE
 ;;lobal-set-key [(control meta  1)]      '
-;;lobal-set-key [(control super 1)]      '
-;;lobal-set-key [(meta    super 1)]      '
+;(global-set-key [(control super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
+;(global-set-key [(meta    super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
 ;;lobal-set-key [(control meta super 1)] '
 
 ;; ==================== 2 ====================
@@ -561,8 +563,8 @@
 ;;lobal-set-key [(meta    2)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   2)] ' DO NOT USE
 ;;lobal-set-key [(control meta  2)]      '
-;;lobal-set-key [(control super 2)]      'DO NOT USE
-;;lobal-set-key [(meta    super 2)]      '
+;; (global-set-key [(control super 2)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -2)))
+;; (global-set-key [(meta    super 2)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  2)))
 ;;lobal-set-key [(control meta super 2)] '
 
 ;; ==================== 3 ====================
@@ -571,9 +573,9 @@
 ;;lobal-set-key [(meta    3)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   3)] ' DO NOT USE
 ;;lobal-set-key [(control meta  3)]      '
-;;lobal-set-key [(control super 3)]      '
-;;lobal-set-key [(meta    super 3)]      '
-;;lobal-set-key [(control meta super 3)] '
+;; (global-set-key [(control super 3)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -3)))
+;; (global-set-key [(meta    super 3)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  3)))
+;; ;;lobal-set-key [(control meta super 3)] '
 
 ;; ==================== 4 ====================
 ;;
@@ -581,8 +583,8 @@
 ;;lobal-set-key [(meta    4)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   4)] ' DO NOT USE
 ;;lobal-set-key [(control meta  4)]      '
-;;lobal-set-key [(control super 4)]      '
-;;lobal-set-key [(meta    super 4)]      '
+;; (global-set-key [(control super 4)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -4)))
+;; (global-set-key [(meta    super 4)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  4)))
 ;;lobal-set-key [(control meta super 4)] '
 
 ;; ==================== 5 ====================
@@ -591,8 +593,8 @@
 ;;lobal-set-key [(meta    5)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   5)] ' DO NOT USE
 ;;lobal-set-key [(control meta  5)]      '
-;;lobal-set-key [(control super 5)]      '
-;;lobal-set-key [(meta    super 5)]      '
+;; (global-set-key [(control super 5)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -5)))
+;; (global-set-key [(meta    super 5)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  5)))
 ;;lobal-set-key [(control meta super 5)] '
 
 ;; ==================== 6 ====================
@@ -601,8 +603,8 @@
 ;;lobal-set-key [(meta    6)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   6)] ' DO NOT USE
 ;;lobal-set-key [(control meta  6)]      '
-;;lobal-set-key [(control super 6)]      '
-;;lobal-set-key [(meta    super 6)]      '
+;; (global-set-key [(control super 6)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -6)))
+;; (global-set-key [(meta    super 6)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  6)))
 ;;lobal-set-key [(control meta super 6)] '
 
 ;; ==================== 7 ====================
@@ -611,8 +613,8 @@
 ;;lobal-set-key [(meta    7)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   7)] ' DO NOT USE
 ;;lobal-set-key [(control meta  7)]      '
-;;lobal-set-key [(control super 7)]      '
-;;lobal-set-key [(meta    super 7)]      '
+;; (global-set-key [(control super 7)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -7)))
+;; (global-set-key [(meta    super 7)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  7)))
 ;;lobal-set-key [(control meta super 7)] '
 
 ;; ==================== 8 ====================
@@ -621,8 +623,8 @@
 ;;lobal-set-key [(meta    8)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   8)] ' DO NOT USE
 ;;lobal-set-key [(control meta  8)]      '
-;;lobal-set-key [(control super 8)]      '
-;;lobal-set-key [(meta    super 8)]      '
+;; (global-set-key [(control super 8)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -8)))
+;; (global-set-key [(meta    super 8)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  8)))
 ;;lobal-set-key [(control meta super 8)] '
 
 ;; ==================== 9 ====================
@@ -631,11 +633,11 @@
 ;;lobal-set-key [(meta    9)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   9)] ' DO NOT USE
 ;;lobal-set-key [(control meta  9)]      '
-;;lobal-set-key [(control super 9)]      '
-;;lobal-set-key [(meta    super 9)]      '
+;; (global-set-key [(control super 9)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -9)))
+;; (global-set-key [(meta    super 9)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  9)))
 ;;lobal-set-key [(control meta super 9)] '
 
-;; ==================== SPC ====================
+!;; ==================== SPC ====================
 ;;
 ;;lobal-set-key [(control    SPC)] 'cua-set-mark)
 ;;lobal-set-key [(meta       SPC)] ' KEY NOT REGISTERED
@@ -889,8 +891,8 @@
 ;;lobal-set-key [(meta    f1)] ' DO NOT USE
 (global-set-key [(super   f1)] 'tjf:navigate/forward-symbol)
 ;;lobal-set-key [(control meta  f1)] ' DO NOT USE
-;;lobal-set-key [(control super f1)] '
-;;lobal-set-key [(meta    super f1)] '
+(global-set-key [(control super f1)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
+(global-set-key [(meta    super f1)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
 ;;lobal-set-key [(control meta super f1)] ' DO NOT USE
 
 ;; ==================== f2 ====================
@@ -899,9 +901,9 @@
 (global-set-key [(control f2)] 'tjf:edit/insert-che)
 ;;lobal-set-key [(meta    f2)] ' DO NOT USE
 (global-set-key [(super   f2)] 'backward-symbol)
-;;lobal-set-key [(control meta  f2)]      ' DO NOT USE
 ;;lobal-set-key [(control super f2)]      '
-;;lobal-set-key [(meta    super f2)]      '
+(global-set-key [(control super f2)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -2)))
+(global-set-key [(meta    super f2)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  2)))
 ;;lobal-set-key [(control meta super f2)] ' DO NOT USE
 
 ;; ==================== f3 ====================
@@ -911,8 +913,8 @@
 ;;lobal-set-key [(meta    f3)] ' DO NOT USE
 ;;lobal-set-key [(super   f3)] '
 ;;lobal-set-key [(control meta  f3)]      ' DO NOT USE
-;;lobal-set-key [(control super f3)]      '
-;;lobal-set-key [(meta    super f3)]      '
+(global-set-key [(control super f3)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -3)))
+(global-set-key [(meta    super f3)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  3)))
 ;;lobal-set-key [(control meta super f3)] ' DO NOT USE
 
 ;; ==================== f4 ====================
@@ -922,8 +924,8 @@
 ;;lobal-set-key [(meta    f4)] ' DO NOT USE
 ;;lobal-set-key [(super   f4)] '
 ;;lobal-set-key [(control meta  f4)]      ' DO NOT USE
-;;lobal-set-key [(control super f4)]      '
-;;lobal-set-key [(meta    super f4)]      '
+(global-set-key [(control super f4)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -4)))
+(global-set-key [(meta    super f4)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  4)))
 ;;lobal-set-key [(control meta super f4)] ' DO NOT USE
 
 ;; ==================== f5 ====================
@@ -933,8 +935,8 @@
 ;;lobal-set-key [(meta    f5)] ' DO NOT USE
 ;;lobal-set-key [(super   f5)] '
 ;;lobal-set-key [(control meta  f5)]      ' DO NOT USE
-;;lobal-set-key [(control super f5)]      '
-;;lobal-set-key [(meta    super f5)]      '
+(global-set-key [(control super f5)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -5)))
+(global-set-key [(meta    super f5)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  5)))
 ;;lobal-set-key [(control meta super f5)] ' DO NOT USE
 
 ;; ==================== f6 ====================
@@ -944,8 +946,8 @@
 ;;lobal-set-key [(meta    f6)] ' DO NOT USE
 ;;lobal-set-key [(super f6)]   'xah-toggle-letter-case)
 ;;lobal-set-key [(control meta  f6)]      ' DO NOT USE
-;;lobal-set-key [(control super f6)]      '
-;;lobal-set-key [(meta    super f6)]      '
+(global-set-key [(control super f6)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -6)))
+(global-set-key [(meta    super f6)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  6)))
 ;;lobal-set-key [(control meta super f6)] ' DO NOT USE
 
 ;; ==================== f7 ====================
@@ -955,6 +957,8 @@
 ;;lobal-set-key [(meta    f7)] ' DO NOT USE
 ;;lobal-set-key [(super   f7)] '
 ;;lobal-set-key [(control meta  f7)]      ' DO NOT USE
+(global-set-key [(control super f7)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -7)))
+(global-set-key [(meta    super f7)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  7)))
 ;;lobal-set-key [(control super f7)]      '
 ;;lobal-set-key [(meta    super f7)]      '
 ;;lobal-set-key [(control meta super f7)] ' DO NOT USE
@@ -966,6 +970,8 @@
 ;;lobal-set-key [(meta    f8)] ' DO NOT USE
 ;;lobal-set-key [(super   f8)] '
 ;;lobal-set-key [(control meta  f8)]      ' DO NOT USE
+(global-set-key [(control super f8)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -8)))
+(global-set-key [(meta    super f8)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  8)))
 ;;lobal-set-key [(control super f8)]      '
 ;;lobal-set-key [(meta    super f8)]      '
 ;;lobal-set-key [(control meta super f8)] ' DO NOT USE
@@ -977,6 +983,8 @@
 ;;lobal-set-key [(meta    f9)] ' DO NOT        USE
 ;;lobal-set-key [(super   f9)] '
 ;;lobal-set-key [(control meta  f9)]      ' DO NOT USE
+(global-set-key [(control super 9)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -9)))
+(global-set-key [(meta    super 9)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  9)))
 ;;lobal-set-key [(control super f9)]      '
 ;;lobal-set-key [(meta    super f9)]      '
 ;;lobal-set-key [(control meta super f9)] ' DO NOT USE
@@ -1231,23 +1239,30 @@
 (global-set-key [kp-enter]           'tjf:duplicate/previous)
 ;;lobal-set-key [(control kp-enter)] ' DO NOT USE ... messes up C-enter
 (global-set-key [(meta    kp-enter)] 'tjf:edit/insert-newline-before)
-(global-set-key [(super   kp-enter)] 'tjf:duplicate/tabs)
+;global-set-key [(super   kp-enter)] ')
 ;;lobal-set-key [(control meta  kp-enter)]      ' DO NOT USE
 ;;lobal-set-key [(control super kp-enter)]      '
 ;;lobal-set-key [(meta    super kp-enter)]      '
 ;;lobal-set-key [(control meta super kp-enter)] '
 
+;; ==================== kp-decimal ====================
+;;
 (global-set-key [kp-decimal]           'delete-horizontal-space)
 ;;lobal-set-key [(control kp-decimal)] '
 ;;lobal-set-key [(meta    kp-decimal)] 'xref-find-definitions)
 ;;lobal-set-key [(super   kp-decimal)] '
+;;lobal-set-key [(control meta  kp-enter)]      '
+;;lobal-set-key [(control super kp-enter)]      '
+;;lobal-set-key [(meta    super kp-enter)]      '
+;;lobal-set-key [(control meta super kp-enter)] '
 
 ;; ==================== kp-0/kp-insert ====================
 ;;
 (global-set-key [kp-0] 'tjf:duplicate/line-or-region)
 ;;lobal-set-key [(control kp-0)] ' DO NOT USE ... digit argument
 (global-set-key [(meta    kp-0)] 'tjf:duplicate/line-or-region)
-;;lobal-set-key [(super   kp-0)] '
+;global-set-key [(super   kp-0)] '
+
 ;;lobal-set-key [(control meta  kp-0)] ' DO NOT USE
 (global-set-key [(control super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
 (global-set-key [(meta    super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
