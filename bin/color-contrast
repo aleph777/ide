@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2020-2023 Tom Fontaine
 
@@ -29,25 +29,17 @@
 # dealings in the software.
 
 #
-# Purpose:
+# Purpose:   computes constrast from input color to white
 #
-# Arguments:
+# Arguments: input color (hex rgb)
 #
-# Revision:
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
+use Modern::Perl;
 use Util::Color;
-use strict;
-use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
-
-# die _ME_,": should have two arguments!!!" unless @ARGV == 2;
-
-# my ($color1,$color2) = @ARGV;
-
-# my $color = Util::Color->new();
-
-# say $color->computeContrast(hex1 => $color1,hex2 => $color2);
 
 sub computeLuminance
 {

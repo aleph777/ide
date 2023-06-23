@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2006-2023 Tom Fontaine
 
@@ -28,14 +28,18 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Used as an emacs call-process-region by u-align-equals
+# Purpose:   used as an emacs call-process-region by u-align-equals
 #
-# Arguments: None
+# Arguments: n/a
 #
-# Revision:  21-May-2008 use strict;
+# Revision:  21-May-2008 use strict
+#            02-Jun-2023 new shebang
+#            12-Jun-2023 use Modern::Perl
 #
+use Modern::Perl;
 use List::Util qw(max);
-use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 my @text = <>;
 

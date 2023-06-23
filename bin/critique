@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -28,19 +28,17 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Critiques Perl source code for best-practices.
+# Purpose:   critiques Perl source code for best-practices.
 #
-# Arguments: $1 is file 1 to analyze
-#            .
-#            .
-#            .
-#            $N is file N to analyze
+# Arguments: file1 [file2 … fileN]
 #
-# Revision:  27-May-2015 Changed over to ‘say’
+# Revision:  27-May-2015 changed over to ‘say’
+#            12-Jun-2023 use Modern::Perl
 #
+use Modern::Perl;
 use Perl::Critic;
-use strict;
-use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 foreach my $file (@ARGV)
 {
@@ -50,8 +48,8 @@ foreach my $file (@ARGV)
 
   for($critic->critique($file))
   {
-    # Bareword file handle opened at line 101, column 1.
     s/^(.+) at line (\d+), column (\d+)/$file:$2:$3: $1/;
+
     print $_;
   }
 }

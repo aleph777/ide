@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 1998-2023 Tom Fontaine
 
@@ -39,8 +39,12 @@
 #
 # Revision:  09-Oct-2001 Fixed bug in multiple file detection
 #            12-May-2008 use strict
+#            12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
-use strict;
+use Modern::Perl;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 my @parm;
 my %line;

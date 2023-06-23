@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2006-2023 Tom Fontaine
 
@@ -40,6 +40,8 @@
 use File::Which qw(where);
 use strict;
 
-die $0 =~ m=([^/]+)$=,": No executable specified!!!\n" unless defined $ARGV[0];
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+die _ME_,": No executable specified!!!\n" unless defined $ARGV[0];
 
 print map { $_,"\n" } where($ARGV[0]);

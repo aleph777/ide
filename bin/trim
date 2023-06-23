@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2008-2023 Tom Fontaine
 
@@ -28,13 +28,16 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Trim excess whitespace from text files
+# Purpose:   trim excess whitespace from text files
 #
-# Arguments: filespec1 [filespec2 ... filespecN]
+# Arguments: filespec1 [filespec2 … filespecN]
 #
-# Revision:  03-Apr-2015 Changed inner for loop to statement
-#            21-Apr-2015 Check that files needs to be written
+# Revision:  03-Apr-2015 changed inner for loop to statement
+#            21-Apr-2015 check that files needs to be written
+#            12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
+use Modern::Perl;
 use Digest::SHA;
 use File::IO;
 use strict;

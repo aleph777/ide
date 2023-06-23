@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2017-2023 Tom Fontaine
 
@@ -32,12 +32,12 @@
 #
 # Arguments: $1 is the Flycheck temp file
 #
-# Revision:
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
+use Modern::Perl;
 use File::IO;
 use File::Basename;
-use strict;
-use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
