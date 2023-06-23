@@ -29,18 +29,19 @@
 
 ;;; Commentary:
 
-;; Revision: 01-Apr-2016 Cleaned up do-update-modeline-vars
-;;           09-May-2016 Added `anzu'
-;;           14-Sep-2016 Fixed `mode-line-inactive'
-;;           18-Sep-2016 Moved `alias-face' to `u-macro'
-;;           23-May-2017 Changed ‘powerline-red-face’ to ‘error’
-;;           13-Jun-2018 Added ‘require’ for ‘u-flags’
-;;           03-Jul-2018 Moved ‘powerline-vc’ to rhs face2
-;;           10-Jul-2019 Added ‘require’ for ‘anzu’
-;;           28-Oct-2020 Reworked because of ‘powerline' changes
+;; Revision: 01-Apr-2016 cleaned up do-update-modeline-vars
+;;           09-May-2016 added `anzu'
+;;           14-Sep-2016 fixed `mode-line-inactive'
+;;           18-Sep-2016 moved `alias-face' to `u-macro'
+;;           23-May-2017 changed ‘powerline-red-face’ to ‘error’
+;;           13-Jun-2018 added ‘require’ for ‘u-flags’
+;;           03-Jul-2018 moved ‘powerline-vc’ to rhs face2
+;;           10-Jul-2019 added ‘require’ for ‘anzu’
+;;           28-Oct-2020 reworked because of ‘powerline' changes
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           29-Aug-2022 Using ‘%C’ for column format
-;;           02-Oct-2022 Removed ‘tjf:powerline/column’
+;;           29-Aug-2022 using ‘%C’ for column format
+;;           02-Oct-2022 removed ‘tjf:powerline/column’
+;;           08-May-2023 added separate region info
 ;;
 
 ;;; Code:
@@ -53,17 +54,29 @@
 (require 'tjf-view)
 
 ;;
-(defvar tjf:powerline/bufreg-byte-count nil
-  "String value of Buffer or Region byte count.")
+(defvar tjf:powerline/buffer-byte-count nil
+  "String value of Buffer byte count.")
 (make-variable-buffer-local 'tjf:powerline/bufreg-byte-count)
 
-(defvar tjf:powerline/bufreg-line-count nil
-  "String value of Buffer or Region line count.")
-(make-variable-buffer-local 'tjf:powerline/bufreg-line-count)
+(defvar tjf:powerline/buffer-line-count nil
+  "String value of Buffer line count.")
+(make-variable-buffer-local 'tjf:powerline/buffer-line-count)
 
-(defvar tjf:powerline/bufreg-word-count nil
-  "String value of Buffer or Region word count.")
-(make-variable-buffer-local 'tjf:powerline/bufreg-word-count)
+(defvar tjf:powerline/buffer-word-count nil
+  "String value of Buffer word count.")
+(make-variable-buffer-local 'tjf:powerline/buffer-word-count)
+
+(defvar tjf:powerline/region-byte-count nil
+  "String value of Region byte count.")
+(make-variable-buffer-local 'tjf:powerline/region-byte-count)
+
+(defvar tjf:powerline/region-line-count nil
+  "String value of Region line count.")
+(make-variable-buffer-local 'tjf:powerline/region-line-count)
+
+(defvar tjf:powerline/region-word-count nil
+  "String value of Region word count.")
+(make-variable-buffer-local 'tjf:powerline/region-word-count)
 
 (defvar tjf:powerline/encoding-alist (list (cons 'prefer-utf-8-unix            "Unix")
                                            (cons 'prefer-utf-8-dos             "DOS")
@@ -90,7 +103,11 @@
 (defvar tjf:powerline/row-column-format '(" Ln: %l Col: %C ")
   "Format for displaying the column in the mode line.")
 
-(defvar tjf:powerline/word-count-format '("" tjf:powerline/bufreg-line-count "," tjf:powerline/bufreg-word-count "," tjf:powerline/bufreg-byte-count " ")
+(defvar tjf:powerline/word-count-format
+    (if (use-region-p)
+        '("" tjf:powerline/buffer-line-count "," tjf:powerline/buffer-word-count "," tjf:powerline/buffer-byte-count " ["
+             tjf:powerline/region-line-count "," tjf:powerline/region-word-count "," tjf:powerline/region-byte-count "] ")
+      '("" tjf:powerline/buffer-line-count "," tjf:powerline/buffer-word-count "," tjf:powerline/buffer-byte-count " "))
   "Format for displaying the word count info in the mode line.")
 
 (defun tjf:powerline/buffer-status ()
@@ -123,12 +140,15 @@
   "Update the strings containing the modeline variables."
   (if (use-region-p)
       (progn
-        (setq tjf:powerline/bufreg-line-count (int-to-string (abs (- (line-number-at-pos (point)) (line-number-at-pos (mark))))))
-        (setq tjf:powerline/bufreg-word-count (int-to-string (count-words-region (point) (mark))))
-        (setq tjf:powerline/bufreg-byte-count (int-to-string (abs (- (point) (mark))))))
-    (setq tjf:powerline/bufreg-line-count (int-to-string (line-number-at-pos (point-max))))
-    (setq tjf:powerline/bufreg-word-count (int-to-string (count-words-region (point-min) (point-max))))
-    (setq tjf:powerline/bufreg-byte-count (int-to-string (point-max))))
+        (setq tjf:powerline/word-count-format '("" tjf:powerline/buffer-line-count "," tjf:powerline/buffer-word-count "," tjf:powerline/buffer-byte-count " ["
+                                                   tjf:powerline/region-line-count "," tjf:powerline/region-word-count "," tjf:powerline/region-byte-count "] "))
+        (setq tjf:powerline/region-line-count (int-to-string (abs (- (line-number-at-pos (point)) (line-number-at-pos (mark))))))
+        (setq tjf:powerline/region-word-count (int-to-string (count-words-region (point) (mark))))
+        (setq tjf:powerline/region-byte-count (int-to-string (abs (- (point) (mark))))))
+    (setq tjf:powerline/word-count-format '("" tjf:powerline/buffer-line-count "," tjf:powerline/buffer-word-count "," tjf:powerline/buffer-byte-count " ")))
+  (setq tjf:powerline/buffer-line-count (int-to-string (line-number-at-pos (point-max))))
+  (setq tjf:powerline/buffer-word-count (int-to-string (count-words-region (point-min) (point-max))))
+  (setq tjf:powerline/buffer-byte-count (int-to-string (point-max)))
   (setq tjf:powerline/encoding (tjf:powerline/encoding))
   (set-buffer-modified-p (buffer-modified-p)))
 
