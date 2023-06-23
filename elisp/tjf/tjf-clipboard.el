@@ -39,6 +39,7 @@
 ;;           27-Jun-2019 Added ‘u/paste-clipboard-n’
 ;;                       Added ‘u/clipboard-buffer’
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           13-Jun-2023 fixed bug in ‘tjf:clipboard/paste-n’
 ;;
 
 ;;; Code:
@@ -98,7 +99,7 @@
 (defun tjf:clipboard/paste-n (n)
   "Paste from clipboard buffer N."
   (interactive "*")
-  (let ((clipboard (get-buffer (clipboard-buffer n)))
+  (let ((clipboard (get-buffer (tjf:clipboard/get-name n)))
         (transient-mark-mode nil))
     (if clipboard
         (insert-buffer-substring clipboard)
