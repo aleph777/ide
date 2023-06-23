@@ -33,6 +33,7 @@
 #
 # Revision:  12-Jun-2023 new shebang
 #                        use Modern::Perl
+#            23-Jun-2023 additional filters
 #
 use Modern::Perl;
 use Util::GetOpt;
@@ -54,7 +55,7 @@ my ($suffix,$switches) = exists $opt->option->{'g'} || exists $opt->option->{'gz
 chdir $ENV{HOME};
 
 my $file  = join '','ide-',localtime->strftime('%Y%m%d%H%M%S'),'.',$suffix;
-my @files = sort qx(pfind ide -no-dir -no-suffix elc -no-name '(git|obsolete)');
+my @files = sort qx(pfind ide -no-bin -no-dir -no-suffix elc -no-name '(git|obsolete|usr|vscode)');
 
 chomp @files;
 
