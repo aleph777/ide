@@ -29,14 +29,15 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Apr-2015 Added loading messages
-;;           06-May-2015 Removed ‘duplicate-previous-N’, ‘duplicate-next-N’ functions
-;;           26-Feb-2016 Refactored ‘duplicate’ to better deal with TABs
-;;                       Added ‘duplicate-line-or-region’
-;;           03-Mar-2016 Fixed bug in ‘duplicate-line-or-region’
-;;           29-Apr-2016 Added ‘duplicate-as-comment’
+;; Revision: 02-Apr-2015 added loading messages
+;;           06-May-2015 removed ‘duplicate-previous-N’, ‘duplicate-next-N’ functions
+;;           26-Feb-2016 refactored ‘duplicate’ to better deal with TABs
+;;                       added ‘duplicate-line-or-region’
+;;           03-Mar-2016 fixed bug in ‘duplicate-line-or-region’
+;;           29-Apr-2016 added ‘duplicate-as-comment’
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           28-Apr-2022 Added ‘tjf:duplicate/tabs’
+;;           28-Apr-2022 added ‘tjf:duplicate/tabs’
+;;           14-Jun-2023 added ‘tjf:duplicate/syntax-spaces’
 ;;
 
 ;;; Code:
@@ -93,13 +94,33 @@ not work well when the duplicated line contains TABs."
       (tjf:duplicate/tabs 1)
     (tjf:duplicate/syntax 1)))
 
+(defun tjf:duplicate/text (dup-offset)
+  "Duplicates a word of DUP-OFFSET's text starting from the current column.
+There is no effect when the current column exceeds the width of the next line.
+This function does not work on the last line of a buffer.  This function does
+not work well when the duplicated line contains TABs."
+  (interactive "*")
+  (if tjf:flags/using-tabs
+      (tjf:duplicate/tabs dup-offset)
+    (tjf:duplicate/syntax dup-offset)))
+
+(defun tjf:duplicate/spaces (dup-offset)
+  "Duplicates a word of DUP-OFFSET's text starting from the current column.
+There is no effect when the current column exceeds the width of the next line.
+This function does not work on the last line of a buffer.  This function does
+not work well when the duplicated line contains TABs."
+  (interactive "*")
+  (if tjf:flags/using-tabs
+      (tjf:duplicate/spaces-tabs dup-offset)
+    (tjf:duplicate/spaces-syntax dup-offset)))
+
 (defun tjf:duplicate/syntax (dup-offset)
-  "Duplicate a word of the DUP-OFFSET line's text starting from the current
-column.  There is no effect when the current column exceeds the width of the
-duplicated line.  This function does not work when the ‘dup-offset’ would be
-prior to ‘point-min’ or after ‘point-max’.  This function does not replicate
-TABs but will re-create the equivalent amount of whitespace."
-  (if (< dup-offset 0)
+  "Duplicates a word of DUP-OFFSET's text starting from the current column.
+There is no effect when the current column exceeds the width of the duplicated
+line. This function does not work when the ‘dup-offset’ would be prior to
+‘point-min’ or after ‘point-max’. This function does not replicate TABs but
+will re-create the equivalent amount of whitespace."
+(if (< dup-offset 0)
       (if (< (+ (tjf:tools/current-line) dup-offset) 0)
           (error "Can't go back that many lines"))
     (let* ((beg-line (line-number-at-pos nil))
@@ -127,8 +148,7 @@ TABs but will re-create the equivalent amount of whitespace."
     (insert dup-string)))
 
 (defun tjf:duplicate/tabs (dup-offset)
-  "Duplicate a word of the DUP-OFFSET line's text starting from the current
-column using TABs."
+  "Duplicates a word of the DUP-OFFSET line's text using TABs."
   (interactive "P*")
   (if (< dup-offset 0)
       (if (< (+ (tjf:tools/current-line) dup-offset) 0)
@@ -148,6 +168,63 @@ column using TABs."
       (skip-syntax-forward "w")
       (skip-syntax-forward "^w" (line-end-position))
       (setq dup-string (buffer-substring-no-properties dupbeg-point (point))))
+    (insert dup-string)))
+
+(defun tjf:duplicate/spaces-syntax (dup-offset)
+  "Insert whitespace at the current location using DUP-OFFSET line's text.
+The number of spaces is taken from DUP-OFFSET. This string is of the same
+length as would be created by the other duplicate functions."
+  (if (< dup-offset 0)
+      (if (< (+ (tjf:tools/current-line) dup-offset) 0)
+          (error "Can't go back that many lines"))
+    (let* ((beg-line (line-number-at-pos nil))
+           (dup-line (+ beg-line dup-offset))
+           (end-line (save-excursion (goto-char (point-max)) (line-number-at-pos nil))))
+      (if (>= dup-line end-line)
+          (error "Can't go forward that many lines"))))
+  (let ((column-limit (current-column))
+        (dup-string   nil)
+        (dup-fmt      nil)
+        (tabs?        nil)
+        (dupbeg-point nil))
+    (save-excursion
+      (forward-line dup-offset)
+      (setq tabs? (tjf:flags/is-tabs-on-line?))
+      (when tabs?
+        (untabify (line-beginning-position) (line-end-position)))
+      (setq column-limit (+ (point) column-limit))
+      (skip-chars-forward "^\n" column-limit)
+      (setq dupbeg-point (point))
+      (skip-syntax-forward "w")
+      (skip-syntax-forward "^w" (line-end-position))
+      (setq dup-fmt (concat "%" (format "%d" (- (point) dupbeg-point)) "s"))
+      (setq dup-string (format dup-fmt " "))
+      (when tabs?
+        (undo-tree-undo)))
+    (insert dup-string)))
+
+(defun tjf:duplicate/spaces-tabs (dup-offset)
+  "Duplicates a word of the DUP-OFFSET line's text using TABs."
+  (interactive "P*")
+  (if (< dup-offset 0)
+      (if (< (+ (tjf:tools/current-line) dup-offset) 0)
+          (error "Can't go back that many lines"))
+    (let* ((beg-line (line-number-at-pos nil))
+           (dup-line (+ beg-line dup-offset))
+           (end-line (save-excursion (goto-char (point-max)) (line-number-at-pos nil))))
+      (if (>= dup-line end-line)
+          (error "Can't go forward that many lines"))))
+  (let ((column-limit (current-column))
+        (dup-string   nil)
+        (dupbeg-point nil))
+    (save-excursion
+      (forward-line dup-offset)
+      (move-to-column column-limit)
+      (setq dupbeg-point (point))
+      (skip-syntax-forward "w")
+      (skip-syntax-forward "^w" (line-end-position))
+      (setq dup-fmt (concat "%" (format "%d" (- (point) dupbeg-point)) "s"))
+      (setq dup-string (format dup-fmt " ")))
     (insert dup-string)))
 
 ;;
