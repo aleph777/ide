@@ -120,7 +120,6 @@ sub AUTOLOAD
 
   return if $name eq "DESTROY";
 
-  say STDERR "$name";
   croak "Can't access `$name' field in class $type" unless exists $this->{_permitted}->{$name};
 
   return @_ ? $this->{$name} = shift : $this->{$name};
