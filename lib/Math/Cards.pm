@@ -33,17 +33,22 @@
 #           15-Apr-2015 Changed new to initialize contents from deck
 #                       Added methods perfectShuffle and imperfectShuffle
 #                       Renamed method shuffle to randomShuffle
+#           14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Math::Cards;
 
-require 5.006;
 use Carp;
-use strict;
+use Modern::Perl;
 
 use Util::Shuffle;
 
-use Math::Random::Secure qw(irand);
 use Ascii qw(ESC);
+use Math::Random::Secure qw(irand);
+
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 use constant CSI    => join '',ESC,'[';
 use constant RED    => join '',CSI,31,';1m';

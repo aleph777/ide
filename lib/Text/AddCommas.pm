@@ -29,13 +29,16 @@
 
 #
 # Revision: 13-Apr-2015 Added Scalar::Util::looks_like_number check
+#           14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Text::AddCommas;
 
-require 5.004;
 use Exporter 'import';
 use Carp;
-use strict;
+use Modern::Perl;
 
 use Scalar::Util qw(looks_like_number);
 
@@ -55,9 +58,9 @@ sub addCommas
 {
   my $number = shift;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
-  die $__ME__,": $number is not a number!!!\n" unless looks_like_number($number);
+  die $_SELF_,": $number is not a number!!!\n" unless looks_like_number($number);
 
   return length($number) < 5 ? $number : join ',',map { scalar reverse } reverse grep /^\d/,split /(\d{3})/,reverse($number);
 }

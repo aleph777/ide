@@ -28,14 +28,16 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package File::FixPath;
 
-require 5.008;
 use Exporter 'import';
 use Carp;
-use strict;
+use Modern::Perl;
 
 our @EXPORT_OK = qw(fixpath);
 
@@ -70,9 +72,9 @@ sub fixpath
   }
   else
   {
-    my $__ME__ = (caller(0))[3];
+    my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
-    die $__ME__,": invalid reference type [$refp]!!!\n",;
+    die $_SELF_,": invalid reference type [$refp]!!!\n",;
   }
 }
 

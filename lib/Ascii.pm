@@ -30,6 +30,7 @@
 #
 # Revision: 26-Mar-2015 Added %char;
 #           18-Mar-2016 Added chr 128 .. 255
+#           14-Jun-2023 use Modern::Perl
 #
 # Usage:
 #             use Ascii;
@@ -46,12 +47,14 @@
 #
 #             print "==> $Ascii::char{'QUOTE'}\n"
 #
+
+# Code:
+
 package Ascii;
 
-require 5.008;
 use Carp;
 use Exporter 'import';
-use strict;
+use Modern::Perl;
 
 our @ASCII_CHARNAMES;
 

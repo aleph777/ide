@@ -29,20 +29,23 @@
 
 ;;; Commentary:
 
-;; Revision: 18-Mar-2016 Added a few missing letters
-;;           16-Jan-2017 Added "Check Language" to Tools menu
-;;           17-Jan-2017 Added ‘*-unicode-name-at-point’
-;;                       Added ‘copyright-update’
-;;           17-Apr-2018 Added ‘magit-status’
-;;           31-May-2018 Added ‘powerthesaurus-lookup-word’
-;;           14-Jun-2018 Added ‘declutter’
-;;           06-Jul-2018 Added ‘paradox-list-packages’
-;;           10-Jul-2019 Completed Greek alphabet
-;;           19-Jul-2019 Added ‘open-new-shell’
+;; Revision: 18-Mar-2016 added a few missing letters
+;;           16-Jan-2017 added "Check Language" to Tools menu
+;;           17-Jan-2017 added ‘*-unicode-name-at-point’
+;;                       added ‘copyright-update’
+;;           17-Apr-2018 added ‘magit-status’
+;;           31-May-2018 added ‘powerthesaurus-lookup-word’
+;;           14-Jun-2018 added ‘declutter’
+;;           06-Jul-2018 added ‘paradox-list-packages’
+;;           10-Jul-2019 completed Greek alphabet
+;;           19-Jul-2019 added ‘open-new-shell’
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           16-Apr-2022 Added menu entry for convert to python mode
-;;           10-Nov-2022 Added ‘tjf:tools/insert-che’ and ‘tjf:tools/insert-chs
-;;                       Fixed menu entries
+;;           16-Apr-2022 added menu entry for convert to python mode
+;;           10-Nov-2022 added ‘tjf:tools/insert-che’ and ‘tjf:tools/insert-chs
+;;                       fixed menu entries
+;;           31-May-2023 added ‘is-feature?’
+;;           07-Jun-2023 added ‘blamer-show-posframe-commit-info’ to Tools menu
+;;           09-Jun-2023 changed ‘paradox-list-packages’ to ‘elpaca-manager’
 ;;
 
 ;;; Code:
@@ -409,7 +412,8 @@
       ))
     ["Show Unicode Name" show-unicode-name-at-point t]
     "---"
-    ["Git Status" magit-status t]
+    ["Git Status" magit-status                     t]
+    ["Git Blame"  blamer-show-posframe-commit-info t]
     "---"
     ["Open New Shell" tjf:tools/open-new-shell t]
     "---"
@@ -423,7 +427,9 @@
     "---"
     ["Read from URL..." declutter :active t]
     "---"
-    ["List Packages"    paradox-list-packages :active t]
+    ["Check Feature..." is-feature? :active t]
+    "---"
+    ["List Packages"    elpaca-manager :active t]
     "---"
     ["Complete Symbol"        completion-at-point                :enable (tjf:flags/enable-write?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (tjf:flags/enable-write?)]

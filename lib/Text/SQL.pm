@@ -29,16 +29,17 @@
 
 #
 # Revision: 18-Jan-2017 Fixed syntax errors
+#           14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Text::SQL;
 
-require 5.008;
 use Carp;
-use strict;
+use Modern::Perl;
 
-# use Foo::Bar;
-
-# use constant FOO => 'BAR';
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -109,7 +110,7 @@ sub getInsert
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $contents  = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
   my $data      = exists $parm{data}      ? $parm{data}      : $this->{data};
@@ -117,8 +118,8 @@ sub getInsert
   my $tableKeys = exists $parm{tableKeys} ? $parm{tableKeys} : $this->{tableKeys};
   my $tableId   = exists $parm{tableId}   ? $parm{tableId}   : $this->{tableId};
 
-  die "$__ME__: table name is undefined!!!"   unless defined $tableName;
-  die "$__ME__: table keys are  undefined!!!" unless defined $tableKeys;
+  die "$_SELF_: table name is undefined!!!\n"   unless defined $tableName;
+  die "$_SELF_: table keys are  undefined!!!\n" unless defined $tableKeys;
 
   my $insert = join '','insert into ',$tableName,' ( ',join(', ',map { sprintf '[%s]',$_ } @{$tableKeys}),' )';
   my $select = defined $tableId ? join '','select',$tableId,'= @@Identity;' : undef;

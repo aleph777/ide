@@ -35,12 +35,15 @@
 #                       require 5.008
 #           21-Apr-2015 changed to 3 argument open from critique
 #           04-May-2023 use Time::Piece
+#           13-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package File::Log;
 
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 use File::IO;
 use Time::Piece;
@@ -78,7 +81,7 @@ my $open;
 my $stderr;
 my $saverr;
 
-my $__ME__ = join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 BEGIN
 {
@@ -201,6 +204,8 @@ sub put
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   unless(defined $open)
   {

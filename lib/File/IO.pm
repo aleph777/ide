@@ -39,6 +39,9 @@
 #           17-Feb-2021 use v5.10
 #           02-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package File::IO;
 
 use Carp;
@@ -138,7 +141,7 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $path      = exists $parm{path}      ? $parm{path}      : $this->{path};
   my $basename  = exists $parm{basename}  ? $parm{basename}  : $this->{basename};
@@ -172,11 +175,11 @@ sub get
 
     if(substr($filename,-3) eq '.gz')
     {
-      $fh = IO::Uncompress::Gunzip->new($filename) or die "$__ME__ - Unable to open $filename: $!!!!\n";
+      $fh = IO::Uncompress::Gunzip->new($filename) or die "$_SELF_ - Unable to open $filename: $!!!!\n";
     }
     elsif(substr($filename,-3) eq '.xz')
     {
-      $fh = IO::Uncompress::UnXz->new($filename) or die "$__ME__ - Unable to open $filename: $!!!!\n";
+      $fh = IO::Uncompress::UnXz->new($filename) or die "$_SELF_ - Unable to open $filename: $!!!!\n";
     }
     else
     {
@@ -188,7 +191,7 @@ sub get
 
         substr($filename,0,1) = '';
       }
-      open($fh,$mode,$filename) or die "$__ME__ - Unable to open $filename: $!!!!\n";
+      open($fh,$mode,$filename) or die "$_SELF_ - Unable to open $filename: $!!!!\n";
     }
     @{$contents} = <$fh>;
     close $fh;
@@ -217,7 +220,7 @@ sub put
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $path      = exists $parm{path}      ? $parm{path}      : $this->{path};
   my $basename  = exists $parm{basename}  ? $parm{basename}  : $this->{basename};
@@ -248,11 +251,11 @@ sub put
 
     if(substr($filename,-3) eq '.gz')
     {
-      $fh = IO::Compress::Gzip->new($filename) or die "$__ME__ - Unable to open $filename: $!!!!\n";
+      $fh = IO::Compress::Gzip->new($filename) or die "$_SELF_ - Unable to open $filename: $!!!!\n";
     }
     elsif(substr($filename,-3) eq '.xz')
     {
-      $fh = IO::Compress::Xz->new($filename) or die "$__ME__ - Unable to open $filename: $!!!!\n";
+      $fh = IO::Compress::Xz->new($filename) or die "$_SELF_ - Unable to open $filename: $!!!!\n";
     }
     else
     {
@@ -264,7 +267,7 @@ sub put
 
         substr($filename,0,1) = '';
       }
-      open($fh,$mode,$filename) or die "$__ME__ - Unable to open $filename: $!!!!\n";
+      open($fh,$mode,$filename) or die "$_SELF_ - Unable to open $filename: $!!!!\n";
     }
     if($newline)
     {

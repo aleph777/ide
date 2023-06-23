@@ -30,18 +30,22 @@
 #
 # Revision: 20-Apr-2015 use Math::Random::Secure
 #           12-Feb-2021 added getDistribution
+#           14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Math::Dice;
 
-require 5.006;
 require Exporter;
 use Carp;
-use strict;
+use Modern::Perl;
+
 use List::Util qw(sum);
 use Math::Random::Secure qw(irand);
 use v5.10;
 
-# use constant FOO => 'BAR';
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -107,13 +111,13 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $n     = exists $parm{N}     ? $parm{N}     : $this->{N};
   my $sides = exists $parm{sides} ? $parm{sides} : $this->{sides};
 
-  die "$__ME__: N ($n) must be positive!!!\n"           if $n     < 1;
-  die "$__ME__: sides ($sides) must be at least 2!!!\n" if $sides < 2;
+  die "$_SELF_: N ($n) must be positive!!!\n"           if $n     < 1;
+  die "$_SELF_: sides ($sides) must be at least 2!!!\n" if $sides < 2;
 
   #my @sides = (1 .. $sides);
 
