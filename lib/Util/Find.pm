@@ -39,6 +39,7 @@ use Carp;
 use Modern::Perl;
 
 use Cwd qw(abs_path);
+use File::FixPath qw(fixpath);
 use File::Find;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
@@ -119,6 +120,7 @@ sub AUTOLOAD
 
   return if $name eq "DESTROY";
 
+  say STDERR "$name";
   croak "Can't access `$name' field in class $type" unless exists $this->{_permitted}->{$name};
 
   return @_ ? $this->{$name} = shift : $this->{$name};
