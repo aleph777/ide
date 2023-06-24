@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -28,19 +28,18 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Computes sloc for specified input and creates a report
+# Purpose:   computes sloc for specified input and creates a report
 #
-# Arguments: dir1|file1 [dir2|file2 .. dirN|fileN]
+# Arguments: dir1|file1 [dir2|file2 … dirN|fileN]
 #
-# Revision: 18-Sep-2022 Using ‘Util::GetOptNew’
+# Revision:  18-Sep-2022 using Util::GetOptNew
+#            03-May-2023 using Util::GetOpt
+#            12-Jun-2023 using Modern::Perl
 #
+use Modern::Perl;
 use File::SLOC;
 use List::Util qw(first);
-use Util::GetOptNew;
-use strict;
-use v5.10;
-
-require 5.013006;
+use Util::GetOpt;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
@@ -61,11 +60,11 @@ my %option;
 
 my $o = Util::GetOpt->new(option => \%option);
 
-my @arg2  = qw(factor exponent salary outdir details summary);
+my @args2 = qw(factor exponent salary outdir details summary);
 my @bare1 = qw(s);
 my @bare2 = qw(spreadsheet);
 
-$o->get(bare1 => \@bare1,bare2 => \@bare2,arg2 => \@arg2);
+$o->get(bare1 => \@bare1,bare2 => \@bare2,args2 => \@args2);
 
 my $badswitch = first { substr($_,0,1) eq '-' } @ARGV;
 
@@ -74,7 +73,6 @@ die _ME_,": 'outdir' is not a directory!!!\n"           if exists $option{'outdi
 
 my $sloc = File::SLOC->new(dirs => [grep { -d } @ARGV],files => [grep { -e && !-d } @ARGV]);
 
-# $sloc->configure(map { $fieldSwitch{$_} => $option{$_} } grep { exists $option{$_} } @switchesArg);
 $sloc->configure($option{$_});
 
 $sloc->get;

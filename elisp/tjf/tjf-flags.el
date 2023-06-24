@@ -58,6 +58,7 @@
 
 (defvar tjf:flags/html-modes '(html-helper-mode
                                html-mode
+                               html-ts-mode
                                nxhtml-mode))
 
 (defvar tjf:flags/javascript-modes '(espresso-mode

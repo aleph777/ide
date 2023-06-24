@@ -1,7 +1,7 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
-#
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
 #         Copyright © 2019-2023 Tom Fontaine
-#
+
 # Title:  fix-copyright
 # Author: Tom Fontaine
 # Date:   05-May-2019
@@ -30,18 +30,16 @@
 
 # Purpose:   Fixes copyright statements for the current year.
 #
-# Arguments: $1 is file 1 to check
-#            .
-#            .
-#            .
-#            $N is file N to check
+# Arguments: file1 [file2 … fileN]
 #
 # Revision: 03-May-2023 changed to ‘Time::Piece’
+#           12-Jun-2023 use Modern::Perl
 #
+use Modern::Perl;
 use File::IO;
 use Time::Piece;
-use strict;
-use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 my $year = gmtime->year;
 

@@ -1,7 +1,8 @@
 # <<<PACKAGE>>> --- [description] -*-Perl-*-
 
-#         Copyright © <<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © <<<YEAR>>>-<<<YEAR>>> <<<AUTHOR>>>
 
+# Author: <<<AUTHOR>>>
 # Date:   <<<DATE>>>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -30,11 +31,12 @@
 # Revision:
 #
 
+# Code:
+
 package <<<PACKAGE>>>;
 
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 # use Foo::Bar;
 
@@ -101,6 +103,8 @@ sub get
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
 }

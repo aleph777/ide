@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -28,26 +28,22 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
+# Purpose:   takes Perl source code and determines the minimum version
+#            of perl required to be able to run it
 #
-# Purpose:   Determines the minimum version of Perl required to be able the
-#            input source code.
+# Arguments: file1 [file2 … file N]
 #
-# Arguments: $1 is file 1 to check
-#             .
-#             .
-#             .
-#             $N is file N to check
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
-# Revision:   27-May-2015 Changed to use ‘say’
-#
+use Modern::Perl;
 use Perl::MinimumVersion;
-use strict;
 
-for(@ARGV)
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+for(grep { -e } @ARGV)
 {
   my $mv = Perl::MinimumVersion->new($_);
 
-  print "$_: " if @ARGV > 1;
-
-  CORE::say $mv->minimum_version;
+  say $_,' requires: ',$mv->minimum_version;
 }

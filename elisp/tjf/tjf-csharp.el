@@ -72,11 +72,11 @@
   "Return a list of local project files for this buffer."
   (tjf:csharp/search-path "*.csproj"))
 
-(defun tjf:csharp/build-menu ()
-  "Create a Build menu."
-  (let ((sln-list  (tjf:csharp/find-sln))
-        (proj-list (tjf:csharp/find-proj)))
-    ))
+;; (defun tjf:csharp/build-menu ()
+;;   "Create a Build menu."
+;;   (let ((sln-list  (tjf:csharp/find-sln))
+;;         (proj-list (tjf:csharp/find-proj)))
+;;     ))
 
 (defun tjf:csharp/setup()
   "C#-mode setup function"

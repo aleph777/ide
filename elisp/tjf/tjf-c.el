@@ -36,13 +36,14 @@
 ;;           21-Oct-2022 Added key definition for ‘tjf:cc/insert-docstring’
 ;;                       Added ‘tjf:c/set-includes’
 ;;           04-Jan-2023 Fixed ‘tjf:c/setup’
+;;           06-Jun-2023 changed from ‘tjf:c/setup’ to ‘tjf:c/hook’ and ‘tjf:c/config’
 
 ;;; Code:
 
 (message "Loading from tjf-c...")
-(require 'eglot)
-(require 'flycheck)
-(require 'tjf-cc)
+;; (require 'eglot)
+;; (require 'flycheck)
+;; (require 'tjf-cc)
 
 ;;
 (defvar tjf:c/compiler)
@@ -158,30 +159,33 @@
     (unless (string= warnings tjf:c/warnings)
       (tjf:cc/set-warnings warnings))))
 
-(defun tjf:c/setup ()
-  "C-mode setup function."
-  (abbrev-mode -1)
-  (flymake-mode -1)
-  (flycheck-mode)
-  (imenu-add-to-menubar "Navigate")
-  ;;
-  (c-set-style "gnu")
-  (c-set-offset 'case-label '+)
+(defun tjf:c/config ()
+  "C mode config function."
+  (define-key c-ts-mode-map [menu-bar]    nil)
+  (define-key c-ts-mode-map [(control d)] nil)
+  (define-key c-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
 
-  (define-key c-mode-map [menu-bar]    nil)
-  (define-key c-mode-map [(control d)] nil)
-  (define-key c-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
+  (easy-menu-define tjf-cpp-menu   c-ts-mode-map "C" (append '("C") tjf:cc/menu-text))
+  (easy-menu-define cpp-build-menu c-ts-mode-map "C Build" tjf:c/build-menu))
 
-  (easy-menu-define tjf-c-menu   c-mode-map "C" (append '("C") tjf:cc/menu-text))
-  (easy-menu-define c-build-menu c-mode-map "C Build" tjf:c/build-menu)
-  ;;
-  (setq flycheck-gcc-language-standard tjf:c/dialect)
-
-  (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-  (add-hook 'completion-at-point-functions #'clang-capf   nil 'local)
+(defun tjf:c/hook ()
+  "C mode hook function."
   (setq-local comment-start "// ")
   (setq-local comment-end "")
-  (eglot-ensure))
+  (setq-local completion-at-point-functions (cons #'eglot-completion-at-point completion-at-point-functions))
+  (setq-local completion-at-point-functions (cons #'clang-capf                completion-at-point-functions))
+
+  (abbrev-mode   -1)
+  (flycheck-mode -1)
+
+  (flymake-mode)
+
+  ;; (setq flycheck-gcc-language-standard   tjf:c/dialect)
+  ;; (setq flycheck-clang-language-standard tjf:c/dialect)
+
+  (eglot-ensure)
+
+  (imenu-add-to-menubar "Navigate"))
 
 (defun tjf:c/syntax-check ()
   "Compile the current buffer (syntax check only)."

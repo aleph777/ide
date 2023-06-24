@@ -28,17 +28,19 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Math::RandomWalk;
 
-require 5.008;
 use Carp;
-use strict;
+use Modern::Perl;
 
 use Math::Random::Secure qw(irand);
 
-# use constant FOO => 'BAR';
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -109,7 +111,7 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
   my $start    = exists $parm{start}    ? $parm{start}    : $this->{start};

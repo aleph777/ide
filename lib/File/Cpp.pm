@@ -29,13 +29,17 @@
 
 #
 # Revision: 10-Mar-2016 Fixed problem with contents and chomp parameters
+#           14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package File::Cpp;
 
-require 5.008;
 use Carp;
-use strict;
-use File::SourceCode;
+use Modern::Perl;
+
+use File::IO;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
@@ -49,8 +53,6 @@ my %fields = (contents => undef,
               path     => undef,
               basename => undef,
               basedir  => undef,
-
-              chomp    => 0,
              );
 
 # BEGIN
@@ -107,17 +109,41 @@ sub get
   my $this = shift;
   my %parm = @_;
 
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
+
   my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
   my $path     = exists $parm{path}     ? $parm{path}     : $this->{path};
   my $basename = exists $parm{basename} ? $parm{basename} : $this->{basename};
   my $basedir  = exists $parm{basedir}  ? $parm{basedir}  : $this->{basedir};
-  my $chomp    = exists $parm{chomp}    ? $parm{chomp}    : $this->{chomp};
-  my $pragma   = exists $parm{pragma}   ? $parm{pragma}   : $this->{pragma};
 
-  my $sc = File::SourceCode->new(path  => $path, basename => $basename,basedir => $basedir,
-                                 chomp => $chomp,pragma   => $pragma,  style   => 'CPP');
+  my $io = File::IO->new(path  => $path, basename => $basename,basedir => $basedir,chomp => 0);
 
-  $sc->get(contents => $contents);
+  my @tmp;
+
+  $io->get(contents => \@tmp);
+
+  my $tmp = join '',@tmp;
+
+  $tmp =~ s#/\*[^*]*\*+([^/*][^*]*\*+)*/|//[^\n]*|("(\\.|[^"\\])*"|'(\\.|[^'\\])*'|.[^/"'\\]*)#defined $2 ? $2 : ''#egs;
+
+  @{$contents} = grep !/^\s*$/,split /\n\r?/,$tmp;
+}
+
+sub put
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
+
+  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
+  my $path     = exists $parm{path}     ? $parm{path}     : $this->{path};
+  my $basename = exists $parm{basename} ? $parm{basename} : $this->{basename};
+  my $basedir  = exists $parm{basedir}  ? $parm{basedir}  : $this->{basedir};
+
+  my $io = File::IO->new(path  => $path, basename => $basename,basedir => $basedir,newline => 1);
+
+  $io->put(contents => $contents);
 }
 
 1;

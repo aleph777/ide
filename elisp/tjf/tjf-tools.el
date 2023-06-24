@@ -29,18 +29,23 @@
 
 ;;; Commentary:
 
-;; Revision: 18-Mar-2016 Added a few missing letters
-;;           16-Jan-2017 Added "Check Language" to Tools menu
-;;           17-Jan-2017 Added ‘*-unicode-name-at-point’
-;;                       Added ‘copyright-update’
-;;           17-Apr-2018 Added ‘magit-status’
-;;           31-May-2018 Added ‘powerthesaurus-lookup-word’
-;;           14-Jun-2018 Added ‘declutter’
-;;           06-Jul-2018 Added ‘paradox-list-packages’
-;;           10-Jul-2019 Completed Greek alphabet
-;;           19-Jul-2019 Added ‘open-new-shell’
+;; Revision: 18-Mar-2016 added a few missing letters
+;;           16-Jan-2017 added "Check Language" to Tools menu
+;;           17-Jan-2017 added ‘*-unicode-name-at-point’
+;;                       added ‘copyright-update’
+;;           17-Apr-2018 added ‘magit-status’
+;;           31-May-2018 added ‘powerthesaurus-lookup-word’
+;;           14-Jun-2018 added ‘declutter’
+;;           06-Jul-2018 added ‘paradox-list-packages’
+;;           10-Jul-2019 completed Greek alphabet
+;;           19-Jul-2019 added ‘open-new-shell’
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           16-Apr-2022 Added menu entry for convert to python mode
+;;           16-Apr-2022 added menu entry for convert to python mode
+;;           10-Nov-2022 added ‘tjf:tools/insert-che’ and ‘tjf:tools/insert-chs
+;;                       fixed menu entries
+;;           31-May-2023 added ‘is-feature?’
+;;           07-Jun-2023 added ‘blamer-show-posframe-commit-info’ to Tools menu
+;;           09-Jun-2023 changed ‘paradox-list-packages’ to ‘elpaca-manager’
 ;;
 
 ;;; Code:
@@ -69,6 +74,16 @@
               (= ?< (elt name 0)))
       (setq name (get-char-code-property char-code 'old-name)))
     name))
+
+(defun tjf:tools/insert-che ()
+  "Insert closing \"cut here end\" snippet."
+  (interactive "*")
+  (insert "--8<---------------cut here---------------end--------------->8---\n"))
+
+(defun tjf:tools/insert-chs ()
+  "Insert opening \"cut here start\" snippet."
+  (interactive "*")
+  (insert "--8<---------------cut here---------------start------------->8---\n"))
 
 (defun tjf:tools/open-new-shell ()
   "Open a new shell buffer."
@@ -397,7 +412,8 @@
       ))
     ["Show Unicode Name" show-unicode-name-at-point t]
     "---"
-    ["Git Status" magit-status]
+    ["Git Status" magit-status                     t]
+    ["Git Blame"  blamer-show-posframe-commit-info t]
     "---"
     ["Open New Shell" tjf:tools/open-new-shell t]
     "---"
@@ -405,13 +421,15 @@
     ["Insert Synonym..."          powerthesaurus-lookup-word :enable (tjf:flags/enable-write?)]
     ["Look up word definition..." sdcv-search                :active t]
     "---"
-    ["Insert ‘Cut Here’ Start" insert-chs       :enable (tjf:flags/enable-write?)]
-    ["Insert ‘Cut Here’ End"   insert-che       :enable (tjf:flags/enable-write?)]
-    ["Update Copyright"        copyright-update :enable (tjf:flags/enable-write?)]
+    ["Insert ‘Cut Here’ Start" tjf:tools/insert-chs :enable (tjf:flags/enable-write?)]
+    ["Insert ‘Cut Here’ End"   tjf:tools/insert-che :enable (tjf:flags/enable-write?)]
+    ["Update Copyright"        copyright-update     :enable (tjf:flags/enable-write?)]
     "---"
     ["Read from URL..." declutter :active t]
     "---"
-    ["List Packages"    paradox-list-packages :active t]
+    ["Check Feature..." is-feature? :active t]
+    "---"
+    ["List Packages"    elpaca-manager :active t]
     "---"
     ["Complete Symbol"        completion-at-point                :enable (tjf:flags/enable-write?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (tjf:flags/enable-write?)]

@@ -2,6 +2,7 @@
 
 #         Copyright © <<<YEAR>>> <<<AUTHOR>>>
 
+# Author: <<<AUTHOR>>>
 # Date:   <<<DATE>>>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -30,12 +31,13 @@
 # Revision:
 #
 
+# Code:
+
 package <<<PACKAGE>>>;
 
 use Exporter 'import';
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 our @EXPORT_OK = qw();
 
@@ -54,6 +56,8 @@ use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 sub Foo
 {
   my ($bar) = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   return $bar;
 }

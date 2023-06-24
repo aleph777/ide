@@ -37,6 +37,7 @@ installPackage julia
 installPackage jupyter
 installPackage klatexformula
 installPackage libffi-dev
+installPackage libgccjit-dev
 installPackage libgconf2-dev
 installPackage libgdbm-dev
 installPackage libgif-dev
@@ -57,14 +58,13 @@ installPackage libssl-dev
 installPackage libsystemd-dev
 installPackage libtiff5-dev
 installPackage libtinfo-dev
-installPackage libwebp-dev
 installPackage libxml2-dev
 installPackage libxpm-dev
 installPackage libyaml-dev
 #installPackage makeinfo
 installPackage net-tools
 installPackage p7zip-full
-installPackage python3-dev
+installPackage python-dev
 # installPackage ruby
 installPackage sdcv
 installPackage sloccount

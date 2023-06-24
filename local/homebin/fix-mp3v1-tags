@@ -3,6 +3,7 @@
 use File::Basename;
 use MP3::Tag;
 use MP3::Info;
+use Encode;
 use strict;
 use v5.18;
 
@@ -10,29 +11,75 @@ for(@ARGV)
 {
   my $mp3 = MP3::Tag->new($_);
   my $r   = $mp3->autoinfo();
-  my $fn  = basename($_,'.mp3');
 
-  $mp3->get_tags;
+  my %tag = map { $_ => 1 } $mp3->get_tags;
 
-  if(exists $mp3->{ID3v1})
+  if(exists $tag{'ID3v1'})
   {
-    # say $fn,': V1 TAG';
+    say 'ID3v1 - ',$_;
 
-    #ProcessV1($mp3->{ID3v1},$fn);
+    say '<',$mp3->{ID3v1}->artist,'>';
+    say '<',$mp3->{ID3v1}->title,'>';
+
+    unless($mp3->{ID3v1}->artist)
+    {
+      $mp3->artist_set($r->{artist});
+      $mp3->update_tags();
+    }
+    unless($mp3->{ID3v1}->title)
+    {
+      $mp3->title_set($r->{title});
+      $mp3->update_tags;
+    }
+    say '----'
   }
   else
   {
-    say $fn,': NO TAG';
-
-    #$mp3->delete_tag('ID3v2') if exists $mp3->{ID3v2};
+    say 'no ID3v1 - ',$_;
 
     my $tag = $mp3->new_tag('ID3v1');
 
+    say 1;
+
+    say exists $tag{'ID3v2'} ? 'ID3v2' : 'no ID3v2';
+
+    say 2;
+
     $mp3->artist_set($r->{artist});
+
+    say 3;
+
     $mp3->title_set($r->{title});
-    $mp3->update_tags();
-    # say $r->{artist};
-    # say $r->{title};
+
+    say 4;
+
+    $mp3->update_tags;
+
+    say 5;
   }
-  $mp3->close();
 }
+
+# for(@ARGV)
+# {
+#   my $mp3 = MP3::Tag->new($_);
+#   my $r   = $mp3->autoinfo();
+#   my $fn  = basename($_,'.mp3');
+
+#   $mp3->get_tags;
+
+#   if(exists $mp3->{ID3v1})
+#   {
+#     # say $fn,': V1 TAG';
+
+#     #ProcessV1($mp3->{ID3v1},$fn);
+#   }
+#   else
+#   {
+#     say $fn,': NO TAG';
+
+#     $mp3->artist_set($r->{artist});
+#     $mp3->title_set($r->{title});
+#     $mp3->update_tags();
+#   }
+#   $mp3->close();
+# }

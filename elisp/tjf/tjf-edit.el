@@ -77,6 +77,7 @@
 ;;           28-Apr-2022 Changed ‘tjf:edit/cleanse-whitespace’ to use ‘tjf:flags/using-tabs’
 ;;           02-May-2022 Restored ‘tjf:edit/copy-buffer’
 ;;           29-Aug-2022 Fixed ‘tjf:edit/menu-justify’
+;;           10-Nov-2022 Removed ‘tjf:eedit/insert-che’ and ‘tjf:eedit/insert-chs’
 ;;
 
 ;;; Code:
@@ -274,16 +275,6 @@
   (interactive "*")
   (with-buffer-or-region (beg end)
                          (indent-region beg end)))
-
-(defun tjf:edit/insert-chs ()
-  "Insert opening \"cut here start\" snippet."
-  (interactive "*")
-  (insert "--8<---------------cut here---------------start------------->8---\n"))
-
-(defun tjf:edit/insert-che ()
-  "Insert closing \"cut here end\" snippet."
-  (interactive "*")
-  (insert "--8<---------------cut here---------------end--------------->8---\n"))
 
 (defun tjf:edit/insert-newline-after ()
   "Insert a newline at the end of the current line."

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/perl    # -*-Perl-*-
 
 #         Copyright © 2020-2023 Tom Fontaine
 
@@ -29,14 +29,15 @@
 # dealings in the software.
 
 #
-# Purpose:
+# Purpose:   calculates color distances (from black, gray, and white) for each
+#            color from STDIN
 #
-# Arguments:
+# Arguments: n/a
 #
-# Revision:
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
-use strict;
-use v5.10;
+use Modern::Perl;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 

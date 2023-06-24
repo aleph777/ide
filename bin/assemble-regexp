@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -28,16 +28,18 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Converts @ARGV into a minimal regular expression.
+# Purpose:   converts @ARGV into a minimal regular expression.
+#
 #            NOTE: for command substitution use: "$(assemble-regexp args)"
 #
+# Arguments: str1 [str2 … strN]
 #
-# Arguments: str1 [str2 str3 … strN]
+# Revision:  27-May-2015 changed to use ‘say’
 #
-# Revision:  27-May-2015 Changed over to use ‘say’
-#
+use Modern::Perl;
 use Regexp::Assemble;
-use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 my $ra  = Regexp::Assemble->new;
 
@@ -45,4 +47,4 @@ $ra->add(@ARGV);
 
 my $regexp = $ra->re;
 
-CORE::say $ra->re;
+say $ra->re;

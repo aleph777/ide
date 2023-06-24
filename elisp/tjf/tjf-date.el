@@ -85,7 +85,7 @@
   (insert (tjf:date/today tjf:date/dd-mon-yyyy)))
 
 (defun tjf:date/insert-month-day-year ()
-   "Insert today's date in month day, year format i.e. 'June 22, 2000'."
+   "Insert today's date in month day, year format i.e. ‘June 22, 2000’."
   (interactive "*")
    (insert (tjf:date/today tjf:date/month-day-year)))
 

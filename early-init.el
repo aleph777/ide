@@ -12,7 +12,10 @@
 ;; customized in the regular init file. *NotPackage Installation::.
 
 ;; We do not recommend that you move into ‘early-init.el’
-;; customizations that can be left in the normal init files.
+;; customizations that can be left in the normal init files. That is
+;; because the early init file is read before the GUI is initialized,
+;; so customizations related to GUI features will not work reliably in
+;; ‘early-init.el’.
 
 ;;; Code:
 
@@ -37,6 +40,15 @@
 (add-hook 'emacs-startup-hook
           #'(lambda ()
               (setq gc-cons-threshold  (* 8 1024 1024))
+              (setq gc-cons-percentage 0.1)
+              (garbage-collect)))
+
+(setq gc-cons-threshold  most-positive-fixnum)   ;; Defer Garbage collection
+(setq gc-cons-percentage 1.0)
+
+(add-hook 'emacs-startup-hook
+          #'(lambda ()
+              (setq gc-cons-threshold (* 8 1024 1024))
               (setq gc-cons-percentage 0.1)
               (garbage-collect)))
 

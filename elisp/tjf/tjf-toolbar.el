@@ -195,7 +195,7 @@
 ;;
 ;; Control Meta
 ;;
-(define-key tool-bar-map [(control meta case)]     'tjf:edit/capitalize)
+(define-key tool-bar-map [(control meta case)]     'xah-toggle-letter-case)
 (define-key tool-bar-map [(control meta paste)]    'clipboard-yank)
 (define-key tool-bar-map [(control meta zoom-in)]  'tjf:color/saturate-background)
 (define-key tool-bar-map [(control meta zoom-out)] 'tjf:color/desaturate-background)
@@ -203,7 +203,7 @@
 ;;
 ;; Control Super
 ;;
-(define-key tool-bar-map [(control super case)]     'tjf:edit/upcase)
+(define-key tool-bar-map [(control super case)]     'ergoemacs-toggle-camel-case)
 (define-key tool-bar-map [(control super zoom-in)]  'tjf:color/increase-hue-background)
 (define-key tool-bar-map [(control super zoom-out)] 'tjf:color/decrease-hue-background)
 

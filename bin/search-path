@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -28,19 +28,23 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Searches directories in PATH for input regular expression.
+# Purpose:   searches directories in PATH for input regular expression
 #
 # Arguments: $1 is the regex to search for
 #
-# Revision:
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
-use strict;
+use Modern::Perl;
+use File::Basename qw(basename);
 
-die $0 =~ m=([^/]+)$=,": No regular expression specified!!!\n" unless defined $ARGV[0];
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-my $regex = $ARGV[0];
-my $path  = qx(clean-path $ENV{PATH});
+die _ME_,": No regular expression specified!!!\n" unless defined $ARGV[0];
+
+my $regex  = $ARGV[0];
+my ($path) = qx(clean-path $ENV{PATH});
 
 chomp $path;
 
-print map { $_,"\n" } grep /$regex/o,glob("$_/*") for split ':',$path;
+say $_ for sort grep { basename($_) =~ /$regex/o } map { glob "$_/*" } split ':',$path;

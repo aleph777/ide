@@ -29,30 +29,32 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Mar-2016 Added ‘query-frame-font’ to ‘tjf-view-menu’
-;;           11-Aug-2016 Changed ‘usr-view-clipboard’ to ‘tjf-view-clipboard’
-;;           25-Aug-2016 Added ‘narrow-or-widen-dwim’
-;;           13-Sep-2016 Removed original ‘Hide/Show’ and ‘Folding’ menus
-;;                       Added new ‘Fold’ menu
-;;           15-Sep-2016 Added ‘which-function-mode’
-;;           16-Dec-2016 Added ‘linum-relative-mode’ and supporting functions
-;;           12-Jan-2017 Changed ‘is-linum?’ to buffer local
-;;                       Fixed toggle functions
-;;           02-Apr-2018 Changed line-number functions to use ‘display-line-numbers’
-;;           17-Apr-2018 Added ‘diminish-minor-modes' and added to ‘tjf-view-menu’
-;;                       Fixed byte compile warnings
-;;           31-May-2018 Added ‘get-os-version’ and ‘get-desktop’
-;;                       Updated ‘display-properties’
-;;           20-Jun-2018 Fixed ‘display-line-numbers-set’ with ‘bound-and-true-p’ check
+;; Revision: 02-Mar-2016 added ‘query-frame-font’ to ‘tjf-view-menu’
+;;           11-Aug-2016 changed ‘usr-view-clipboard’ to ‘tjf-view-clipboard’
+;;           25-Aug-2016 added ‘narrow-or-widen-dwim’
+;;           13-Sep-2016 removed original ‘Hide/Show’ and ‘Folding’ menus
+;;                       added new ‘fold’ menu
+;;           15-Sep-2016 added ‘which-function-mode’
+;;           16-Dec-2016 added ‘linum-relative-mode’ and supporting functions
+;;           12-Jan-2017 changed ‘is-linum?’ to buffer local
+;;                       fixed toggle functions
+;;           02-Apr-2018 changed line-number functions to use ‘display-line-numbers’
+;;           17-Apr-2018 added ‘diminish-minor-modes' and added to ‘tjf-view-menu’
+;;                       fixed byte compile warnings
+;;           31-May-2018 added ‘get-os-version’ and ‘get-desktop’
+;;                       updated ‘display-properties’
+;;           20-Jun-2018 fixed ‘display-line-numbers-set’ with ‘bound-and-true-p’ check
 ;;                       of ‘display-line-numbers-mode’
-;;           02-Jul-2018 Changed menu text to eliminate reference to frame
-;;           06-Jul-2018 Added ‘list-faces-display’
-;;                       Moved randon background colors to submenu
-;;           21-Oct-2020 Fixed ‘is-line-numbers-absolute?' and ‘is-line-numbers-relative?'
-;;           22-Jan-2021 Added ‘what-cursor-position' to menu
+;;           02-Jul-2018 changed menu text to eliminate reference to frame
+;;           06-Jul-2018 added ‘list-faces-display’
+;;                       moved randon background colors to submenu
+;;           21-Oct-2020 fixed ‘is-line-numbers-absolute?' and ‘is-line-numbers-relative?'
+;;           22-Jan-2021 added ‘what-cursor-position' to menu
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           08-May-2021 Fixed reset frame size menu entry
-;;           14-Aug-2021 Fixed ‘tjf:view/get-line-numbers’
+;;           08-May-2021 fixed reset frame size menu entry
+;;           14-Aug-2021 fixed ‘tjf:view/get-line-numbers’
+;;           09-Feb-2023 added entry for ‘tjf:frame/half-size’
+;;           13-Apr-2023 removed ‘company-mode’ from ‘diminish’
 ;;
 
 ;;; Code:
@@ -103,7 +105,7 @@
 (defun tjf:view/get-desktop ()
   "Call ‘cinnamon’ or ‘gnome-shell’ to retrieve GNOME version."
   (let ((cin (shell-command-to-string "which cinnamon")))
-    (unless (eq cin "")
+    (unless (equal cin "")
         (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "cinnamon --version"))
       (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "gnome-shell --version")))))
 
@@ -114,7 +116,6 @@
                       'abbrev-mode
                       'anzu-mode
                       'auto-revert-mode
-                      'company-mode
                       'eldoc-mode
                       'highlight-operators-mode
                       'hs-minor-mode
@@ -122,8 +123,7 @@
                       'smartparens-mode
                       'undo-tree-mode
                       'volatile-highlights-mode
-                      'whitespace-mode
-                      'ycmd-mode))
+                      'whitespace-mode))
 
 (defun tjf:view/get-os-version ()
   "Call ‘lsb_release’ to retrieve OS version."
@@ -166,11 +166,8 @@ org-src-block actually calls ‘org-edit-src-code’.
 With prefix P, don't widen, just narrow even if buffer
 is already narrowed."
   (interactive "P")
-  (declare (interactive-only))
   (cond ((and (buffer-narrowed-p) (not p)) (widen))
-        ((region-active-p)
-         (narrow-to-region (region-beginning)
-                           (region-end)))
+        ((region-active-p) (narrow-to-region (region-beginning) (region-end)))
         ((derived-mode-p 'org-mode)
          ;; ‘org-edit-src-code’ is not a real narrowing
          ;; command. Remove this first conditional if
@@ -333,6 +330,7 @@ is already narrowed."
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
      "---"
      ["Reset Window Size"     tjf:frame/reset-size :enable (tjf:flags/is-not-fullscreen?)]
+     ["Set Window Half Size"  tjf:frame/half-size  t]
      ("Background Color"
       ["Set Background Color"  tjf:color/set-background-random]
 

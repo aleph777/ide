@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
 
 #         Copyright © 2000-2023 Tom Fontaine
 
@@ -28,12 +28,12 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Prints a path specification based on the input directories
+# Purpose:   prints a path specification based on the input directories
 #            and the current path.  The input directories are kept in
 #            order and precede the current path.  Duplicate entries
-#            are removed.
+#            are removed
 #
-# Arguments: $1 .. $n path directories or path specification
+# Arguments: path1 [path2 … pathN]
 #
 # Revision:  06-Jul-2000 Updated version switch
 #                        Added -help switch
@@ -44,11 +44,12 @@
 #            27-May-2015 Changed over to say
 #            14-Jul-2019 use v5.10
 #            23-Aug-2020 List::Util (Core)
+#            12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
 #
+use Modern::Perl;
 use List::Util qw(uniq);
-use strict;
-use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 

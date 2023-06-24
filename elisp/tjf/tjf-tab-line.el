@@ -758,7 +758,7 @@ P2 13 13 255 255 255 255 255 255 255 255 255 255 255 255 255 255 255
 The variable `tabbar-button-widget' gives details on this widget."
   :group 'tabbar
   :type tabbar-button-widget
-  :set '(lambda (variable value)
+  :set #'(lambda (variable value)
           (custom-set-default variable value)
           ;; Schedule refresh of button value.
           (setq tabbar-home-button-value nil)))
@@ -791,7 +791,7 @@ A disabled button image will be automatically build from it.")
 The variable `tabbar-button-widget' gives details on this widget."
   :group 'tabbar
   :type tabbar-button-widget
-  :set '(lambda (variable value)
+  :set #'(lambda (variable value)
           (custom-set-default variable value)
           ;; Schedule refresh of button value.
           (setq tabbar-scroll-left-button-value nil)))
@@ -824,7 +824,7 @@ A disabled button image will be automatically build from it.")
 The variable `tabbar-button-widget' gives details on this widget."
   :group 'tabbar
   :type tabbar-button-widget
-  :set '(lambda (variable value)
+  :set #'(lambda (variable value)
           (custom-set-default variable value)
           ;; Schedule refresh of button value.
           (setq tabbar-scroll-right-button-value nil)))
@@ -853,7 +853,7 @@ The value (\"\"), or (0) hide separators.")
 The variable `tabbar-separator-widget' gives details on this widget."
   :group 'tabbar
   :type tabbar-separator-widget
-  :set '(lambda (variable value)
+  :set #'(lambda (variable value)
           (custom-set-default variable value)
           ;; Schedule refresh of separator value.
           (setq tabbar-separator-value nil)))
@@ -865,7 +865,7 @@ The variable `tabbar-separator-widget' gives details on this widget."
 That is for buttons and separators."
   :group 'tabbar
   :type 'boolean
-  :set '(lambda (variable value)
+  :set #'(lambda (variable value)
           (custom-set-default variable value)
           ;; Schedule refresh of all buttons and separator values.
           (setq tabbar-separator-value nil
@@ -1674,7 +1674,7 @@ buffer tabs.
 The variable `tabbar-button-widget' gives details on this widget."
   :group 'tabbar-buffer
   :type tabbar-button-widget
-  :set '(lambda (variable value)
+  :set #'(lambda (variable value)
           (custom-set-default variable value)
           ;; Schedule refresh of button value.
           (setq tabbar-home-button-value nil)))
@@ -1836,7 +1836,7 @@ That is a pair (ENABLED . DISABLED), where ENABLED and DISABLED are
 respectively the appearance of the button when enabled and disabled.
 They are propertized strings which could display images, as specified
 by the variable ‘tabbar-button-label’.
-When NAME is 'home, return a different ENABLED button if showing tabs
+When NAME is ‘home’, return a different ENABLED button if showing tabs
 or groups.  Call the function ‘tabbar-button-label’ otherwise."
   (let ((lab (tabbar-button-label name)))
     (when (eq name 'home)

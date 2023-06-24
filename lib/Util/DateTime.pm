@@ -1,4 +1,4 @@
-# Util::DateTime --- Date/Time object -*-Perl-*-
+# Util::DateTime --- [OBSOLETE] Date/Time object -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -118,7 +118,7 @@ my %fields = (format   => undef,
 
               YYYYMMDD => "%Y%m%d",
               HHMMSS   => "%H%M%S",
-              LOG      => "%Y%m%d_%H%M%S",
+              LOG      => "%Y%m%d%H%M%S",
               DATE     => "%B%e, %Y",
               DAY_DATE => "%A, %B%e, %Y",
 
@@ -226,7 +226,7 @@ sub now
   $this->{second}     = $dt->second;
   $this->{nanosecond} = $dt->nanosecond;
 
-  return $dt->strftime($this->{format});
+  return $dt->strftime($this->{$this->{format}});
 }
 
 sub set

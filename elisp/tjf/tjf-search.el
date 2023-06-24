@@ -49,7 +49,8 @@
 (defalias 'search-word-backward 'tjf:search/backward-word-at-point)
 
 (defun tjf:search/all-files ()
-  "Find matching text in all open files (i.e. `multi-occur') for text at point or region."
+  "Find matching text in all open files (i.e. `multi-occur') for text
+  at point or region."
   (interactive)
   (multi-occur (buffer-list) (tjf:search/thing)))
 
@@ -69,7 +70,8 @@
                        (isearch-yank-string (buffer-substring-no-properties beg end))))
 
 (defun tjf:search/multi-occur ()
-  "Call `multi-occur', but use `tjf:search/thing' for regexp default and `buffer-list' for buffers."
+  "Call `multi-occur', but use `tjf:search/thing' for regexp default
+  and `buffer-list' for buffers."
   (interactive)
   (multi-occur (buffer-list) (tjf:search/prompt)))
 
@@ -123,23 +125,23 @@
   (interactive)
   (tjf:search/goto-word-at-point 'backward))
 
-(defun tjf:search/add-to-isearch-search-ring (isearch-string)
-  "Add ISEARCH-STRING to isearch ‘search-ring’."
-  (if (> (length isearch-string) 0)
+(defun tjf:search/add-to-isearch-search-ring (isearch-str)
+  "Add ISEARCH-STR to isearch ‘search-ring’."
+  (if (> (length isearch-str) 0)
       ;; Update the ring data.
       (if isearch-regexp
           (if (or (null regexp-search-ring)
-                  (not (string= isearch-string (car regexp-search-ring))))
+                  (not (string= isearch-str (car regexp-search-ring))))
               (progn
                 (setq regexp-search-ring
-                      (cons isearch-string regexp-search-ring))
+                      (cons isearch-str regexp-search-ring))
                 (if (> (length regexp-search-ring) regexp-search-ring-max)
                     (setcdr (nthcdr (1- search-ring-max) regexp-search-ring)
                             nil))))
         (if (or (null search-ring)
-                (not (string= isearch-string (car search-ring))))
+                (not (string= isearch-str (car search-ring))))
             (progn
-              (setq search-ring (cons isearch-string search-ring))
+              (setq search-ring (cons isearch-str search-ring))
               (if (> (length search-ring) search-ring-max)
                   (setcdr (nthcdr (1- search-ring-max) search-ring) nil)))))))
 

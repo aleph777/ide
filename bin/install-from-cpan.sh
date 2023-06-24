@@ -14,6 +14,7 @@ cpanm install IO::Compress::Xz
 cpanm install IO::Uncompress::UnXz
 cpanm install List::MoreUtils
 cpanm install Log::Log4Perl
+cpanm install Modern::Perl
 cpanm install MP3::Mplib
 cpanm install Math::Random::Secure
 cpanm install Perl::Critic

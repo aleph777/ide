@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2015-2023 Tom Fontaine
 
@@ -28,14 +28,18 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Performs syntax check on all Perl ide items
+# Purpose:   performs syntax check on all Perl ide items
 #
-# Arguments: None
+# Arguments: n/a
 #
-# Revision:
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
+use Modern::Perl;
 use File::Find;
 use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 my @files;
 

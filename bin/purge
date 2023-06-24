@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 1999-2023 Tom Fontaine
 
@@ -28,16 +28,20 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Deletes temporary files from either current dir or input
-#            directory trees.
+# Purpose:   deletes temporary files from either current dir or input
+#            directory trees
 #
-# Arguments: [dir1 ... dirN]
+# Arguments: [dir1 … dirN]
 #
 # Revision:  12-May-2008 use strict
 #            14-May-2008 Filter ARGV for dir existence
+#            12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
+use Modern::Perl;
 use File::Find;
-use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 push @ARGV,'.' unless @ARGV;
 

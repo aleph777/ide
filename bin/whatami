@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2020-2023 Tom Fontaine
 
@@ -28,14 +28,16 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Prints the Linux distro description
+# Purpose:   prints the Linux distro description
 #
-# Arguments:
+# Arguments: n/a
 #
-# Revision:
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
 #
-use v5.10;
-use strict;
+use Modern::Perl;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 my @lsb = split /:\s+/,qx(lsb_release -d);
 

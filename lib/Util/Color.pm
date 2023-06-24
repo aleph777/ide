@@ -29,19 +29,20 @@
 
 #
 # Revision: 17-May-2020 use v5.10
+#           13-Jun-2023 use Modern::Perl
 #
+
+# Code:
 
 package Util::Color;
 
-require 5.008;
 use Carp;
-use strict;
-use v5.10;
+use Modern::Perl;
 
 use Math::Random::Secure;
 use List::Util qw(min max);
 
-use constant _PROGRAM_ => $0 =~ m=([^/]+)$=;
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 use constant SCALE_DISTANCE => sqrt 10;
 
@@ -197,7 +198,7 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
   my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
@@ -227,7 +228,7 @@ sub random
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $scheme    = exists $parm{scheme}    ? $parm{scheme}    : $this->{scheme};
 
@@ -306,7 +307,7 @@ sub rndRed
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $red_min = exists $parm{red_min} ? $parm{red_min} : $this->{red_min};
   my $red_max = exists $parm{red_max} ? $parm{red_max} : $this->{red_max};
@@ -327,7 +328,7 @@ sub rndGreen
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $green_min = exists $parm{green_min} ? $parm{green_min} : $this->{green_min};
   my $green_max = exists $parm{green_max} ? $parm{green_max} : $this->{green_max};
@@ -348,7 +349,7 @@ sub rndBlue
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = join '::',_PROGRAM_,(caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $blue_min = exists $parm{blue_min} ? $parm{blue_min} : $this->{blue_min};
   my $blue_max = exists $parm{blue_max} ? $parm{blue_max} : $this->{blue_max};
@@ -369,6 +370,8 @@ sub getRGB
   my $this = shift;
   my %parm = @_;
 
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
+
   my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
   my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
   my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
@@ -376,11 +379,13 @@ sub getRGB
 
   if(defined $value)
   {
-    my ($color) = $value =~ /^#*([[:xdigit:]]{6})/;die $value unless defined $color;
+    my ($color) = $value =~ /^#*([[:xdigit:]]{6})/;
+
+    die $_SELF_,': ',$value unless defined $color;
 
     ($red,$green,$blue) = map { hex(join '',"0x",$_)/256 } (substr($color,0,2),substr($color,2,2),substr($color,4,2));
 
-    die "($red,$green,$blue)\n" unless defined $red && defined $green && defined $blue;
+    die $_SELF_,": ($red,$green,$blue)\n" unless defined $red && defined $green && defined $blue;
   }
   else
   {
@@ -395,6 +400,8 @@ sub computeDistance
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $hex1 = exists $parm{hex1} ? $parm{hex1} : $this->{hex1};
   my $hex2 = exists $parm{hex2} ? $parm{hex2} : $this->{hex2};
@@ -412,6 +419,8 @@ sub computeLuminance
   my $this = shift;
   my %parm = @_;
 
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
+
   my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
   my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
   my $blue  = exists $parm{blue}    ? $parm{blue}    : $this->{blue};
@@ -427,6 +436,8 @@ sub computeContrast
   my $this = shift;
   my %parm = @_;
 
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
+
   my $hex1 = exists $parm{hex1} ? $parm{hex1} : $this->{hex1};
   my $hex2 = exists $parm{hex2} ? $parm{hex2} : $this->{hex2};
 
@@ -440,6 +451,8 @@ sub computeHSL
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
   my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
@@ -492,6 +505,8 @@ sub computeHSL
 
 sub getShade
 {
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
+
   my $luminosity = 2*shift;
 
   if($luminosity < 0.125)
@@ -520,6 +535,8 @@ sub getColorType
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $red   = exists $parm{red}     ? $parm{red}     : $this->{red};
   my $green = exists $parm{green}   ? $parm{green}   : $this->{green};
@@ -563,64 +580,14 @@ sub getColorType
     $r->{SHADE} = 'white';
   }
   return $r;
-  # elsif($hue >=   0 && $hue <  30)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'red' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >=  30 && $hue <  60)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'orange' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >=  60 && $hue <  90)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'yellow' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >=  90 && $hue < 120)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'green-yellow' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 120 && $hue < 150)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'green' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 150 && $hue < 180)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'cyan-green' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 180 && $hue <  210)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'cyan' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 210 && $hue <  240)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'blue-cyan' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 240 && $hue < 270)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'blue' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 270 && $hue < 300)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'indigo' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 300 && $hue < 330)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'magenta' : 'gray',getShade($luminosity);
-  # }
-  # elsif($hue >= 330 && $hue < 360)
-  # {
-  #   return join '-',$saturation >= 0.25 ? 'red-magenta' : 'gray',getShade($luminosity);
-  # }
-  # else
-  # {
-  #   die "$value: ($hue,$saturation,$luminosity)";
-  # }
 }
 
 sub parseThemeColors
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $file   = exists $parm{file}    ? $parm{file}    : $this->{file};
   my $colors = exists $parm{colors}  ? $parm{colors}  : $this->{colors};

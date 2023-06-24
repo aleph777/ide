@@ -1,4 +1,4 @@
-# Util::Time --- [description] -*-Perl-*-
+# Util::Time --- OBSOLETE -*-Perl-*-
 
 #         Copyright © 2022-2023 Tom Fontaine
 
@@ -158,7 +158,7 @@ our $AUTOLOAD;
 my @AREF = qw();
 my @HREF = qw();
 
-my %fields = (tp => undef,
+my %fields = (FORMAT => 'TIMESTAMP',
 
               MMDDYYYY => "%D",
               DATE_ISO => "%F",
@@ -167,11 +167,11 @@ my %fields = (tp => undef,
               DEF_DATE => "%x",
               DEF_TIME => "%X",
 
-              YYYYMMDD => "%Y%m%d",
-              HHMMSS   => "%H%M%S",
-              LOG      => "%Y%m%d%H%M%S",
-              DATE     => "%B%e, %Y",
-              DAY_DATE => "%A, %B%e, %Y",
+              YYYYMMDD  => "%Y%m%d",
+              HHMMSS    => "%H%M%S",
+              TIMESTAMP => "%Y%m%d%H%M%S",
+              DATE      => "%B%e, %Y",
+              DAY_DATE  => "%A, %B%e, %Y",
              );
 
 
@@ -198,8 +198,6 @@ sub new
   my %parm = @_;
 
   @{$this}{keys %parm} = values %parm;
-
-  $this->{tp} = localtime;
 
   return $this;
 }
@@ -233,6 +231,17 @@ sub get
   my %parm = @_;
 
   $this->{tp} = localtime;
+}
+
+sub now
+{
+  my $this = shift;
+  my %parm = @_;
+
+  my $fmt = exists $parm{FORMAT} ? $parm{FORMAT} : $this->{FORMAT};
+  my $stf = exists $this->{$fmt} ? $this->{$fmt} : $fmt;
+
+  return gmtime->strftime($stf);
 }
 
 1;

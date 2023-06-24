@@ -104,6 +104,7 @@ sub configure
 
   @{$this}{keys %parm} = values %parm;
 }
+
 sub get
 {
   my $this = shift;

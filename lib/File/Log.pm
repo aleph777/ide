@@ -34,17 +34,22 @@
 #           25-Mar-2015 removed usage of bareword file handles
 #                       require 5.008
 #           21-Apr-2015 changed to 3 argument open from critique
+#           04-May-2023 use Time::Piece
+#           13-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package File::Log;
 
-require 5.008;
 use Carp;
-use strict;
+use Modern::Perl;
+
 use File::IO;
-use Util::Time;
+use Time::Piece;
 use IO::Handle;
 
-# use constant FOO => 'BAR';
+use constant TIMESTAMP => '%Y%m%d%H%M%S';
 
 our $AUTOLOAD;
 
@@ -55,13 +60,17 @@ my %fields = (path      => undef,
               basename  => undef,
               basedir   => undef,
 
+              utc       => 1,
+
               clobber   => 1,
-              timestamp => 0,
+              delimiter => ' ',
+              timestamp => 1,
               echo      => 0,
 
               who       => undef,
              );
 
+my $delimiter;
 my $logfile;
 my $ts;
 my $timestamp;
@@ -72,7 +81,7 @@ my $open;
 my $stderr;
 my $saverr;
 
-my $__ME__ = join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 BEGIN
 {
@@ -159,10 +168,10 @@ sub open
   $open = 1;
 
   $logfile = File::IO->new(path => $filename,newline => 1,append  => 1);
-  $ts      = Util::Time->new(style => 'LOG');
 
   open STDERR,'>>',$filename;
 }
+
 sub close
 {
   $timestamp = undef;
@@ -174,6 +183,7 @@ sub close
 
   STDERR->fdopen($stderr,'w');
 }
+
 sub append
 {
   my $this = shift;
@@ -181,6 +191,7 @@ sub append
 
   $msg .= $text;
 }
+
 sub prepend
 {
   my $this = shift;
@@ -188,34 +199,41 @@ sub prepend
 
   $msg = join '',$text,$msg;
 }
+
 sub put
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   unless(defined $open)
   {
     print "Logfile is not OPEN!!!\n";
     exit;
   }
-  $who  = exists $parm{who}  ? $parm{who}  : $who;
-  $echo = exists $parm{echo} ? $parm{echo} : $echo;
+  $who       = exists $parm{who}       ? $parm{who}       : $who;
+  $echo      = exists $parm{echo}      ? $parm{echo}      : $echo;
+  $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $delimiter;
+  my $utc    = exists $parm{utc}       ? $parm{utc}       : $this->{utc};
 
-  my $time = $timestamp ? getTimestamp() : undef;
+  my $time = $timestamp ? getTimestamp($utc) : undef;
 
-  $msg = join ' ',grep { defined } $time,$who,"$msg$parm{text}";
+  $msg = join $delimiter,grep { defined } $time,$who,"$msg$parm{text}";
 
   $logfile->put(contents => $msg);
 
-  print $msg,"\n" if $echo;
+  say $msg if $echo;
 
   $msg = '';
 }
+
 sub getTimestamp
 {
-  $ts->get();
+  my $utc = shift;
+  my $now = defined $utc && $utc ? gmtime : localtime;
 
-  return $ts->timestamp;
+  return $now->strftime(TIMESTAMP);
 }
 
 1;

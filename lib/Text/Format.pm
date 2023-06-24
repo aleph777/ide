@@ -31,16 +31,19 @@
 # Revision: 03-Jan-2003 Added Meta
 #           12-May-2008 Moved to Text::Format
 #                       use strict
+#           14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Text::Format;
 
-require 5.006;
 use Carp;
-use strict;
+use Modern::Perl;
 
 use List::Util qw(max);
 
-# use constant FOO => 'BAR';
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -56,8 +59,6 @@ my %fields = (keys       => undef,
               newline    => undef,
               format     => undef,
              );
-
-my $__ME__ = join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 # BEGIN
 # {
@@ -110,6 +111,8 @@ sub get
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $fkeys    = exists $parm{keys}      ? $parm{keys}      : $this->{keys};
   my $left     = exists $parm{leftKeys}  ? $parm{leftKeys}  : $this->{leftKeys};

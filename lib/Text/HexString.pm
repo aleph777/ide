@@ -31,18 +31,17 @@
 #                e.g. "89ABCDEF" => "89AB CDEF"
 #                e.g. "89ABCDEF" => "89AB-CDEF"
 #
-# Revision:
+# Revision: 14-Jun-2023 use Modern::Perl
 #
+
+# Code:
 
 package Text::HexString;
 
-require 5.006;
 use Carp;
-use strict;
+use Modern::Perl;
 
-# use Foo::Bar;
-
-# use constant FOO => 'BAR';
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -108,6 +107,8 @@ sub get
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $number    = exists $parm{number}    ? $parm{number}    : $this->{number};
   my $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $this->{delimiter};

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
 #         Copyright © 2022-2023 Tom Fontaine
 
@@ -28,15 +28,17 @@
 # dealings in the software.
 
 #
-# Purpose:
+# Purpose:   converts color triplet into hex RGB value
 #
-# Arguments:
+# Arguments: $1 is the red value
+#            $2 is the green value
+#            $3 is the blue value
 #
-# Revision:
+# Revision:  12-Jun-2023 shebang
+#                        use Modern::Perl
 #
-use strict;
-use v5.10;
+use Modern::Perl;
 
-my  $flag = grep { $_ > 1 } @ARGV;
+use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-say sprintf '#%02x%02x%02x',$flag ? @ARGV : map { int(255*$_ + 0.5) } @ARGV;
+say sprintf '#%02x%02x%02x',map { /\./ ? int(255*$_ + 0.5) : $_ } @ARGV;

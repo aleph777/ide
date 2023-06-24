@@ -5,10 +5,8 @@ use File::Copy;
 use strict;
 use v5.18;
 
-# use constant ARCHIVE   => '/media/fontaine/easystore/audio/rav4';
-# use constant REMOVABLE => '/media/fontaine/3936-61B1';
-use constant ARCHIVE   => '/media/sf_D_DRIVE/Music';
-use constant REMOVABLE => '/media/sf_E_DRIVE';
+use constant ARCHIVE   => '/media/fontaine/easystore/audio/rav4';
+use constant REMOVABLE => '/media/fontaine/3936-61B1';
 
 my $dir = @ARGV ? shift @ARGV : REMOVABLE;
 

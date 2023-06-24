@@ -1,6 +1,6 @@
 # <<<PACKAGE>>> --- [description] -*-Perl-*-
 
-#         Copyright © <<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © <<<YEAR>>>-<<<YEAR>>> <<<AUTHOR>>>
 
 # Date:   <<<DATE>>>
 

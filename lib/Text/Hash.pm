@@ -28,15 +28,17 @@
 # dealings in the software.
 
 #
-# Revision:
+# Revision: 14-Jun-2023 use Modern::Perl
 #
+
+# Code:
+
 package Text::Hash;
 
-require 5.008;
 use Carp;
-use strict;
+use Modern::Perl;
 
-# use constant FOO => 'BAR';
+use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
 our $AUTOLOAD;
 
@@ -106,7 +108,7 @@ sub get
   my $this = shift;
   my %parm = @_;
 
-  my $__ME__ = (caller(0))[3];
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $type      = exists $parm{type}      ? $parm{type}      : $this->{type};
   my $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $this->{delimiter};
@@ -131,7 +133,7 @@ sub get
   }
   else
   {
-    die "$__ME__: Unknown hash type: $type!!!";
+    die "$_SELF_: Unknown hash type: $type!!!\n";
   }
 }
 
@@ -139,6 +141,8 @@ sub put
 {
   my $this = shift;
   my %parm = @_;
+
+  my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
   my $type      = exists $parm{type}      ? $parm{type}      : $this->{type};
   my $delimiter = exists $parm{delimiter} ? $parm{delimiter} : $this->{delimiter};

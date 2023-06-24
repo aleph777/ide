@@ -217,10 +217,10 @@ the beginning of the buffer."
     (setq buffer-read-only nil)
     (sdcv-parse-failed)
     (setq buffer-read-only t)
-    (hide-body)
+    (outline-hide-body)
     (goto-char (point-min))
     (forward-line 1)
-    (show-entry)))
+    (outline-show-entry)))
 
 (defun sdcv-parse-failed ()
   (goto-char (point-min))
@@ -236,12 +236,12 @@ the beginning of the buffer."
 (defun sdcv-next-entry ()
   (interactive)
   (outline-next-heading)
-  (show-entry)
+  (outline-show-entry)
   (recenter-top-bottom 0))
 (defun sdcv-previous-entry ()
   (interactive)
   (outline-previous-heading)
-  (show-entry)
+  (outline-show-entry)
   (recenter-top-bottom 0))
 
 (defun sdcv-toggle-entry ()
@@ -249,8 +249,8 @@ the beginning of the buffer."
   (save-excursion
     (outline-back-to-heading)
     (if (not (outline-invisible-p (line-end-position)))
-        (hide-entry)
-      (show-entry))))
+        (outline-hide-entry)
+      (outline-show-entry))))
 
 ;;; ==================================================================
 ;;; Support for sdcv process in background
