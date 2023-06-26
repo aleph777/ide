@@ -122,6 +122,7 @@
 (defun tjf:perl/convert ()
   "Convert the current file into a Perl script."
   (interactive "*")
+  (message "tjf:perl/convert")
   (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)
   (set-auto-mode))
 
