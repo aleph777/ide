@@ -49,7 +49,7 @@
 
 (defvar tjf:python/shebang "#!/usr/bin/env -S  # -*-Python-*-\n\n")
 
-;;
+;;;###autoload
 (defun tjf:python/convert ()
   "Convert the current file into Python."
   (interactive "*")
