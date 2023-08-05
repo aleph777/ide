@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-#!/usr/bin/env -S perl   # -*-Perl-*-
+#!/usr/bin/env -S perl -w  # -*-Perl-*-
 
 #         Copyright © 2023-2023 Tom Fontaine
 
@@ -35,15 +34,8 @@
 #
 # Revision:
 #
-use Modern::Perl;
-
-use constant _ME_ => $0 =~ m=([^/]+)$=;
-=======
-#!/usr/bin/env -S perl -w   # -*-Perl-*-
-
 use strict;
 use v5.10;
->>>>>>> 50e14df2b2b8f5da8bcd397ab8a08a403645eda4
 
 use constant _CPAN_ => 'cpan';
 
