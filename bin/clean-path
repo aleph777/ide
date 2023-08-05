@@ -48,8 +48,9 @@
 #                        use Modern::Perl
 #
 #
-use Modern::Perl;
 use List::Util qw(uniq);
+use strict;
+use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
