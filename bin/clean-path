@@ -57,6 +57,6 @@ use constant _ME_ => $0 =~ m=([^/]+)$=;
 
 if(@ARGV && ($ARGV[0] =~ /^(?:-{0,2}\?|-{1,2}h(?:elp)?)$/))
 {
-  say "\nUsage: ",_ME_,"<path1> [... <pathN>]\n";exit;
+  say "\nUsage: ",_ME_," <path1> [... <pathN>]\n";exit;
 }
 say join ':',uniq grep { -d } map { split ':' } @ARGV;
