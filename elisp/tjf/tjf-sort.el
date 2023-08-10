@@ -29,16 +29,18 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Feb-2010 Added exit message
-;;           29-Feb-2016 Changed from `usr-' to `u-'
+;; Revision: 02-Feb-2010 added exit message
+;;           29-Feb-2016 changed from `usr-' to `u-'
 ;;           03-Feb-2021 ‘tjf’ overhaul
+;;           28-Jun-2023 fixed missing ‘interactive’
 ;;
 
 ;;; Code:
 
 (message "Loading tjf-sort...")
 (eval-when-compile
-  (require 'sort))
+  (require 'sort)
+  (require 'tjf-macro))
 
 ;;
 (defvar tjf:sort/order-list (list  '"Sort in which order?"
@@ -51,11 +53,13 @@
 
 (defun tjf:sort/do (field)
   "Sort by FIELD."
+  (interactive "*")
   (with-buffer-or-region (beg end)
                          (tjf:sort/fields field beg end)))
 
 (defun tjf:sort/do-numeric (field)
   "Sort numerically by FIELD."
+  (interactive "*")
   (with-buffer-or-region (beg end)
                          (tjf:sort/fields-numeric field beg end)))
 
