@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 # Util::Find --- support package for File::Find; -*-Perl-*-
 
 #         Copyright © 2023-2023 Tom Fontaine
 
 # Author: Tom Fontaine
-=======
-# Util::Find --- [description] -*-Perl-*-
-
-#         Copyright © 2023-2023 Tom Fontaine
-
->>>>>>> 50e14df2b2b8f5da8bcd397ab8a08a403645eda4
 # Date:   04-May-2023
 
 # Permission is hereby granted, free of charge, to any person obtaining a
@@ -38,7 +31,6 @@
 # Revision:
 #
 
-<<<<<<< HEAD
 # Code:
 
 package Util::Find;
@@ -47,20 +39,9 @@ use Carp;
 use Modern::Perl;
 
 use Cwd qw(abs_path);
-use File::FixPath qw(fixpath);
+use File::Basename qw(basename dirname);
 use File::Find;
-=======
-package Util::Find;
-
-use Carp;
-use strict;
-use v5.10;
-
-use Cwd qw(abs_path);
-use File::Find;
-use File::Basename;
 use File::FixPath qw(fixpath);
->>>>>>> 50e14df2b2b8f5da8bcd397ab8a08a403645eda4
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
