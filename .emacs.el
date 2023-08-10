@@ -10,12 +10,15 @@
 ;;
 (require 'cl-lib)
 
-(defvar is-cygwin?    (eq system-type 'cygwin))
 (defvar is-daemon?    (daemonp))
 (defvar is-gui?       (display-graphic-p))
+
+(defvar is-cygwin?    (eq system-type 'cygwin))
 (defvar is-linux?     (eq system-type 'gnu/linux))
-(defvar is-linux-gui? (and is-linux? is-gui?))
+(defvar is-macos?     (eq system-type 'darwin))
 (defvar is-windows?   (eq system-type 'windows-nt))
+
+(defvar is-linux-gui? (and is-linux? is-gui?))
 
 (defvar tjf:user/windows-id       "tfontaine")
 (defvar tjf:user/copyright-holder user-full-name)
