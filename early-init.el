@@ -43,10 +43,4 @@
               (setq gc-cons-percentage 0.1)
               (garbage-collect)))
 
-(add-hook 'emacs-startup-hook
-          #'(lambda ()
-              (setq gc-cons-threshold (* 8 1024 1024))
-              (setq gc-cons-percentage 0.1)
-              (garbage-collect)))
-
 ;;; early-init.el ends here
