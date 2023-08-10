@@ -43,9 +43,6 @@
               (setq gc-cons-percentage 0.1)
               (garbage-collect)))
 
-(setq gc-cons-threshold  most-positive-fixnum)   ;; Defer Garbage collection
-(setq gc-cons-percentage 1.0)
-
 (add-hook 'emacs-startup-hook
           #'(lambda ()
               (setq gc-cons-threshold (* 8 1024 1024))
