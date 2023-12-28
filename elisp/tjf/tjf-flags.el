@@ -29,68 +29,26 @@
 
 ;;; Commentary:
 
-;; Revision: 03-Feb-2016 Changed ‘usr-enable-revert-p’ to not require buffer modification
-;;           04-Feb-2016 Updated ‘usr-enable-undo-p’ and ‘usr-enable-redo-p’ for new ‘undo-tree’ version
-;;           25-Feb-2016 Renamed as ‘u-flags’
-;;           25-Feb-2016 Added ‘is-html-modes’ and ‘is-html-mode?’
-;;                       Added ‘is-javascript-modes’ and ‘is-javascript-mode?’
-;;           16-Dec-2016 Added support for mode-line CAPS LOCK indicator
-;;           14-Jan-2017 Added ‘is-bookmark?’
-;;           17-Jan-2017 Changed ‘defvar’s to ‘defconst’s
+;; Revision: 03-Feb-2016 changed ‘usr-enable-revert-p’ to not require buffer modification
+;;           04-Feb-2016 updated ‘usr-enable-undo-p’ and ‘usr-enable-redo-p’ for new ‘undo-tree’ version
+;;           25-Feb-2016 renamed as ‘u-flags’
+;;           25-Feb-2016 added ‘is-html-modes’ and ‘is-html-mode?’
+;;                       added ‘is-javascript-modes’ and ‘is-javascript-mode?’
+;;           16-Dec-2016 added support for mode-line CAPS LOCK indicator
+;;           14-Jan-2017 added ‘is-bookmark?’
+;;           17-Jan-2017 changed ‘defvar’s to ‘defconst’s
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           02-Jul-2021 Reworked ‘tjf:flags/enable-undo-redo?’
-;;           28-Apr-2022 Added ‘tjf:flags/using-tabs’
-;;           10-Apr-2023 Added ‘is-feature?’
+;;           02-Jul-2021 reworked ‘tjf:flags/enable-undo-redo?’
+;;           28-Apr-2022 added ‘tjf:flags/using-tabs’
+;;           10-Apr-2023 added ‘is-feature?’
+;;           21-Jul-2023 removed modes
 ;;
 
 ;;; Code:
 
 (message "Loading tjf-flags...")
-
+(require 'tjf-mode)
 ;;
-(defvar tjf:flags/enable-enriched-modes '(fundamental-mode
-                                          indented-text-mode
-                                          text-mode))
-
-(defvar tjf:flags/enable-space-modes '(fundamental-mode
-                                       indented-text-mode
-                                       text-mode))
-
-(defvar tjf:flags/html-modes '(html-helper-mode
-                               html-mode
-                               html-ts-mode
-                               nxhtml-mode))
-
-(defvar tjf:flags/javascript-modes '(espresso-mode
-                                     javascript-mode
-                                     js-mode
-                                     js2-mode))
-
-(defvar tjf:flags/make-modes '(makefile-automake-mode
-                               makefile-bsdmake-mode
-                               makefile-gmake-mode
-                               makefile-imake-mode
-                               makefile-makepp-mode
-                               makefile-mode))
-
-(defvar tjf:flags/perl-modes '(cperl-mode
-                               perl-mode))
-
-(defvar tjf:flags/shell-script-modes '(sh-mode
-                                       shell-script-mode))
-
-(defvar tjf:flags/shell-modes '(eshell-mode
-                                shell-mode
-                                ssh-mode))
-
-(defvar tjf:flags/text-modes '(text-mode
-                               indented-text-mode))
-
-(defvar tjf:flags/using-tabs t)
-
-(defvar tjf:flags/xml-modes '(nxml-mode
-                              xml-mode))
-
 ;; enable- functions are for :enable in menu entries
 
 (defun tjf:flags/enable-buffer-operations? ()
@@ -105,7 +63,7 @@
 
 (defun tjf:flags/enable-enriched-mode? ()
   "Boolean: should ‘enriched-mode’?"
-  (memq major-mode tjf:flags/enable-enriched-modes))
+  (memq major-mode tjf:flags/enriched-modes))
 
 (defun tjf:flags/enable-modify-region? ()
   "Boolean: should menu entries that change region be enabled?"
@@ -140,18 +98,11 @@
 
 (defun tjf:flags/enable-space-region? ()
   "Boolean: should ‘canonically-space-region’ be enabled?"
-  (and mark-active (tjf:flags/is-rw?) (memq major-mode tjf:flags/enable-space-modes)))
+  (and mark-active (tjf:flags/is-rw?) (memq major-mode tjf:flags/space-modes)))
 
 (defun tjf:flags/enable-undo-redo? ()
   "Boolean: should ‘undo/redo’ be enabled?"
   (and undo-tree-mode (not buffer-read-only)))
-       ;; (not (eq t buffer-undo-list))
-       ;; (not (eq nil buffer-undo-tree))
-       ;; (undo-tree-node-previous
-       ;;  (undo-tree-current buffer-undo-tree))))
-  ;; (and undo-tree-mode
-  ;;      (not buffer-read-only))
-
 
 (defalias 'tjf:flags/enable-write? 'tjf:flags/is-rw?)
 
@@ -182,18 +133,6 @@ This depends on major mode having setup syntax table properly."
 This depends on major mode having setup syntax table properly."
   (nth 3 (syntax-ppss)))
 
-(defun tjf:flags/is-html-mode? ()
-  "Boolean: is the current major mode an ‘html’ mode?"
-  (memq major-mode tjf:flags/html-modes))
-
-(defun tjf:flags/is-javascript-mode? ()
-  "Boolean: is the current major mode a ‘javascript’ mode?"
-  (memq major-mode tjf:flags/javascript-modes))
-
-(defun tjf:flags/is-make-mode? ()
-  "Boolean: is the current major mode a ‘make’ mode?"
-  (memq major-mode tjf:flags/make-modes))
-
 (defun tjf:flags/is-maxmized? ()
   "Boolean: is the current frame maximized?"
   (memq (frame-parameter nil (quote fullscreen)) (quote (maximized))))
@@ -202,39 +141,19 @@ This depends on major mode having setup syntax table properly."
   "Boolean: is the current frame not fullscreen?"
   (not (tjf:flags/is-fullscreen?)))
 
-(defun tjf:flags/is-not-shell-mode? ()
-  "Boolean: is the current major mode not a shell mode?"
-  (not (tjf:flags/is-shell-mode?)))
-
 (defun tjf:flags/is-not-shell-mode-or-read-only? ()
   "Boolean: is the current major mode not a shell mode and not read-only?"
-  (not (or (tjf:flags/is-shell-mode?) buffer-read-only)))
-
-(defun tjf:flags/is-perl-mode? ()
-  "Boolean: is the current major mode a ‘perl’ mode?"
-  (memq major-mode tjf:flags/perl-modes))
+  (not (or (tjf:mode/is-shell-mode?) buffer-read-only)))
 
 (defun tjf:flags/is-rw? ()
   "Boolean: is the current buffer read/write?"
   (not buffer-read-only))
-
-(defun tjf:flags/is-shell-script-mode? ()
-  "Boolean: is the current major mode a ‘shell-script’ mode?"
-  (memq major-mode tjf:flags/shell-script-modes))
-
-(defun tjf:flags/is-shell-mode? ()
-  "Boolean: is the current major mode a shell mode?"
-  (memq major-mode tjf:flags/shell-modes))
 
 (defun tjf:flags/is-tabs-on-line? ()
   "Boolean: are there TABs on the current-line?"
   (save-excursion
     (beginning-of-line)
     (search-forward "\t" (line-end-position) t)))
-
-(defun tjf:flags/is-text-mode? ()
-  "Boolean: is the current major mode a ‘text’ mode?"
-  (memq major-mode tjf:flags/text-modes))
 
 (defun tjf:flags/is-utf-16be-bom-dos? ()
   "Boolean: is file coding system ‘utf-16be-with-signature-dos’?"
@@ -284,25 +203,9 @@ This depends on major mode having setup syntax table properly."
   "Boolean: is file coding system ‘utf-8-unix’?"
   (eq buffer-file-coding-system 'utf-8-unix))
 
-(defun tjf:flags/is-xml-mode? ()
-  "Boolean: is the current major mode an ‘xml’ mode?"
-  (memq major-mode tjf:flags/xml-modes))
-
 ;; visible- functions are for :visible in menu/toolbar entries
 
-(defalias 'tjf:flags/visible-shell? 'tjf:flags/is-shell-mode?)
-
-(defalias 'tjf:flags/visible-not-shell? 'tjf:flags/is-not-shell-mode?)
-
 (defalias 'tjf:flags/visible-replace? 'tjf:flags/is-not-shell-mode-or-read-only?)
-
-(defun tjf:flags/visible-lock? ()
-  "Boolean: should ‘lock’ be visible?"
-  (and (tjf:flags/is-not-shell-mode?) (not buffer-read-only)))
-
-(defun tjf:flags/visible-unlock? ()
-  "Boolean: should ‘unlock’ be visible?"
-  (and (tjf:flags/is-not-shell-mode?) buffer-read-only))
 
 (defun tjf:flags/visible-convert-to-perl? ()
   "Boolean: should ‘convert-to-perl’ be visible?"
