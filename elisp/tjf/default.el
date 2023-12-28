@@ -379,7 +379,6 @@
   (setq mouse-yank-at-point                 t)
   ;; (setq mouse-wheel-scroll-amount           '(3 ((shift) . 1) ((control))))
   (setq mouse-wheel-scroll-amount           '(1 ((shift) . 5) ((meta)) ((control))))
-  (setq native-comp-async-report-warnings-errors 'silent)
   (setq recenter-positions                  '(top middle bottom))
   (setq ring-bell-function                  '(lambda () (let ((visible-bell t)))))
   (setq save-interprogram-paste-before-kill t)

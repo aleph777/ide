@@ -23,7 +23,6 @@ installPackage()
 installPackage autoconf
 installPackage build-essential
 
-#installPackage autotrace
 installPackage bear
 installPackage clangd
 installPackage cmake
@@ -31,9 +30,7 @@ installPackage cpanminus
 installPackage cppcheck
 installPackage ffmpeg
 installPackage flex
-# installPackage git # -- if we have this script, then git has already been installed
 installPackage indent
-installPackage julia
 installPackage jupyter
 installPackage klatexformula
 installPackage libffi-dev
@@ -49,7 +46,7 @@ installPackage libjpeg-dev
 installPackage liblcms2-dev
 installPackage libncurses5-dev
 # installPackage perl-doc
-# installPackage plsense
+installPackage plsense
 installPackage libotf-dev
 installPackage libpng-dev
 installPackage libreadline-dev
@@ -62,7 +59,6 @@ installPackage libtree-sitter-dev
 installPackage libxml2-dev
 installPackage libxpm-dev
 installPackage libyaml-dev
-#installPackage makeinfo
 installPackage net-tools
 installPackage p7zip-full
 installPackage python3-dev
