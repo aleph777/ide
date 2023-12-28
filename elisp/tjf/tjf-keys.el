@@ -154,7 +154,7 @@
 ;;
 (global-set-key [(control b)]            'bm-toggle)
 ;;lobal-set-key [(meta    b)]            'backward-word)
-(global-set-key [(super   b)]            'blamer-show-commit-info)
+(global-set-key [(super   b)]            'blamer-show-posframe-commit-info)
 ;;lobal-set-key [(control meta  b)]      '
 ;;lobal-set-key [(control shift b)]      '
 ;;lobal-set-key [(control super b)]      '
@@ -867,7 +867,7 @@
 (global-set-key [(meta    tab)] 'tjf:color/set-background-random)
 ;;lobal-set-key [(super   tab)] ' DO  NOT USE
 ;;lobal-set-key [(control meta  tab)] ' DO  NOT USE
-(global-set-key [(control super tab)] 'clean-ndent--bsunindent)
+(global-set-key [(control super tab)] 'clean-aindent--bsunindent)
 ;;lobal-set-key [(meta    super tab)] ')
 ;;lobal-set-key [(control meta super tab)] '
 
