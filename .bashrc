@@ -15,11 +15,12 @@ fi
 
 # Append to the history file, don't overwrite it.
 #
-# shopt -s histappend
+shopt -s histappend
+#
 export HISTCONTROL=ignoreboth:erasedups
 export HISTIGNORE="bg:cd:exit:fg:hg:history:ls"
 export HISTSIZE=999
-export PROMPT_COMMAND="history -a; history -n"
+# export PROMPT_COMMAND="history -a; history -n"
 
 # Don't know why this is needed
 #
@@ -31,7 +32,7 @@ export IDE="$HOME/ide"
 #   alias hello="echo Hello"
 #   alias world='hello World!'
 #
-alias perl='perl -Mv5.10'
+alias perl='perl -MModern::Perl'
 alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
 alias sum="perl -e 'use List::Util qw(sum); say sum(@ARGV);'"
@@ -62,6 +63,8 @@ alias hg='history | grep '
 alias lsc='TERM=ansi ls --color=always'
 alias lsf='ls -F'
 alias psfind='ps u -C'
+alias inetip='echo $(curl -s https://api.ipify.org)'
+alias localip='ip a'
 
 # these are a handy reference
 #
@@ -104,15 +107,15 @@ export COLUMNS=108
 # alias cmake="$CMAKEBIN/cmake"
 
 if [[ -z "$IP" ]]; then
-    export IP=$(ifconfig | head -2 | grep inet | cut -d' ' -f10)
+    export IP=$(ifconfig | grep -A1 BROADCAST,RUNNING,MULTICAST | grep inet | cut -d' ' -f10)
 fi
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
 export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$IDE/bin
-export OPTPATH=$NODEJSDIR/bin:$ANDROIDDIR/bin
+export OPTPATH=
 export SNAPBIN=/snap/bin
-export PATH=$($HOME/bin/clean-path $OPTPATH $HOME/cinco/bin $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
+export PATH=$($HOME/bin/clean-path $OPTPATH $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
 export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
 
@@ -120,7 +123,7 @@ export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
 export SHOW_LD_PATHS="ld --verbose | grep SEARCH_DIR | tr -s ' ;' \\012"
 
 if [[ -z "$THIS_ARCH" ]]; then
-    export THIS_ARCH=$(uname -m)
+    export THIS_ARCH=$(arch)
 fi
 if [[ -z "$THIS_ID" ]]; then
     export THIS_ID=$(grep '^ID=' /etc/os-release | cut -d= -f2)
@@ -129,37 +132,17 @@ if [[ -z "$THIS_VERSIONID" ]]; then
     export THIS_VERSION_ID=$(grep '^VERSION_ID=' /etc/os-release | cut -d= -f2 | cut -d'"' -f2)
 fi
 
-BOLD="\[\033[1;"
-NORMAL="\[\033[0;"
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
 
-BLACK="30m\]"
-RED="31m\]"
-GREEN="32m\]"
-YELLOW="33m\]"
-BLUE="34m\]"
-MAGENTA="35m\]"
-CYAN="36m\]"
-WHITE="37m\]"
-
-BOLD_BLACK=${BOLD}${BLACK}
-BOLD_RED=${BOLD}${RED}
-BOLD_GREEN=${BOLD}${GREEN}
-BOLD_YELLOW=${BOLD}${YELLOW}
-BOLD_BLUE=${BOLD}${BLUE}
-BOLD_MAGENTA=${BOLD}${MAGENTA}
-BOLD_CYAN=${BOLD}${CYAN}
-BOLD_WHITE=${BOLD}${WHITE}
-
-NORMAL_BLACK=${NORMAL}${BLACK}
-NORMAL_RED=${NORMAL}${RED}
-NORMAL_GREEN=${NORMAL}${GREEN}
-NORMAL_YELLOW=${NORMAL}${YELLOW}
-NORMAL_BLUE=${NORMAL}${BLUE}
-NORMAL_MAGENTA=${NORMAL}${MAGENTA}
-NORMAL_CYAN=${NORMAL}${CYAN}
-NORMAL_WHITE=${NORMAL}${WHITE}
-
-NO_COLOR="\[\033[0m\]"
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
 
 # OLD STUFF (you never know)
 #
@@ -170,11 +153,11 @@ NO_COLOR="\[\033[0m\]"
 # export PS1=${LIGHT_GREEN}'\# [\h] \W> '${NO_COLOUR}
 
 if [[ "$THIS_ARCH" = "x86_64" ]]; then
-    PROMPT_COLOR=${BOLD_GREEN}
+    PROMPT_COLOR=${BOLD}${GREEN}
 else
-    PROMPT_COLOR=${BOLD_BLUE}
+    PROMPT_COLOR=${BOLD}${BLUE}
 fi
-export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOR}
+export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '$NORMAL
 
 # ==============================================================================
 
