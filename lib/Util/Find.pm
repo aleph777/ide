@@ -39,8 +39,9 @@ use Carp;
 use Modern::Perl;
 
 use Cwd qw(abs_path);
-use File::FixPath qw(fixpath);
+use File::Basename qw(basename dirname);
 use File::Find;
+use File::FixPath qw(fixpath);
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
