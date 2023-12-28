@@ -44,76 +44,34 @@
 (require 'python)
 (require 'flycheck)
 (require 'smartparens-python)
+(require 'tjf-edit)
 
 (message "Loading tjf-python...")
 
-(defvar tjf:python/shebang "#!/usr/bin/env -S  # -*-Python-*-\n\n")
+(defvar tjf:python/coding)
+(setq   tjf:python/coding "# -*-coding: utf-8-*- ; -*-Python-*-")
+
+(defvar tjf:python/shebang)
+(setq   tjf:python/shebang (concat "#!/usr/bin/env -S  " tjf:python/coding))
+
+(defvar tjf:python/me)
+(setq   tjf:python/me "__me__ = os.path.basename(__file__)")
+
+(defvar tjf:python/module-template)
+(setq   tjf:python/module-template (concat tjf:user/dir-elisp "templates/python-module-header-work.py"))
+
+(defvar tjf:python/script-template)
+(setq   tjf:python/script-template (concat tjf:user/dir-elisp "templates/python-script-header-work.py"))
+
+(defun tjf:python/config ()
+  "Python mode config function.")
 
 ;;;###autoload
 (defun tjf:python/convert ()
   "Convert the current file into Python."
   (interactive "*")
-  (tjf:python/insert-module-skeleton)
+  (insert (concat tjf:python/coding "\n\n"))
   (set-auto-mode))
-
-(defun tjf:python/insert-license ()
-  "Insert the code license."
-  (interactive "*")
-  (insert-file-contents (concat tjf:user/dir-elisp "templates/license.py")))
-
-(defun tjf:python/insert-me ()
-  "Insert the `_ME_' variable declaration."
-  (interactive "*")
-  (insert "\n__me__ = os.path.basename(__file__)\n\n"))
-
-(defun tjf:python/insert-script-header ()
-  "Insert script boilerplate at point."
-  (interactive "*")
-  (insert-file-contents (concat tjf:user/dir-elisp "templates/python-script-header.py"))
-  (let* ((year   (format-time-string "%Y-%Y"))
-         (author (user-full-name))
-         (title  (file-name-nondirectory (buffer-name)))
-         (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
-    (save-excursion
-      (search-forward "<<<YEAR>>>")
-      (replace-match year t)
-      (search-forward "<<<AUTHOR>>>")
-      (replace-match author t)
-      (search-forward "<<<TITLE>>>")
-      (replace-match title t)
-      (search-forward "<<<DATE>>>")
-      (replace-match date t))))
-
-(defun tjf:python/insert-script-skeleton ()
-  "Insert the python shebang and script boilerplate at the top of the file."
-  (interactive "*")
-  (save-excursion
-    (tjf:python/insert-shebang)
-    (tjf:python/insert-script-header)))
-
-(defun tjf:python/insert-module-skeleton ()
-  "Insert the python module boilerplate at the top of the file."
-  (interactive "*")
-  (insert-file-contents (concat tjf:user/dir-elisp "templates/python-module-header.py"))
-  (let* ((year   (format-time-string "%Y-%Y"))
-         (author (user-full-name))
-         (title  (file-name-nondirectory (buffer-name)))
-         (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
-    (save-excursion
-      (search-forward "<<<YEAR>>>")
-      (replace-match year t)
-      (search-forward "<<<AUTHOR>>>")
-      (replace-match author t)
-      (search-forward "<<<TITLE>>>")
-      (replace-match title t)
-      (search-forward "<<<DATE>>>")
-      (replace-match date t))))
-
-(defun tjf:python/insert-shebang ()
-  "Insert the python shebang at the top of the file."
-  (interactive "*")
-  (goto-char (point-min))
-  (insert tjf:python/shebang))
 
 (defun tjf:python/hook ()
   "Python mode hook function."
@@ -124,40 +82,57 @@
                                               cape-dabbrev
                                               cape-file
                                               cape-history))
-
   (flycheck-mode -1)
-  (python-ts-mode)
-
   (setq-local imenu-create-index-function #'python-imenu-create-index) ;; only language where this is defined
   (imenu-add-to-menubar "Navigate"))
 
-(defun tjf:python/config ()
-  "Python mode config function.")
+(defun tjf:python/insert-header (header)
+  "Insert the python module boilerplate HEADER at the top of the file."
+  (goto-char (point-min))
+  (insert-file-contents header)
+  (let* ((year   (format-time-string "%Y"))
+         (author (user-full-name))
+         (title  (file-name-nondirectory (buffer-name)))
+         (date   (tjf:date/today tjf:date/dd-mon-yyyy)))
+    (tjf:edit/fill-skeleton "<<<SHEBANG>>>" tjf:python/shebang)
+    (tjf:edit/fill-skeleton "<<<YEAR>>>"    year)
+    (tjf:edit/fill-skeleton "<<<AUTHOR>>>"  author)
+    (tjf:edit/fill-skeleton "<<<TITLE>>>"   title)
+    (tjf:edit/fill-skeleton "<<<DATE>>>"    date)))
 
-;; (defun tjf:python/setup ()
-;;   "Set up Python mode."
-;;   (add-hook 'completion-at-point-functions #'cape-keyword nil 'local)
-;;   (add-hook 'completion-at-point-functions #'anaconda-mode-complete nil 'local)
-;;   (setq-local imenu-create-index-function #'python-imenu-create-index) ;; only language where this is defined
-;;   (imenu-add-to-menubar "Navigate")
-;;   (flycheck-mode)
-;;   (setq-local completion-at-point-functions (cons #'lsp-completion-at-point completion-at-point-functions))
-;;   (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions)))
+(defun tjf:python/insert-me ()
+  "Insert the `_ME_' variable declaration."
+  (interactive "*")
+  (insert (concat "\n" tjf:python/me "\n\n")))
+
+(defun tjf:python/insert-module-header ()
+  "Insert the python module boilerplate at the top of the file."
+  (interactive "*")
+  (tjf:python/insert-header tjf:python/module-template))
+
+(defun tjf:python/insert-script-header ()
+  "Insert script boilerplate at point."
+  (interactive "*")
+  (tjf:python/insert-header tjf:python/script-template))
+
+(defun tjf:python/insert-shebang ()
+  "Insert the python shebang at the top of the file."
+  (interactive "*")
+  (goto-char (point-min))
+  (insert (concat tjf:python/shebang "\n\n")))
 
 (defun tjf:python/insert-usage ()
   "Insert the script usage code."
   (interactive "*")
-  (tjf:python/insert-me)
   (insert-file-contents (concat tjf:user/dir-elisp "templates/python-script-usage.py")))
 
+;;
 (easy-menu-define tjf:python/menu python-mode-map "Python Mode menu"
   '("Python"
     :help "Python-specific Features"
     ["Insert shebang"         tjf:python/insert-shebang         :active (tjf:flags/is-rw?)]
     ["Insert Script Header"   tjf:python/insert-script-header   :active (tjf:flags/is-rw?)]
-    ["Insert Script Skeleton" tjf:python/insert-script-skeleton :active (tjf:flags/is-rw?)]
-    ["Insert Module Skeleton" tjf:python/insert-module-skeleton :active (tjf:flags/is-rw?)]
-    ["Insert License"         tjf:python/insert-license         :active (tjf:flags/is-rw?)]
+    ["Insert Module Skeleton" tjf:python/insert-module-header   :active (tjf:flags/is-rw?)]
     ["Insert _ME_"            tjf:python/insert-me              :active (tjf:flags/is-rw?)]
     ["Insert Script Usage"    tjf:python/insert-usage           :active (tjf:flags/is-rw?)]
     "---"
@@ -166,8 +141,6 @@
     "-"
     ["Mark def/class"     mark-defun         :help "Mark outermost definition around point"]
     "--"
-    ("Skeletons")
-    "---"
     ["Start interpreter" run-python                   :help "Run inferior Python process in a separate buffer"]
     ["Switch to shell"   python-shell-switch-to-shell :help "Switch to running inferior Python process"]
     ["Eval string"       python-shell-send-string     :help "Eval string in inferior Python session"]
