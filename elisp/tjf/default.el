@@ -43,7 +43,7 @@
 ;;           02-Feb-2010 removed ‘develock’
 ;;           11-Feb-2011 removed ‘redo’ - added ‘redo+’
 ;;                       added ‘recentf-mode’
-;;                       updated default setting for emacs 22 changes (many obsolete settings removed)
+;;                       updated default setting for Emacs 22 changes (many obsolete settings removed)
 ;;           30-Aug-2012 removed ‘c-mode-hook’ and ‘c++-mode-hook’ (usr-cc-setup)
 ;;                       added ".cpp" to ‘auto-mode-alist’
 ;;           26-Dec-2012 added ‘eshell-mode-hook’
@@ -223,12 +223,12 @@
 (message "Configuring from default.el...")
 
 ;;
-(enable-theme   'fontaine)
+(enable-theme 'fontaine)
 
 (if (featurep 'package)
 	(unload-feature 'package))
 
-(defvar elpaca-installer-version 0.3)
+(defvar elpaca-installer-version 0.5)
 (defvar elpaca-directory)
 (defvar elpaca-builds-directory)
 (defvar elpaca-repos-directory)
@@ -343,23 +343,21 @@
   (setq fast-but-imprecise-scrolling    t)
   (setq scroll-conservatively           101)
   (setq scroll-margin                   0)
-  (setq scroll-preserve-screen-position t)
+  (setq-default scroll-error-top-bottom         t)
+  (setq-default scroll-preserve-screen-position t)
 
-  (setq-default cursor-type                     '(bar      . 2))
+  (setq-default cursor-type                     '(bar . 2))
   (setq-default font-lock-maximum-decoration    t)
   (setq-default frame-title-format              "%b")
   (setq-default indent-tabs-mode                nil)
+  (setq-default line-spacing                    0)
   (setq-default tab-always-indent               'complete)
-  (setq-default scroll-conservatively           0)
-  (setq-default scroll-error-top-bottom         t)
-  (setq-default scroll-margin                   0)
-  (setq-default scroll-preserve-screen-position t)
 
   (setq auto-save-file-name-transforms      `((".*"   ,tjf:user/dir-autosave t)))
   (setq backup-directory-alist              `((".*" . ,tjf:user/dir-backup)))
   (setq blink-cursor-blinks                 0)
   (setq buffers-menu-max-size               nil)
-  (setq byte-compile-warnings               '(not free-vars unresolved noruntime lexical make-local))
+  (setq byte-compile-warnings               '(not free-vars obsolete unresolved noruntime lexical make-local))
   (setq colon-double-space                  nil)
   (setq comint-input-ignoredups             t)
   (setq comint-input-ring-size              64)
@@ -368,6 +366,7 @@
   (setq echo-keystrokes                     0.25)
   (setq explicit-shell-file-name            "/bin/bash")
   (setq fill-column                         8192)
+  (setq frame-resize-pixelwise              t)
   (setq gnutls-min-prime-bits               80)
   (setq imenu-sort-function                 'imenu--sort-by-name)
   (setq indent-tabs-mode                    nil)
@@ -380,14 +379,17 @@
   (setq mouse-yank-at-point                 t)
   ;; (setq mouse-wheel-scroll-amount           '(3 ((shift) . 1) ((control))))
   (setq mouse-wheel-scroll-amount           '(1 ((shift) . 5) ((meta)) ((control))))
+  (setq native-comp-async-report-warnings-errors 'silent)
   (setq recenter-positions                  '(top middle bottom))
-  (setq ring-bell-function                  '(lambda () (let ((visible-bell t)) (beep)) (beep) (beep)))
+  (setq ring-bell-function                  '(lambda () (let ((visible-bell t)))))
   (setq save-interprogram-paste-before-kill t)
   (setq scroll-bar-mode                     'right)
   (setq sentence-end-double-space           nil)
   (setq sentence-end-without-period         nil)
   (setq use-hard-newlines                   nil)
+  (setq warning-suppress-log-types '((comp) (bytecomp)))
   (setq which-func-modes                    '(emacs-lisp-mode c-mode c++-mode cperl-mode python-mode diff-mode))
+  (setq x-underline-at-descent-line         t)
 
   (setq auto-mode-alist
         '(("\\.\\(deb\\|[oi]pk\\)\\'" . archive-mode)
@@ -502,6 +504,14 @@
 
 (use-package consult-eglot        :elpaca t   :after eglot)
 
+(use-package corfu-popupinfo      :elpaca t   :disabled
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-popupinfo-hide nil)
+  :config
+  (corfu-popupinfo-mode))
+
 (use-package corfu-prescient      :elpaca t   :after vertico-prescient
   :config
   (setq corfu-cycle       t)
@@ -511,7 +521,20 @@
   (setq corfu-quit-no-match 'separator)
   (global-corfu-mode +1))
 
-(use-package eglot                :elpaca t   :after orderless)
+(use-package eglot                :elpaca t   :after orderless
+  :custom
+  (eglot-send-changes-idle-time 0.1)
+
+  :config
+  (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
+  ; (add-to-list 'eglot-server-programs
+  ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+  )
+
+(use-package kind-icon            :elpaca t   :after corfu-prescient
+  :if (display-graphic-p)
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package marginalia           :elpaca t   :after corfu-prescient
   :config
@@ -565,6 +588,8 @@
   (setq anzu-cons-mode-line-p nil)
   (global-anzu-mode +1))
 
+(use-package async                :elpaca t   :after tjf-menubar)
+
 (use-package bazel                :elpaca t   :commands bazel-mode
   :init
   (add-hook 'bazel-mode-hook '(lambda () (setq-local completion-at-point-functions (cons #'bazel-completion-at-point completion-at-point-functions)))))
@@ -605,10 +630,7 @@
   (define-key bm-show-mode-map [mouse-2] 'bm-show-goto-bookmark)
   (message "Loading bm...done"))
 
-(use-package async                :elpaca t   :after tjf-menubar)
-
-(use-package blamer
-  :elpaca t
+(use-package blamer               :elpaca t
   :config
   (global-blamer-mode t))
 
@@ -895,9 +917,9 @@
           (if (eq (cdr pair) 'perl-mode)
               (setcdr pair 'cperl-mode)))
         (append auto-mode-alist interpreter-mode-alist))
-  ;; (defalias 'perl-mode 'cperl-mode)
+  (defalias 'perl-mode 'cperl-mode)
   :config
-  ;; (treesit-install-language-grammar 'perl)
+  ;;
   (setq cperl-hairy t)
 
   (setq cperl-indent-region-fix-constructs nil)
@@ -981,6 +1003,8 @@
   :diminish face-remap-mode
   buffer-face-mode)
 
+(use-package ffap                 :elpaca nil :commands ffap-at-mouse)
+
 (use-package frame                :elpaca nil
   :config
   (blink-cursor-mode)
@@ -1013,7 +1037,9 @@
 
 (use-package make-mode            :elpaca nil :commands makefile-gmake-mode
   :init
-  (add-hook 'makefile-gmake-mode #'(lambda () (setq-local completion-at-point-functions (cons #'makefile-completions-at-point completion-at-point-functions))))
+  (add-hook 'makefile-gmake-mode
+            #'(lambda () (setq-local completion-at-point-functions
+                                     (cons #'makefile-completions-at-point completion-at-point-functions))))
   (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
 
 (use-package mapreplace           :elpaca nil :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp))
@@ -1024,6 +1050,48 @@
 
 (use-package msb                  :elpaca nil
   :config
+  (defun msb-menu-bar-update-buffers (&optional arg)
+    "A re-written version of `menu-bar-update-buffers'."
+    ;; If user discards the Buffers item, play along.
+    (when (and (lookup-key (current-global-map) [menu-bar buffer])
+               (or (not (fboundp 'frame-or-buffer-changed-p))
+                   (frame-or-buffer-changed-p)
+                   arg))
+      (let ((frames (frame-list))
+            buffers-menu frames-menu)
+        ;; Make the menu of buffers proper.
+        (setq msb--last-buffer-menu (msb--create-buffer-menu))
+        ;; Skip the `keymap' symbol.
+        (setq buffers-menu (cdr msb--last-buffer-menu))
+        ;; Make a Frames menu if we have more than one frame.
+        (when (cdr frames)
+          (let* ((frame-length (length frames))
+                 (f-title  (format "Windows (%d)" frame-length)))  ;; tjf
+            ;; List only the N most recently selected frames
+            (when (and (integerp msb-max-menu-items)
+                       (> msb-max-menu-items 1)
+                       (> frame-length msb-max-menu-items))
+              (setcdr (nthcdr msb-max-menu-items frames) nil))
+            (setq frames-menu
+                  (nconc
+                   (list 'frame f-title '(nil) 'keymap f-title)
+                   (mapcar
+                    (lambda (frame)
+                      (nconc
+                       (list (frame-parameter frame 'name)
+                             (frame-parameter frame 'name)
+                             (cons nil nil))
+                       `(lambda ()
+                          (interactive) (menu-bar-select-frame ,frame))))
+                    frames)))))
+        (setcdr global-buffers-menu-map
+                (if (and buffers-menu frames-menu)
+                    ;; Combine Frame and Buffers menus with separator between
+                    (nconc (list "Buffers and Frames" frames-menu
+                                 (and msb-separator-diff '(separator "--")))
+                           (cdr buffers-menu))
+                  buffers-menu)))))
+
   (setq msb-display-invisible-buffers-p     t)
   (setq msb-max-menu-items                  nil))
 
@@ -1039,7 +1107,7 @@
   :init
   (add-hook 'python-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions))))
   :config
-  ;; (treesit-install-language-grammar 'python)
+  ;;
   (setq python-indent-guess-indent-offset-verbose nil))
 
 (use-package recentf              :elpaca nil
@@ -1075,7 +1143,6 @@
 
 (use-package tex-mode             :elpaca nil :commands tex-mode
   :config
-  ;; (treesit-install-language-grammar 'latex)
   (define-key latex-mode-map [(control return)] 'tjf:edit/insert-newline-after))
 
 (use-package text-mode            :elpaca nil :commands text-mode
@@ -1161,7 +1228,9 @@
   (recentf-mode)
   (add-hook 'menu-bar-update-hook 'tjf:navigate/menu))
 
-(use-package tjf-msb              :elpaca nil
+(use-package tjf-mode             :elpaca nil)
+
+(use-package tjf-msb              :elpaca nil :after tjf-mode
   :config
   (msb-mode))
 
@@ -1181,7 +1250,7 @@
   :config
   (add-hook 'post-command-hook 'tjf:powerline/update-modeline-vars)
   (alias-face powerline-red-face fontaine/powerline-red)
-  (setq powerline-default-separator 'wave)
+  (setq powerline-default-separator 'arrow)
   (tjf:powerline/theme))
 
 (use-package tjf-python           :elpaca nil :after python
@@ -1213,9 +1282,9 @@
 
 (use-package tjf-view             :elpaca nil)
 
-;; (use-package treesit              :elpaca nil :defer :disabled
 (use-package treesit              :elpaca nil :defer
   :config
+  (setq treesit-font-lock-level 4)
   (setq treesit-language-source-alist
         '((bash       . ("https://github.com/tree-sitter/tree-sitter-bash"       "release"))
           (c          . ("https://github.com/tree-sitter/tree-sitter-c"          "release"))
