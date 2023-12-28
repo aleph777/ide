@@ -60,6 +60,7 @@
 ;;              26-Oct-2022 added ‘eglot-highlight-symbol-face’
 ;;              08-Jun-2023 added ‘blamer’ faces
 ;;              09-Jun-2023 added ‘elpaca’ faces
+;;              10-Aug-2023 clean up
 ;;
 
 ;; =============================================================================
@@ -239,23 +240,42 @@
 ;;   Iosevka,Iosevka Light Extended:style=Light Extended,Regular
 
 (let* ((font-family-list (font-family-list))
-       (camingo         (car (member "CamingoCode"         font-family-list)))
-       (consolas        (car (member "Consolas"            font-family-list)))
-       (courier         (car (member "Courier 10 Pitch"    font-family-list)))
-       (cousine         (car (member "Cousine"             font-family-list)))
-       (deja-vu         (car (member "DejaVu Sans Mono"    font-family-list)))
-       (fantasque       (car (member "Fantasque Sans Mono" font-family-list)))
-       (firacode        (car (member "Fira Code"           font-family-list)))
-       (hack            (car (member "Hack"                font-family-list)))
-       (input           (car (member "Input"               font-family-list)))
-       (iosevka         (car (member "Iosevka"             font-family-list)))
-       (iosevka-slab    (car (member "Iosevka Slab"        font-family-list)))
-       (jet             (car (member "Jet"                 font-family-list)))
-       (source-code-pro (car (member "Source Code Pro"     font-family-list)))
-       (victor          (car (member "Victor Mono"         font-family-list)))
+       (anka            (car (member "Anka/Coder"                   font-family-list)))
+       (bitstream       (car (member "Bitstream Vera Sans Mono"     font-family-list)))
+       (camingo         (car (member "CamingoCode"                  font-family-list)))
+       (consolas        (car (member "Consolas"                     font-family-list)))
+       (courier         (car (member "Courier 10 Pitch"             font-family-list)))
+       (courier-prime   (car (member "Courier Prime Code"           font-family-list)))
+       (cousine         (car (member "Cousine"                      font-family-list)))
+       (dm              (car (member "DM Mono"                      font-family-list)))
+       (envy            (car (member "Envy Code R"                  font-family-list)))
+       (fantasque       (car (member "Fantasque Sans Mono"          font-family-list)))
+       (firacode        (car (member "Fira Code"                    font-family-list)))
+       (hack            (car (member "Hack Nerd Font"               font-family-list)))
+       (hermit          (car (member "Hermit"                       font-family-list)))
+       (ia-writer       (car (member "iA Writer Mono S"             font-family-list)))
+       (inconsolata     (car (member "Inconsolata"                  font-family-list)))
+       (input           (car (member "Input Mono"                   font-family-list)))
+       (intel-one       (car (member "IntelOne Mono"                font-family-list)))
+       (iosevka         (car (member "Iosevka"                      font-family-list)))
+       (jet             (car (member "JetBrains Mono"               font-family-list)))
+       (julia           (car (member "JuliaMono"                    font-family-list)))
+       (liberation      (car (member "Liberation Mono"              font-family-list)))
+       (lotion          (car (member "Lotion"                       font-family-list)))
+       (luculent        (car (member "Luculent"                     font-family-list)))
+       (meslo           (car (member "Meslo LG S DZ"                font-family-list)))
+       (monofoki        (car (member "Monofoki"                     font-family-list)))
+       (monoid          (car (member "Monoid"                       font-family-list)))
+       (recursive       (car (member "Recursive Mono Linear Static" font-family-list)))
+       (source-code-pro (car (member "Source Code Pro"              font-family-list)))
+       (space           (car (member "Space Mono"                   font-family-list)))
+       (twilio          (car (member "Twilio Sans Mono Retina"      font-family-list)))
+       (ubuntu          (car (member "Ubuntu Mono"                  font-family-list)))
+       (victor          (car (member "Victor Mono"                  font-family-list)))
 
        (avenir-next (car (member "Avenir Next Rounded Pro" font-family-list)))
        (dejavu-sans (car (member "DejaVu Sans"             font-family-list)))
+       (inter       (car (member "Inter V"                 font-family-list)))
        (nimbus-sans (car (member "Nimbus Sans"             font-family-list)))
        (noto-sans   (car (member "Noto Sans"               font-family-list)))
        (open-sans   (car (member "Open Sans"               font-family-list)))
@@ -263,11 +283,22 @@
        (segoe-ui    (car (member "Segoe UI"                font-family-list)))
        (source-sans (car (member "Source Sans Pro"         font-family-list)))
 
-       (fontaine/fixed-pitch-family    (or hack deja-vu consolas source-code-pro jet firacode iosevka iosevka-slab cousine camingo fantasque victor input courier))
-       (fontaine/variable-pitch-family (or nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
+       (fontaine/fixed-pitch-family
+        (or hack bitstream envy ubuntu fantasque
+            anka julia cousine input recursive liberation monofoki consolas
+            meslo twilio camingo dm source-code-pro iosevka courier-prime
+            ia-writer monoid firacode
+            hermit intel-one
+            space
+            luculent inconsolata lotion
+            victor
+            firacode
+            courier))
 
-       (fontaine/fixed-pitch-height    120)
-       (fontaine/variable-pitch-height 120)
+       (fontaine/variable-pitch-family (or inter nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
+
+       (fontaine/fixed-pitch-height    168)
+       (fontaine/variable-pitch-height (/ (* 3 fontaine/fixed-pitch-height) 4))
 
        (mint-y/green   "#8fa876")
        (mint-y/green-2 "#b3c4a2")
@@ -281,12 +312,16 @@
 
        ;; theme palette foregrounds - minimum WCAG AA, preferably WCAG AAA
 
+       (fontaine/black x11/black)
+       (fontaine/red   x11/red)
+       (fontaine/white x11/white)
+
        (fontaine/fg-black x11/black)
        (fontaine/fg-gray  nord/polar-night-nord-2)
        (fontaine/fg-white mint-x/white)
 
        (fontaine/fg-red          canva/red-pepper)
-       (fontaine/fg-red-yellow   wcag/010)
+       (fontaine/fg-red-yellow   x11/dark-orange3)
        (fontaine/fg-yellow-red   canva/camouflage)
        (fontaine/fg-yellow       wcag/060)
        (fontaine/fg-yellow-green canva/forest-green)
@@ -336,15 +371,15 @@
 
        (fontaine/added              fontaine/fg-green)
        (fontaine/array              fontaine/fg-blue-magenta)
-       (fontaine/bookmark-bg        fontaine/bg-red-yellow)
-       (fontaine/bookmark-fg        fontaine/bg-white)
+       (fontaine/bg-bookmark        fontaine/bg-red-yellow)
+       (fontaine/fg-bookmark        fontaine/bg-white)
        (fontaine/builtin            fontaine/fg-cyan)
        (fontaine/comment            fontaine/fg-red-dark)
        (fontaine/constant           fontaine/fg-green)
        (fontaine/current-line       fontaine/bg-white)
        (fontaine/cursor             fontaine/fg-black)
-       (fontaine/default-bg         fontaine/bg-gray)
-       (fontaine/default-fg         fontaine/fg-black)
+       (fontaine/bg-default         fontaine/bg-gray)
+       (fontaine/fg-default         fontaine/fg-black)
        (fontaine/deleted            fontaine/fg-red)
        (fontaine/escape             fontaine/fg-blue-magenta)
        (fontaine/error              fontaine/fg-red)
@@ -356,15 +391,15 @@
        (fontaine/inactive-2         ibm/cool-gray-60)
        (fontaine/keyword            fontaine/fg-black)
        (fontaine/lazy-highlight     fontaine/bg-blue-cyan)
-       (fontaine/line-number        fontaine/fg-black)
+       (fontaine/line-number        fontaine/fg-gray)
        (fontaine/match              fontaine/bg-cyan)
        (fontaine/modified           fontaine/fg-blue-magenta)
        (fontaine/next-error         fontaine/bg-red)
        (fontaine/non-overridable    fontaine/fg-gray)
-       (fontaine/paren-mismatch-bg  fontaine/bg-red)
-       (fontaine/paren-mismatch-fg  fontaine/fg-white)
-       (fontaine/paren-no-match-bg  fontaine/bg-yellow)
-       (fontaine/paren-no-match-fg  fontaine/fg-red)
+       (fontaine/bg-paren-mismatch  fontaine/bg-red)
+       (fontaine/fg-paren-mismatch  fontaine/fg-white)
+       (fontaine/bg-paren-no-match  fontaine/bg-yellow)
+       (fontaine/fg-paren-no-match  fontaine/fg-red)
        (fontaine/prompt             fontaine/fg-blue-cyan)
        (fontaine/rainbow-1          wcag/180)
        (fontaine/rainbow-2          wcag/220)
@@ -389,319 +424,225 @@
        ;; theme elements: mode-line / powerline
 
        (fontaine/mode-line-box         x11/gray50)
-       (fontaine/mode-line-active-bg   fontaine/bg-black)
-       (fontaine/mode-line-active-fg   fontaine/fg-white)
-       (fontaine/mode-line-inactive-bg fontaine/bg-black)
-       (fontaine/mode-line-inactive-fg fontaine/fg-white)
+       (fontaine/bg-mode-line-active   fontaine/bg-black)
+       (fontaine/fg-mode-line-active   fontaine/fg-white)
+       (fontaine/bg-mode-line-inactive fontaine/bg-black)
+       (fontaine/fg-mode-line-inactive fontaine/fg-white)
 
-       ;; (fontaine/powerline-active0-bg   mint-y/green)
-       ;; (fontaine/powerline-active1-bg   mint-y/green-2)
-       (fontaine/powerline-active0-bg   material/light-green-300)
-       (fontaine/powerline-active1-bg   material/light-green-200)
-       (fontaine/powerline-active2-bg   fontaine/mode-line-active-bg)
+       (fontaine/bg-powerline-active0   material/light-green-300)
+       (fontaine/bg-powerline-active1   material/light-green-200)
+       (fontaine/bg-powerline-active2   fontaine/bg-black)
 
-       (fontaine/powerline-active0-fg   fontaine/fg-black)
-       (fontaine/powerline-active1-fg   fontaine/fg-black)
-       (fontaine/powerline-active2-fg   fontaine/mode-line-active-fg)
-       (fontaine/powerline-inactive0-bg fontaine/mode-line-inactive-bg)
-       (fontaine/powerline-inactive1-bg fontaine/inactive-1)
-       (fontaine/powerline-inactive2-bg fontaine/inactive-2)
-       (fontaine/powerline-inactive0-fg fontaine/mode-line-inactive-fg)
-       (fontaine/powerline-inactive1-fg fontaine/fg-white)
-       (fontaine/powerline-inactive2-fg fontaine/fg-white)
+       (fontaine/fg-powerline-active0   fontaine/fg-black)
+       (fontaine/fg-powerline-active1   fontaine/fg-black)
+       (fontaine/fg-powerline-active2   fontaine/fg-mode-line-active)
 
-       ;; theme elements: tabbar
+       (fontaine/bg-powerline-inactive0 fontaine/bg-black)
+       (fontaine/bg-powerline-inactive1 fontaine/inactive-1)
+       (fontaine/bg-powerline-inactive2 fontaine/inactive-2)
 
-       (fontaine/tabbar-bg            fontaine/bg-black)
-       (fontaine/tabbar-fg            fontaine/fg-white)
-       (fontaine/tabbar-modified-bg   x11/red)
-       (fontaine/tabbar-modified-fg   x11/white)
-       (fontaine/tabbar-sel-mod-fg    fontaine/fg-red)
-       (fontaine/tabbar-selected-fg   fontaine/fg-black)
-       (fontaine/tabbar-unselected-bg fontaine/inactive-1))
+       (fontaine/fg-powerline-inactive0 fontaine/fg-mode-line-inactive)
+       (fontaine/fg-powerline-inactive1 fontaine/fg-white)
+       (fontaine/fg-powerline-inactive2 fontaine/fg-white))
 
-  (message "Defining faces...")
+  (set-face-attribute 'default
+                      nil
+                      :background fontaine/bg-default
+                      :family     fontaine/fixed-pitch-family
+                      :height     fontaine/fixed-pitch-height)
 
-  ;; (defface clips-constant-face '((t (:foreground ,fontaine/constant)))
-  ;; (defface clips-control-face '((t (:foreground ,fontaine/builtin :weight bold)))
-  ;; (defface clips-declaration-face '((t (:foreground ,fontaine/non-overridable :weight bold)))
-  ;; (defface clips-function-face '((t (:foreground ,fontaine/function :weight bold)))
-  ;; (defface clips-global-variable-face '((t (:foreground ,fontaine/variable :weight bold)))
-  ;; (defface clips-logical-face '((t (:foreground ,fontaine/fg-yellow-red :weight bold)))
-  ;; (defface clips-object-match-face '((t (:foreground ,fontaine/fg-magenta-blue :weight bold)))
-  ;; (defface clips-variable-face '((t (:foreground ,fontaine/variable)))
-  ;; (defface clips-verb-face '((t(:foreground ,fontaine/fg-green :weight bold) ))
-  ;;   "CLIPS verb face."
-  ;;   :group 'font-lock-faces)
-  ;; (defvar clips-verb-face (make-face 'clips-verb-face))
+  (set-face-attribute 'variable-pitch
+                      nil
+                      :family fontaine/variable-pitch-family
+                      :height fontaine/variable-pitch-height)
 
-
-  (defface fontaine/mode-line-base `((t (:inherit variable-pitch :weight bold :box (:line-width 1 :color ,fontaine/mode-line-box)))) "" :group 'font-lock-faces)
-  ;; (defface fontaine/powerline-red  `((t (:inherit variable-pitch :foreground ,fontaine/warning))) "" :group 'font-lock-faces)
-  (defface fontaine/powerline-red  `((t (:inherit variable-pitch :foreground "white"))) "" :group 'font-lock-faces)
-  (defface fontaine/tabline-base   `((t (:inherit default        :family ,fontaine/variable-pitch-family :height 0.8))) "" :group 'font-lock-faces)
-
-  (message "Defining faces...done")
+  ;; (defface powerline-base `((t (:inherit mode-line :family variable-pitch :weight bold))) "" :group 'mode-line-faces)
+  (defface powerline-base `((t (:inherit variable-pitch :weight bold))) "" :group 'mode-line-faces)
 
   (custom-theme-set-faces
    `fontaine
+;; ;;;;; anzu
+   `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :height ,fontaine/fixed-pitch-height :foreground ,fontaine/match :weight bold))))
 
-   `(default        ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg :background ,fontaine/default-bg))))
-   `(fixed-pitch    ((t (:family ,fontaine/fixed-pitch-family    :height ,fontaine/fixed-pitch-height    :foreground ,fontaine/default-fg))))
-   `(variable-pitch ((t (:family ,fontaine/variable-pitch-family :height ,fontaine/variable-pitch-height :foreground ,fontaine/default-fg))))
-
-   `(bold   ((t :weight bold)))
-   `(italic ((t :slant  italic)))
-
-   `(bold-italic ((t :inherit (bold italic))))
-
-   ;; not fully defined - need to see an example first
-   `(homoglyph         ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
-   `(mm-command-output ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
-   `(nobreak-hyphen    ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
-   `(nobreak-space     ((t :foreground ,fontaine/bg-white :background ,fontaine/fg-black)))
-
-   ;; basic settings
-
-;;;;; annotate
-   ;; `(annotate-annotation ((t :inherit fontaine-theme-subtle-blue)))
-   ;; `(annotate-annotation-secondary ((t :inherit fontaine-theme-subtle-green)))
-   ;; `(annotate-highlight ((t :background ,blue-nuanced-bg :underline ,blue-intense)))
-   ;; `(annotate-highlight-secondary ((t :background ,green-nuanced-bg :underline ,green-intense)))
-
-   `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :foreground ,fontaine/match :weight bold))))
-
-;;;;; blamer
-   `(blamer-face ((t :foreground ,fontaine/comment :italic t)))
-
-   `(blamer-pretty-border-face          ((t :foreground "black" :weight bold)))
-   `(blamer-pretty-commit-message-face  ((t :foreground ,fontaine/string :italic t)))
+;; ;;;;; blamer
+   `(blamer-face                        ((t :foreground ,fontaine/comment    :slant italic)))
+   `(blamer-pretty-border-face          ((t :foreground ,fontaine/fg-default :weight bold)))
+   `(blamer-pretty-commit-message-face  ((t :inherit font-lock-comment-face)))
    `(blamer-pretty-meta-data-face       ((t :foreground ,fontaine/comment)))
    `(blamer-pretty-meta-keywords-face   ((t :foreground ,fontaine/prompt :weight bold)))
 
-   `(bm-face                   ((t :background "hotpink" :foreground "blue" :extend t)))
-   `(bm-fringe-face            ((t :background "yellow" :foreground "red" )))
-   `(bm-fringe-persistent-face ((t :background ,fontaine/bookmark-bg :foreground ,fontaine/bookmark-fg )))
-
-;; (set-face-attribute 'bm-fringe-persistent-face nil :foreground "white" :background material/fg-orange-800))
+;; ;;;;; bm
+   `(bm-fringe-persistent-face ((t :background ,fontaine/bg-bookmark :foreground ,fontaine/fg-bookmark )))
 
 ;;;;; compilation
-   ;; `(compilation-column-number ((t :foreground ,magenta-alt-other)))
-   ;; `(compilation-error ((t :inherit fontaine-theme-bold :foreground ,red)))
-   ;; `(compilation-info ((t :inherit fontaine-theme-bold :foreground ,fg-special-cold)))
-   ;; `(compilation-line-number ((t :foreground ,fg-special-warm)))
-   ;; `(compilation-mode-line-exit ((t :inherit fontaine-theme-bold :foreground ,blue-active)))
-   ;; `(compilation-mode-line-fail ((t :inherit fontaine-theme-bold :foreground ,red-active)))
-   ;; `(compilation-mode-line-run ((t :inherit fontaine-theme-bold :foreground ,magenta-active)))
-   ;; `(compilation-warning ((t :inherit fontaine-theme-bold :foreground ,yellow)))
+   `(compilation-column-number ((t (:weight bold))))
+   `(compilation-error         ((t :inherit error)))
+   `(compilation-line-number   ((t (:weight bold))))
+   `(compilation-warning       ((t :inherit warning)))
 
+;;;;; cursor
    `(cursor ((t (:background ,fontaine/cursor))))
 
 ;;;;; comint
-   `(comint-highlight-input  ((t (:inherit bold))))
-   `(comint-highlight-prompt ((t (:inherit bold :foreground ,fontaine/prompt))))
+   `(comint-highlight-input  ((t (:weight bold))))
+   `(comint-highlight-prompt ((t (:weight bold :foreground ,fontaine/prompt))))
 
-   `(compilation-column-number ((t (:weight bold))))
-   `(compilation-line-number   ((t (:weight bold))))
-   `(compilation-warning       ((t (:foreground ,fontaine/warning :weight bold))))
-
+;;;;; cperl
    `(cperl-array-face          ((t (:foreground ,fontaine/array           :weight bold))))
    `(cperl-hash-face           ((t (:foreground ,fontaine/hash            :weight bold))))
    `(cperl-nonoverridable-face ((t (:foreground ,fontaine/non-overridable :weight bold))))
 
 ;;;;; eglot
-   ;; `(eglot-mode-line ((t :inherit fontaine-theme-bold :foreground ,magenta-active)))
    `(eglot-highlight-symbol-face ((t (:weight bold :background ,fontaine/bg-magenta-red))))
 
 ;;;;; elpaca
-   `(elpaca-blocked  ((t (:weight bold :foreground ,fontaine/fg-yellow))))
-   `(elpaca-busy     ((t (:weight bold :foreground ,fontaine/fg-yellow-red))))
-   `(elpaca-finished ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
-   `(elpaca-finished ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
-
+   `(elpaca-blocked           ((t (:weight bold :foreground ,fontaine/fg-yellow))))
+   `(elpaca-busy              ((t (:weight bold :foreground ,fontaine/fg-yellow-red))))
+   `(elpaca-finished          ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
+   `(elpaca-finished          ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
    `(elpaca-ui-marked-package ((t (:weight bold :foreground ,fontaine/fg-magenta))))
 
+;;;;; error
    `(error ((t (:foreground ,fontaine/error :weight bold))))
 
+;;;;; escape-glyph
    `(escape-glyph ((t :inherit bold-italic :foreground ,fontaine/escape)))
 
-   `(file-name-shadow ((t (:foreground ,fontaine/shadow))))
+;;;;; file-name-shadow
+   `(file-name-shadow ((t (:inherit shadow))))
 
-;;;;; fold-this
-   ;; `(fold-this-overlay ((t :inherit fontaine-theme-special-mild)))
+;;;;; fixed-pitch
+   `(fixed-pitch ((t (:inherit default))))
 
-   `(font-lock-builtin-face           ((t (:inherit bold        :foreground ,fontaine/builtin))))
-   `(font-lock-comment-face           ((t (:inherit italic      :foreground ,fontaine/comment))))
+;;;;; font-lock
+   `(font-lock-builtin-face           ((t (:foreground ,fontaine/builtin :weight bold))))
+   `(font-lock-comment-face           ((t (:foreground ,fontaine/comment :slant italic))))
    `(font-lock-comment-delimiter-face ((t (:inherit font-lock-comment-face))))
-   `(font-lock-constant-face          ((t (:inherit bold        :foreground ,fontaine/constant))))
-   `(font-lock-doc-face               ((t (:inherit bold-italic :foreground ,fontaine/comment))))
-   `(font-lock-function-name-face     ((t (:inherit bold        :foreground ,fontaine/function))))
-   `(font-lock-keyword-face           ((t (:inherit bold        :foreground ,fontaine/keyword))))
-   `(font-lock-negation-char-face     ((t (:inherit bold))))
-   `(font-lock-string-face            ((t (:inherit italic      :foreground ,fontaine/string))))
-   `(font-lock-type-face              ((t (:inherit bold        :foreground ,fontaine/type))))
-   `(font-lock-variable-name-face     ((t (:inherit bold        :foreground ,fontaine/variable))))
-   `(font-lock-warning-face           ((t (:inherit bold        :foreground ,fontaine/warning))))
+   `(font-lock-constant-face          ((t (:foreground ,fontaine/constant :weight bold))))
+   `(font-lock-doc-face               ((t (:foreground ,fontaine/comment  :weight bold :slant italic))))
+   `(font-lock-function-call-face     ((t (:foreground ,fontaine/function))))
+   `(font-lock-function-name-face     ((t (:foreground ,fontaine/function :weight bold))))
+   `(font-lock-keyword-face           ((t (:foreground ,fontaine/keyword  :weight bold))))
+   `(font-lock-negation-char-face     ((t (:weight bold))))
+   `(font-lock-string-face            ((t (:foreground ,fontaine/string   :slant italic))))
+   `(font-lock-type-face              ((t (:foreground ,fontaine/type     :weight bold))))
+   `(font-lock-variable-name-face     ((t (:foreground ,fontaine/variable :weight bold))))
+   `(font-lock-warning-face           ((t (:inherit warning))))
 
+;;;;; fringe
    `(fringe  ((t (:background unspecified))))
 
+;;;;; git-gutter
    `(git-gutter:added    ((t (:foreground ,fontaine/added    :weight bold))))
    `(git-gutter:deleted  ((t (:foreground ,fontaine/deleted  :weight bold))))
    `(git-gutter:modified ((t (:foreground ,fontaine/modified :weight bold))))
-   ;; `(git-gutter:separator ((t :inherit fontaine-theme-fringe-cyan)))
-   ;; `(git-gutter:unchanged ((t :inherit fontaine-theme-fringe-magenta)))
 
-;;;;; helpful
-   ;; `(helpful-heading ((t :inherit fontaine-theme-heading-1)))
+;;;;; highlight
+   `(highlight ((t (:inherit match))))
 
-   `(highlight ((t (:background ,fontaine/match))))
-
+;;;;; hl-line
    `(hl-line ((t (:background ,fontaine/current-line))))
 
-   `(isearch ((t (:background ,fontaine/match))))
+;;;;; isearch
+   `(isearch ((t (:inherit match))))
 
+;;;;; italic
+   `(italic         ((t (:slant italic)))) ;; === yes ===
+
+;;;;; lazy-highlight
    `(lazy-highlight ((t (:background ,fontaine/lazy-highlight))))
 
+;;;;; line-number
    `(line-number              ((t (:foreground ,fontaine/line-number))))
    `(line-number-current-line ((t (:foreground ,fontaine/line-number :background ,fontaine/current-line :weight bold))))
-   ;; `(line-number-major-tick ((t :inherit (bold default) :background ,yellow-nuanced-bg :foreground ,yellow-nuanced-fg)))
-   ;; `(line-number-minor-tick ((t :inherit (bold default) :background ,bg-inactive :foreground ,fg-inactive)))
 
-;;;;; make-mode (makefiles)
-   ;; `(makefile-makepp-perl ((t :background ,cyan-nuanced-bg)))
-   ;; `(makefile-space ((t :background ,magenta-nuanced-bg)))
-
+;;;;; match
    `(match ((t (:background ,fontaine/match))))
 
-   `(minibuffer-prompt ((t (:inherit bold))))
+;;;;; minibuffer-prompt
+   `(minibuffer-prompt ((t (:weight bold))))
 
-   `(mode-line           ((t (:inherit fontaine/mode-line-base :background ,fontaine/mode-line-active-bg   :foreground ,fontaine/mode-line-active-fg))))
-   `(mode-line-inactive  ((t (:inherit fontaine/mode-line-base :background ,fontaine/mode-line-inactive-bg :foreground ,fontaine/mode-line-inactive-fg))))
+;;;;; mode-line
+   `(mode-line           ((t (:inherit variable-pitch :background ,fontaine/bg-mode-line-active   :foreground ,fontaine/fg-mode-line-active))))
+   `(mode-line-inactive  ((t (:inherit variable-pitch :background ,fontaine/bg-mode-line-inactive :foreground ,fontaine/fg-mode-line-inactive))))
 
-   `(next-error ((t (:background ,fontaine/bg-red :foreground ,fontaine/default-fg))))
+;; ;;;;; next-error
+;;    `(next-error ((t (:background ,fontaine/bg-red :foreground ,fontaine/default-fg))))
 
-   `(paren-face-match    ((t (:background ,fontaine/match))))
-   `(paren-face-mismatch ((t (:background ,fontaine/paren-mismatch-bg :foreground ,fontaine/paren-mismatch-fg))))
-   `(paren-face-no-match ((t (:background ,fontaine/paren-no-match-bg :foreground ,fontaine/paren-no-match-fg))))
+;;;;; paren
+   `(paren-face-match    ((t (:inherit match))))
+   `(paren-face-mismatch ((t (:background ,fontaine/bg-paren-mismatch :foreground ,fontaine/fg-paren-mismatch))))
+   `(paren-face-no-match ((t (:background ,fontaine/bg-paren-no-match :foreground ,fontaine/fg-paren-no-match))))
 
-   `(powerline-active0   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active0-bg   :foreground ,fontaine/powerline-active0-fg))))
-   `(powerline-active1   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active1-bg   :foreground ,fontaine/powerline-active1-fg))))
-   `(powerline-active2   ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-active2-bg   :foreground ,fontaine/powerline-active2-fg))))
+;;;;; powerline
+   `(powerline-active0   ((t (:inherit powerline-base :background ,fontaine/bg-powerline-active0   :foreground ,fontaine/fg-powerline-active0))))
+   `(powerline-active1   ((t (:inherit powerline-base :background ,fontaine/bg-powerline-active1   :foreground ,fontaine/fg-powerline-active1))))
+   `(powerline-active2   ((t (:inherit powerline-base :background ,fontaine/bg-powerline-active2   :foreground ,fontaine/fg-powerline-active2))))
 
-   `(powerline-inactive0 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive0-bg :foreground ,fontaine/powerline-inactive0-fg))))
-   `(powerline-inactive1 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive1-bg :foreground ,fontaine/powerline-inactive1-fg))))
-   `(powerline-inactive2 ((t (:inherit fontaine/mode-line-base :background ,fontaine/powerline-inactive2-bg :foreground ,fontaine/powerline-inactive2-fg))))
+   `(powerline-inactive0 ((t (:inherit powerline-base :background ,fontaine/bg-powerline-inactive0 :foreground ,fontaine/fg-powerline-inactive0))))
+   `(powerline-inactive1 ((t (:inherit powerline-base :background ,fontaine/bg-powerline-inactive1 :foreground ,fontaine/fg-powerline-inactive1))))
+   `(powerline-inactive2 ((t (:inherit powerline-base :background ,fontaine/bg-powerline-inactive2 :foreground ,fontaine/fg-powerline-inactive2))))
 
-   `(rainbow-delimiters-base-face     ((t (:inherit fixed-pitch :weight bold))))
-   `(rainbow-delimiters-depth-1-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-1))))
-   `(rainbow-delimiters-depth-2-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-2))))
-   `(rainbow-delimiters-depth-3-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-3))))
-   `(rainbow-delimiters-depth-4-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-4))))
-   `(rainbow-delimiters-depth-5-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-5))))
-   `(rainbow-delimiters-depth-6-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-6))))
-   `(rainbow-delimiters-depth-7-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-7))))
-   `(rainbow-delimiters-depth-8-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-8))))
-   `(rainbow-delimiters-depth-9-face ((t (:inherit rainbow-delimiters-base-face :foreground ,fontaine/rainbow-9))))
+;;;;; rainbow-delimiters
+   `(rainbow-delimiters-depth-1-face ((t (:weight bold :foreground ,fontaine/rainbow-1))))
+   `(rainbow-delimiters-depth-2-face ((t (:weight bold :foreground ,fontaine/rainbow-2))))
+   `(rainbow-delimiters-depth-3-face ((t (:weight bold :foreground ,fontaine/rainbow-3))))
+   `(rainbow-delimiters-depth-4-face ((t (:weight bold :foreground ,fontaine/rainbow-4))))
+   `(rainbow-delimiters-depth-5-face ((t (:weight bold :foreground ,fontaine/rainbow-5))))
+   `(rainbow-delimiters-depth-6-face ((t (:weight bold :foreground ,fontaine/rainbow-6))))
+   `(rainbow-delimiters-depth-7-face ((t (:weight bold :foreground ,fontaine/rainbow-7))))
+   `(rainbow-delimiters-depth-8-face ((t (:weight bold :foreground ,fontaine/rainbow-8))))
+   `(rainbow-delimiters-depth-9-face ((t (:weight bold :foreground ,fontaine/rainbow-9))))
 
-   `(rainbow-delimiters-mismatched-face ((t (:inherit paren-face-mismatch :weight bold))))
-   `(rainbow-delimiters-unmatched-face  ((t (:inherit paren-face-no-match :weight bold))))
+   `(rainbow-delimiters-mismatched-face ((t (:inherit paren-face-mismatch))))
+   `(rainbow-delimiters-unmatched-face  ((t (:inherit paren-face-no-match))))
 
-   `(rectangle-preview ((t (:background ,fontaine/region))))
+;;;;; rectangle-preview
+   `(rectangle-preview ((t (:inherit region))))
 
+;;;;; region
    `(region ((t (:background ,fontaine/region))))
 
+;;;;; scroll-bar
+   `(scroll-bar ((t (:background ,fontaine/fg-default :foreground ,fontaine/bg-default))))
+
+;;;;; secondary-selection
    `(secondary-selection ((t (:background ,fontaine/secondary))))
 
 ;;;;; shell-script-mode
-   ;; `(sh-heredoc ((t :foreground ,blue-alt)))
    `(sh-quoted-exec ((t :foreground ,fontaine/execute)))
-   `(sh-heredoc ((t :foreground ,fontaine/heredoc)))
+   `(sh-heredoc     ((t :foreground ,fontaine/heredoc)))
 
+;;;;; shadow
    `(shadow ((t (:foreground ,fontaine/shadow))))
 
-;;;;; smartparens
-   ;; `(sp-pair-overlay-face ((t :inherit fontaine-theme-special-warm)))
-   ;; `(sp-show-pair-enclosing ((t :inherit fontaine-theme-special-mild)))
-   ;; `(sp-show-pair-match-face ((t ,@(fontaine-themes--paren bg-paren-match bg-paren-match-intense) :foreground ,fg-main)))
-   ;; `(sp-show-pair-mismatch-face ((t :inherit fontaine-theme-intense-red)))
-   ;; `(sp-wrap-overlay-closing-pair ((t :inherit sp-pair-overlay-face)))
-   ;; `(sp-wrap-overlay-face ((t :inherit sp-pair-overlay-face)))
-   ;; `(sp-wrap-overlay-opening-pair ((t :inherit sp-pair-overlay-face)))
-   ;; `(sp-wrap-tag-overlay-face ((t :inherit sp-pair-overlay-face)))
-
-;;;;; smerge
-   ;; `(smerge-base ((t :inherit fontaine-theme-diff-changed)))
-   ;; `(smerge-lower ((t :inherit fontaine-theme-diff-added)))
-   ;; `(smerge-markers ((t :background ,bg-diff-neutral-2 :foreground ,fg-diff-neutral-2)))
-   ;; `(smerge-refined-added ((t :inherit fontaine-theme-diff-refine-added)))
-   ;; `(smerge-refined-changed ((t)))
-   ;; `(smerge-refined-removed ((t :inherit fontaine-theme-diff-refine-removed)))
-   ;; `(smerge-upper ((t :inherit fontaine-theme-diff-removed)))
-
+;;;;; success
    `(success ((t (:foreground ,fontaine/success :weight bold))))
 
-   `(tjf:tabline/default    ((t (:inherit fontaine/tabline-base :background ,fontaine/tabbar-bg          :foreground ,fontaine/tabbar-fg))))
-   `(tjf:tabline/modified   ((t (:inherit tjf:tabline/default   :background ,fontaine/tabbar-modified-bg :foreground ,fontaine/tabbar-modified-fg))))
-   `(tjf:tabline/selected   ((t (:inherit fontaine/tabline-base :weight bold))))
-   `(tjf:tabline/sel-mod    ((t (:inherit tjf:tabline/selected                                           :foreground ,fontaine/tabbar-sel-mod-fg))))
-   `(tjf:tabline/unselected ((t (:inherit tjf:tabline/default   :background ,fontaine/tabbar-unselected-bg))))
-   `(tjf:tabline/button     ((t (:inherit tjf:tabline/unselected))))
+;;;;; tab-bar
+   `(tab-bar ((t (:inherit mode-line :family ,fontaine/fixed-pitch-family :weight bold :height 0.9))))
 
+;;;;; tjf:tabline
+   `(tjf:tabline/default          ((t (:inherit variable-pitch :height 0.8 :background ,fontaine/bg-black))))
+   `(tjf:tabline/button           ((t (:inherit nil :family ,fontaine/fixed-pitch-family :background ,fontaine/fg-mode-line-active :foreground ,fontaine/fg-black :weight bold))))
+   `(tjf:tabline/button-highlight ((t (:inherit tjf:tabline/highlight))))
+   `(tjf:tabline/highlight        ((t (:background ,fontaine/bg-yellow-red :foreground ,fontaine/fg-default :weight bold))))
+   `(tjf:tabline/modified         ((t (:inherit tjf:tabline/default :background ,fontaine/red    :foreground ,fontaine/white :weight bold))))
+   `(tjf:tabline/sel-mod          ((t (:inherit tjf:tabline/default :background "xxx"            :foreground ,fontaine/red   :weight bold))))
+   `(tjf:tabline/selected         ((t (:inherit tjf:tabline/default :background "xxx"            :foreground ,fontaine/black :weight bold))))
+   `(tjf:tabline/unselected       ((t (:inherit tjf:tabline/default :background ,fontaine/shadow :foreground ,fontaine/fg-white))))
+
+;;;;; trailing-whitespace
    `(trailing-whitespace ((t (:background ,fontaine/whitespace))))
 
-;;;;; treemacs
-   ;; `(treemacs-directory-collapsed-face ((t :foreground ,magenta-alt)))
-   ;; `(treemacs-directory-face ((t :inherit dired-directory)))
-   ;; `(treemacs-file-face ((t :foreground ,fg-main)))
-   ;; `(treemacs-fringe-indicator-face ((t :foreground ,fg-main)))
-   ;; `(treemacs-git-added-face ((t :foreground ,green-intense)))
-   ;; `(treemacs-git-conflict-face ((t :inherit (fontaine-theme-intense-red bold))))
-   ;; `(treemacs-git-ignored-face ((t :inherit shadow)))
-   ;; `(treemacs-git-modified-face ((t :foreground ,yellow-alt-other)))
-   ;; `(treemacs-git-renamed-face ((t :foreground ,cyan-alt-other)))
-   ;; `(treemacs-git-unmodified-face ((t :foreground ,fg-main)))
-   ;; `(treemacs-git-untracked-face ((t :foreground ,red-alt-other)))
-   ;; `(treemacs-help-column-face ((t :inherit fontaine-theme-bold :foreground ,magenta-alt-other :underline t)))
-   ;; `(treemacs-help-title-face ((t :foreground ,blue-alt-other)))
-   ;; `(treemacs-on-failure-pulse-face ((t :inherit fontaine-theme-intense-red)))
-   ;; `(treemacs-on-success-pulse-face ((t :inherit fontaine-theme-intense-green)))
-   ;; `(treemacs-root-face ((t :inherit bold :foreground ,blue-alt-other :height 1.2 :underline t)))
-   ;; `(treemacs-root-remote-disconnected-face ((t :inherit treemacs-root-remote-face :foreground ,yellow)))
-   ;; `(treemacs-root-remote-face ((t :inherit treemacs-root-face :foreground ,magenta)))
-   ;; `(treemacs-root-remote-unreadable-face ((t :inherit treemacs-root-unreadable-face)))
-   ;; `(treemacs-root-unreadable-face ((t :inherit treemacs-root-face :strike-through t)))
-   ;; `(treemacs-tags-face ((t :foreground ,blue-alt)))
-   ;; `(treemacs-tags-face ((t :foreground ,magenta-alt)))
-
+;;;;; vhl/default-face
    `(vhl/default-face ((t (:background ,fontaine/volatile-highlight))))
 
+;;;;; warning
    `(warning ((t (:foreground ,fontaine/warning :weight bold))))
 
+;;;;; web-mode
    `(web-mode-json-key-face ((t (:weight bold))))
-
-;;;;; which-function-mode
-   ;; `(which-func ((t :foreground ,magenta-active)))
-
-;;;;; whitespace-mode
-   ;; `(whitespace-big-indent ((t :inherit fontaine-theme-subtle-red)))
-   ;; `(whitespace-empty ((t :inherit fontaine-theme-intense-magenta)))
-   ;; `(whitespace-hspace ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-indentation ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-line ((t :background ,bg-alt)))
-   ;; `(whitespace-newline ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-space ((t :background ,bg-whitespace :foreground ,fg-whitespace)))
-   ;; `(whitespace-space-after-tab ((t :inherit fontaine-theme-subtle-magenta)))
-   ;; `(whitespace-space-before-tab ((t :inherit fontaine-theme-subtle-cyan)))
-   ;; `(whitespace-tab ((t :inherit fontaine-theme-subtle-green)))
-   ;; `(whitespace-trailing ((t :inherit fontaine-theme-intense-red)))
-
-;;;;; xref
-   ;; `(xref-file-header ((t :inherit bold :foreground ,fg-special-cold)))
-   ;; `(xref-line-number ((t :inherit shadow)))
-   ;; `(xref-match ((t :inherit match)))
-
-;;;;; yaml-mode
-   ;; `(yaml-tab-face ((t :inherit fontaine-theme-intense-red)))
 
    )) ;; custom-theme-set-faces ;; let*
 ;;
