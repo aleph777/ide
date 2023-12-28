@@ -38,6 +38,7 @@
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           28-Apr-2022 added ‘tjf:duplicate/tabs’
 ;;           14-Jun-2023 added ‘tjf:duplicate/syntax-spaces’
+;;           10-Aug-2023 added ‘tjf:duplicate/skip-to-next-word-on-line’
 ;;
 
 ;;; Code:
@@ -49,6 +50,14 @@
 (require 'undo-tree)
 
 ;;
+(defvar tjf:duplicate/using-tabs nil)
+(setq tjf:duplicate/using-tabs   nil)
+
+(defsubst tjf:duplicate/skip-to-next-word-on-line ()
+  "Move to the beginning of the next word on the current line."
+  (skip-syntax-forward "w")
+  (skip-syntax-forward "^w" (line-end-position)))
+
 (defun tjf:duplicate/as-comment ()
   "Create a commented copy of the current region (or line
 if no region is active). This is handy for testing out temporary
@@ -80,7 +89,7 @@ column.  There is no effect when the current column exceeds the width of the
 previous line.  This function does not work on the first line of a buffer.  This
 function does not work well when the duplicated line contains TABs."
   (interactive "*")
-  (if tjf:flags/using-tabs
+  (if tjf:duplicate/using-tabs
       (tjf:duplicate/tabs -1)
     (tjf:duplicate/syntax -1)))
 
@@ -90,7 +99,7 @@ There is no effect when the current column exceeds the width of the next line.
 This function does not work on the last line of a buffer.  This function does
 not work well when the duplicated line contains TABs."
   (interactive "*")
-  (if tjf:flags/using-tabs
+  (if tjf:duplicate/using-tabs
       (tjf:duplicate/tabs 1)
     (tjf:duplicate/syntax 1)))
 
@@ -100,7 +109,7 @@ There is no effect when the current column exceeds the width of the next line.
 This function does not work on the last line of a buffer.  This function does
 not work well when the duplicated line contains TABs."
   (interactive "*")
-  (if tjf:flags/using-tabs
+  (if tjf:duplicate/using-tabs
       (tjf:duplicate/tabs dup-offset)
     (tjf:duplicate/syntax dup-offset)))
 
@@ -110,7 +119,7 @@ There is no effect when the current column exceeds the width of the next line.
 This function does not work on the last line of a buffer.  This function does
 not work well when the duplicated line contains TABs."
   (interactive "*")
-  (if tjf:flags/using-tabs
+  (if tjf:duplicate/using-tabs
       (tjf:duplicate/spaces-tabs dup-offset)
     (tjf:duplicate/spaces-syntax dup-offset)))
 
@@ -140,8 +149,7 @@ will re-create the equivalent amount of whitespace."
       (setq column-limit (+ (point) column-limit))
       (skip-chars-forward "^\n" column-limit)
       (setq dupbeg-point (point))
-      (skip-syntax-forward "w")
-      (skip-syntax-forward "^w" (line-end-position))
+      (tjf:duplicate/skip-to-next-word-on-line)
       (setq dup-string (buffer-substring-no-properties dupbeg-point (point)))
       (when tabs?
         (undo-tree-undo)))
@@ -165,8 +173,7 @@ will re-create the equivalent amount of whitespace."
       (forward-line dup-offset)
       (move-to-column column-limit)
       (setq dupbeg-point (point))
-      (skip-syntax-forward "w")
-      (skip-syntax-forward "^w" (line-end-position))
+      (tjf:duplicate/skip-to-next-word-on-line)
       (setq dup-string (buffer-substring-no-properties dupbeg-point (point))))
     (insert dup-string)))
 
@@ -195,8 +202,7 @@ length as would be created by the other duplicate functions."
       (setq column-limit (+ (point) column-limit))
       (skip-chars-forward "^\n" column-limit)
       (setq dupbeg-point (point))
-      (skip-syntax-forward "w")
-      (skip-syntax-forward "^w" (line-end-position))
+      (tjf:duplicate/skip-to-next-word-on-line)
       (setq dup-fmt (concat "%" (format "%d" (- (point) dupbeg-point)) "s"))
       (setq dup-string (format dup-fmt " "))
       (when tabs?
@@ -221,8 +227,7 @@ length as would be created by the other duplicate functions."
       (forward-line dup-offset)
       (move-to-column column-limit)
       (setq dupbeg-point (point))
-      (skip-syntax-forward "w")
-      (skip-syntax-forward "^w" (line-end-position))
+      (tjf:duplicate/skip-to-next-word-on-line)
       (setq dup-fmt (concat "%" (format "%d" (- (point) dupbeg-point)) "s"))
       (setq dup-string (format dup-fmt " ")))
     (insert dup-string)))
