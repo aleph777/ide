@@ -77,7 +77,8 @@
 ;;           28-Apr-2022 Changed ‘tjf:edit/cleanse-whitespace’ to use ‘tjf:flags/using-tabs’
 ;;           02-May-2022 Restored ‘tjf:edit/copy-buffer’
 ;;           29-Aug-2022 Fixed ‘tjf:edit/menu-justify’
-;;           10-Nov-2022 Removed ‘tjf:eedit/insert-che’ and ‘tjf:eedit/insert-chs’
+;;           10-Nov-2022 Removed ‘tjf:edit/insert-che’ and ‘tjf:eedit/insert-chs’
+;;           14-Nov-2023 Removed redundant ‘justify’ menu entries
 ;;
 
 ;;; Code:
@@ -444,15 +445,10 @@ the cursor prior to the inserted newline."
   '("Justify"
     ["Canonically Space Region" canonically-space-region :enable (tjf:flags/enable-space-region?)]
     "---"
-    ["Center Justify Paragraph" (tjf:edit/justify 'center) :enable (tjf:flags/enable-write?)]
-    ["Full Justify Paragraph"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-write?)]
-    ["Left Justify Paragraph"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-write?)]
-    ["Right Justify Paragraph"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-write?)]
-    "---"
-    ["Center Justify Region" (tjf:edit/justify 'center) :enable (tjf:flags/enable-modify-region?)]
-    ["Full Justify Region"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-modify-region?)]
-    ["Left Justify Region"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-modify-region?)]
-    ["Right Justify Region"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-modify-region?)]
+    ["Center Justify" (tjf:edit/justify 'center) :enable (tjf:flags/enable-write?)]
+    ["Full Justify"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-write?)]
+    ["Left Justify"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-write?)]
+    ["Right Justify"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-write?)]
     "---"
     ["Set Fill Column..." set-fill-column]
     "---"
