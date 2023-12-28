@@ -384,10 +384,10 @@ You should use this hook to reset dependent data.")
 The result is a list just as long as the number of existing tab sets."
          (let (,result)
            (if tjf:tabline/tabsets
-	       (mapatoms
-		#'(lambda (,tabset)
-		    (push (funcall ,function ,tabset) ,result))
-		tjf:tabline/tabsets))
+	           (mapatoms
+		        #'(lambda (,tabset)
+		            (push (funcall ,function ,tabset) ,result))
+		        tjf:tabline/tabsets))
            ,result)))))
 
 (defun tjf:tabline/make-tabset (name &rest objects)
@@ -488,9 +488,9 @@ That is, the sub-list of tabs starting at the first visible one."
 
 (defun tjf:tabline/add-tab (tabset object &optional _append_ignored)
   "Add to TABSET a tab with value OBJECT if there isn't one there yet.
- If the tab is added, it is added at the beginning of the tab list,
- unless the optional argument APPEND is non-nil, in which case it is
- added at the end."
+If the tab is added, it is added at the beginning of the tab list,
+unless the optional argument APPEND is non-nil, in which case it is
+added at the end."
   (let ((tabs (tjf:tabline/tabs tabset)))
     (if (tjf:tabline/get-tab object tabset)
         tabs
@@ -564,37 +564,76 @@ current cached copy."
   (tjf:tabline/set-template tjf:tabline/tabsets-tabset nil)
   tjf:tabline/tabsets-tabset)
 
+(defconst tjf:tabline/bg-default  "#2f2f2f")
+(defconst tjf:tabline/fg-default  "#cccccc")
+(defconst tjf:tabline/bg-modified "red")
+(defconst tjf:tabline/fg-modified "white")
+(defconst tjf:tabline/fg-selected "black")
+(defconst tjf:tabline/fg-sel-mod  "red")
+
 ;;; Faces
 ;;
 (defface tjf:tabline/default
-  '((t :inherit variable-pitch :height 0.8 :background "#2f2f2f" :foreground "#2f2f2f" :box nil))
+  '((t :inherit variable-pitch :box nil))
   "Default face used in the tab bar."
   :group 'tjf-tabline)
 
+(set-face-attribute 'tjf:tabline/default
+                    nil
+                    :background tjf:tabline/bg-default)
+
 (defface tjf:tabline/unselected
-  '((t :inherit tjf:tabline/default :background "#424747" :foreground "#cccccc"))
+  '((t :inherit tjf:tabline/default))
   "Face used for unselected tabs."
   :group 'tjf-tabline)
 
+(set-face-attribute 'tjf:tabline/unselected
+                    nil
+                    :background "gray25"
+                    :foreground tjf:tabline/fg-default)
+
 (defface tjf:tabline/selected
-  '((t :inherit tjf:tabline/default :background "xxx"     :foreground "black"))
+  '((t :inherit tjf:tabline/default))
   "Face used for the selected tab."
   :group 'tjf-tabline)
 
+(set-face-attribute 'tjf:tabline/selected
+                    nil
+                    :background "xxx"
+                    :foreground tjf:tabline/fg-selected
+                    :weight 'bold)
+
 (defface tjf:tabline/modified
-  '((t :inherit tjf:tabline/default :background "red"     :foreground "white"))
+  '((t :inherit tjf:tabline/default))
   "Face used for unsaved tabs."
   :group 'tjf-tabline)
 
+(set-face-attribute 'tjf:tabline/modified
+                    nil
+                    :background tjf:tabline/bg-modified
+                    :foreground tjf:tabline/fg-modified)
+
 (defface tjf:tabline/sel-mod
-  '((t     :inherit tjf:tabline/selected                  :foreground "red"))
+  '((t     :inherit tjf:tabline/default))
   "Face used for unsaved and selected tabs."
   :group 'tjf-tabline)
+
+(set-face-attribute 'tjf:tabline/sel-mod
+                    nil
+                    :background "xxx"
+                    :foreground tjf:tabline/fg-sel-mod
+                    :weight 'bold)
 
 (defface tjf:tabline/highlight
   '((t :underline t))
   "Face used to highlight a tab during mouse-overs."
   :group 'tjf-tabline)
+
+(set-face-attribute 'tjf:tabline/highlight
+                    nil
+                    :background ryb/orange
+                    :foreground tjf:tabline/fg-selected
+                    :weight 'bold)
 
 (defface tjf:tabline/separator
   '((t :inherit tjf:tabline/default))
@@ -602,14 +641,28 @@ current cached copy."
   :group 'tjf-tabline)
 
 (defface tjf:tabline/button
-  '((t :inherit tjf:tabline/unselected))
+  '((t :inherit tjf:tabline/default))
   "Face used for tab bar buttons."
   :group 'tjf-tabline)
+
+(set-face-attribute 'tjf:tabline/button
+                    nil
+                    :background tjf:tabline/fg-default
+                    :family "DejaVu Sans Mono"
+                    :inherit nil
+                    :foreground tjf:tabline/fg-selected
+                    :weight 'bold)
 
 (defface tjf:tabline/button-highlight
   '((t :inherit tjf:tabline/default))
   "Face used to highlight a button during mouse-overs."
   :group 'tjf-tabline)
+
+(set-face-attribute 'tjf:tabline/button-highlight
+                    nil
+                    :background "orange"
+                    :foreground tjf:tabline/fg-selected
+                    :weight 'bold)
 
 (defcustom tjf:tabline/background-color nil
   "*Background color of the tab bar.
@@ -837,10 +890,10 @@ SPECS is a list of image specifications.  See also `find-image'."
       tjf:tabline/cached-image
     (when (and tjf:tabline/use-images (display-images-p))
       (condition-case nil
-	  (prog1
-	      (setq tjf:tabline/cached-image (find-image specs))
-	    (setq tjf:tabline/cached-spec specs))
-	(error nil)))))
+	      (prog1
+	          (setq tjf:tabline/cached-image (find-image specs))
+	        (setq tjf:tabline/cached-spec specs))
+	    (error nil)))))
 
 (defsubst tjf:tabline/disable-image (image)
   "From IMAGE, return a new image which looks disabled."
@@ -1543,7 +1596,7 @@ Returns non-nil if the new state is enabled.
         (setq tjf:tabline/-global-hlf (default-value 'tab-line-format))
         (tjf:tabline/init-tabsets-store)
         (setq-default tab-line-format tjf:tabline/tab-line-format)
-	(if (fboundp 'tjf:tabline/define-access-keys) (tjf:tabline/define-access-keys)))
+	    (if (fboundp 'tjf:tabline/define-access-keys) (tjf:tabline/define-access-keys)))
 ;;; OFF
     (when (tjf:tabline/mode-on-p)
       ;; Turn off Tjf:Tabline/Local mode globally.
@@ -1566,22 +1619,22 @@ Returns non-nil if the new state is enabled.
     (if (get 'mouse-wheel 'event-symbol-elements)
         ;; Use one generic mouse wheel event
         (define-key km [A-mouse-wheel]
-          'tjf:tabline/mwheel-switch-group)
+                    'tjf:tabline/mwheel-switch-group)
       ;; Use separate up/down mouse wheel events
       (let ((up   (tjf:tabline/-mwheel-key tjf:tabline/-mwheel-up-event))
             (down (tjf:tabline/-mwheel-key tjf:tabline/-mwheel-down-event)))
         (define-key km `[tab-line ,down]
-          'tjf:tabline/mwheel-backward-group)
+                    'tjf:tabline/mwheel-backward-group)
         (define-key km `[tab-line ,up]
-          'tjf:tabline/mwheel-forward-group)
+                    'tjf:tabline/mwheel-forward-group)
         (define-key km `[tab-line (control ,down)]
-          'tjf:tabline/mwheel-backward-tab)
+                    'tjf:tabline/mwheel-backward-tab)
         (define-key km `[tab-line (control ,up)]
-          'tjf:tabline/mwheel-forward-tab)
+                    'tjf:tabline/mwheel-forward-tab)
         (define-key km `[tab-line (shift ,down)]
-          'tjf:tabline/mwheel-backward)
+                    'tjf:tabline/mwheel-backward)
         (define-key km `[tab-line (shift ,up)]
-          'tjf:tabline/mwheel-forward)
+                    'tjf:tabline/mwheel-forward)
         ))
     km)
   "Keymap to use in Tjf:Tabline/Mwheel mode.")
@@ -1715,8 +1768,8 @@ Return a list of one element based on major mode."
 Return the the first group where the current buffer is."
   (let ((bl (sort
              (mapcar
-	      ;; for each buffer, create list: buffer, buffer name, groups-list
-	      ;; sort on buffer name; store to bl (buffer list)
+	          ;; for each buffer, create list: buffer, buffer name, groups-list
+	          ;; sort on buffer name; store to bl (buffer list)
               #'(lambda (b)
                   (with-current-buffer b
                     (list (current-buffer)
@@ -1735,15 +1788,15 @@ Return the the first group where the current buffer is."
         (dolist (g (nth 2 e)) ;; for each member of groups-list for current buffer
           (let ((tabset (tjf:tabline/get-tabset g))) ;; get group from group name
             (if tabset ;; if group exists
-		;; check if current buffer is same as any cached buffer
-		;; (search buffer list for matching buffer)
+		        ;; check if current buffer is same as any cached buffer
+		        ;; (search buffer list for matching buffer)
                 (unless (equal e (assq (car e) tjf:tabline/-buffers)) ;; if not,...
                   ;; This is a new buffer, or a previously existing
                   ;; buffer that has been renamed, or moved to another
                   ;; group.  Update the tab set, and the display.
                   (tjf:tabline/add-tab tabset (car e) t) ;; add to end of tabset
                   (tjf:tabline/set-template tabset nil))
-	      ;;if tabset doesn't exist, make a new tabset with this buffer
+	          ;;if tabset doesn't exist, make a new tabset with this buffer
               (tjf:tabline/make-tabset g (car e))))))
       ;; Remove tabs for buffers not found in cache or moved to other
       ;; groups, and remove empty tabsets.
