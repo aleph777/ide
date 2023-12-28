@@ -37,7 +37,7 @@
 ;;           13-Jun-2018 added ‘require’ for ‘u-flags’
 ;;           03-Jul-2018 moved ‘powerline-vc’ to rhs face2
 ;;           10-Jul-2019 added ‘require’ for ‘anzu’
-;;           28-Oct-2020 reworked because of ‘powerline' changes
+;;           28-Oct-2020 reworked  ‘powerline' changes
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           29-Aug-2022 using ‘%C’ for column format
 ;;           02-Oct-2022 removed ‘tjf:powerline/column’
@@ -98,7 +98,7 @@
                                            (cons 'utf-16le-with-signature-dos  "UCS-2 LE BOM DOS")
                                            (cons 'utf-16le-with-signature-mac  "UCS-2 LE BOM Mac")))
 
-(defvar tjf:powerline/encoding-format '("" tjf:powerline/encoding ""))
+(defvar tjf:powerline/encoding-format '("" tjf:powerline/encoding "  "))
 
 (defvar tjf:powerline/row-column-format '(" Ln: %l Col: %C ")
   "Format for displaying the column in the mode line.")
@@ -153,36 +153,37 @@
   (set-buffer-modified-p (buffer-modified-p)))
 
 (defun tjf:powerline/theme-lhs (mode-line face0 face1 face2)
-  "Create a list that defines the left-hand side of the modeline
-using MODE-LINE, FACE0, FACE1, and FACE2."
-  (list
-   (when (and (boundp 'global-anzu-mode) global-anzu-mode)
-     (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
-   (unless (and (boundp 'global-anzu-mode) global-anzu-mode anzu--state)
-     (powerline-raw '(:eval (tjf:powerline/buffer-status))))
-   (funcall separator-left mode-line face0)
-   (powerline-buffer-id face0 'l)
-   (when (and (boundp 'which-function-mode) (eq tjf:view/which-function-mode 'on))
-     (powerline-raw which-func-format face0 'l))
-   (powerline-vc face0) ;; !!!!
-   (powerline-raw " " face0)
-   (funcall separator-left face0 face1)
-   (powerline-major-mode face1 'l)
-   (powerline-process face1)
-   (powerline-narrow face1 'l)
-   (powerline-raw " " face1)
-   (funcall separator-left face1 face2)))
+  "Define the left-hand side of the modeline using MODE-LINE, FACE0, FACE1, and FACE2."
+  (let ((separator-left  (intern (format "powerline-%s-%s" (powerline-current-separator) (car powerline-default-separator-dir)))))
+    (list
+     (when (and (boundp 'global-anzu-mode) global-anzu-mode)
+       (powerline-raw '(:eval (anzu--update-mode-line) anzu-mode-line 'l)))
+     (unless (and (boundp 'global-anzu-mode) global-anzu-mode anzu--state)
+       (powerline-raw '(:eval (tjf:powerline/buffer-status))))
+     (funcall separator-left mode-line face0)
+     (powerline-buffer-id face0 'l)
+     (when (and (boundp 'which-function-mode) (eq tjf:view/which-function-mode 'on))
+       (powerline-raw which-func-format face0 'l))
+     (powerline-vc face0) ;; !!!!
+     (powerline-raw " " face0)
+     (funcall separator-left face0 face1)
+     (powerline-major-mode face1 'l)
+     (powerline-process face1)
+     (powerline-narrow face1 'l)
+     (powerline-raw " " face1)
+     (funcall separator-left face1 face2))))
+
 
 (defun tjf:powerline/theme-rhs (mode-line face0 face1 face2)
-  "Create a list that defines the right-hand side of the modeline
-using MODE-LINE, FACE0, FACE1, and FACE2."
-  (list (powerline-raw global-mode-string face2 'r)
-        (funcall separator-right face2 face1)
-	(powerline-raw tjf:powerline/row-column-format face1 'r)
-	(funcall separator-right face1 face0)
-	(powerline-raw tjf:powerline/word-count-format face0 'r)
-	(funcall separator-right face0 mode-line)
-        (powerline-raw tjf:powerline/encoding-format nil 'l)))
+  "Define the right-hand side of the modeline using MODE-LINE, FACE0, FACE1, and FACE2."
+  (let ((separator-right (intern (format "powerline-%s-%s" (powerline-current-separator) (cdr powerline-default-separator-dir)))))
+    (list (powerline-raw global-mode-string face2 'r)
+          (funcall separator-right face2 face1)
+          (powerline-raw tjf:powerline/row-column-format face1 'r)
+          (funcall separator-right face1 face0)
+          (powerline-raw tjf:powerline/word-count-format face0 'r)
+          (funcall separator-right face0 mode-line)
+          (powerline-raw tjf:powerline/encoding-format nil 'l))))
 
 (defun tjf:powerline/theme ()
   "Setup the default mode-line."
@@ -198,19 +199,17 @@ using MODE-LINE, FACE0, FACE1, and FACE2."
                           (face1     (if active 'powerline-active1 'powerline-inactive1))
                           (face2     (if active 'powerline-active2 'powerline-inactive2))
 
-                          (separator-left  (intern (format "powerline-%s-%s" (powerline-current-separator) (car powerline-default-separator-dir))))
-                          (separator-right (intern (format "powerline-%s-%s" (powerline-current-separator) (cdr powerline-default-separator-dir))))
+                          ;; (separator-left  (intern (format "powerline-%s-%s" (powerline-current-separator) (car powerline-default-separator-dir))))
+                          ;; (separator-right (intern (format "powerline-%s-%s" (powerline-current-separator) (cdr powerline-default-separator-dir))))
 
                           (lhs    (tjf:powerline/theme-lhs mode-line face0 face1 face2))
-                          ;; (center (list (powerline-raw (if (tjf:flags/is-caps-lock-on? (tjf:flags/x-led-mask)) " CAPS-LOCK" "") face2 'l)))
                           (center nil)
                           (rhs    (tjf:powerline/theme-rhs mode-line face0 face1 face2)))
-
-		     (concat (powerline-render lhs)
+		             (concat (powerline-render lhs)
                              (powerline-fill-center face2 (/ (powerline-width center) 2.0))
                              (powerline-render center)
-			     (tjf:powerline/fill face2 (powerline-width rhs))
-			     (powerline-render rhs)))))))
+			                 (tjf:powerline/fill face2 (powerline-width rhs))
+			                 (powerline-render rhs)))))))
 
 ;;
 (message "Loading tjf-powerline...done")
