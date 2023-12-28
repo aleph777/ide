@@ -55,6 +55,9 @@
 
 ;; macros
 
+(defvar word-symbol-syntax     "w_")
+(defvar not-word-symbol-syntax (concat "^" word-symbol-syntax))
+
 (defmacro alias-face (name face)
   "Create an alias ‘NAME’ to face ‘FACE’."
   `(progn (defface ,name '((default :inherit ,face :slant r))
@@ -100,6 +103,13 @@ on a GNU/Linux GUI."
 (defmacro on-gui (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on GUI."
   `(when is-gui?
+     ,statement
+     ,@statements))
+
+(defmacro on-macos (statement &rest statements)
+  "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run
+on Mac OS."
+  `(when is-macos?
      ,statement
      ,@statements))
 
@@ -184,14 +194,19 @@ to POINT-END (defaults to ‘point-max’)."
   (while (re-search-forward regexp (or point-end (point-max)) t)
       (replace-match replacement-string t)))
 
+(defsubst string-to-symbol (string)
+  "Convert STRING to a symbol."
+  (intern string))
+
+(defsubst symbol-to-string (symbol)
+  "Convert SYMBOL to a string."
+  (symbol-name 'symbol))
+
 (defsubst replace-matches-nre (str replacement-string &optional point-end)
   "Replace all occurences of STR with REPLACEMENT-STRING from point to
 POINT-END (defaults to ‘point-max’)."
   (while (search-forward str (or point-end (point-max)) t)
       (replace-match replacement-string t)))
-
-(defvar word-symbol-syntax     "w_")
-(defvar not-word-symbol-syntax (concat "^" word-symbol-syntax))
 
 (defun looking-at-word-or-symbol ()
   "Return t if character after point is a word character or a symbol character."
@@ -216,15 +231,6 @@ POINT-END (defaults to ‘point-max’)."
       (skip-syntax-forward not-word-symbol-syntax)
       (skip-syntax-forward word-symbol-syntax))
     (point)))
-
-(defsubst string-to-symbol (string)
-  "Convert STRING to a symbol."
-  (intern string))
-
-(defsubst symbol-to-string (symbol)
-  "Convert SYMBOL to a string."
-  (symbol-name 'symbol))
-
 ;;
 (message "Loading tjf-macro...done")
 (provide 'tjf-macro)
