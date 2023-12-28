@@ -29,34 +29,35 @@
 
 ;;; Commentary:
 
-;; Revision: 15-Sep-2000 Added 1 column to c/c++ mode entries in usr-size-alist
+;; Revision: 15-Sep-2000 added 1 column to c/c++ mode entries in usr-size-alist
 ;;                       to get a full 80 columns
-;;           16-Nov-2001 Revised for Emacs 21
-;;           04-Feb-2005 Restored newframe method for manpages
-;;           29-May-2008 Add ‘ssh-mode’ to ‘usr-size-alist’
-;;           02-Feb-2010 Added exit message
-;;           03-Mar-2014 Added ‘clips-mode’, ‘csharp-mode’, and ‘matlab-mode’ to ‘usr-size-alist’
-;;           10-Apr-2014 Added ‘nxml-mode’ to ‘usr-size-alist’
-;;           06-May-2014 Added log-mode to ‘usr-size-alist’
-;;           27-Mar-2015 Added java-mode to ‘usr-size-alist’
-;;           30-Mar-2015 Converted ‘current-frame’ to ‘alias selected-frame’
-;;           16-Jan-2016 Added ‘makefile-modes’
-;;           26-Jan-2016 Added ‘usr-fullscreen-p’ and ‘usr-maxmized-p’
-;;           29-Feb-2016 Changed from ‘usr-’ to ‘u-’
-;;           02-Mar-2016 Fixed problem with ‘query-frame-colors’
-;;                       Added ‘comint-mode’ and ‘shell-mode’ to ‘frame-mode-size-alist’
-;;           03-Mar-2016 Added ‘html-mode’, ‘html-helper-mode’, and ‘nxhtml-mode’ to ‘frame-mode-size-alist’
-;;                       Added ‘javascript-mode’, ‘js2-mode’, and ‘espresso-mode’ to ‘frame-mode-size-alist’
-;;           13-Sep-2016 Changed ‘default-frame-width’ to 120
-;;                       Changed ‘alt-frame-width’ to 96
-;;           31-Jan-2017 Added ‘json-mode’
-;;           11-Jun-2018 Moved color functions to ‘colors.el’
-;;           14-Jun-2018 Changed ‘alt-frame-width’ to 112 to accomodate toolbar
-;;                       Added new major modes to ‘frame-mode-size-alist’
+;;           16-Nov-2001 revised for Emacs 21
+;;           04-Feb-2005 restored newframe method for manpages
+;;           29-May-2008 add ‘ssh-mode’ to ‘usr-size-alist’
+;;           02-Feb-2010 added exit message
+;;           03-Mar-2014 added ‘clips-mode’, ‘csharp-mode’, and ‘matlab-mode’ to ‘usr-size-alist’
+;;           10-Apr-2014 added ‘nxml-mode’ to ‘usr-size-alist’
+;;           06-May-2014 added log-mode to ‘usr-size-alist’
+;;           27-Mar-2015 added java-mode to ‘usr-size-alist’
+;;           30-Mar-2015 converted ‘current-frame’ to ‘alias selected-frame’
+;;           16-Jan-2016 added ‘makefile-modes’
+;;           26-Jan-2016 added ‘usr-fullscreen-p’ and ‘usr-maxmized-p’
+;;           29-Feb-2016 changed from ‘usr-’ to ‘u-’
+;;           02-Mar-2016 fixed problem with ‘query-frame-colors’
+;;                       added ‘comint-mode’ and ‘shell-mode’ to ‘frame-mode-size-alist’
+;;           03-Mar-2016 added ‘html-mode’, ‘html-helper-mode’, and ‘nxhtml-mode’ to ‘frame-mode-size-alist’
+;;                       added ‘javascript-mode’, ‘js2-mode’, and ‘espresso-mode’ to ‘frame-mode-size-alist’
+;;           13-Sep-2016 changed ‘default-frame-width’ to 120
+;;                       changed ‘alt-frame-width’ to 96
+;;           31-Jan-2017 added ‘json-mode’
+;;           11-Jun-2018 moved color functions to ‘colors.el’
+;;           14-Jun-2018 changed ‘alt-frame-width’ to 112 to accomodate toolbar
+;;                       added new major modes to ‘frame-mode-size-alist’
 ;;           03-Feb-2021 ‘tjf’ overhaul
-;;           09-Feb-2023 Added ‘tjf:frame/half-size’
-;;           15-Feb-2023 Changed ‘default-frame-width’ and ‘default-frame-height’ to use monitor settings
+;;           09-Feb-2023 added ‘tjf:frame/half-size’
+;;           15-Feb-2023 changed ‘default-frame-width’ and ‘default-frame-height’ to use monitor settings
 ;;                       fixed ‘tjf:frame/half-size’
+;;           21-Sep-2023 removed ‘tjf/size-alist’
 ;;
 
 ;;; Code:
@@ -65,7 +66,9 @@
 (require 'tjf-flags)
 (require 'tjf-color)
 
-;;
+;; (push '(width  . (text-pixels . 1920)) default-frame-alist)
+;; (push '(height . (text-pixels . 1080)) default-frame-alist)
+;; ;;
 (defvar tjf:frame/format-colors-modeline   "Background: %s, Cursor: %s, Mouse: %s")
 (defvar tjf:frame/format-colors-properties "Background:  %s\nCursor:      %s\nMouse:       %s\n\n")
 
@@ -80,97 +83,18 @@
 (setq tjf:frame/default-width   (- (/ (x-display-pixel-width)  (frame-char-width) 4) 8))
 (setq tjf:frame/default-height  (- (/ (x-display-pixel-height) (frame-char-height) ) 10))
 
-(defvar tjf:frame/alt-width  128)
-(defvar tjf:frame/alt-height  40)
-
 (defvar tjf:frame/default-size (list (cons 'width tjf:frame/default-width) (cons 'height tjf:frame/default-height)))
-(defvar tjf:frame/alt-size     (list (cons 'width tjf:frame/alt-width)     (cons 'height tjf:frame/alt-height)))
 
-(defvar tjf:frame/mode-size-alist (list (cons 'ada-mode               tjf:frame/default-size)
-                                        (cons 'archive-mode           tjf:frame/alt-size)
-                                        (cons 'asm-mode               tjf:frame/alt-size)
-                                        (cons 'awk-mode               tjf:frame/alt-size)
-                                        (cons 'bat-mode               tjf:frame/alt-size)
-                                        (cons 'bibtex-mode            tjf:frame/alt-size)
-                                        (cons 'bibtex-style-mode      tjf:frame/alt-size)
-                                        (cons 'c-mode                 tjf:frame/default-size)
-                                        (cons 'csharp-mode            tjf:frame/default-size)
-                                        (cons 'c++-mode               tjf:frame/default-size)
-                                        (cons 'clips-mode             tjf:frame/default-size)
-                                        (cons 'cmake-mode             tjf:frame/default-size)
-                                        (cons 'clips-log-mode         tjf:frame/default-size)
-                                        (cons 'comint-mode-map        tjf:frame/default-size)
-                                        (cons 'cperl-mode             tjf:frame/default-size)
-                                        (cons 'css-mode               tjf:frame/alt-size)
-                                        (cons 'cuda-mode              tjf:frame/alt-size)
-                                        (cons 'Custom-mode            tjf:frame/alt-size)
-                                        (cons 'doctex-mode            tjf:frame/alt-size)
-                                        (cons 'emacs-lisp-mode        tjf:frame/default-size)
-                                        (cons 'espresso-mode          tjf:frame/default-size)
-                                        (cons 'fortran-mode           tjf:frame/alt-size)
-                                        (cons 'f90-mode               tjf:frame/alt-size)
-                                        (cons 'help-mode              tjf:frame/alt-size)
-                                        (cons 'html-mode              tjf:frame/default-size)
-                                        (cons 'html-helper-mode       tjf:frame/default-size)
-                                        (cons 'nxhtml-mode            tjf:frame/default-size)
-                                        (cons 'icon-mode              tjf:frame/alt-size)
-                                        (cons 'image-mode             tjf:frame/alt-size)
-                                        (cons 'indented-text-mode     tjf:frame/alt-size)
-                                        (cons 'java-mode              tjf:frame/default-size)
-                                        (cons 'javascript-mode        tjf:frame/default-size)
-                                        (cons 'js-mode                tjf:frame/default-size)
-                                        (cons 'js2-mode               tjf:frame/default-size)
-                                        (cons 'json-mode              tjf:frame/default-size)
-                                        (cons 'latex-mode             tjf:frame/default-size)
-                                        (cons 'lisp-mode              tjf:frame/default-size)
-                                        (cons 'lisp-interaction-mode  tjf:frame/default-size)
-                                        (cons 'log-mode               tjf:frame/default-size)
-                                        (cons 'lua-mode               tjf:frame/default-size)
-                                        (cons 'makefile-automake-mode tjf:frame/default-size)
-                                        (cons 'makefile-bsdmake-mode  tjf:frame/default-size)
-                                        (cons 'makefile-gmake-mode    tjf:frame/default-size)
-                                        (cons 'makefile-imake-mode    tjf:frame/default-size)
-                                        (cons 'makefile-makepp-mode   tjf:frame/default-size)
-                                        (cons 'makefile-mode          tjf:frame/default-size)
-                                        (cons 'Man-mode               tjf:frame/alt-size)
-                                        (cons 'matlab-mode            tjf:frame/default-size)
-                                        (cons 'nxml-mode              tjf:frame/default-size)
-                                        (cons 'org-mode               tjf:frame/alt-size)
-                                        (cons 'pascal-mode            tjf:frame/alt-size)
-                                        (cons 'perl-mode              tjf:frame/alt-size)
-                                        (cons 'perl6-mode             tjf:frame/alt-size)
-                                        (cons 'ps-mode                tjf:frame/alt-size)
-                                        (cons 'python-mode            tjf:frame/default-size)
-                                        (cons 'ruby-mode              tjf:frame/alt-size)
-                                        (cons 'scheme-mode            tjf:frame/alt-size)
-                                        (cons 'sh-mode                tjf:frame/default-size)
-                                        (cons 'shell-mode             tjf:frame/default-size)
-                                        (cons 'shell-script-mode      tjf:frame/default-size)
-                                        (cons 'sql-mode               tjf:frame/alt-size)
-                                        (cons 'tar-mode               tjf:frame/alt-size)
-                                        (cons 'tcl-mode               tjf:frame/alt-size)
-                                        (cons 'texinfo-mode           tjf:frame/alt-size)
-                                        (cons 'text-mode              tjf:frame/alt-size)
-                                        (cons 'vhdl-mode              tjf:frame/alt-size)
-                                        (cons 'xml-mode               tjf:frame/default-size)))
 ;;
 ;; NOTE: frame size is usually set in switch-to-buffer-other-frame but are also set
 ;;       in ‘after-make-frame-functions’ for emacsclient
 ;;
 (setq after-make-frame-functions
       '(lambda (frame)
-         (let* ((mode-size (assq major-mode tjf:frame/mode-size-alist))
-                (width     (if mode-size
-                               (or (cdr (assq 'width  mode-size)) tjf:frame/alt-width)
-                             tjf:frame/alt-width))
-                (height    (if mode-size
-                               (or (cdr (assq 'height mode-size)) tjf:frame/alt-height)
-                             tjf:frame/alt-height)))
-           (fringe-mode (cons 8 4))
-           (modify-frame-parameters frame (list (cons 'background-color (tjf:color/random-background-hex))
-                                                (cons 'width width)
-                                                (cons 'height height)
-                                                )))))
+         (fringe-mode (cons 8 4))
+         (modify-frame-parameters frame (list (cons 'background-color (tjf:color/random-background-hex))
+                                              (cons 'width  tjf:frame/default-width)
+                                              (cons 'height tjf:frame/default-height)))))
 
 (defalias 'current-frame 'selected-frame)
 
@@ -181,9 +105,8 @@
   (mouse-minibuffer-check click)
   (let* ((window    (posn-window (event-start click)))
          (buf       (window-buffer window))
-         (mode-size (assq major-mode tjf:frame/mode-size-alist))                                  ;;; tjf
-         (width     (or (cdr (assq 'width  mode-size)) tjf:frame/default-height))                 ;;; tjf
-         (height    (or (cdr (assq 'height mode-size)) tjf:frame/default-width))                  ;;; tjf
+         (width     tjf:frame/default-height)                                                     ;;; tjf
+         (height    tjf:frame/default-width)                                                      ;;; tjf
          (frame     (make-frame (list (cons 'background-color (tjf:color/random-background-hex))  ;;; tjf
                                       (cons 'width  width)                                        ;;; tjf
                                       (cons 'height height)))))                                   ;;; tjf
@@ -215,8 +138,9 @@ documentation for additional customization information."
    (list (read-buffer-to-switch "Switch to buffer in other frame: ")))
   (let* ((major-mode (with-current-buffer buffer-or-name major-mode))
          (pop-up-frames t)
-         (pop-up-frame-alist (append (cdr  (assq major-mode tjf:frame/mode-size-alist))             ;;; tjf
-                                     (list (cons 'background-color (tjf:color/get-background))))))  ;;; tjf
+         (pop-up-frame-alist (append (list (cons 'background-color (tjf:color/get-background))      ;;; tjf
+                                           (cons 'width  tjf:frame/default-width)                   ;;; tjf
+                                           (cons 'height tjf:frame/default-height)))))              ;;; tjf
     (pop-to-buffer buffer-or-name display-buffer--other-frame-action norecord)))
 
 (defun tjf:frame/display-parameters ()
@@ -243,8 +167,9 @@ documentation for additional customization information."
 (defun tjf:frame/make-new ()
   "Make a new frame for the current buffer."
   (interactive)
-  (make-frame (append (cdr  (assq major-mode tjf:frame/mode-size-alist))
-                      (list (cons 'background-color (tjf:color/random-background-hex))))))
+  (make-frame (append (list (cons 'background-color (tjf:color/random-background-hex))
+                            (cons 'width  tjf:frame/default-width)
+                            (cons 'height tjf:frame/default-height)))))
 
 (defun tjf:frame/size (format-type)
   "Return the size from FORMAT-TYPE (as a string) of the current frame."
@@ -273,19 +198,11 @@ documentation for additional customization information."
 (defun tjf:frame/reset-size ()
   "Reset current frame size to default."
   (interactive)
-  (let* ((mode-size (assq major-mode tjf:frame/mode-size-alist))
-         (width     (if mode-size
-                        (or (cdr (assq 'width  mode-size)) tjf:frame/alt-width)
-                      tjf:frame/alt-width))
-         (height    (if mode-size
-                        (or (cdr (assq 'height mode-size)) tjf:frame/alt-height)
-                      tjf:frame/alt-height)))
     (if (tjf:flags/is-fullscreen?)
         (toggle-frame-fullscreen)
       (when (tjf:flags/is-maxmized?)
         (toggle-frame-maximized)))
-    (message "columns: %s, rows: %s" width height)
-    (set-frame-size (current-frame) width height)))
+    (set-frame-size (current-frame) tjf:frame/default-width tjf:frame/default-height))
 
 ;; (x-display-pixel-width)   ∑monitors
 ;; (x-display-pixel-height)
