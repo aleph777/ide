@@ -83,7 +83,7 @@
     `(find-image ',(list svg-spec png-spec xpm-spec))))
 
 ;;
-;; Comint functions
+;; comint functions
 ;;
 (defun tjf:toolbar/previous-input ()
   "Retrieve previous input without the drama."
@@ -99,7 +99,16 @@
       (goto-char (point-max)))
   (comint-previous-input 1))
 
+;; lock/unlock
 ;;
+(defun tjf:toolbar/visible-lock? ()
+  "Boolean: should ‘lock’ be visible?"
+  (and (tjf:mode/is-not-shell-mode?) (not buffer-read-only)))
+
+(defun tjf:toolbar/visible-unlock? ()
+  "Boolean: should ‘unlock’ be visible?"
+  (and (tjf:mode/is-not-shell-mode?) buffer-read-only))
+
 (setq tool-bar-map (make-sparse-keymap))
 
 ;;
@@ -108,14 +117,14 @@
 (tool-bar-add-item "sg-view"  'view-file                 'view  :label "" :help "Browse file/Toggle Browse mode")
 (tool-bar-add-item "sg-edit"  'find-file                 'open  :label "" :help "Open file/Open file in new window...")
 (tool-bar-add-item "sg-new"   'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
-(tool-bar-add-item "sg-close" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:flags/visible-not-shell?))
+(tool-bar-add-item "sg-close" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
 ;; (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
-(tool-bar-add-item "sg-lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:flags/visible-lock?))
-(tool-bar-add-item "sg-unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:flags/visible-unlock?))
-(tool-bar-add-item "sg-save"    'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:flags/visible-not-shell?) :enable '(tjf:flags/enable-save?) )
+(tool-bar-add-item "sg-lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
+(tool-bar-add-item "sg-unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
+(tool-bar-add-item "sg-save"    'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
 (tool-bar-add-item "sg-saveall" 'write-file       'saveas :label "" :help "Save buffer as/Write region...")
-(tool-bar-add-item "sg-revert"  'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:flags/visible-not-shell?) :enable '(tjf:flags/enable-revert?))
+(tool-bar-add-item "sg-revert"  'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
 (define-key-after (default-value 'tool-bar-map) [separator-2] menu-bar-separator)
 
 ;;
@@ -160,14 +169,14 @@
 
 (tool-bar-add-item "sg-repeat"   'repeat-complex-command             'repeat   :label "" :help "Repeat Command...")
 (tool-bar-add-item "sg-case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case"     :visible '(tjf:flags/is-rw?))
-(tool-bar-add-item "sg-bookmark" 'bm-toggle            'bookmark               :label "" :help "Bookmark toggle" :visible '(tjf:flags/visible-not-shell?))
+(tool-bar-add-item "sg-bookmark" 'bm-toggle            'bookmark               :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
 (tool-bar-add-item "sg-zoom-in"  'text-scale-increase                'zoom-in  :label "")
 (tool-bar-add-item "sg-zoom-out" 'text-scale-decrease                'zoom-out :label "")
 (tool-bar-add-item "sg-tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")
 
-(tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:flags/visible-shell?) :label "" :help "Previous input")
-(tool-bar-add-item "mi-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:flags/visible-shell?) :label "" :help "Next input")
-(tool-bar-add-item "sg-cancel"   'comint-delete-output       'cancel     :visible '(tjf:flags/visible-shell?) :label "" :help "Flush output")
+(tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:mode/is-shell-mode?) :label "" :help "Previous input")
+(tool-bar-add-item "mi-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:mode/is-shell-mode?) :label "" :help "Next input")
+(tool-bar-add-item "sg-cancel"   'comint-delete-output       'cancel     :visible '(tjf:mode/is-shell-mode?) :label "" :help "Flush output")
 
 ;;
 ;; Control
