@@ -637,7 +637,7 @@
 ;; (global-set-key [(meta    super 9)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  9)))
 ;;lobal-set-key [(control meta super 9)] '
 
-!;; ==================== SPC ====================
+;; ==================== SPC ====================
 ;;
 ;;lobal-set-key [(control    SPC)] 'cua-set-mark)
 ;;lobal-set-key [(meta       SPC)] ' KEY NOT REGISTERED
