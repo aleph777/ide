@@ -112,12 +112,14 @@ fi
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$IDE/bin
+export HOMEBIN=$IDE/bin
+export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$HOMEBIN
 export OPTPATH=
 export SNAPBIN=/snap/bin
-export PATH=$($HOME/bin/clean-path $OPTPATH $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
+export CLEANPATH=$HOMEBIN/clean-path
+export PATH=$($CLEANPATH $OPTPATH $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
-export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
+export MANPATH=$($CLEANPATH /usr/local/share/man /usr/share/man $MANPATH)
 
 export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
 export SHOW_LD_PATHS="ld --verbose | grep SEARCH_DIR | tr -s ' ;' \\012"
@@ -161,9 +163,9 @@ export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '$
 
 # ==============================================================================
 
-export LOCAL_INSTALL_DIR=$(clean-path $LOCAL_INSTALL_DIR:/home/fontaine/.local)
-export PATH=$(clean-path $PATH:$LOCAL_INSTALL_DIR/bin)
-export LD_LIBRARY_PATH=$(clean-path $LD_LIBRARY_PATH:$LOCAL_INSTALL_DIR/lib:/usr/local/lib)
+export LOCAL_INSTALL_DIR=$($CLEANPATH $LOCAL_INSTALL_DIR:/home/fontaine/.local)
+export PATH=$($CLEANPATH $PATH:$LOCAL_INSTALL_DIR/bin)
+export LD_LIBRARY_PATH=$($CLEANPATH $LD_LIBRARY_PATH:$LOCAL_INSTALL_DIR/lib:/usr/local/lib)
 
 ppverbosefunc() {
     cd ~/Workspace/tenbeauty/build/path_planner_cpp/src
@@ -172,5 +174,5 @@ ppverbosefunc() {
     export GLOG_v="$1"
 }
 
-export CMAKE_PREFIX_PATH=$(clean-path $CMAKE_PREFIX_PATH:/usr/aarch64-linux-gnu)
+export CMAKE_PREFIX_PATH=$($CLEANPATH $CMAKE_PREFIX_PATH:/usr/aarch64-linux-gnu)
 export AARCH64GCC_DIR=/usr
