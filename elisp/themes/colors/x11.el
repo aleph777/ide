@@ -1,6 +1,6 @@
 ;;; x11.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst x11/alice-blue             "#f0f8ff")
 (defconst x11/antique-white          "#faebd7")

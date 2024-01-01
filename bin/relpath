@@ -1,10 +1,9 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S python3   # -*-Python-*-
 
-#         Copyright © 2015-2023 Tom Fontaine
+#         Copyright © 2023-2023 Tom Fontaine
 
-# Title:  progsize
-# Author: Tom Fontaine
-# Date:   25-Nov-2015
+# Title:  relpath
+# Date:   28-Jan-2023
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,15 +27,15 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Determines program image size
 #
-# Arguments: filname of program binary
+# Purpose:   converts the input path to a relative pathname
 #
-# Revision:
+# Arguments: $1 is the input path
 #
-use strict;
-use v5.10;
+# Revision:  12-Jun-2023 new shebang
+#
+import os
+import sys
 
-my $size = hex(join '0x',((split ' ',(qx(objdump -x $ARGV[0] | grep text))[0])[2]));
-
-printf "Size = %dK\n",$size/1024;
+print(os.path.relpath(sys.argv[1], sys.argv[2]) if len(sys.argv) == 3
+      else os.path.relpath(sys.argv[1]))

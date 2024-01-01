@@ -1,7 +1,7 @@
 ;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-no-byte-compile: t; -*- ;; -*-Emacs-Lisp-*-
 
 
-;;         Copyright © 2000-2023 Tom Fontaine
+;;         Copyright © 2000-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Sep-2000
@@ -228,17 +228,13 @@
 (if (featurep 'package)
 	(unload-feature 'package))
 
-(defvar elpaca-installer-version 0.5)
-(defvar elpaca-directory)
-(defvar elpaca-builds-directory)
-(defvar elpaca-repos-directory)
-(setq elpaca-directory        (expand-file-name "elpaca/" (concat tjf:user/dir-home ".config/emacs/")))
-(setq elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(setq elpaca-repos-directory  (expand-file-name "repos/"  elpaca-directory))
-
+(defvar elpaca-installer-version 0.6)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :ref nil
-                              :files (:defaults (:exclude "extensions"))
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
@@ -247,6 +243,7 @@
   (add-to-list 'load-path (if (file-exists-p build) build repo))
   (unless (file-exists-p repo)
     (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
         (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
                  ((zerop (call-process "git" nil buffer t "clone"
@@ -258,15 +255,14 @@
                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
                  ((require 'elpaca))
                  ((elpaca-generate-autoloads "elpaca" repo)))
-            (kill-buffer buffer)
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
           (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (require 'elpaca)
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
     (elpaca-generate-autoloads "elpaca" repo)
     (load "./elpaca-autoloads")))
-(add-hook 'after-init-hook 'elpaca-process-queues)
+(add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
 
 (elpaca elpaca-use-package
@@ -357,7 +353,7 @@
   (setq backup-directory-alist              `((".*" . ,tjf:user/dir-backup)))
   (setq blink-cursor-blinks                 0)
   (setq buffers-menu-max-size               nil)
-  (setq byte-compile-warnings               '(not free-vars unresolved noruntime lexical make-local))
+  (setq byte-compile-warnings               '(not free-vars obsolete unresolved noruntime lexical make-local))
   (setq colon-double-space                  nil)
   (setq comint-input-ignoredups             t)
   (setq comint-input-ring-size              64)
@@ -366,6 +362,7 @@
   (setq echo-keystrokes                     0.25)
   (setq explicit-shell-file-name            "/bin/bash")
   (setq fill-column                         8192)
+  (setq frame-resize-pixelwise              t)
   (setq gnutls-min-prime-bits               80)
   (setq imenu-sort-function                 'imenu--sort-by-name)
   (setq indent-tabs-mode                    nil)
@@ -385,6 +382,7 @@
   (setq sentence-end-double-space           nil)
   (setq sentence-end-without-period         nil)
   (setq use-hard-newlines                   nil)
+  (setq warning-suppress-log-types '((comp) (bytecomp)))
   (setq which-func-modes                    '(emacs-lisp-mode c-mode c++-mode cperl-mode python-mode diff-mode))
   (setq x-underline-at-descent-line         t)
 
@@ -501,6 +499,14 @@
 
 (use-package consult-eglot        :elpaca t   :after eglot)
 
+(use-package corfu-popupinfo      :elpaca t   :disabled
+  :hook (corfu-mode . corfu-popupinfo-mode)
+  :custom
+  (corfu-popupinfo-delay '(0.25 . 0.1))
+  (corfu-popupinfo-hide nil)
+  :config
+  (corfu-popupinfo-mode))
+
 (use-package corfu-prescient      :elpaca t   :after vertico-prescient
   :config
   (setq corfu-cycle       t)
@@ -510,7 +516,20 @@
   (setq corfu-quit-no-match 'separator)
   (global-corfu-mode +1))
 
-(use-package eglot                :elpaca t   :after orderless)
+(use-package eglot                :elpaca t   :after orderless
+  :custom
+  (eglot-send-changes-idle-time 0.1)
+
+  :config
+  (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
+  ; (add-to-list 'eglot-server-programs
+  ;              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+  )
+
+(use-package kind-icon            :elpaca t   :after corfu-prescient
+  :if (display-graphic-p)
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package marginalia           :elpaca t   :after corfu-prescient
   :config
@@ -674,7 +693,7 @@
             (`suspicious '(propertize " ?" 'face 'warning)))))
   (global-flycheck-mode))
 
-(use-package flycheck-pos-tip     :elpaca t   :after flycheck
+(use-package flycheck-pos-tip     :elpaca t   :after (flycheck pos-tip) :disabled
   :functions flycheck-pos-tip-mode
   :config
   (flycheck-pos-tip-mode))
@@ -731,6 +750,8 @@
   :config
   (add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/"))
   (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")))
+
+(use-package pos-tip              :elpaca t :after flycheck)
 
 (use-package powerline            :elpaca t)
 
@@ -895,7 +916,7 @@
         (append auto-mode-alist interpreter-mode-alist))
   (defalias 'perl-mode 'cperl-mode)
   :config
-  ;; (treesit-install-language-grammar 'perl)
+  ;;
   (setq cperl-hairy t)
 
   (setq cperl-indent-region-fix-constructs nil)
@@ -1013,7 +1034,9 @@
 
 (use-package make-mode            :elpaca nil :commands makefile-gmake-mode
   :init
-  (add-hook 'makefile-gmake-mode #'(lambda () (setq-local completion-at-point-functions (cons #'makefile-completions-at-point completion-at-point-functions))))
+  (add-hook 'makefile-gmake-mode
+            #'(lambda () (setq-local completion-at-point-functions
+                                     (cons #'makefile-completions-at-point completion-at-point-functions))))
   (add-to-list 'auto-mode-alist '("\\.\\(mk\\|pro\\|pro\\.sav\\)\\'" . makefile-gmake-mode)))
 
 (use-package mapreplace           :elpaca nil :commands (mapreplace-regexp mapreplace-string query-mapreplace query-mapreplace-regexp))
@@ -1081,7 +1104,7 @@
   :init
   (add-hook 'python-mode-hook #'(lambda () (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions))))
   :config
-  ;; (treesit-install-language-grammar 'python)
+  ;;
   (setq python-indent-guess-indent-offset-verbose nil))
 
 (use-package recentf              :elpaca nil
@@ -1117,7 +1140,6 @@
 
 (use-package tex-mode             :elpaca nil :commands tex-mode
   :config
-  ;; (treesit-install-language-grammar 'latex)
   (define-key latex-mode-map [(control return)] 'tjf:edit/insert-newline-after))
 
 (use-package text-mode            :elpaca nil :commands text-mode
@@ -1257,26 +1279,27 @@
 
 (use-package tjf-view             :elpaca nil)
 
-;; (use-package treesit              :elpaca nil :defer :disabled
 (use-package treesit              :elpaca nil :defer
   :config
   (setq treesit-font-lock-level 4)
   (setq treesit-language-source-alist
-        '((bash       . ("https://github.com/tree-sitter/tree-sitter-bash"       "release"))
-          (c          . ("https://github.com/tree-sitter/tree-sitter-c"          "release"))
-          (c-sharp    . ("https://github.com/tree-sitter/tree-sitter-c-sharp"    "release"))
-          (cmake      . ("https://github.com/uyha/tree-sitter-cmake"             "release"))
-          (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"        "release"))
-          (css        . ("https://github.com/tree-sitter/tree-sitter-css"        "release"))
+        '((bash       . ("https://github.com/tree-sitter/tree-sitter-bash"       "v0.20.2"))
+          (c          . ("https://github.com/tree-sitter/tree-sitter-c"          "v0.20.5"))
+          (c-sharp    . ("https://github.com/tree-sitter/tree-sitter-c-sharp"    "v0.20.0"))
+          (cmake      . ("https://github.com/uyha/tree-sitter-cmake"             "v0.4.1"))
+          (cpp        . ("https://github.com/tree-sitter/tree-sitter-cpp"        "v0.20.3"))
+          (css        . ("https://github.com/tree-sitter/tree-sitter-css"        "v0.20.0"))
+          (elisp      . ("https://github.com/Wilfred/tree-sitter-elisp"          "1.3.0"))
+          (html       . ("https://github.com/tree-sitter/tree-sitter-html"       "v0.19.0"))
           (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "release"))
-          (json       . ("https://github.com/tree-sitter/tree-sitter-json"       "release"))
-          (latex      . ("https://github.com/latex-lsp/tree-sitter-latex"        "release"))
+          (json       . ("https://github.com/tree-sitter/tree-sitter-json"       "v0.20.1"))
+          (latex      . ("https://github.com/latex-lsp/tree-sitter-latex"        "v0.3.0"))
           (make       . ("https://github.com/alemuller/tree-sitter-make"         "release"))
-          (markdown   . ("https://github.com/MDeiml/tree-sitter-markdown"        "release"))
-          (perl       . ("https://github.com/tree-sitter-perl/tree-sitter-perl"  "release"))
-          (python     . ("https://github.com/tree-sitter/tree-sitter-python"     "release"))
-          (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"          "release"))))
-  (message "Loading treesit...config"))
+          (markdown   . ("https://github.com/MDeiml/tree-sitter-markdown"        "v0.1.7"))
+          (perl       . ("https://github.com/tree-sitter-perl/tree-sitter-perl" "release"))
+          (python     . ("https://github.com/tree-sitter/tree-sitter-python"     "v0.20.4"))
+          (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"          "v0.5.0"))))
+        (message "Loading treesit...config"))
 
 (use-package uniquify             :elpaca nil :after tjf-menubar
   :config

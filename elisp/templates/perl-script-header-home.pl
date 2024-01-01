@@ -1,10 +1,9 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+<<<SHEBANG>>>
 
-#         Copyright © 2006-2023 Tom Fontaine
+#         Copyright © <<<YEAR>>>-<<<YEAR>>> <<<AUTHOR>>>
 
-# Title:  pexpand
-# Author: Thomas J Fontaine
-# Date:   29-Mar-2006
+# Title:  <<<TITLE>>>
+# Date:   <<<DATE>>>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,26 +27,13 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Expands TABs into spaces (using tabstops of 8).
 #
-# Arguments: file1 [file2 ... fileN]
+# Purpose:
 #
-# Revision:  21-May-2008 use strict
+# Arguments:
 #
-use File::IO;
-use Text::Tabs;
-use strict;
+# Revision:
+#
+use Modern::Perl;
 
-my $tabstop = 8;
-my $file    = File::IO->new(chomp => 1,newline => 1);
-
-for(map { glob $_ } @ARGV)
-{
-  $file->get(path => $_);
-
-  next unless grep /\t/,@{$file->contents};
-
-  @{$file->contents} = expand(@{$file->contents});
-
-  $file->Put(path => $_);
-}
+use constant _ME_ => $0 =~ m=([^/]+)$=;

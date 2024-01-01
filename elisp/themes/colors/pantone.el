@@ -1,6 +1,6 @@
 ;;; pantone.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst pantone/137c           "#ffa300")
 (defconst pantone/1655c          "#fc4c02")
@@ -66,6 +66,7 @@
 (defconst pantone/otter          "#7f674f")
 (defconst pantone/paloma         "#aab1b0")
 (defconst pantone/peach-echo     "#f7786b")
+(defconst pantone/peach-fuzz     "#ffbe98")
 (defconst pantone/pickled-pepper "#9ea450")
 (defconst pantone/pirouette      "#edbedc")
 (defconst pantone/placid-blue    "#83b5dd")

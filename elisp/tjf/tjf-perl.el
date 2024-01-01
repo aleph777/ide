@@ -1,6 +1,6 @@
 ;;; tjf-perl.el --- cperl-mode support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2023 Tom Fontaine
+;;         Copyright © 1999-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -122,6 +122,7 @@
 (defun tjf:perl/convert ()
   "Convert the current file into a Perl script."
   (interactive "*")
+  (message "tjf:perl/convert")
   (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)
   (set-auto-mode))
 

@@ -1,6 +1,6 @@
 # Util::Time --- OBSOLETE -*-Perl-*-
 
-#         Copyright © 2022-2023 Tom Fontaine
+#         Copyright © 2022-2024 Tom Fontaine
 
 # Date:   16-Sep-2022
 

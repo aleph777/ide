@@ -1,6 +1,6 @@
 ;;; british.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst british/blue-nights            "#353b48")
 (defconst british/blueberry-soda         "#7f8fa6")

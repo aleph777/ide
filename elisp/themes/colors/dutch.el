@@ -1,6 +1,6 @@
 ;;; dutch.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst dutch/20000-leagues-under-the-sea "#1b1464")
 (defconst dutch/android-green               "#a3cb38")

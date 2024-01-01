@@ -1,9 +1,9 @@
-<<<SHEBANG>>>
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
-#         Copyright © <<<YEAR>>>-<<<YEAR>>> <<<AUTHOR>>>
+#         Copyright © 2023-2023 Tom Fontaine
 
-# Title:  <<<TITLE>>>
-# Date:   <<<DATE>>>
+# Title:  tab2ws
+# Date:   12-Jun-2023
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,12 +28,37 @@
 # dealings in the software.
 
 #
-# Purpose:
+# Purpose:   converts the whitespace in text file to TABs
 #
-# Arguments:
+# Arguments: file1 [file2 … fileN]
 #
 # Revision:
 #
 use Modern::Perl;
+use File::IO;
+use Util::GetOpt;
+use Text::Tabs;
 
-<<<ME>>>
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my %option;
+
+my $o = Util::GetOpt->new(option => \%option);
+my $f = File::IO->new(chomp => 1,newline => 1);
+
+my $args = [qw(ts)];
+
+$o->get(args1 => $args, args2 => $args);
+
+my $tabstop = exists $option{'ts'} ? $option{'ts'} : 8;
+
+for(map { glob $_ } @ARGV)
+{
+  $f->get(path => $_);
+
+  next unless grep /\t/,@{$f->contents};
+
+  @{$f->contents} = expand(@{$f->contents});
+
+  $f->put(path => $_);
+}

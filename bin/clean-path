@@ -46,12 +46,10 @@
 #            23-Aug-2020 List::Util (Core)
 #            12-Jun-2023 new shebang
 #                        use Modern::Perl
-#            05-Aug-2023 use v5.10
 #
 #
+use Modern::Perl;
 use List::Util qw(uniq);
-use strict;
-use v5.10;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 

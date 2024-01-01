@@ -1,6 +1,6 @@
 # Util::Color --- color utilities -*-Perl-*-
 
-#         Copyright © 2017-2023 Tom Fontaine
+#         Copyright © 2017-2024 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   07-Dec-2017

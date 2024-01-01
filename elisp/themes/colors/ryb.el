@@ -1,6 +1,6 @@
 ;;; ryb.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst ryb/red           "#fe2712")
 (defconst ryb/red-orange    "#fc600a")

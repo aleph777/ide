@@ -1,6 +1,6 @@
 # Text::AddCommas --- Adds commas to input number -*-Perl-*-
 
-#         Copyright © 2012-2023 Tom Fontaine
+#         Copyright © 2012-2024 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   26-Sep-2012

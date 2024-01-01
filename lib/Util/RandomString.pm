@@ -1,6 +1,6 @@
 # Util::RandomString --- creates random strings of characters -*-Perl-*-
 
-#         Copyright © 2020-2023 Tom Fontaine
+#         Copyright © 2020-2024 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   17-May-2020

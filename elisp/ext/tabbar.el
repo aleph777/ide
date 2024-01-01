@@ -1,37 +1,33 @@
-;;; tjf-tab-line.el --- Display a tab bar in the tab-line -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*- ;; -*-no-byte-compile: t; -*-
+;; -*-no-byte-compile: t; -*-
+;;; tabbar.el --- Display a tab bar in the header line
 
-;;         Copyright © 2021-2023 by Tom Fontaine
+;; Copyright (C) 2003, 2004, 2005 David Ponce
 
-;; Original Author:     David Ponce <david@dponce.com>
-;; Original Maintainer: David Ponce <david@dponce.com>
-;; Created:  25 February 2003
+;; Author: David Ponce <david@dponce.com>
+;; Maintainer: David Ponce <david@dponce.com>
+;; Created: 25 February 2003
 ;; Keywords: convenience
+;; Version: 2.2
+;; Revision: $Id: tabbar.el,v 1.7 2009/03/02 21:02:34 davidswelt Exp $
+
+(defconst tabbar-version "2.2")
+
 ;; This file is not part of GNU Emacs.
 
-;; This is a heavily modified version of the original tabbar.el
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 3, or (at
+;; your option) any later version.
 
-;; Permission is hereby granted, free of charge, to any person obtaining a
-;; copy of this software and associated documentation files (the "Software",
-;; to deal in the Software without restriction, including without limitation
-;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
-;; and/or sell copies of the Software, and to permit persons to whom the
-;; Software is furnished to do so, subject to the following conditions:
+;; This program is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
 
-;; The above copyright notice and this permission notice shall be included in
-;; all copies or substantial portions of the Software.
-
-;; Except as contained in this notice, the name(s of the above copyright
-;; holders shall not be used in advertising or otherwise to promote the sale,
-;; use or other dealings in this Software without prior written authorization.
-
-;; The software is provided "As Is", without warranty of any kind, express or
-;; implied, including but not limited to the warranties of merchantability,
-;; fitness for a particular purpose and noninfringement. In no event shall
-;; the authors or copyright holders be liable for any claim, damages or other
-;; liability, whether in an action of contract, tort or otherwise, arising
-;; from, out of or in connection with the software or the use or other
-;; dealings in the software.
-
+;; You should have received a copy of the GNU General Public License
+;; along with this program; see the file COPYING.  If not, write to
+;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth
+;; Floor, Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
 ;;
@@ -46,18 +42,26 @@
 ;; maintain several sets of tabs at the same time (see also the
 ;; chapter "Core" below for more details on tab grouping).  Only one
 ;; group is displayed on the tab bar, and the "home" button, for
+;; example, can be used to navigate through the different groups, to
+;; show different tab bars.
+;;
+;; In a graphic environment, using the mouse is probably the preferred
+;; way to work with the tab bar.  However, you can also use the tab
+;; bar when Emacs is running on a terminal, so it is possible to use
+;; commands to press special buttons, or to navigate cyclically
+;; through tabs.
 ;;
 ;; These commands, and default keyboard shortcuts, are provided:
 ;;
 ;; `tabbar-mode'
 ;;     Toggle the Tabbar global minor mode.  When enabled a tab bar is
-;;     displayed in the tab-line.
+;;     displayed in the header line.
 ;;
 ;; `tabbar-local-mode'         (C-c <C-f10>)
 ;;     Toggle the Tabbar-Local minor mode.  Provided the global minor
 ;;     mode is turned on, the tab bar becomes local in the current
 ;;     buffer when the local minor mode is enabled.  This permits to
-;;     see the tab bar in a buffer where the tab-line is already
+;;     see the tab bar in a buffer where the header line is already
 ;;     used by another mode (like `Info-mode' for example).
 ;;
 ;; `tabbar-mwheel-mode'
@@ -109,7 +113,7 @@
 ;; tab set view.
 ;;
 ;; The visual representation of a tab bar is a list of valid
-;; `tab-line-format' template elements, one for each special
+;; `header-line-format' template elements, one for each special
 ;; button, and for each tab found into a tab set "view".  When the
 ;; visual representation of a tab is required, the function specified
 ;; in the variable `tabbar-tab-label-function' is called to obtain it.
@@ -189,7 +193,7 @@
 ;;; Options
 ;;
 (defgroup tabbar nil
-  "Display a tab bar in the tab-line."
+  "Display a tab bar in the header line."
   :group 'convenience)
 
 (defcustom tabbar-cycle-scope nil
@@ -274,7 +278,7 @@ scroll right button.  It should scroll the current tab set.")
   "Function to obtain a help string for the scroll right button.
 The help string is displayed when the mouse is onto the button.
 The function is called with no arguments.")
-
+
 ;;; Misc.
 ;;
 (eval-and-compile
@@ -330,7 +334,7 @@ room."
               w (+ w (char-width (aref str n)))))
       (concat (substring str 0 i) el (substring str n)))
      )))
-
+
 ;;; Tab and tab set
 ;;
 (defsubst tabbar-make-tab (object tabset)
@@ -437,13 +441,13 @@ Return the tab found, or nil if not found."
 
 (defsubst tabbar-template (tabset)
   "Return the cached visual representation of TABSET.
-That is, a `tab-line-format' template, or nil if the cache is
+That is, a `header-line-format' template, or nil if the cache is
 empty."
   (get tabset 'template))
 
 (defsubst tabbar-set-template (tabset template)
   "Set the cached visual representation of TABSET to TEMPLATE.
-TEMPLATE must be a valid `tab-line-format' template, or nil to
+TEMPLATE must be a valid `header-line-format' template, or nil to
 cleanup the cache."
   (put tabset 'template template))
 
@@ -592,8 +596,6 @@ current cached copy."
   "Default face used in the tab bar."
   :group 'tabbar)
 
-(set-face-attribute 'tabbar-default nil :background "pink")
-
 (defface tabbar-unselected
   '((t
      :inherit tabbar-default
@@ -601,8 +603,6 @@ current cached copy."
      ))
   "Face used for unselected tabs."
   :group 'tabbar)
-
-(set-face-attribute 'tabbar-unselected nil :background "purple" :foreground "white")
 
 (defface tabbar-selected
   '((t
@@ -613,8 +613,6 @@ current cached copy."
   "Face used for the selected tab."
   :group 'tabbar)
 
-(set-face-attribute 'tabbar-selected nil :background "green4" :foreground "white")
-
 (defface tabbar-modified
   '((t
      :inherit tabbar-default
@@ -624,8 +622,6 @@ current cached copy."
   "Face used for unsaved tabs."
   :group 'tabbar)
 
-(set-face-attribute 'tabbar-modified nil :background "red" :foreground "white")
-
 (defface tabbar-selected-modified
   '((t
      :inherit tabbar-default
@@ -634,8 +630,6 @@ current cached copy."
      ))
   "Face used for unsaved and selected tabs."
   :group 'tabbar)
-
-(set-face-attribute 'tabbar-selected-modified nil :background "white" :foreground "red")
 
 (defface tabbar-highlight
   '((t
@@ -658,9 +652,6 @@ current cached copy."
      ))
   "Face used for tab bar buttons."
   :group 'tabbar)
-
-(set-face-attribute 'tabbar-button nil :inherit tabbar-unselected)
-
 
 (defface tabbar-button-highlight
   '((t
@@ -848,7 +839,7 @@ The value (\"\"), or (0) hide separators.")
 (defvar tabbar-separator-value nil
   "Value of the separator used between tabs.")
 
-(defcustom tabbar-separator (list 0.0)
+(defcustom tabbar-separator (list 0.2)
   "Separator used between tabs.
 The variable `tabbar-separator-widget' gives details on this widget."
   :group 'tabbar
@@ -860,7 +851,7 @@ The variable `tabbar-separator-widget' gives details on this widget."
 
 ;;; Images
 ;;
-(defcustom tabbar-use-images nil
+(defcustom tabbar-use-images t
   "*Non-nil means to try to use images in tab bar.
 That is for buttons and separators."
   :group 'tabbar
@@ -917,12 +908,12 @@ an extra margin around the image."
 CALLBACK is passed the received mouse event."
   (let ((keymap (make-sparse-keymap)))
     ;; Pass mouse-1, mouse-2 and mouse-3 events to CALLBACK.
-    (define-key keymap [tab-line down-mouse-1] 'ignore)
-    (define-key keymap [tab-line      mouse-1] callback)
-    (define-key keymap [tab-line down-mouse-2] 'ignore)
-    (define-key keymap [tab-line      mouse-2] callback)
-    (define-key keymap [tab-line down-mouse-3] 'ignore)
-    (define-key keymap [tab-line      mouse-3] callback)
+    (define-key keymap [header-line down-mouse-1] 'ignore)
+    (define-key keymap [header-line mouse-1] callback)
+    (define-key keymap [header-line down-mouse-2] 'ignore)
+    (define-key keymap [header-line mouse-2] callback)
+    (define-key keymap [header-line down-mouse-3] 'ignore)
+    (define-key keymap [header-line mouse-3] callback)
     keymap))
 
 (defsubst tabbar-make-mouse-event (&optional type)
@@ -1081,7 +1072,7 @@ by the variable `tabbar-NAME-button'."
 
 (defun tabbar-line-button (name)
   "Return the display representation of button NAME.
-That is, a propertized string used as an `tab-line-format' template
+That is, a propertized string used as an `header-line-format' template
 element."
   (let ((label (if tabbar-button-label-function
                    (funcall tabbar-button-label-function name)
@@ -1103,7 +1094,7 @@ element."
 
 (defun tabbar-line-separator ()
   "Return the display representation of a tab bar separator.
-That is, a propertized string used as an `tab-line-format' template
+That is, a propertized string used as an `header-line-format' template
 element."
   (let ((image (tabbar-find-image (cdr tabbar-separator))))
     ;; Cache the separator display value in variable
@@ -1144,7 +1135,7 @@ TABSET is the tab set used to choose the appropriate buttons."
 
 (defsubst tabbar-line-tab (tab)
   "Return the display representation of tab TAB.
-That is, a propertized string used as an `tab-line-format' template
+That is, a propertized string used as an `header-line-format' template
 element.
 Call `tabbar-tab-label-function' to obtain a label for TAB."
   (concat (propertize
@@ -1167,7 +1158,7 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
           tabbar-separator-value))
 
 (defun tabbar-line-format (tabset)
-  "Return the `tab-line-format' value to display TABSET."
+  "Return the `header-line-format' value to display TABSET."
   (let* ((sel (tabbar-selected-tab tabset))
          (tabs (tabbar-view tabset))
          (padcolor (tabbar-background-color))
@@ -1230,20 +1221,20 @@ Call `tabbar-tab-label-function' to obtain a label for TAB."
     ))
 
 (defun tabbar-line ()
-  "Return the tab-line templates that represent the tab bar.
+  "Return the header line templates that represent the tab bar.
 Inhibit display of the tab bar in current window if any of the
 `tabbar-inhibit-functions' return non-nil."
   (cond
    ((run-hook-with-args-until-success 'tabbar-inhibit-functions)
     ;; Don't show the tab bar.
-    (setq tab-line-format nil))
+    (setq header-line-format nil))
    ((tabbar-current-tabset t)
     ;; When available, use a cached tab bar value, else recompute it.
     (or (tabbar-template tabbar-current-tabset)
         (tabbar-line-format tabbar-current-tabset)))))
 
-(defconst tabbar-tab-line-format '(:eval (tabbar-line))
-  "The tab bar tab-line format.")
+(defconst tabbar-header-line-format '(:eval (tabbar-line))
+  "The tab bar header line format.")
 
 (defun tabbar-default-inhibit-function ()
   "Inhibit display of the tab bar in specified windows.
@@ -1502,8 +1493,8 @@ Mouse-enabled equivalent of the command `tabbar-forward-tab'."
 ;;
 (defsubst tabbar-mode-on-p ()
   "Return non-nil if Tabbar mode is on."
-  (eq (default-value 'tab-line-format)
-      tabbar-tab-line-format))
+  (eq (default-value 'header-line-format)
+      tabbar-header-line-format))
 
 ;;; Tabbar-Local mode
 ;;
@@ -1514,9 +1505,9 @@ Mouse-enabled equivalent of the command `tabbar-forward-tab'."
   "Toggle local display of the tab bar.
 With prefix argument ARG, turn on if positive, otherwise off.
 Returns non-nil if the new state is enabled.
-When turned on, if a local tab-line is shown, it is hidden to show
+When turned on, if a local header line is shown, it is hidden to show
 the tab bar.  The tab bar is locally hidden otherwise.  When turned
-off, if a local tab-line is hidden or the tab bar is locally
+off, if a local header line is hidden or the tab bar is locally
 hidden, it is shown again.  Signal an error if Tabbar mode is off."
   :group 'tabbar
   :global nil
@@ -1524,27 +1515,27 @@ hidden, it is shown again.  Signal an error if Tabbar mode is off."
     (error "Tabbar mode must be enabled"))
 ;;; ON
   (if tabbar-local-mode
-      (if (and (local-variable-p 'tab-line-format)
-               tab-line-format)
-          ;; A local tab-line exists, hide it to show the tab bar.
+      (if (and (local-variable-p 'header-line-format)
+               header-line-format)
+          ;; A local header line exists, hide it to show the tab bar.
           (progn
             ;; Fail in case of an inconsistency because another local
-            ;; tab-line is already hidden.
+            ;; header line is already hidden.
             (when (local-variable-p 'tabbar--local-hlf)
-              (error "Another local tab-line is already hidden"))
+              (error "Another local header line is already hidden"))
             (set (make-local-variable 'tabbar--local-hlf)
-                 tab-line-format)
-            (kill-local-variable 'tab-line-format))
+                 header-line-format)
+            (kill-local-variable 'header-line-format))
         ;; Otherwise hide the tab bar in this buffer.
-        (setq tab-line-format nil))
+        (setq header-line-format nil))
 ;;; OFF
     (if (local-variable-p 'tabbar--local-hlf)
-        ;; A local tab-line is hidden, show it again.
+        ;; A local header line is hidden, show it again.
         (progn
-          (setq tab-line-format tabbar--local-hlf)
+          (setq header-line-format tabbar--local-hlf)
           (kill-local-variable 'tabbar--local-hlf))
       ;; The tab bar is locally hidden, show it again.
-      (kill-local-variable 'tab-line-format))))
+      (kill-local-variable 'header-line-format))))
 
 ;;; Tabbar mode
 ;;
@@ -1574,7 +1565,7 @@ hidden, it is shown again.  Signal an error if Tabbar mode is off."
 
 ;;;###autoload
 (define-minor-mode tabbar-mode
-  "Toggle display of a tab bar in the tab-line.
+  "Toggle display of a tab bar in the header line.
 With prefix argument ARG, turn on if positive, otherwise off.
 Returns non-nil if the new state is enabled.
 
@@ -1586,10 +1577,10 @@ Returns non-nil if the new state is enabled.
   (if tabbar-mode
 ;;; ON
       (unless (tabbar-mode-on-p)
-        ;; Save current default value of `tab-line-format'.
-        (setq tabbar--global-hlf (default-value 'tab-line-format))
+        ;; Save current default value of `header-line-format'.
+        (setq tabbar--global-hlf (default-value 'header-line-format))
         (tabbar-init-tabsets-store)
-        (setq-default tab-line-format tabbar-tab-line-format)
+        (setq-default header-line-format tabbar-header-line-format)
 	(if (fboundp 'tabbar-define-access-keys) (tabbar-define-access-keys)))
 ;;; OFF
     (when (tabbar-mode-on-p)
@@ -1601,8 +1592,8 @@ Returns non-nil if the new state is enabled.
                            (tabbar-local-mode -1)))
                   (error nil)))
             (buffer-list))
-      ;; Restore previous `tab-line-format'.
-      (setq-default tab-line-format tabbar--global-hlf)
+      ;; Restore previous `header-line-format'.
+      (setq-default header-line-format tabbar--global-hlf)
       (tabbar-free-tabsets-store))
     ))
 
@@ -1617,17 +1608,17 @@ Returns non-nil if the new state is enabled.
       ;; Use separate up/down mouse wheel events
       (let ((up   (tabbar--mwheel-key tabbar--mwheel-up-event))
             (down (tabbar--mwheel-key tabbar--mwheel-down-event)))
-        (define-key km `[tab-line ,down]
+        (define-key km `[header-line ,down]
           'tabbar-mwheel-backward-group)
-        (define-key km `[tab-line ,up]
+        (define-key km `[header-line ,up]
           'tabbar-mwheel-forward-group)
-        (define-key km `[tab-line (control ,down)]
+        (define-key km `[header-line (control ,down)]
           'tabbar-mwheel-backward-tab)
-        (define-key km `[tab-line (control ,up)]
+        (define-key km `[header-line (control ,up)]
           'tabbar-mwheel-forward-tab)
-        (define-key km `[tab-line (shift ,down)]
+        (define-key km `[header-line (shift ,down)]
           'tabbar-mwheel-backward)
-        (define-key km `[tab-line (shift ,up)]
+        (define-key km `[header-line (shift ,up)]
           'tabbar-mwheel-forward)
         ))
     km)
@@ -1747,7 +1738,7 @@ Return a list of one element based on major mode."
      ;; Return `mode-name' if not blank, `major-mode' otherwise.
      (if (and (stringp mode-name)
               ;; Take care of preserving the match-data because this
-              ;; function is called when updating the tab-line.
+              ;; function is called when updating the header line.
               (save-match-data (string-match "[^ ]" mode-name)))
          mode-name
        (symbol-name major-mode))
@@ -1835,9 +1826,9 @@ Return the the first group where the current buffer is."
 That is a pair (ENABLED . DISABLED), where ENABLED and DISABLED are
 respectively the appearance of the button when enabled and disabled.
 They are propertized strings which could display images, as specified
-by the variable ‘tabbar-button-label’.
-When NAME is ‘home’, return a different ENABLED button if showing tabs
-or groups.  Call the function ‘tabbar-button-label’ otherwise."
+by the variable `tabbar-button-label'.
+When NAME is 'home, return a different ENABLED button if showing tabs
+or groups.  Call the function `tabbar-button-label' otherwise."
   (let ((lab (tabbar-button-label name)))
     (when (eq name 'home)
       (let* ((btn tabbar-buffer-home-button)
@@ -1928,7 +1919,7 @@ after the current buffer has been killed.  Try first the buffer in tab
 after the current one, then the buffer in tab before.  On success, put
 the sibling buffer in front of the buffer list, so it will be selected
 first."
-  (and (eq tab-line-format tabbar-tab-line-format)
+  (and (eq header-line-format tabbar-header-line-format)
        (eq tabbar-current-tabset-function 'tabbar-buffer-tabs)
        (eq (current-buffer) (window-buffer (selected-window)))
        (let ((bl (tabbar-tab-values (tabbar-current-tabset)))

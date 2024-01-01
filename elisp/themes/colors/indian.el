@@ -1,6 +1,6 @@
 ;;; indian.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst indian/bluebell             "#3b3b98")
 (defconst indian/bright-ube           "#d6a2e8")

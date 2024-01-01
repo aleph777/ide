@@ -43,7 +43,6 @@
 #                       new shebang
 #
 use Modern::Perl;
-
 use Util::Find;
 use Util::GetOpt;
 
@@ -112,7 +111,7 @@ if(@ARGV == 0 || exists $option{'help'})
 }
 $f->get(root => \@ARGV,option => \%option);
 
-die _ME_,"No files match criteria!!!\n" unless @{$f->contents};
+die _ME_,": No files match criteria!!!\n" unless @{$f->contents};
 
 if(exists $option{'exec'})
 {

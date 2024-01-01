@@ -55,7 +55,6 @@ installPackage libssl-dev
 installPackage libsystemd-dev
 installPackage libtiff5-dev
 installPackage libtinfo-dev
-installPackage libtool-bin
 installPackage libtree-sitter-dev
 installPackage libxml2-dev
 installPackage libxpm-dev
@@ -63,6 +62,7 @@ installPackage libyaml-dev
 installPackage net-tools
 installPackage p7zip-full
 installPackage python3-dev
+# installPackage ruby
 installPackage sdcv
 installPackage sloccount
 installPackage texinfo

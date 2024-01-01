@@ -1,6 +1,6 @@
 ;;; american.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst american/american-river      "#636e72")
 (defconst american/bright-yarrow       "#fdcb6e")

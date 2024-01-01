@@ -1,6 +1,6 @@
 ;;; fontaine-theme.el --- Dark on light theme -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2023  Tom Fontaine
+;;         Copyright © 2016-2024  Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   19-Aug-2016
@@ -261,6 +261,7 @@
        (jet             (car (member "JetBrains Mono"               font-family-list)))
        (julia           (car (member "JuliaMono"                    font-family-list)))
        (liberation      (car (member "Liberation Mono"              font-family-list)))
+       (lilex           (car (member "Lilex"                        font-family-list)))
        (lotion          (car (member "Lotion"                       font-family-list)))
        (luculent        (car (member "Luculent"                     font-family-list)))
        (meslo           (car (member "Meslo LG S DZ"                font-family-list)))
@@ -285,7 +286,7 @@
 
        (fontaine/fixed-pitch-family
         (or hack bitstream envy ubuntu fantasque
-            anka julia cousine input recursive liberation monofoki consolas
+            anka lilex julia cousine input recursive liberation monofoki consolas
             meslo twilio camingo dm source-code-pro iosevka courier-prime
             ia-writer monoid firacode
             hermit intel-one
@@ -297,8 +298,8 @@
 
        (fontaine/variable-pitch-family (or inter nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
 
-       (fontaine/fixed-pitch-height    168)
-       (fontaine/variable-pitch-height (/ (* 3 fontaine/fixed-pitch-height) 4))
+       (fontaine/fixed-pitch-height    92)
+       (fontaine/variable-pitch-height 64)
 
        (mint-y/green   "#8fa876")
        (mint-y/green-2 "#b3c4a2")
@@ -462,7 +463,7 @@
   (custom-theme-set-faces
    `fontaine
 ;; ;;;;; anzu
-   `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/variable-pitch-family :foreground ,fontaine/match :weight bold))))
+   `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :height ,fontaine/fixed-pitch-height :foreground ,fontaine/match :weight bold))))
 
 ;; ;;;;; blamer
    `(blamer-face                        ((t :foreground ,fontaine/comment    :slant italic)))
@@ -604,7 +605,7 @@
    `(region ((t (:background ,fontaine/region))))
 
 ;;;;; scroll-bar
-   `(scroll-bar ((t (:background ,fontaine/fg-default :foreground ,fontaine/bg-default))))
+   `(scroll-bar ((t (:background ,fontaine/fg-black :foreground ,fontaine/fg-white))))
 
 ;;;;; secondary-selection
    `(secondary-selection ((t (:background ,fontaine/secondary))))
@@ -619,8 +620,11 @@
 ;;;;; success
    `(success ((t (:foreground ,fontaine/success :weight bold))))
 
+;;;;; tab-bar
+   `(tab-bar ((t (:inherit mode-line :family ,fontaine/fixed-pitch-family :weight bold :height 0.9))))
+
 ;;;;; tjf:tabline
-   `(tjf:tabline/default          ((t (:inherit variable-pitch :height 0.8))))
+   `(tjf:tabline/default          ((t (:inherit variable-pitch :height 0.8 :background ,fontaine/bg-black))))
    `(tjf:tabline/button           ((t (:inherit nil :family ,fontaine/fixed-pitch-family :background ,fontaine/fg-mode-line-active :foreground ,fontaine/fg-black :weight bold))))
    `(tjf:tabline/button-highlight ((t (:inherit tjf:tabline/highlight))))
    `(tjf:tabline/highlight        ((t (:background ,fontaine/bg-yellow-red :foreground ,fontaine/fg-default :weight bold))))

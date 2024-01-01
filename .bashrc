@@ -112,12 +112,14 @@ fi
 
 export DEFAULTPATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export EXTRAPATH=/usr/local/go/bin:/usr/gnu/bin:/usr/X11/bin
-export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$IDE/bin
+export HOMEBIN=$IDE/bin
+export HOMEPATH=$HOME/.local/bin:$IDE/local/bin:$IDE/local/homebin:$HOMEBIN
 export OPTPATH=
 export SNAPBIN=/snap/bin
-export PATH=$($HOME/bin/clean-path $OPTPATH $HOME/cinco/bin $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
+export CLEANPATH=$HOMEBIN/clean-path
+export PATH=$($CLEANPATH $OPTPATH $HOMEPATH $DEFAULTPATH $PATH $SNAPBIN $EXTRAPATH)
 
-export MANPATH=$($HOME/bin/clean-path /usr/local/share/man /usr/share/man $MANPATH)
+export MANPATH=$($CLEANPATH /usr/local/share/man /usr/share/man $MANPATH)
 
 export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
 export SHOW_LD_PATHS="ld --verbose | grep SEARCH_DIR | tr -s ' ;' \\012"
@@ -132,37 +134,17 @@ if [[ -z "$THIS_VERSIONID" ]]; then
     export THIS_VERSION_ID=$(grep '^VERSION_ID=' /etc/os-release | cut -d= -f2 | cut -d'"' -f2)
 fi
 
-BOLD="\[\033[1;"
-NORMAL="\[\033[0;"
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
 
-BLACK="30m\]"
-RED="31m\]"
-GREEN="32m\]"
-YELLOW="33m\]"
-BLUE="34m\]"
-MAGENTA="35m\]"
-CYAN="36m\]"
-WHITE="37m\]"
-
-BOLD_BLACK=${BOLD}${BLACK}
-BOLD_RED=${BOLD}${RED}
-BOLD_GREEN=${BOLD}${GREEN}
-BOLD_YELLOW=${BOLD}${YELLOW}
-BOLD_BLUE=${BOLD}${BLUE}
-BOLD_MAGENTA=${BOLD}${MAGENTA}
-BOLD_CYAN=${BOLD}${CYAN}
-BOLD_WHITE=${BOLD}${WHITE}
-
-NORMAL_BLACK=${NORMAL}${BLACK}
-NORMAL_RED=${NORMAL}${RED}
-NORMAL_GREEN=${NORMAL}${GREEN}
-NORMAL_YELLOW=${NORMAL}${YELLOW}
-NORMAL_BLUE=${NORMAL}${BLUE}
-NORMAL_MAGENTA=${NORMAL}${MAGENTA}
-NORMAL_CYAN=${NORMAL}${CYAN}
-NORMAL_WHITE=${NORMAL}${WHITE}
-
-NO_COLOR="\[\033[0m\]"
+BLACK=$(tput setaf 0)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+BLUE=$(tput setaf 4)
+MAGENTA=$(tput setaf 5)
+CYAN=$(tput setaf 6)
+WHITE=$(tput setaf 7)
 
 # OLD STUFF (you never know)
 #
@@ -173,17 +155,17 @@ NO_COLOR="\[\033[0m\]"
 # export PS1=${LIGHT_GREEN}'\# [\h] \W> '${NO_COLOUR}
 
 if [[ "$THIS_ARCH" = "x86_64" ]]; then
-    PROMPT_COLOR=${BOLD_GREEN}
+    PROMPT_COLOR=${BOLD}${GREEN}
 else
-    PROMPT_COLOR=${BOLD_BLUE}
+    PROMPT_COLOR=${BOLD}${BLUE}
 fi
-export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '${NO_COLOR}
+export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '$NORMAL
 
 # ==============================================================================
 
-export LOCAL_INSTALL_DIR=$(clean-path $LOCAL_INSTALL_DIR:/home/fontaine/.local)
-export PATH=$(clean-path $PATH:$LOCAL_INSTALL_DIR/bin)
-export LD_LIBRARY_PATH=$(clean-path $LD_LIBRARY_PATH:$LOCAL_INSTALL_DIR/lib:/usr/local/lib)
+export LOCAL_INSTALL_DIR=$($CLEANPATH $LOCAL_INSTALL_DIR:/home/fontaine/.local)
+export PATH=$($CLEANPATH $PATH:$LOCAL_INSTALL_DIR/bin)
+export LD_LIBRARY_PATH=$($CLEANPATH $LD_LIBRARY_PATH:$LOCAL_INSTALL_DIR/lib:/usr/local/lib)
 
 ppverbosefunc() {
     cd ~/Workspace/tenbeauty/build/path_planner_cpp/src
@@ -192,5 +174,5 @@ ppverbosefunc() {
     export GLOG_v="$1"
 }
 
-export CMAKE_PREFIX_PATH=$(clean-path $CMAKE_PREFIX_PATH:/usr/aarch64-linux-gnu)
+export CMAKE_PREFIX_PATH=$($CLEANPATH $CMAKE_PREFIX_PATH:/usr/aarch64-linux-gnu)
 export AARCH64GCC_DIR=/usr

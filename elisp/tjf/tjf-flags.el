@@ -1,6 +1,6 @@
 ;;; tjf-flags.el --- Defintion of boolean flags used in menus and toolbars -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;          Copyright © 2016-2023 Tom Fontaine
+;;          Copyright © 2016-2024 Tom Fontaine
 
 ;; Author:  Tom Fontaine
 ;; Date:    26-Jan-2016
@@ -103,13 +103,6 @@
 (defun tjf:flags/enable-undo-redo? ()
   "Boolean: should ‘undo/redo’ be enabled?"
   (and undo-tree-mode (not buffer-read-only)))
-       ;; (not (eq t buffer-undo-list))
-       ;; (not (eq nil buffer-undo-tree))
-       ;; (undo-tree-node-previous
-       ;;  (undo-tree-current buffer-undo-tree))))
-  ;; (and undo-tree-mode
-  ;;      (not buffer-read-only))
-
 
 (defalias 'tjf:flags/enable-write? 'tjf:flags/is-rw?)
 

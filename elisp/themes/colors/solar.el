@@ -1,6 +1,6 @@
 ;;; solar.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst solar/bg-base0    "#839496")
 (defconst solar/bg-base1    "#93a1a1")

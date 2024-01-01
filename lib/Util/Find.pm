@@ -1,6 +1,6 @@
 # Util::Find --- support package for File::Find; -*-Perl-*-
 
-#         Copyright © 2023-2023 Tom Fontaine
+#         Copyright © 2023-2024 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   04-May-2023

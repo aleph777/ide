@@ -1,6 +1,6 @@
 ;;; tjf-mode.el --- [description] -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2023-2023 Tom Fontaine
+;;         Copyright © 2023-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   24-Jul-2023
@@ -61,8 +61,8 @@
 
 ;; not for ‘msb’
 ;;
-(defvar tjf:mode/enriched-mode '(fundamental-mode indented-text-mode text-mode))
-(defvar tjf:mode/space-mode    '(fundamental-mode indented-text-mode text-mode))
+(defconst tjf:mode/enriched-mode '(fundamental-mode indented-text-mode text-mode))
+(defconst tjf:mode/space-mode    '(fundamental-mode indented-text-mode text-mode))
 
 
 (defun tjf:mode/is-mode? (mode-or-list)

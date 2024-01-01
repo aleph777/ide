@@ -1,6 +1,6 @@
 ;;; aussie.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst aussie/beekeeper        "#f6e58d")
 (defconst aussie/blurple          "#4834d4")

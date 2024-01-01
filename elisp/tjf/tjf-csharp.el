@@ -1,6 +1,6 @@
 ;;; tjf-csharp.el --- CSharp major mode -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2015-2023 Tom Fontaine
+;;         Copyright © 2015-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   12-May-2015

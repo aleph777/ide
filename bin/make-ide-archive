@@ -1,10 +1,9 @@
-#!/usr/bin/perl -w    # -*-Perl-*-
+#!/usr/bin/env -S perl   # -*-Perl-*-
 
-#         Copyright © 2008-2023 Tom Fontaine
+#         Copyright © 2023-2023 Tom Fontaine
 
-# Title:  make-ide-archive-gz
-# Author: Tom Fontaine
-# Date:   15-May-2008
+# Title:  make-ide-archive
+# Date:   03-May-2023
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,41 +27,38 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-# Purpose:   Creates a gz-compressed tar archive of the ide.
+# Purpose:   creates a compressed tar archive of the ide
 #
-# Arguments: None
+# Arguments: n/a
 #
-# Revision:  25-Mar-2015 "use strict"
-#            03-Apr-2015 Major overhaul
-#            01-Jun-2015 "use DateTime"
-#            01-Mar-2016 Changed elisp package handling to filter git data and obsolete dirs
+# Revision:  12-Jun-2023 new shebang
+#                        use Modern::Perl
+#            23-Jun-2023 additional filters
 #
-use DateTime;
-use File::Path qw(make_path);
-use strict;
+use Modern::Perl;
+use Util::GetOpt;
+use Time::Piece;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-if(@ARGV && $ARGV[0] eq '-help')
+if(@ARGV && $ARGV[0] =~ /(?^:^(?:--?h(?:elp)?|-?-?\?)$)/)
 {
-  print "\nUsage: ",_ME_," [-gz]\n\n";
+  print "\nUsage: ",_ME_," [-g|-x|--gz|--xz]\n\n";
   exit;
 }
-my @files = qw(.bashrc .emacs .emacs.d/gtkrc .gitconfig);
-my @dirs  = qw(bin lib local);
-my @elisp = qx(pfind elisp/* -no-dir -no-name '(git|obsolete)');
+my $opt = Util::GetOpt->new();
 
-chomp @elisp;
+$opt->get(bare1 => [qw(g x)],bare2 => [qw(gz xz)]);
 
-my ($suffix,$switches) = @ARGV && $ARGV[0] eq '-gz' ? ('tar.gz','czvf') : ('tar.xz','cJvf');
+my ($suffix,$switches) = exists $opt->option->{'g'} || exists $opt->option->{'gz'} ? ('tar.gz','czvf') : ('tar.xz','cJvf');
 
-my $dir = "$ENV{HOME}/Documents/ide";
+chdir $ENV{HOME};
 
-make_path($dir) unless -d $dir;
+my $file  = join '','ide-',localtime->strftime('%Y%m%d%H%M%S'),'.',$suffix;
+my @files = sort qx(pfind ide -no-bin -no-dir -no-suffix elc -no-name '(git|obsolete|usr|vscode)');
 
-die _ME_,": $dir does not exist!!!\n"     unless -e $dir;
-die _ME_,": $dir is not a directory!!!\n" unless -d $dir;
+chomp @files;
 
-my $file = join '.',"$dir/ide",DateTime->now(time_zone => 'local')->strftime('%Y%m%d_%H%M%S'),$suffix;
+system "purge ide/";
 
-system "purge @dirs;tar $switches $file @files @dirs @elisp";
+system "tar $switches $file ide/.git/config @files";

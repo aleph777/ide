@@ -1,6 +1,6 @@
 ;;; tjf-color.el --- Color functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2017-2023 Tom Fontaine
+;;         Copyright © 2017-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Jan-2017
@@ -233,7 +233,7 @@
   (if window-system
       (let* ((hex (tjf:color/hsl-to-hex color)))
         (set-background-color hex))
-    (error "Not a wondowed system!")))
+    (error "Not a windowed system!")))
 
 (defun tjf:color/set-background-blue ()
   "Return a random blueish background color."
@@ -273,7 +273,11 @@
 (defun tjf:color/set-background-random ()
   "Set a random background color."
   (interactive)
-  (tjf:color/set-background (tjf:color/random-background)))
+  ;; (tjf:color/set-background (tjf:color/random-background)))
+  (let ((r (tjf:color/random (* 9 16) 250))
+        (g (tjf:color/random 192 250))
+        (b (tjf:color/random (* 9 16) 250)))
+    (set-background-color (format "#%02x%02x%02x" r g b))))
 
 (defun tjf:color/set-background-red ()
   "Return a random redish background color."
