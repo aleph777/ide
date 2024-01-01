@@ -118,7 +118,7 @@
 (tool-bar-add-item "sg-edit"  'find-file                 'open  :label "" :help "Open file/Open file in new window...")
 (tool-bar-add-item "sg-new"   'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
 (tool-bar-add-item "sg-close" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
-;; (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
+(define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
 (tool-bar-add-item "sg-lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
 (tool-bar-add-item "sg-unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
@@ -133,7 +133,7 @@
 (tool-bar-add-item "sg-undo" 'undo 'undo :label "" :help "Undo last operation" :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
 (tool-bar-add-item "sg-redo" 'redo 'redo :label "" :help "Redo last undo"      :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
 
-;; (define-key-after (default-value 'tool-bar-map) [separator-3] menu-bar-separator)
+(define-key-after (default-value 'tool-bar-map) [separator-3] menu-bar-separator)
 
 ;;
 ;; Cut/Copy/Paste
@@ -169,9 +169,15 @@
 
 (tool-bar-add-item "sg-repeat"   'repeat-complex-command             'repeat   :label "" :help "Repeat Command...")
 (tool-bar-add-item "sg-case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case"     :visible '(tjf:flags/is-rw?))
-(tool-bar-add-item "sg-bookmark" 'bm-toggle            'bookmark               :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
+(tool-bar-add-item "sg-bookmark" 'bm-toggle                          'bookmark :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
+
+(define-key-after  (default-value 'tool-bar-map) [separator-7] menu-bar-separator)
+
 (tool-bar-add-item "sg-zoom-in"  'text-scale-increase                'zoom-in  :label "")
 (tool-bar-add-item "sg-zoom-out" 'text-scale-decrease                'zoom-out :label "")
+
+(define-key-after  (default-value 'tool-bar-map) [separator-8] menu-bar-separator)
+
 (tool-bar-add-item "sg-tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")
 
 (tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:mode/is-shell-mode?) :label "" :help "Previous input")
