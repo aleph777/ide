@@ -34,7 +34,6 @@
 #           03-May-2023 moved from ‘Util::GetOptNew’
 #           12-Jun-2023 use Modern::Perl
 #           12-Jun-2023 use Modern::Perl
->>>>>>> 12b96db1f3d32ff9f2cb57bafc6ef5583c8bad51
 
 # Code:
 
