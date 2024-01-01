@@ -261,6 +261,7 @@
        (jet             (car (member "JetBrains Mono"               font-family-list)))
        (julia           (car (member "JuliaMono"                    font-family-list)))
        (liberation      (car (member "Liberation Mono"              font-family-list)))
+       (lilex           (car (member "Lilex"                        font-family-list)))
        (lotion          (car (member "Lotion"                       font-family-list)))
        (luculent        (car (member "Luculent"                     font-family-list)))
        (meslo           (car (member "Meslo LG S DZ"                font-family-list)))
@@ -285,7 +286,7 @@
 
        (fontaine/fixed-pitch-family
         (or hack bitstream envy ubuntu fantasque
-            anka julia cousine input recursive liberation monofoki consolas
+            anka lilex julia cousine input recursive liberation monofoki consolas
             meslo twilio camingo dm source-code-pro iosevka courier-prime
             ia-writer monoid firacode
             hermit intel-one
@@ -297,8 +298,8 @@
 
        (fontaine/variable-pitch-family (or inter nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
 
-       (fontaine/fixed-pitch-height    168)
-       (fontaine/variable-pitch-height (/ (* 3 fontaine/fixed-pitch-height) 4))
+       (fontaine/fixed-pitch-height    92)
+       (fontaine/variable-pitch-height 64)
 
        (mint-y/green   "#8fa876")
        (mint-y/green-2 "#b3c4a2")
@@ -604,7 +605,7 @@
    `(region ((t (:background ,fontaine/region))))
 
 ;;;;; scroll-bar
-   `(scroll-bar ((t (:background ,fontaine/fg-default :foreground ,fontaine/bg-default))))
+   `(scroll-bar ((t (:background ,fontaine/fg-black :foreground ,fontaine/fg-white))))
 
 ;;;;; secondary-selection
    `(secondary-selection ((t (:background ,fontaine/secondary))))
