@@ -1,6 +1,6 @@
 ;;; wcag.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst wcag/000 "#e60000")
 (defconst wcag/010 "#e62600")

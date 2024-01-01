@@ -1,6 +1,6 @@
 ;;; tjf-mode.el --- [description] -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2023-2023 Tom Fontaine
+;;         Copyright © 2023-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   24-Jul-2023

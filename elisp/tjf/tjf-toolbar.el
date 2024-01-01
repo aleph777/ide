@@ -1,6 +1,6 @@
 ;;; tjf-toolbar.el --- Emacs toolbar revision -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2001-2023 Tom Fontaine
+;;              Copyright © 2001-2024 Tom Fontaine
 
 ;;
 ;; Author:      Tom Fontaine

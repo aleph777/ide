@@ -1,6 +1,6 @@
 ;;; german.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst german/algal-fuel      "#20bf6b")
 (defconst german/beniukon-bronze "#fa8231")

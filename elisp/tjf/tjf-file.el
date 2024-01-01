@@ -1,6 +1,6 @@
 ;;; tjf-file.el --- File menu and associated local functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2023 Tom Fontaine
+;;         Copyright © 2016-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016

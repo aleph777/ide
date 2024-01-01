@@ -1,6 +1,6 @@
 ;;; material.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst material/amber-050  "#fff8e1")
 (defconst material/amber-100  "#ffecb3")

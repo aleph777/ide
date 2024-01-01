@@ -1,6 +1,6 @@
 ;;; material-ui.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2023  Tom Fontaine
+;;         Copyright © 2020-2024  Tom Fontaine
 
 (defconst material-ui/amber       "#ffc107")
 (defconst material-ui/blue        "#2196f3")

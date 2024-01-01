@@ -1,6 +1,6 @@
 ;;; tjf-clips.el --- CLIPS major mode support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2023 Tom Fontaine
+;;         Copyright © 2016-2024 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   11-Apr-2016

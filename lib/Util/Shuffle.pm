@@ -1,6 +1,6 @@
 # Util::Shuffle --- Shuffles the contents of specified array -*-Perl-*-
 
-#         Copyright © 2015-2023 Tom Fontaine
+#         Copyright © 2015-2024 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   25-Mar-2015
