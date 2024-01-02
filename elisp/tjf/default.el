@@ -1,4 +1,4 @@
-;;; default.el --- Global initialization for GNU Emacs -*- lexical-binding: t; -*- ;; -*-no-byte-compile: t; -*- ;; -*-Emacs-Lisp-*-
+;;; default.el --- Global initialization -*- lexical-binding: t; -*- ;; -*-no-byte-compile: t; -*- ;; -*-Emacs-Lisp-*-
 
 
 ;;         Copyright © 2000-2024 Tom Fontaine
@@ -30,7 +30,7 @@
 
 ;;; Commentary:
 
-;; Revision: 01-Mar-2001 revised to support emacs and xemacs
+;; Revision: 01-Mar-2001 revised to support Emacs and xemacs
 ;;           05-Apr-2001 changed autoload for new version of ‘tinysearch’
 ;;           29-Nov-2001 changed ‘message-log-max’ from 50 to 512
 ;;           03-Dec-2001 added ‘usr-toolbar’
@@ -202,6 +202,7 @@
 ;;                       changed from ‘selectrum’ to ‘vertico’
 ;;           18-Apr-2023 added ‘csv-highlight’
 ;;           24-May-2023 added ‘textsize’
+;;           02-Jan-2024 fixed cperl problem with ‘eglot-server’
 ;;
 
 ;;; Code:
@@ -938,8 +939,6 @@
   (define-key cperl-mode-map "("        nil)
   (define-key cperl-mode-map "["        nil)
 
-  (add-to-list 'eglot-server-programs (cons cperl-mode '("perl" "-MPerl::LanguageServer" "-e" "Perl::LanguageServer::run")))
-
   (message "Loading cperl-mode...done"))
 
 (use-package csharp-mode          :elpaca nil :commands csharp-mode
@@ -1233,15 +1232,13 @@
 
 (use-package tjf-navigate         :elpaca nil)
 
-(use-package tjf-perl             :elpaca nil :commands tjf:perl/convert
-  :preface
-  (eval-when-compile
-    (defun tjf:perl/hook ())
-    (defun tjf:perl/config ()))
+(use-package tjf-perl             :elpaca nil :after cperl-mode
   :hook
   (cperl-mode . tjf:perl/hook)
   :config
-  (tjf:perl/config))
+  (tjf:perl/config)
+
+  (add-to-list 'eglot-server-programs '(cperl-mode . ("perl" "-MPerl::LanguageServer" "-e" "Perl::LanguageServer::run"))))
 
 (use-package tjf-powerline        :elpaca nil
   :config
