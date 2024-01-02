@@ -41,6 +41,7 @@ installPackage libgif-dev
 installPackage libgnutls28-dev
 installPackage libgpm-dev
 installPackage libgtk-3-dev
+installPackage libio-aio-perl
 installPackage libjansson-dev
 installPackage libjpeg-dev
 installPackage liblcms2-dev

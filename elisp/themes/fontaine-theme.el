@@ -61,6 +61,9 @@
 ;;              08-Jun-2023 added ‘blamer’ faces
 ;;              09-Jun-2023 added ‘elpaca’ faces
 ;;              10-Aug-2023 clean up
+;;              01-Jan-2024 added ‘Lilex’ font
+;;                          changed scrollbar colors
+;;                          Wayland adjustments
 ;;
 
 ;; =============================================================================
@@ -298,8 +301,8 @@
 
        (fontaine/variable-pitch-family (or inter nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
 
-       (fontaine/fixed-pitch-height    92)
-       (fontaine/variable-pitch-height 64)
+       (fontaine/fixed-pitch-height    160)
+       (fontaine/variable-pitch-height 120)
 
        (mint-y/green   "#8fa876")
        (mint-y/green-2 "#b3c4a2")
@@ -457,7 +460,6 @@
                       :family fontaine/variable-pitch-family
                       :height fontaine/variable-pitch-height)
 
-  ;; (defface powerline-base `((t (:inherit mode-line :family variable-pitch :weight bold))) "" :group 'mode-line-faces)
   (defface powerline-base `((t (:inherit variable-pitch :weight bold))) "" :group 'mode-line-faces)
 
   (custom-theme-set-faces

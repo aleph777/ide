@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w    # -*-Perl-*-
 
-#         Copyright © 2021-2023 Tom Fontaine
+#         Copyright © 2021-2024 Tom Fontaine
 
 # Title:  stuff.pl
 # Date:   21-Feb-2021

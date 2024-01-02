@@ -18,6 +18,7 @@ cpanm install Modern::Perl
 cpanm install MP3::Mplib
 cpanm install Math::Random::Secure
 cpanm install Perl::Critic
+cpanm install Perl::LanguageServer
 cpanm install Perl::MinimumVersion
 cpanm install Regexp::Assemble
 cpanm install Scalar::Util
