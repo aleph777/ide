@@ -1,4 +1,4 @@
-;;; early-init.el --- initialization file -*-Emacs-Lisp-*-
+;;; early-init.el --- initialization file -*- lexical-binding: t; -*- ; -*-Emacs-Lisp-*-
 
 ;;; Commentary:
 
@@ -19,28 +19,86 @@
 
 ;;; Code:
 
-;; Do not initialise installed packages
-(setq package-enable-at-startup nil)
+(message "Loading early-init.el...")
 
-;; Do not allow loading from the package cache
-(setq package-quickstart nil)
-
-;; Do not resize the frame at this early stage.
-(setq frame-inhibit-implied-resize t)
-
-(setq inhibit-splash-screen       t)
-(setq inhibit-startup-buffer-menu t)
-(setq inhibit-startup-screen      t)
-
-(setq use-dialog-box              t)
-
+;; garbage collection
+;;
 (setq gc-cons-threshold most-positive-fixnum)
 (setq gc-cons-percentage 1.0)
 
 (add-hook 'emacs-startup-hook
           #'(lambda ()
-              (setq gc-cons-threshold  (* 8 1024 1024))
+              (setq gc-cons-threshold  (* 16 1024 1024))
               (setq gc-cons-percentage 0.1)
               (garbage-collect)))
 
+;; frames and windows
+;;
+(setq frame-inhibit-implied-resize t) ;; Do not resize the frame at this early stage.
+(setq frame-resize-pixelwise t)
+(setq window-resize-pixelwise t)
+
+(setq inhibit-splash-screen       t)
+(setq inhibit-startup-buffer-menu t)
+(setq inhibit-startup-screen      t)
+(setq inhibit-startup-echo-area-message (user-login-name))
+(setq initial-buffer-choice       nil)
+(setq inhibit-x-resources         t)
+
+(setq-default cursor-in-non-selected-windows nil)
+
+(advice-add #'display-startup-screen :override #'ignore)
+
+(setq highlight-nonselected-windows nil)
+
+(setq auto-mode-case-fold nil)
+
+;; bidirectional text
+;;
+(setq bidi-inhibit-bpa t)
+(setq-default bidi-display-reordering 'left-to-right)
+
+;; misc
+;;
+(setq ad-redefinition-action 'accept)
+
+(setq idle-update-delay 1.0)
+
+(setq package-enable-at-startup nil)
+
+(setq read-process-output-max (* 256 1024))
+
+(setq use-dialog-box t)
+
+(setq warning-suppress-log-types '((comp) (bytecomp)))
+(setq warning-suppress-types '((defvaralias) (lexical-binding)))
+
+;; -----------------------------------------------------------------------------
+
+(if (and (featurep 'native-compile)
+         (fboundp 'native-comp-available-p)
+         (native-comp-available-p))
+    ;; Activate `native-compile'
+    (progn
+      (setq native-comp-deferred-compilation t)
+      (setq native-comp-speed                2)
+      ;; (setq package-native-compile           t)
+      (setq native-comp-async-report-warnings-errors 'silent)
+    )
+  ;; Deactivate the `native-compile' feature if it is not available
+  (setq features (delq 'native-compile features)))
+
+;; Suppress compiler warnings and don't inundate users with their popups.
+;; (setq native-comp-async-report-warnings-errors
+;; (or minimal-emacs-debug 'silent))
+;; (setq native-comp-warning-on-missing-source minimal-emacs-debug)
+
+;; (setq debug-on-error minimal-emacs-debug
+;;       jka-compr-verbose minimal-emacs-debug)
+
+(setq byte-compile-warnings '(not obsolete))
+;; (setq byte-compile-verbose minimal-emacs-debug)
+
+;;
+(message "Loading early-init.el...done")
 ;;; early-init.el ends here

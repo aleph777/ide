@@ -28,6 +28,7 @@
 (defvar tjf:user/dir-bin      (concat tjf:user/dir-home "bin/"))
 (defvar tjf:user/dir-config   (concat tjf:user/dir-home ".config/emacs/"))
 (defvar tjf:user/dir-elisp    (concat tjf:user/dir-home "elisp/"))
+(defvar tjf:user/dir-emacsd   (concat tjf:user/dir-home ".emacs.d/"))
 
 (defvar tjf:user/dir-autosave (concat tjf:user/dir-config "autosave/"))
 (defvar tjf:user/dir-backup   (concat tjf:user/dir-config "backup/"))
@@ -36,20 +37,27 @@
 (defvar tjf:user/dir-themes   (concat tjf:user/dir-elisp "themes/"))
 
 (defvar tjf:user/dir-elisp-ext    (concat tjf:user/dir-elisp "ext/"))
-(defvar tjf:user/dir-elisp-images (concat tjf:user/dir-elisp "images/"))
+(defvar tjf:user/dir-elisp-images (concat tjf:user/dir-elisp "images/icons-22"))
 (defvar tjf:user/dir-elisp-tjf    (concat tjf:user/dir-elisp "tjf/"))
 
-;;
-(cl-pushnew tjf:user/dir-elisp-ext load-path :test 'string=)
-(cl-pushnew tjf:user/dir-elisp-tjf load-path :test 'string=)
+(defvar tjf:user/dir-initialize (concat tjf:user/dir-elisp "00_initialize/"))
+(defvar tjf:user/dir-experiment (concat tjf:user/dir-elisp "00_experiment/"))
 
+;;
 (cl-pushnew tjf:user/dir-elisp-images image-load-path :test 'string=)
+(cl-pushnew tjf:user/dir-elisp-ext  load-path :test 'string=)
+(cl-pushnew tjf:user/dir-elisp-tjf  load-path :test 'string=)
 
 (setq user-emacs-directory tjf:user/dir-config)
 (setq custom-file (concat tjf:user/dir-elisp "custom.el"))
 (setq custom-theme-directory tjf:user/dir-themes)
 
 (load custom-file)
+
+(if t
+    (cl-pushnew tjf:user/dir-initialize load-path :test 'string=)
+  (cl-pushnew tjf:user/dir-experiment load-path :test 'string=)
+  (require 'init))
 
 ;;
 (message "Loading .emacs.el...done")
