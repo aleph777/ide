@@ -1,7 +1,6 @@
-;;; fontaine-theme.el --- Dark on light theme -*-Emacs-Lisp-*-
+;;; fontaine-theme.el --- color definitions -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024  Tom Fontaine
-
+;;         Copyright © 2016-2025  Tom Fontaine
 ;; Author: Tom Fontaine
 ;; Date:   19-Aug-2016
 
@@ -11,14 +10,11 @@
 ;; the rights to use, copy, modify, merge, publish, distribute, sublicense,
 ;; and/or sell copies of the Software, and to permit persons to whom the
 ;; Software is furnished to do so, subject to the following conditions:
-
 ;; The above copyright notice and this permission notice shall be included in
 ;; all copies or substantial portions of the Software.
-
 ;; Except as contained in this notice, the name(s of the above copyright
 ;; holders shall not be used in advertising or otherwise to promote the sale,
 ;; use or other dealings in this Software without prior written authorization.
-
 ;; The software is provided "As Is", without warranty of any kind, express or
 ;; implied, including but not limited to the warranties of merchantability,
 ;; fitness for a particular purpose and noninfringement. In no event shall
@@ -148,7 +144,6 @@
 ;; trailing-whitespace
 ;; The face for highlighting excess spaces and tabs at the end of a
 ;; line when show-trailing-whitespace is non-nil
-
 ;; =============================================================================
 ;; The following faces control the appearance of parts of the Emacs frame:
 ;;
@@ -218,9 +213,7 @@
 ;; This face is used for the vertical divider between windows on text
 ;; terminals.
 ;;
-
 ;;; Code:
-
 (message "Loading fontaine-theme...")
 
 (deftheme fontaine)
@@ -301,8 +294,8 @@
 
        (fontaine/variable-pitch-family (or inter nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
 
-       (fontaine/fixed-pitch-height    160)
-       (fontaine/variable-pitch-height 120)
+       (fontaine/fixed-pitch-height    184)
+       (fontaine/variable-pitch-height (/ (* 3 fontaine/fixed-pitch-height) 4))
 
        (mint-y/green   "#8fa876")
        (mint-y/green-2 "#b3c4a2")
@@ -460,10 +453,11 @@
                       :family fontaine/variable-pitch-family
                       :height fontaine/variable-pitch-height)
 
+  ;; (defface powerline-base `((t (:inherit mode-line :family variable-pitch :weight bold))) "" :group 'mode-line-faces)
   (defface powerline-base `((t (:inherit variable-pitch :weight bold))) "" :group 'mode-line-faces)
 
-  (custom-theme-set-faces
-   `fontaine
+(custom-theme-set-faces
+    `fontaine
 ;; ;;;;; anzu
    `(anzu-mode-line ((t (:inherit minibuffer-prompt :family ,fontaine/fixed-pitch-family :height ,fontaine/fixed-pitch-height :foreground ,fontaine/match :weight bold))))
 
@@ -498,12 +492,6 @@
 ;;;;; eglot
    `(eglot-highlight-symbol-face ((t (:weight bold :background ,fontaine/bg-magenta-red))))
 
-;;;;; elpaca
-   `(elpaca-blocked           ((t (:weight bold :foreground ,fontaine/fg-yellow))))
-   `(elpaca-busy              ((t (:weight bold :foreground ,fontaine/fg-yellow-red))))
-   `(elpaca-finished          ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
-   `(elpaca-finished          ((t (:weight bold :foreground ,fontaine/fg-green-cyan))))
-   `(elpaca-ui-marked-package ((t (:weight bold :foreground ,fontaine/fg-magenta))))
 
 ;;;;; error
    `(error ((t (:foreground ,fontaine/error :weight bold))))
@@ -569,7 +557,7 @@
    `(mode-line           ((t (:inherit variable-pitch :background ,fontaine/bg-mode-line-active   :foreground ,fontaine/fg-mode-line-active))))
    `(mode-line-inactive  ((t (:inherit variable-pitch :background ,fontaine/bg-mode-line-inactive :foreground ,fontaine/fg-mode-line-inactive))))
 
-;; ;;;;; next-error
+;;;;; next-error
 ;;    `(next-error ((t (:background ,fontaine/bg-red :foreground ,fontaine/default-fg))))
 
 ;;;;; paren
@@ -648,6 +636,7 @@
    `(web-mode-json-key-face ((t (:weight bold))))
 
    )) ;; custom-theme-set-faces ;; let*
+
 ;;
 (message "Loading fontaine-theme...done")
 
