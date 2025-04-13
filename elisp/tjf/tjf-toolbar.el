@@ -1,6 +1,6 @@
 ;;; tjf-toolbar.el --- Emacs toolbar revision -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2001-2024 Tom Fontaine
+;;              Copyright © 2001-2025 Tom Fontaine
 
 ;;
 ;; Author:      Tom Fontaine
@@ -65,6 +65,7 @@
 ;;           03-Apr-2024 fixed icon names
 ;;           05-Dec-2024 update for ‘undo-fu’
 ;;           06-Dec-2024 added ‘noccur-project
+;;           13-Apr-2025 refixed button names
 ;;
 
 ;;; Code:
@@ -118,17 +119,17 @@
 ;;
 ;; File/Buffer operations
 ;;
-(tool-bar-add-item "view"  'view-file                 'view  :label "" :help "Browse file/Toggle Browse mode")
-(tool-bar-add-item "edit"  'find-file                 'open  :label "" :help "Open file/Open file in new window...")
-(tool-bar-add-item "new"   'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
-(tool-bar-add-item "close" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
+(tool-bar-add-item "view"   'view-file                 'view  :label "" :help "Browse file/Toggle Browse mode")
+(tool-bar-add-item "edit"   'find-file                 'open  :label "" :help "Open file/Open file in new window...")
+(tool-bar-add-item "add"    'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
+(tool-bar-add-item "cancel" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
 (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
 (tool-bar-add-item "lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
 (tool-bar-add-item "unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
 (tool-bar-add-item "save"    'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
-(tool-bar-add-item "saveall" 'write-file       'saveas :label "" :help "Save buffer as/Write region...")
-(tool-bar-add-item "revert"  'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
+(tool-bar-add-item "save-as" 'write-file       'saveas :label "" :help "Save buffer as/Write region...")
+(tool-bar-add-item "refresh" 'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
 (define-key-after (default-value 'tool-bar-map) [separator-2] menu-bar-separator)
 
 ;;
@@ -164,9 +165,9 @@
 ;;
 ;; (tool-bar-add-item "00-hide"    'hs-hide-block             'hide :label "" :help "Hide block" :visible 'hs-minor-mode)
 ;; (tool-bar-add-item "00-show"    'hs-show-block             'show :label "" :help "Show block" :visible 'hs-minor-mode)
-(tool-bar-add-item "search-up"   'search-word-backward 'backward :label "" :help "Search backward")
-(tool-bar-add-item "search-down" 'search-word-forward  'forward  :label "" :help "Search forward")
-(tool-bar-add-item "find"        'tjf:search/occur     'search   :label "" :help "Show matching lines...")
+(tool-bar-add-item "up-circle"   'search-word-backward 'backward :label "" :help "Search backward")
+(tool-bar-add-item "down-circle" 'search-word-forward  'forward  :label "" :help "Search forward")
+(tool-bar-add-item "search"      'tjf:search/occur     'search   :label "" :help "Show matching lines...")
 (tool-bar-add-item "replace"     'anzu-query-replace   'replace  :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
 
 (define-key-after  (default-value 'tool-bar-map) [separator-6] menu-bar-separator)
