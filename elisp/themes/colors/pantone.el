@@ -102,7 +102,6 @@
 (defconst pantone/violet-tulip   "#9b90c8")
 (defconst pantone/warm-taupe     "#af9483")
 (defconst pantone/woodbine       "#7f8040")
-
 (defconst pms/117-10   "#fdf5e7")
 (defconst pms/117-20   "#fbeccf")
 (defconst pms/117-30   "#f9e3b8")

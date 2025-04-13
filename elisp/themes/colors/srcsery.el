@@ -1,4 +1,4 @@
-;;; colors-american.el --- color definitions -*-Emacs-Lisp-*-
+;;; srcsery.el --- color definitions -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 
