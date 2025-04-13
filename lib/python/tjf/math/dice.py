@@ -1,6 +1,6 @@
 # -*-coding: utf-8-*- ; -*-Python-*-
 
-#         Copyright © 2022-2023 Tom Fontaine
+#         Copyright © 2022-2025 Tom Fontaine
 
 # Title:  dice.py
 # Date:   20-Apr-2022
