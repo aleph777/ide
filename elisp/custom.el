@@ -13,10 +13,19 @@
    [default default default italic underline success warning error])
  '(anzu-mode-lighter " ")
  '(anzu-mode-line-update-function 'anzu--update-mode-line-local)
+ '(before-save-hook '(copyright-update tjf:edit/cleanse-whitespace))
  '(blamer-avatar-folder "~/.config/emacs/blamer/avatars/")
  '(blamer-smart-background-p nil)
  '(connection-local-criteria-alist
-   '(((:application tramp :protocol "kubernetes")
+   '(((:application tramp :protocol "androidsu")
+      tramp-androidsu-connection-local-default-profile
+      tramp-adb-connection-local-default-shell-profile
+      tramp-adb-connection-local-default-ps-profile)
+     ((:application tramp :protocol "adb")
+      tramp-adb-connection-local-default-shell-profile
+      tramp-adb-connection-local-default-ps-profile)
+     ((:application vc-git) vc-git-connection-default-profile)
+     ((:application tramp :protocol "kubernetes")
       tramp-kubernetes-connection-local-default-profile)
      ((:application tramp :protocol "flatpak")
       tramp-container-connection-local-default-flatpak-profile
@@ -25,7 +34,23 @@
       tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((tramp-flatpak-connection-local-default-profile
+   '((tramp-androidsu-connection-local-default-profile
+      (tramp-remote-path "/system/bin" "/system/xbin"))
+     (tramp-adb-connection-local-default-ps-profile
+      (tramp-process-attributes-ps-args)
+      (tramp-process-attributes-ps-format (user . string)
+                                          (pid . number)
+                                          (ppid . number)
+                                          (vsize . number)
+                                          (rss . number)
+                                          (wchan . string)
+                                          (pc . string)
+                                          (state . string) (args)))
+     (tramp-adb-connection-local-default-shell-profile
+      (shell-file-name . "/system/bin/sh")
+      (shell-command-switch . "-c"))
+     (vc-git-connection-default-profile (vc-git--program-version))
+     (tramp-flatpak-connection-local-default-profile
       (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin"
                          "/usr/bin" "/sbin" "/usr/sbin"
                          "/usr/local/bin" "/usr/local/sbin"
@@ -124,28 +149,43 @@
  '(custom-enabled-themes '(fontaine))
  '(custom-safe-themes t)
  '(flycheck-flake8-maximum-line-length 200)
+ '(imenu-auto-rescan t)
+ '(imenu-sort-function 'imenu--sort-by-name)
  '(native-comp-async-report-warnings-errors nil)
+ '(package-selected-packages
+   '(anaconda-mode anzu bash-completion bazel blamer bm cape clang-capf
+                   clean-aindent-mode consult-eglot corfu-prescient
+                   cpp-auto-include ctrlf diminish emojify
+                   ergoemacs-mode flycheck git-gutter helpful
+                   indent-bars jinx kind-icon langtool loccur
+                   marginalia mic-paren minions modern-cpp-font-lock
+                   modern-sh orderless paradox perl-ts-mode pos-tip
+                   powerline powerthesaurus rainbow-delimiters
+                   rainbow-mode shift-number smartparens
+                   smooth-scrolling textsize treemacs-magit
+                   treesit-fold ts-fold undo-fu unicode-fonts
+                   vertico-prescient volatile-highlights ws-butler
+                   yaml-mode))
  '(paradox-github-token t)
  '(powerline-gui-use-vcs-glyph t)
  '(rainbow-x-colors nil)
  '(safe-local-variable-values
    '((eval font-lock-add-keywords nil
-           `(
-             (,(concat "("
-                       (regexp-opt
-                        '("sp-do-move-op" "sp-do-move-cl"
-                          "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op"
-                          "sp-do-del-cl")
-                        t)
-                       "\\_>")
-              1 'font-lock-variable-name-face)))
+           `
+           ((,(concat "("
+                      (regexp-opt
+                       '("sp-do-move-op" "sp-do-move-cl"
+                         "sp-do-put-op" "sp-do-put-cl" "sp-do-del-op"
+                         "sp-do-del-cl")
+                       t)
+                      "\\_>")
+             1 'font-lock-variable-name-face)))
      (enable-local-variables: . all)))
  '(tab-width 4)
  '(tool-bar-position 'top)
  '(undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo-tree/"))))
 
 (message "setting faces...")
-
 
 ;;; custom.el ends here
 (custom-set-faces
