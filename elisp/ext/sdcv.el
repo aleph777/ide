@@ -1,4 +1,4 @@
-;;; sdcv-mode.el --- major mode to do dictionary query through sdcv
+;;; sdcv.el --- major mode to do dictionary query through sdcv
 
 ;; Copyright 2006~2008 pluskid,
 ;;           2011 gucong

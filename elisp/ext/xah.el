@@ -1,3 +1,5 @@
+;;; xah.el --- Xah Lee convenience functions
+
 (message "Loading xah...")
 ;;
 

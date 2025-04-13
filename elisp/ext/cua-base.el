@@ -1,8 +1,8 @@
-;;; TJF ----------------------------------------------------------------------
+;;;; cua-base.el --- emulate CUA key bindings
+
+;; TJF ----------------------------------------------------------------------
 ;;; TJF Overloaded stuff
 ;;; TJF ----------------------------------------------------------------------
-
-;;; cua-base.el --- emulate CUA key bindings
 
 ;; Copyright (C) 1997-2016 Free Software Foundation, Inc.
 
