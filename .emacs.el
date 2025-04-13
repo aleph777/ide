@@ -1,4 +1,4 @@
-;;; .emacs.el --- initialization file -*-Emacs-Lisp-*-
+;;; .emacs.el --- initialization file  -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;; Commentary:
 
