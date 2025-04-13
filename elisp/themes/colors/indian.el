@@ -1,4 +1,4 @@
-;;; indian.el --- color definitions -*-Emacs-Lisp-*-
+;;; indian.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

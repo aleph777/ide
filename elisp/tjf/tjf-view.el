@@ -1,4 +1,4 @@
-;;; tjf-view.el --- View menu defintion and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-view.el --- View menu defintion and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2024 Tom Fontaine
 

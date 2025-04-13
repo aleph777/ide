@@ -1,4 +1,4 @@
-;;; pretty-column.el --- Prettify all columns in a region or rectangle.
+;;; pretty-column.el --- Prettify all columns in a region or rectangle. -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;; Copyright (C) 1999 Vinicius Jose Latorre <vinicius@cpqd.com.br>
 

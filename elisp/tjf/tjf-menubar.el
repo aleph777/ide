@@ -1,4 +1,4 @@
-;;; tjf-menubar.el --- Custom menubar support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-menubar.el --- Custom menubar support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2024 Tom Fontaine
 

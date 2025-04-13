@@ -1,4 +1,4 @@
-;;; tjf-flags.el --- Defintion of boolean flags used in menus and toolbars -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-flags.el --- Defintion of boolean flags used in menus and toolbars -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;          Copyright © 2016-2024 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; mapreplace.el --- Mapping replace commands for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; mapreplace.el --- Mapping replace commands for GNU Emacs -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;; Copyright (C) 1987, 1988, 1989 Kyle E. Jones
 

@@ -1,4 +1,4 @@
-;;; ryb.el --- color definitions -*-Emacs-Lisp-*-
+;;; ryb.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

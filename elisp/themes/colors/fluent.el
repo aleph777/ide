@@ -1,4 +1,4 @@
-;;; fluent.el --- color definitions -*-Emacs-Lisp-*-
+;;; fluent.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2024  Tom Fontaine
 

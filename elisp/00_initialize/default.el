@@ -1,4 +1,4 @@
-;;; default.el --- Global initialization -*- lexical-binding: t; -*- ;; -*-no-byte-compile: t; -*- ;; -*-Emacs-Lisp-*-
+;;; default.el --- Global initialization -*-no-byte-compile: t ;; -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2000-2025 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-matlab.el --- MATLAB major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-matlab.el --- MATLAB major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2024 Tom Fontaine
 

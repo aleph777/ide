@@ -1,4 +1,4 @@
-;;; tjf-query-replace.el --- Perl query-replace -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-query-replace.el --- Perl query-replace -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2001-2025 Tom Fontaine
 

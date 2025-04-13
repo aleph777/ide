@@ -1,4 +1,4 @@
-;;; tjf-clipboard.el --- Local clipboard implementation -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-clipboard.el --- Local clipboard implementation -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2024 Tom Fontaine
 

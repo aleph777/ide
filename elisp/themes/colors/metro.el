@@ -1,4 +1,4 @@
-;;; metro.el --- color definitions -*-Emacs-Lisp-*-
+;;; metro.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2024  Tom Fontaine
 

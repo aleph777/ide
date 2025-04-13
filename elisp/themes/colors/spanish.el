@@ -1,4 +1,4 @@
-;;; spanish.el --- color definitions -*-Emacs-Lisp-*-
+;;; spanish.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

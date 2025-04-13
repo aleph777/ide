@@ -1,4 +1,4 @@
-;;; tjf-frame.el --- Functions that control frame appearance -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-frame.el --- Functions that control frame appearance -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2024 Tom Fontaine
 

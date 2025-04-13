@@ -1,4 +1,4 @@
-;;; tjf-sort.el --- Sort submenu definition and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-sort.el --- Sort submenu definition and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2024 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-edit.el --- Edit menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-edit.el --- Edit menu and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2024 Tom Fontaine
 

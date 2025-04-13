@@ -1,4 +1,4 @@
-;;; tjf-duplicate.el --- Duplicate text from surrounding lines -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-duplicate.el --- Duplicate text from surrounding lines -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2005-2024 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-cc.el --- Common C/C++ major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-cc.el --- Common C/C++ major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2021-2024 Tom Fontaine
 

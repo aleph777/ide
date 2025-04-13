@@ -1,4 +1,4 @@
-;;; tjf-perl-ts.el --- cperl-mode support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-perl-ts.el --- cperl-mode support for GNU Emacs -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 1999-2025 Tom Fontaine
 

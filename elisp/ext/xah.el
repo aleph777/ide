@@ -1,4 +1,4 @@
-;;; xah.el --- Xah Lee convenience functions
+;;; xah.el --- Xah Lee convenience functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 (message "Loading xah...")
 ;;

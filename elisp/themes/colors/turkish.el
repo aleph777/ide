@@ -1,4 +1,4 @@
-;;; turkish.el --- color definitions -*-Emacs-Lisp-*-
+;;; turkish.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

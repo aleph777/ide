@@ -1,4 +1,4 @@
-;;; tjf-tools.el --- Tools menu definition and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-tools.el --- Tools menu definition and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2024 Tom Fontaine
 

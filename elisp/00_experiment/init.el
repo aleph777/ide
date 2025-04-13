@@ -1,4 +1,4 @@
-;;; default.el --- Global initialization -*- lexical-binding: t; -*- ;; -*-no-byte-compile: t; -*- ;; -*-Emacs-Lisp-*-
+;;; init.el --- Global initialization -*-no-byte-compile: t ;; -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 (defun message--with-timestamp (format-string &rest args)
   "Add FORMAT-STRING timestamp (using ARGS) to `*Messages*' buffer."

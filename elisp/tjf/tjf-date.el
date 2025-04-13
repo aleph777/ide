@@ -1,4 +1,4 @@
-;;; tjf-date.el --- Date support for GNU Emacs -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-date.el --- Date support for GNU Emacs -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2024 Tom Fontaine
 

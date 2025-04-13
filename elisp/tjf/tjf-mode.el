@@ -1,4 +1,4 @@
-;;; tjf-mode.el --- major mode groupings -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-mode.el --- major mode groupings -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2023-2024 Tom Fontaine
 

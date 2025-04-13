@@ -1,4 +1,4 @@
-;;; tenb.el --- color definitions -*-Emacs-Lisp-*-
+;;; tenb.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2024-2024  Tom Fontaine
 

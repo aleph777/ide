@@ -1,4 +1,4 @@
-;;; srcsery.el --- color definitions -*-Emacs-Lisp-*-
+;;; srcsery.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-c.el --- C major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-c.el --- C major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2021-2025 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-navigate.el --- Navigation menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-navigate.el --- Navigation menu and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2025 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-msb.el --- Msb menu definition -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-msb.el --- Msb menu definition -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2024 Tom Fontaine
 

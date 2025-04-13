@@ -1,4 +1,4 @@
-;;; tjf-keys.el --- Global key definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-keys.el --- Global key definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 
 ;;         Copyright © 1999-2024 Tom Fontaine

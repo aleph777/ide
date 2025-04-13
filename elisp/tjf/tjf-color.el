@@ -1,4 +1,4 @@
-;;; tjf-color.el --- Color functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-color.el --- Color functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2017-2024 Tom Fontaine
 

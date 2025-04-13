@@ -1,4 +1,4 @@
-;;; fontaine-theme.el --- color definitions -*-Emacs-Lisp-*-
+;;; fontaine-theme.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2025  Tom Fontaine
 ;; Author: Tom Fontaine

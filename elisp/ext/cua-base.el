@@ -1,4 +1,4 @@
-;;;; cua-base.el --- emulate CUA key bindings
+;;; cua-base.el --- emulate CUA key bindings -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;; TJF ----------------------------------------------------------------------
 ;;; TJF Overloaded stuff

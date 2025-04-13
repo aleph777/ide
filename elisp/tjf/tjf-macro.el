@@ -1,4 +1,4 @@
-;;; tjf-macro.el --- Global macro definitions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-macro.el --- Global macro definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2016-2024 Tom Fontaine
 

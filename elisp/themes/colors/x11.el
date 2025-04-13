@@ -1,4 +1,4 @@
-;;; x11.el --- color definitions -*-Emacs-Lisp-*-
+;;; x11.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-lisp.el --- Support for various Lisp modes -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-lisp.el --- Support for various Lisp modes -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2001-2024 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-tabline.el --- Display a tab bar in the tab-line -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*- ;; -*-no-byte-compile: t; -*-
+;;; tjf-tabline.el --- Display a tab bar in the tab-line -*-no-byte-compile: t ;; -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2021-2024 Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; american.el --- color definitions -*-Emacs-Lisp-*-
+;;; american.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2020-2024  Tom Fontaine
 

@@ -1,4 +1,4 @@
-;;; tjf-bookmark.el --- Bookmark menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; tjf-bookmark.el --- Bookmark menu and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © 2017-2024 Tom Fontaine
 
