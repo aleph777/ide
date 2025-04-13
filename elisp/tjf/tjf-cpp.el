@@ -1,6 +1,6 @@
 ;;; tjf-cpp.el --- C++ major mode support -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2024 Tom Fontaine
+;;         Copyright © 2021-2025 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   10-Feb-2021
@@ -38,6 +38,7 @@
 ;;           04-Jan-2023 fixed ‘tjf:cpp/setup’
 ;;           13-Apr-2023 removed ‘company-mode’ from completions
 ;;           06-Jun-2023 changed from ‘tjf:cpp/setup’ to ‘tjf:cpp/hook’ and ‘tjf:cpp/config’
+;;           21-Mar-2025 fixed bug in ‘tjf:cpp/warnings’
 
 ;;; Code:
 
@@ -161,7 +162,7 @@
   (interactive)
   (let ((warnings (read-shell-command "Warnings: " tjf:cpp/warnings)))
     (unless (string= warnings tjf:cpp/warnings)
-      (tjf:cc/set-warnings warnings))))
+      (setq tjf:cpp/warnings warnings))))
 
 (defun tjf:cpp/config ()
   "C++ mode config function."

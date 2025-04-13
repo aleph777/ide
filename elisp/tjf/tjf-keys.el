@@ -116,6 +116,7 @@
 ;;           30-Sep-2022 added mode-line bindings for ‘mouse-8’, ‘mouse-9’, and ‘C-mouse-3’
 ;;           07-Jun-2023 added ‘blamer-show-commit-info’ to ‘s-b’
 ;;           15-Jun-2023 added ‘tjf:duplicate/spaces’ to ‘C-s-<Fn>’ and ‘M-s-<Fn>’
+;;           05-Dec-2024 update for ‘undo-fu’
 
 ;;; Code:
 
@@ -131,7 +132,7 @@
 (require 'tjf-navigate)
 (require 'tjf-search)
 (require 'tjf-tools)
-(require 'undo-tree)
+(require 'undo-fu)
 (require 'xah)
 
 ;; (unbind-key "C-h n")
@@ -176,7 +177,7 @@
 ;;
 (global-set-key [(control d)]            'tjf:duplicate/line-or-region)
 ;;lobal-set-key [(meta    d)]            'kill-word)
-;;lobal-set-key [(super   d)]            'DO NOT USE ... closes all windows
+;;lobal-set-key [(super   d)]            'DO NOT USE ... minimizes all windows
 ;;lobal-set-key [(control meta  d)]      '
 (global-set-key [(control shift d)]      'tjf:duplicate/as-comment)
 ;;lobal-set-key [(control super d)]      '
@@ -407,7 +408,7 @@
 
 ;; ==================== y ====================
 ;;
-(global-set-key [(control y)]            'undo-tree-redo)
+(global-set-key [(control y)]            'undo-fu-only-redo)
 ;;lobal-set-key [(meta    y)]            'cua-paste-pop)
 ;;lobal-set-key [(super   y)]            '
 ;;lobal-set-key [(control meta  y)]      '
@@ -418,11 +419,11 @@
 
 ;; ==================== z ====================
 ;;
-;;lobal-set-key [(control z)]            'UNDO)
+;;lobal-set-key [(control z)]            'undo-fu-only-undo)
 ;;lobal-set-key [(meta    z)]            'zap-to-char)
 ;;lobal-set-key [(super   z)]            '
 ;;lobal-set-key [(control meta  z)]      '
-;;lobal-set-key [(control shift z)]      'undo-tree-redo)
+;;lobal-set-key [(control shift z)]      'undo-fu-only-redo)
 ;;lobal-set-key [(control super z)]      '
 ;;lobal-set-key [(meta    super z)]      '
 ;;lobal-set-key [(control meta super z)] '
@@ -832,8 +833,8 @@
 
 ;; ==================== _ ====================
 ;;
-;;lobal-set-key [(control _)]  'undo-tree-undo)
-;;lobal-set-key [(meta    _)]  'undo-tree-undo)
+;;lobal-set-key [(control _)]  'undo-fu-only-undo)
+;;lobal-set-key [(meta    _)]  'undo-fu-only-redo)
 ;;lobal-set-key [(super   _)]  '
 ;;lobal-set-key [(control meta  _)]      '
 ;;lobal-set-key [(control super _)]      '
@@ -864,7 +865,7 @@
 ;;
 ;;lobal-set-key [TAB]           ' INDENT
 (global-set-key [(control tab)] 'tjf:color/set-background-random)
-(global-set-key [(meta    tab)] 'tjf:color/set-background-random)
+;;lobal-set-key [(meta    tab)] ' DO  NOT USE
 ;;lobal-set-key [(super   tab)] ' DO  NOT USE
 ;;lobal-set-key [(control meta  tab)] ' DO  NOT USE
 (global-set-key [(control super tab)] 'clean-aindent--bsunindent)

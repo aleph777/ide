@@ -383,9 +383,6 @@ the cursor prior to the inserted newline."
 
 (defvar tjf:edit/menu
   '("Edit"
-    ;; ["Undo" undo :enable (tjf:flags/enable-undo?)] -- from undo-tree.el
-    ;; ["Redo" redo :enable (tjf:flags/enable-redo?)]
-    "---"
     ["Cut"   kill-region    :enable (tjf:flags/enable-modify-region?)]
     ["Copy"  kill-ring-save :enable mark-active]
     ["Paste" yank           :enable (tjf:flags/enable-paste?)]
@@ -423,7 +420,6 @@ the cursor prior to the inserted newline."
     ["Flush Lines..." flush-lines :enable (tjf:flags/enable-write?)]
     ["Keep Lines..."  keep-lines  :enable (tjf:flags/enable-write?)]
     "---"
-    ("Buffer"
      ["Delete Entire Buffer"          erase-buffer                 :enable (tjf:flags/enable-write?)]
      ["Delete to Beginning of Buffer" tjf:edit/delete-to-beginning :enable (tjf:flags/enable-write?)]
      ["Delete to End of Buffer"       tjf:edit/delete-to-end       :enable (tjf:flags/enable-write?)])

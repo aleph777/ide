@@ -62,6 +62,9 @@
 ;;           03-Feb-2021 ‘tjf’ overhaul
 ;;           10-Mar-2021 added SVG graphics
 ;;           16-Apr-2022 added visibility control for ‘toggle-case’
+;;           03-Apr-2024 fixed icon names
+;;           05-Dec-2024 update for ‘undo-fu’
+;;           06-Dec-2024 added ‘noccur-project
 ;;
 
 ;;; Code:
@@ -73,6 +76,7 @@
 (require 'tjf-frame)
 (require 'tjf-navigate)
 (require 'tjf-search)
+(require 'undo-fu)
 
 ;;; overload
 (defun tool-bar--image-expression (icon)
@@ -114,44 +118,44 @@
 ;;
 ;; File/Buffer operations
 ;;
-(tool-bar-add-item "sg-view"  'view-file                 'view  :label "" :help "Browse file/Toggle Browse mode")
-(tool-bar-add-item "sg-edit"  'find-file                 'open  :label "" :help "Open file/Open file in new window...")
-(tool-bar-add-item "sg-new"   'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
-(tool-bar-add-item "sg-close" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
+(tool-bar-add-item "view"  'view-file                 'view  :label "" :help "Browse file/Toggle Browse mode")
+(tool-bar-add-item "edit"  'find-file                 'open  :label "" :help "Open file/Open file in new window...")
+(tool-bar-add-item "new"   'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
+(tool-bar-add-item "close" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
 (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
-(tool-bar-add-item "sg-lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
-(tool-bar-add-item "sg-unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
-(tool-bar-add-item "sg-save"    'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
-(tool-bar-add-item "sg-saveall" 'write-file       'saveas :label "" :help "Save buffer as/Write region...")
-(tool-bar-add-item "sg-revert"  'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
+(tool-bar-add-item "lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
+(tool-bar-add-item "unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
+(tool-bar-add-item "save"    'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
+(tool-bar-add-item "saveall" 'write-file       'saveas :label "" :help "Save buffer as/Write region...")
+(tool-bar-add-item "revert"  'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
 (define-key-after (default-value 'tool-bar-map) [separator-2] menu-bar-separator)
 
 ;;
 ;; Undo/Redo
 ;;
-(tool-bar-add-item "sg-undo" 'undo 'undo :label "" :help "Undo last operation" :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
-(tool-bar-add-item "sg-redo" 'redo 'redo :label "" :help "Redo last undo"      :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
+(tool-bar-add-item "undo" 'undo 'undo-fu-only-undo :label "" :help "Undo last operation" :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
+(tool-bar-add-item "redo" 'redo 'undo-fu-only-redo :label "" :help "Redo last undo"      :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
 
 (define-key-after (default-value 'tool-bar-map) [separator-3] menu-bar-separator)
 
 ;;
 ;; Cut/Copy/Paste
 ;;
-(tool-bar-add-item "sg-cut"   'kill-region    'cut   :label ""  :visible '(tjf:flags/is-rw?) :help "Cut/Cut Rectangle"     :enable '(tjf:flags/enable-modify-region?))
-(tool-bar-add-item "sg-copy"  'kill-ring-save 'copy  :label ""                               :help "Copy/Copy Rectangle"   :enable 'mark-active)
-(tool-bar-add-item "sg-paste" 'yank           'paste :label ""  :visible '(tjf:flags/is-rw?) :help "Paste/Paste Rectangle" :enable '(tjf:flags/enable-paste?))
+(tool-bar-add-item "cut"   'kill-region    'cut   :label ""  :visible '(tjf:flags/is-rw?) :help "Cut/Cut Rectangle"     :enable '(tjf:flags/enable-modify-region?))
+(tool-bar-add-item "copy"  'kill-ring-save 'copy  :label ""                               :help "Copy/Copy Rectangle"   :enable 'mark-active)
+(tool-bar-add-item "paste" 'yank           'paste :label ""  :visible '(tjf:flags/is-rw?) :help "Paste/Paste Rectangle" :enable '(tjf:flags/enable-paste?))
 
 (define-key-after (default-value 'tool-bar-map) [separator-4] menu-bar-separator)
 
 ;;
 ;; Cursor movement
 ;;
-(tool-bar-add-item "sg-home"     'beginning-of-buffer  'home      :label "" :help "Home")
-(tool-bar-add-item "sg-end"      'end-of-buffer        'end       :label "" :help "End")
-(tool-bar-add-item "sg-up"       'scroll-down-command  'page-up   :label "" :help "Page Up")
-(tool-bar-add-item "sg-down"     'scroll-up-command    'page-down :label "" :help "Page Down")
-(tool-bar-add-item "sg-goto"     'goto-line            'goto      :label "" :help "Goto line.../Saved point")
+(tool-bar-add-item "home"     'beginning-of-buffer  'home      :label "" :help "Home")
+(tool-bar-add-item "end"      'end-of-buffer        'end       :label "" :help "End")
+(tool-bar-add-item "up"       'scroll-down-command  'page-up   :label "" :help "Page Up")
+(tool-bar-add-item "down"     'scroll-up-command    'page-down :label "" :help "Page Down")
+(tool-bar-add-item "goto"     'goto-line            'goto      :label "" :help "Goto line.../Saved point")
 
 (define-key-after (default-value 'tool-bar-map) [separator-5] menu-bar-separator)
 
@@ -160,29 +164,29 @@
 ;;
 ;; (tool-bar-add-item "00-hide"    'hs-hide-block             'hide :label "" :help "Hide block" :visible 'hs-minor-mode)
 ;; (tool-bar-add-item "00-show"    'hs-show-block             'show :label "" :help "Show block" :visible 'hs-minor-mode)
-(tool-bar-add-item "sg-search-up"   'search-word-backward 'backward :label "" :help "Search backward")
-(tool-bar-add-item "sg-search-down" 'search-word-forward  'forward  :label "" :help "Search forward")
-(tool-bar-add-item "sg-find"        'tjf:search/occur     'search   :label "" :help "Show matching lines...")
-(tool-bar-add-item "sg-replace"     'anzu-query-replace   'replace  :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
+(tool-bar-add-item "search-up"   'search-word-backward 'backward :label "" :help "Search backward")
+(tool-bar-add-item "search-down" 'search-word-forward  'forward  :label "" :help "Search forward")
+(tool-bar-add-item "find"        'tjf:search/occur     'search   :label "" :help "Show matching lines...")
+(tool-bar-add-item "replace"     'anzu-query-replace   'replace  :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
 
 (define-key-after  (default-value 'tool-bar-map) [separator-6] menu-bar-separator)
 
-(tool-bar-add-item "sg-repeat"   'repeat-complex-command             'repeat   :label "" :help "Repeat Command...")
-(tool-bar-add-item "sg-case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case"     :visible '(tjf:flags/is-rw?))
-(tool-bar-add-item "sg-bookmark" 'bm-toggle                          'bookmark :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
+(tool-bar-add-item "repeat"   'repeat-complex-command             'repeat   :label "" :help "Repeat Command...")
+(tool-bar-add-item "case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case"     :visible '(tjf:flags/is-rw?))
+(tool-bar-add-item "bookmark" 'bm-toggle                          'bookmark :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
 
 (define-key-after  (default-value 'tool-bar-map) [separator-7] menu-bar-separator)
 
-(tool-bar-add-item "sg-zoom-in"  'text-scale-increase                'zoom-in  :label "")
-(tool-bar-add-item "sg-zoom-out" 'text-scale-decrease                'zoom-out :label "")
+(tool-bar-add-item "zoom-in"  'text-scale-increase                'zoom-in  :label "")
+(tool-bar-add-item "zoom-out" 'text-scale-decrease                'zoom-out :label "")
 
 (define-key-after  (default-value 'tool-bar-map) [separator-8] menu-bar-separator)
 
-(tool-bar-add-item "sg-tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")
+(tool-bar-add-item "tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")
 
-(tool-bar-add-item "mi-previous" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:mode/is-shell-mode?) :label "" :help "Previous input")
-(tool-bar-add-item "mi-next"     'tjf:toolbar/next-input     'down-arrow :visible '(tjf:mode/is-shell-mode?) :label "" :help "Next input")
-(tool-bar-add-item "sg-cancel"   'comint-delete-output       'cancel     :visible '(tjf:mode/is-shell-mode?) :label "" :help "Flush output")
+(tool-bar-add-item "up"          'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:mode/is-shell-mode?) :label "" :help "Previous input")
+(tool-bar-add-item "down"        'tjf:toolbar/next-input     'down-arrow :visible '(tjf:mode/is-shell-mode?) :label "" :help "Next input")
+(tool-bar-add-item "delete-exit" 'comint-delete-output       'cancel     :visible '(tjf:mode/is-shell-mode?) :label "" :help "Flush output")
 
 ;;
 ;; Control
@@ -212,6 +216,7 @@
 ;;
 (define-key tool-bar-map [(control meta case)]     'xah-toggle-letter-case)
 (define-key tool-bar-map [(control meta paste)]    'clipboard-yank)
+(define-key tool-bar-map [(control meta search)]   'noccur-project)
 (define-key tool-bar-map [(control meta zoom-in)]  'tjf:color/saturate-background)
 (define-key tool-bar-map [(control meta zoom-out)] 'tjf:color/desaturate-background)
 

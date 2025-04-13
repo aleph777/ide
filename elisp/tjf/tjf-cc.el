@@ -39,8 +39,10 @@
 (require 'f)
 (require 's)
 (require 'tjf-flags)
+(require 'tjf-macro)
 
 ;;
+
 (defvar tjf:cc/nproc (shell-command-to-string "nproc"))
 
 (defun tjf:cc/docstring ()
@@ -121,6 +123,12 @@
     (tjf:cc/insert-boilerplate)
     (goto-char (point-max))
     (insert (concat "#include \"" inc-file "\"\n\n"))))
+
+(defun tjf:cc/format ()  
+  "Format the entire buffer or the region."  
+  (interactive "*")  
+  (with-buffer-or-region (beg end)                         
+                         (eglot-format beg end)))
 
 (defvar tjf:cc/menu-text
   '(

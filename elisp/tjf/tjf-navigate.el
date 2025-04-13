@@ -1,6 +1,6 @@
 ;;; tjf-navigate.el --- Navigation menu and associated functions -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2025 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Feb-2016
@@ -39,7 +39,7 @@
 ;;; Code:
 
 (message "Loading tjf-navigate...")
-(require 'tjf-bookmark)
+;(require 'tjf-bookmark)
 
 ;;
 (defvar tjf:navigate/saved-point nil "Saved value of point for current buffer.")
@@ -98,15 +98,15 @@
   "Top portion of ‘Navigate’ menu."
   (if (derived-mode-p 'prog-mode)
       (progn
-        (easy-menu-add-item nil '("Navigate") "---"                                                "*Rescan*")
+        (easy-menu-add-item nil '("Navigate") "---")
         (easy-menu-add-item nil '("Navigate") ["Find References"         xref-find-references   t] "---")
         (easy-menu-add-item nil '("Navigate") ["Go to Definition"        xref-find-definitions  t] "Find References")
         (easy-menu-add-item nil '("Navigate") "---"                                                "Go to Definition")
         (easy-menu-add-item nil '("Navigate") ["End of function/class"   end-of-defun           t] "---")
         (easy-menu-add-item nil '("Navigate") ["Start of function/class" beginning-of-defun     t] "End of function/class")))
 
-  (easy-menu-add-item nil '("Navigate")                     tjf:bookmark/menu                "Start of function/class")
-  (easy-menu-add-item nil '("Navigate") ["Goto saved point" tjf:navigate/goto-saved-point t] "Bookmarks")
+  ;; (easy-menu-add-item nil '("Navigate")                     tjf:bookmark/menu                "Start of function/class")
+  (easy-menu-add-item nil '("Navigate") ["Goto saved point" tjf:navigate/goto-saved-point t] "Start of function/class")
   (easy-menu-add-item nil '("Navigate") ["Save point"       tjf:navigate/save-point       t] "Goto Saved Point")
   (easy-menu-add-item nil '("Navigate") ["Go to line..."    goto-line                     t] "Save Point")
 

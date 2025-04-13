@@ -46,6 +46,8 @@
 ;;           31-May-2023 added ‘is-feature?’
 ;;           07-Jun-2023 added ‘blamer-show-posframe-commit-info’ to Tools menu
 ;;           09-Jun-2023 changed ‘paradox-list-packages’ to ‘elpaca-manager’
+;;           09-Dec-2024 removed ‘check feature’
+;;           05-Mar-2025 changed ‘elpaca-manager’ to ‘paradox-list-packages’
 ;;
 
 ;;; Code:
@@ -427,9 +429,7 @@
     "---"
     ["Read from URL..." declutter :active t]
     "---"
-    ["Check Feature..." is-feature? :active t]
-    "---"
-    ["List Packages"    elpaca-manager :active t]
+    ["List Packages"    paradox-list-packages :active t]
     "---"
     ["Complete Symbol"        completion-at-point                :enable (tjf:flags/enable-write?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (tjf:flags/enable-write?)]

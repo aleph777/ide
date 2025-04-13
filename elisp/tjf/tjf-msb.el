@@ -39,6 +39,7 @@
 ;;           07-Jun-2023 added remaining ts-modes
 ;;                       removed ‘tjf-flags’ dependency
 ;;           24-Jul-2023 require tjf-mode
+;;           13-Jun-2024 added ‘dockerfile-ts-mode’
 ;;
 
 ;;; Code:
@@ -119,7 +120,8 @@
         ((tjf:mode/is-mode? 'csv-mode)                  2028 "CSV Files  (%d)")
         ((tjf:mode/is-mode? 'Custom-mode)               2029 "Custimization (%d)")
         ;; D 2030
-        ((tjf:mode/is-mode? 'doctex-mode)               2030 "Doctex Files (%d)")
+        ((tjf:mode/is-mode? 'dockerfile-ts-mode)        2030 "Docker Files (%d)")
+        ((tjf:mode/is-mode? 'doctex-mode)               2031 "Doctex Files (%d)")
         ;; E 2040
         ((tjf:mode/is-mode? 'emacs-lisp-mode)           2040 "Emacs Lisp Files (%d)")
         ;; F 2050

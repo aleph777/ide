@@ -42,13 +42,14 @@
 ;;           28-Apr-2022 added ‘tjf:flags/using-tabs’
 ;;           10-Apr-2023 added ‘is-feature?’
 ;;           21-Jul-2023 removed modes
+;;           05-Dec-2024 fixed ‘tjf:flags/enable-undo-redo?’ for ‘undo-fu’
 ;;
 
 ;;; Code:
 
 (message "Loading tjf-flags...")
 (require 'tjf-mode)
-;;
+
 ;; enable- functions are for :enable in menu entries
 
 (defun tjf:flags/enable-buffer-operations? ()
@@ -100,9 +101,9 @@
   "Boolean: should ‘canonically-space-region’ be enabled?"
   (and mark-active (tjf:flags/is-rw?) (memq major-mode tjf:flags/space-modes)))
 
-(defun tjf:flags/enable-undo-redo? ()
-  "Boolean: should ‘undo/redo’ be enabled?"
-  (and undo-tree-mode (not buffer-read-only)))
+(defun tjf:flags/enable-undo-redo? ()  
+  "Boolean: should ‘undo/redo’ be enabled?"  
+  (and (not buffer-read-only) (not (eq t buffer-undo-list))))
 
 (defalias 'tjf:flags/enable-write? 'tjf:flags/is-rw?)
 
