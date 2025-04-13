@@ -620,7 +620,7 @@
   :config
   (require 'indent-bars-ts)         ; not needed with straight
   :custom
-  (indent-bars-treesit-support t)
+  (indent-bars-treesit-support nil)
   (indent-bars-treesit-ignore-blank-lines-types '("module"))
   ;; Add other languages as needed
   (indent-bars-treesit-scope '((c++ function_definition class_definition for_statement
@@ -692,7 +692,7 @@
 
 (use-package shift-number         :ensure t   :commands (shift-number-up shift-number-down))
 
-(use-package smartparens          :ensure t   :commands smartparens-mode
+(use-package smartparens          :ensure t   :commands smartparens-mode :disabled
   :diminish smartparens-mode
   :functions sp-local-pair
   :init
@@ -772,13 +772,13 @@
 
 ;; Commands for using ts-fold.
 ;; Commands                 Description
-;; ts-fold-close	        fold the current syntax node.
+;; ts-fold-close            fold the current syntax node.
 ;; ts-fold-open             open the outermost fold of the current syntax node. Keep the sub-folds close.
-;; ts-fold-open-recursively	open all folds inside the current syntax node.
+;; ts-fold-open-recursively open all folds inside the current syntax node.
 ;; ts-fold-close-all        close all foldable syntax nodes in the current buffer.
 ;; ts-fold-open-all         open all folded syntax nodes in the current buffer.
 ;; ts-fold-toggle           toggle the syntax node at `point'.
-;; 
+;;
 (use-package treesit-fold         :ensure t   :after treesit
   :config
   (global-treesit-fold-indicators-mode))
@@ -808,11 +808,11 @@
   :config
   (volatile-highlights-mode t))
 
-(use-package ws-butler            :ensure t   :after tjf-menubar
-  :diminish ws-butler-mode
-  :functions ws-butler-global-mode
-  :config
-  (ws-butler-global-mode))
+;; (use-package ws-butler            :ensure t   :after tjf-menubar :disabled
+;;   :diminish ws-butler-mode
+;;   :functions ws-butler-global-mode
+;;   :config
+;;   (ws-butler-global-mode))
 
 (use-package yaml-mode            :ensure t   :commands yaml-mode)
 
@@ -1321,7 +1321,7 @@
           (latex      . ("https://github.com/latex-lsp/tree-sitter-latex"        "v0.3.0"))
           (make       . ("https://github.com/alemuller/tree-sitter-make"         "release"))
           (markdown   . ("https://github.com/MDeiml/tree-sitter-markdown"        "v0.1.7"))
-	      (pod        . ("https://github.com/tree-sitter-perl/tree-sitter-pod"   "release"))
+          (pod        . ("https://github.com/tree-sitter-perl/tree-sitter-pod"   "release"))
           (perl       . ("https://github.com/tree-sitter-perl/tree-sitter-perl"  "release"))
           (python     . ("https://github.com/tree-sitter/tree-sitter-python"     "v0.20.4"))
           (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"          "v0.5.0"))))
