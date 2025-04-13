@@ -1,4 +1,4 @@
-;;; <<<NAME>>>.el --- [description] -*- lexical-binding: t; -*- ;; -*-Emacs-Lisp-*-
+;;; <<<NAME>>>.el --- [description] -*- lexical-binding: t ;; -*- ;; -*-Emacs-Lisp-*-
 
 ;;         Copyright © <<<YEAR>>> <<<AUTHOR>>>
 
