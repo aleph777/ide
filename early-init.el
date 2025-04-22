@@ -42,8 +42,8 @@
 (setq inhibit-startup-buffer-menu t)
 (setq inhibit-startup-screen      t)
 (setq inhibit-startup-echo-area-message (user-login-name))
-(setq initial-buffer-choice       nil)
 (setq inhibit-x-resources         t)
+(setq initial-buffer-choice       nil)
 
 (setq-default cursor-in-non-selected-windows nil)
 
@@ -63,6 +63,8 @@
 (setq ad-redefinition-action 'accept)
 
 (setq idle-update-delay 1.0)
+
+(setq lexical-binding nil)
 
 (setq package-enable-at-startup nil)
 
@@ -96,7 +98,8 @@
 ;; (setq debug-on-error minimal-emacs-debug
 ;;       jka-compr-verbose minimal-emacs-debug)
 
-(setq byte-compile-warnings '(not obsolete))
+(setq byte-compile-warnings '(not free-vars obsolete unresolved noruntime lexical make-local))
+;; (setq byte-compile-warnings '(not obsolete))
 ;; (setq byte-compile-verbose minimal-emacs-debug)
 
 ;;

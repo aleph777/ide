@@ -263,9 +263,7 @@
 ;; ================================================================================
 
 (use-package diminish             :ensure t
-  :functions diminish
-  :init   (message "Loading diminish...")
-  :config (message "Loading diminish...done"))
+  :functions diminish)
 
 (use-package f                    :ensure t
   :config
@@ -464,9 +462,9 @@
 ;; ================================================================================
 
 (use-package anaconda-mode        :ensure t   :after python
-  :init
-  (add-hook 'python-mode-hook 'anaconda-mode)
-  (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
+  :hook
+  (python-mode . anaconda-mode)
+  (python-mode . anaconda-eldoc-mode))
 
 (use-package anzu                 :ensure t
   :diminish anzu-mode
@@ -526,8 +524,8 @@
   (bash-completion-setup))
 
 (use-package blamer               :ensure t
-  :config
-  (global-blamer-mode -1))
+  :hook
+  (after-init . (global-blamer-mode -1)))
 
 (use-package clean-aindent-mode   :ensure t   :after tjf-menubar
   :functions clean-aindent-mode
@@ -563,9 +561,9 @@
 
 (use-package emojify              :ensure t   :commands emojify-mode)
 
-(use-package ergoemacs-mode       :ensure t   :defer)
+(use-package ergoemacs-mode       :ensure t   :defer t)
 
-(use-package filladapt            :ensure nil :commands filladapt-mode)
+(use-package filladapt            :ensure nil :commands filladapt-mode :disabled)
 
 (use-package flycheck             :ensure t   :after tjf-menubar
   :functions global-flycheck-mode
@@ -633,10 +631,6 @@
                    'text-mode-hook
                    'paragraph-indent-text-mode-hook))
 
-(use-package json-mode            :ensure t   :commands json-mode :disabled)
-
-;; (use-package jsonrpc              :ensure t   :after eglot)
-
 (use-package langtool             :ensure t   :commands langtool-check
   :config
   (setq langtool-language-tool-jar (concat tjf:user/dir-home "Documents/LanguageTool-4.1/languagetool-commandline.jar")))
@@ -692,7 +686,7 @@
 
 (use-package shift-number         :ensure t   :commands (shift-number-up shift-number-down))
 
-(use-package smartparens          :ensure t   :commands smartparens-mode :disabled
+(use-package smartparens          :ensure t   :commands smartparens-mode
   :diminish smartparens-mode
   :functions sp-local-pair
   :init
@@ -1247,7 +1241,7 @@
 
 (use-package tjf-navigate         :ensure nil)
 
-(use-package tjf-perl             :ensure nil :after cperl-mode
+(use-package tjf-perl             :ensure nil :after cperl-mode :commands tjf:perl/convvert
   :hook
   (cperl-mode . tjf:perl/hook)
   :config

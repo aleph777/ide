@@ -48,49 +48,49 @@
 (require 'msb)
 (require 'tjf-mode)
 
-;;; overload
-;; (with-eval-after-load 'msb
-;;   '(defun msb-menu-bar-update-buffers (&optional arg)
-;;      "A re-written version of `menu-bar-update-buffers'."
-;;      ;; If user discards the Buffers item, play along.
-;;      (when (and (lookup-key (current-global-map) [menu-bar buffer])
-;;                 (or (not (fboundp 'frame-or-buffer-changed-p))
-;;                     (frame-or-buffer-changed-p)
-;;                     arg))
-;;        (let ((frames (frame-list))
-;;              buffers-menu frames-menu)
-;;          ;; Make the menu of buffers proper.
-;;          (setq msb--last-buffer-menu (msb--create-buffer-menu))
-;;          ;; Skip the `keymap' symbol.
-;;          (setq buffers-menu (cdr msb--last-buffer-menu))
-;;          ;; Make a Frames menu if we have more than one frame.
-;;          (when (cdr frames)
-;;            (let* ((frame-length (length frames))
-;;                   (f-title  (format "Windows (%d)" frame-length)))  ;; tjf
-;;              ;; List only the N most recently selected frames
-;;              (when (and (integerp msb-max-menu-items)
-;;                         (> msb-max-menu-items 1)
-;;                         (> frame-length msb-max-menu-items))
-;;                (setcdr (nthcdr msb-max-menu-items frames) nil))
-;;              (setq frames-menu
-;;                    (nconc
-;;                     (list 'frame f-title '(nil) 'keymap f-title)
-;;                     (mapcar
-;;                      (lambda (frame)
-;;                        (nconc
-;;                         (list (frame-parameter frame 'name)
-;;                               (frame-parameter frame 'name)
-;;                               (cons nil nil))
-;;                         `(lambda ()
-;;                            (interactive) (menu-bar-select-frame ,frame))))
-;;                      frames)))))
-;;          (setcdr global-buffers-menu-map
-;;                  (if (and buffers-menu frames-menu)
-;;                      ;; Combine Frame and Buffers menus with separator between
-;;                      (nconc (list "Buffers and Frames" frames-menu
-;;                                   (and msb-separator-diff '(separator "--")))
-;;                             (cdr buffers-menu))
-;;                    buffers-menu))))))
+;; overloaded
+;;
+(defun msb-menu-bar-update-buffers (&optional arg)
+    "A re-written version of `menu-bar-update-buffers'."
+    ;; If user discards the Buffers item, play along.
+    (when (and (lookup-key (current-global-map) [menu-bar buffer])
+               (or (not (fboundp 'frame-or-buffer-changed-p))
+                   (frame-or-buffer-changed-p)
+                   arg))
+      (let ((frames (frame-list))
+            buffers-menu frames-menu)
+        ;; Make the menu of buffers proper.
+        (setq msb--last-buffer-menu (msb--create-buffer-menu))
+        ;; Skip the `keymap' symbol.
+        (setq buffers-menu (cdr msb--last-buffer-menu))
+        ;; Make a Frames menu if we have more than one frame.
+        (when (cdr frames)
+          (let* ((frame-length (length frames))
+                 (f-title  (format "Windows (%d)" frame-length)))  ;; tjf
+            ;; List only the N most recently selected frames
+            (when (and (integerp msb-max-menu-items)
+                       (> msb-max-menu-items 1)
+                       (> frame-length msb-max-menu-items))
+              (setcdr (nthcdr msb-max-menu-items frames) nil))
+            (setq frames-menu
+                  (nconc
+                   (list 'frame f-title '(nil) 'keymap f-title)
+                   (mapcar
+                    (lambda (frame)
+                      (nconc
+                       (list (frame-parameter frame 'name)
+                             (frame-parameter frame 'name)
+                             (cons nil nil))
+                       `(lambda ()
+                          (interactive) (menu-bar-select-frame ,frame))))
+                    frames)))))
+        (setcdr global-buffers-menu-map
+                (if (and buffers-menu frames-menu)
+                    ;; Combine Frame and Buffers menus with separator between
+                    (nconc (list "Buffers and Frames" frames-menu
+                                 (and msb-separator-diff '(separator "--")))
+                           (cdr buffers-menu))
+                  buffers-menu)))))
 
 (defvar msb--u-menus)
 (setq msb--u-menus

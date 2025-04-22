@@ -79,6 +79,7 @@
 ;;           29-Aug-2022 Fixed ‘tjf:edit/menu-justify’
 ;;           10-Nov-2022 Removed ‘tjf:edit/insert-che’ and ‘tjf:eedit/insert-chs’
 ;;           14-Nov-2023 Removed redundant ‘justify’ menu entries
+;;           19-Apr-2025 fixed ‘tjf:edit/cleanse-whitespace’
 ;;
 
 ;;; Code:
@@ -127,7 +128,7 @@
 (defun tjf:edit/cleanse-whitespace ()
   "Untabify, then trim excess whitespace and compress all blank lines."
   (interactive "*")
-  (unless tjf:flags/using-tabs
+  (unless (tjf:flags/is-tabs-on-line?)
       (untabify (point-min) (point-max)))
   (delete-trailing-whitespace)
   (xah-clean-whitespace))

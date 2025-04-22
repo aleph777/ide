@@ -33,17 +33,15 @@ export IDE="$HOME/ide"
 #   alias world='hello World!'
 #
 alias perl='perl -MModern::Perl'
-alias avg='perl -e '\''use List::Util qw(sum);say sum(@ARGV)/@ARGV;'\'''
 alias say='perl -e "say $_ for @ARGV"'
-alias sum="perl -e 'use List::Util qw(sum); say sum(@ARGV);'"
-
+alias sum="perl -e 'my \$s=0;\$s+=\$_ for @ARGV;say \$s'"
+alias avg="perl -e 'my \$s=0;\$s+=\$_ for @ARGV;say \$s/@ARGV'"
+alias prod="perl -e 'my \$p=1;\$p*=\$_ for @ARGV;say \$p'"
+alias v4='v4l2-ctl'
+alias arch='uname -m'
 alias ten="cd ~/Workspace/tenbeauty/"
 
 alias flake8='flake8 --ignore E221,E303,E501'
-
-export PERLLIB="$IDE/lib:$IDE/local/lib"
-export PERL5LIB="$PERLLIB"
-export PYTHONPATH="$IDE/lib/python"
 
 # apt
 #
@@ -58,13 +56,19 @@ export BRANCH='git rev-parse --abbrev-ref HEAD'
 # Bash
 #
 alias clt='printf "\033c"'
-alias grep='grep -P'
-alias hg='history | grep '
 alias lsc='TERM=ansi ls --color=always'
 alias lsf='ls -F'
+
+alias grep='grep -P'
+alias hg='history | grep '
 alias psfind='ps u -C'
-alias inetip='echo $(curl -s https://api.ipify.org)'
-alias localip='ip a'
+
+alias myinet='echo $(curl -s https://api.ipify.org)'
+alias mylan='ifconfig | grep -A1 BROADCAST,RUNNING,MULTICAST | grep inet | cut -d" " -f10'
+# alias mywlan='iw dev wlan0 link'
+alias mywlan='iw dev wlp0s20f3 link'
+alias aslan='sudo arp-scan --localnet'
+alias gtag='git for-each-ref --sort=creatordate --format "%(refname)" refs/tags | cut -d/ -f3'
 
 # these are a handy reference
 #
@@ -76,6 +80,10 @@ alias localip='ip a'
 alias set1920x1080='xrandr --newmode $(cvt 1920 1080 | cut -d" " -f2- | tail -1) && xrandr --addmode Virtual1 "1920x1080_60.00"'
 alias newmode='xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync'
 alias addmode='xrandr --addmode Virtual1 "1920x1080_60.00"'
+
+export PERLLIB="$IDE/lib:$IDE/local/lib"
+export PERL5LIB="$PERLLIB"
+export PYTHONPATH="$IDE/lib/python"
 
 # Emacs
 #
@@ -125,7 +133,7 @@ export SHOW_CPP_INCLUDES='g++ -E -Wp,-v -xc /dev/null'
 export SHOW_LD_PATHS="ld --verbose | grep SEARCH_DIR | tr -s ' ;' \\012"
 
 if [[ -z "$THIS_ARCH" ]]; then
-    export THIS_ARCH=$(arch)
+    export THIS_ARCH=$(uname -m)
 fi
 if [[ -z "$THIS_ID" ]]; then
     export THIS_ID=$(grep '^ID=' /etc/os-release | cut -d= -f2)
@@ -146,18 +154,10 @@ MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 WHITE=$(tput setaf 7)
 
-# OLD STUFF (you never know)
-#
-# if [ $CLEARCASE_ROOT ];
-# then
-#   export PS1='\# [\h($(basename $CLEARCASE_ROOT))] \W> ';
-# fi
-# export PS1=${LIGHT_GREEN}'\# [\h] \W> '${NO_COLOUR}
-
 if [[ "$THIS_ARCH" = "x86_64" ]]; then
     PROMPT_COLOR=${BOLD}${GREEN}
 else
-    PROMPT_COLOR=${BOLD}${BLUE}
+    PROMPT_COLOR=${BOLD}${YELLOW}
 fi
 export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '$NORMAL
 

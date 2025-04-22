@@ -115,7 +115,7 @@
   "Return t if LED-MASK indicates caps lock is on."
   (eq (logand led-mask 1) 1))
 
-(defun is-feature? (sym)
+(defun tjf:flags/is-feature? (sym)
   "Prints message showing if SYM is a feature."
   (interactive "Mfeature: ")
   (message "%s is %s" sym (if (featurep (intern sym)) "a feature" "NOT a feature")))

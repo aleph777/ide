@@ -619,8 +619,10 @@
    `(tjf:tabline/button-highlight ((t (:inherit tjf:tabline/highlight))))
    `(tjf:tabline/highlight        ((t (:background ,fontaine/bg-yellow-red :foreground ,fontaine/fg-default :weight bold))))
    `(tjf:tabline/modified         ((t (:inherit tjf:tabline/default :background ,fontaine/red    :foreground ,fontaine/white :weight bold))))
-   `(tjf:tabline/sel-mod          ((t (:inherit tjf:tabline/default :background "xxx"            :foreground ,fontaine/red   :weight bold))))
-   `(tjf:tabline/selected         ((t (:inherit tjf:tabline/default :background "xxx"            :foreground ,fontaine/black :weight bold))))
+   ;; `(tjf:tabline/sel-mod          ((t (:inherit tjf:tabline/default :background "xxx"            :foreground ,fontaine/red   :weight bold))))
+   ;; `(tjf:tabline/selected         ((t (:inherit tjf:tabline/default :background "xxx"            :foreground ,fontaine/black :weight bold))))
+   `(tjf:tabline/sel-mod          ((t (:inherit tjf:tabline/default            :foreground ,fontaine/red   :weight bold))))
+   `(tjf:tabline/selected         ((t (:inherit tjf:tabline/default            :foreground ,fontaine/black :weight bold))))
    `(tjf:tabline/unselected       ((t (:inherit tjf:tabline/default :background ,fontaine/shadow :foreground ,fontaine/fg-white))))
 
 ;;;;; trailing-whitespace

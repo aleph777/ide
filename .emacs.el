@@ -4,7 +4,6 @@
 
 ;;; Code:
 
-
 (message "Loading .emacs.el...")
 
 ;;
@@ -43,6 +42,8 @@
 (defvar tjf:user/dir-initialize (concat tjf:user/dir-elisp "00_initialize/"))
 (defvar tjf:user/dir-experiment (concat tjf:user/dir-elisp "00_experiment/"))
 
+(defvar tjf:user/dir-tenbeauty  (concat tjf:user/dir-home "Workspace/tenbeauty/"))
+
 ;;
 (cl-pushnew tjf:user/dir-elisp-images image-load-path :test 'string=)
 (cl-pushnew tjf:user/dir-elisp-ext  load-path :test 'string=)
@@ -54,12 +55,13 @@
 
 (load custom-file)
 
-(if t
+(if nil
     (cl-pushnew tjf:user/dir-initialize load-path :test 'string=)
   (cl-pushnew tjf:user/dir-experiment load-path :test 'string=)
   (require 'init))
 
 ;;
 (message "Loading .emacs.el...done")
+(provide 'init)
 
 ;;; .emacs.el ends here

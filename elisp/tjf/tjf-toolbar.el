@@ -125,18 +125,18 @@
 (tool-bar-add-item "cancel" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
 (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
-(tool-bar-add-item "lock"    'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
-(tool-bar-add-item "unlock"  'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
-(tool-bar-add-item "save"    'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
-(tool-bar-add-item "save-as" 'write-file       'saveas :label "" :help "Save buffer as/Write region...")
-(tool-bar-add-item "refresh" 'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
+(tool-bar-add-item "lock"        'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
+(tool-bar-add-item "lock_open"   'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
+(tool-bar-add-item "save"        'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
+(tool-bar-add-item "save-as"     'write-file       'saveas :label "" :help "Save buffer as/Write region...")
+(tool-bar-add-item "refresh"     'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
 (define-key-after (default-value 'tool-bar-map) [separator-2] menu-bar-separator)
 
 ;;
 ;; Undo/Redo
 ;;
-(tool-bar-add-item "undo" 'undo 'undo-fu-only-undo :label "" :help "Undo last operation" :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
-(tool-bar-add-item "redo" 'redo 'undo-fu-only-redo :label "" :help "Redo last undo"      :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
+(tool-bar-add-item "undo" 'undo-fu-only-undo 'undo :label "" :help "Undo last operation" :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
+(tool-bar-add-item "redo" 'undo-fu-only-redo 'redo :label "" :help "Redo last undo"      :visible '(tjf:flags/is-rw?) :enable '(tjf:flags/enable-undo-redo?))
 
 (define-key-after (default-value 'tool-bar-map) [separator-3] menu-bar-separator)
 
@@ -174,7 +174,7 @@
 
 (tool-bar-add-item "repeat"   'repeat-complex-command             'repeat   :label "" :help "Repeat Command...")
 (tool-bar-add-item "case"     'tjf:edit/toggle-char-case-at-point 'case     :label "" :help "Toggle case"     :visible '(tjf:flags/is-rw?))
-(tool-bar-add-item "bookmark" 'bm-toggle                          'bookmark :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
+;; (tool-bar-add-item "bookmark" 'bm-toggle                          'bookmark :label "" :help "Bookmark toggle" :visible '(tjf:mode/is-not-shell-mode?))
 
 (define-key-after  (default-value 'tool-bar-map) [separator-7] menu-bar-separator)
 
