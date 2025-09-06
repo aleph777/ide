@@ -36,7 +36,7 @@
 (defvar tjf:user/dir-themes   (concat tjf:user/dir-elisp "themes/"))
 
 (defvar tjf:user/dir-elisp-ext    (concat tjf:user/dir-elisp "ext/"))
-(defvar tjf:user/dir-elisp-images (concat tjf:user/dir-elisp "images/icons-22"))
+(defvar tjf:user/dir-elisp-images (concat tjf:user/dir-elisp "images/"))
 (defvar tjf:user/dir-elisp-tjf    (concat tjf:user/dir-elisp "tjf/"))
 
 (defvar tjf:user/dir-initialize (concat tjf:user/dir-elisp "00_initialize/"))
@@ -55,7 +55,7 @@
 
 (load custom-file)
 
-(if nil
+(if t
     (cl-pushnew tjf:user/dir-initialize load-path :test 'string=)
   (cl-pushnew tjf:user/dir-experiment load-path :test 'string=)
   (require 'init))
