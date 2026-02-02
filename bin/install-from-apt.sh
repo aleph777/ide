@@ -30,12 +30,13 @@ installPackage cpanminus
 installPackage cppcheck
 installPackage ffmpeg
 installPackage flex
+installPackage fonts-inter
 installPackage indent
 installPackage jupyter
 installPackage klatexformula
 installPackage libffi-dev
 installPackage libgccjit-11-dev
-installPackage libgconf2-dev
+#installPackage libgconf2-dev
 installPackage libgdbm-dev
 installPackage libgif-dev
 installPackage libgnutls28-dev

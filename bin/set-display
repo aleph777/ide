@@ -1,0 +1,29 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my ($width,$height);
+
+if (@ARGV == 2)
+{
+  ($width,$height) = @ARGV;
+}
+else
+{
+  ($width,$height) = (3820,2160);
+}
+
+my ($cvt) = qx(cvt $width $height | tail -1 | cut -d' ' -f2-);
+
+chomp $cvt;
+
+my $mode    = (split ' ',$cvt)[0];
+my $display = qx(xrandr | head -2 | tail -1 | cut -d' ' -f1);
+
+chomp $display;
+
+system "xrandr --newmode $cvt";
+system "xrandr --addmode $display $mode";
+system "xrandr --output $display --mode $mode";

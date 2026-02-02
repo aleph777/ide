@@ -1,0 +1,187 @@
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
+
+use Modern::Perl;
+use Math::Random::Secure;
+use integer;
+
+use warnings FATAL => 'recursion';
+
+use constant NUM_SQUARES => 9;
+use constant NUM_ROWS    => NUM_SQUARES;
+use constant NUM_COLS    => NUM_SQUARES;
+use constant NUM_SEEDS   => NUM_SQUARES*3;
+use constant NUM_GIVEN   => 27;
+use constant NUM_TOTAL   => NUM_ROWS*NUM_COLS;
+use constant NUM_SOLVED  => NUM_TOTAL - NUM_SEEDS;
+use constant NUM_BLANKED => NUM_TOTAL - NUM_GIVEN;
+
+use constant WIDTH      => 21;
+use constant EM_DASH    => '—';
+use constant HORIZONTAL => EM_DASH x 7;
+use constant LINE       => join '+',(HORIZONTAL) x 3;
+
+my %sqmap = (1 => {1 => 1,2 => 1,3 => 1,4 => 2, 5 => 2,6 => 2,7 => 3,8 => 3,9 => 3},
+             2 => {1 => 1,2 => 1,3 => 1,4 => 2, 5 => 2,6 => 2,7 => 3,8 => 3,9 => 3},
+             3 => {1 => 1,2 => 1,3 => 1,4 => 2, 5 => 2,6 => 2,7 => 3,8 => 3,9 => 3},
+             4 => {1 => 4,2 => 4,3 => 4,4 => 5, 5 => 5,6 => 5,7 => 6,8 => 6,9 => 6},
+             5 => {1 => 4,2 => 4,3 => 4,4 => 5, 5 => 5,6 => 5,7 => 6,8 => 6,9 => 6},
+             6 => {1 => 4,2 => 4,3 => 4,4 => 5, 5 => 5,6 => 5,7 => 6,8 => 6,9 => 6},
+             7 => {1 => 7,2 => 7,3 => 7,4 => 8, 5 => 8,6 => 8,7 => 9,8 => 9,9 => 9},
+             8 => {1 => 7,2 => 7,3 => 7,4 => 8, 5 => 8,6 => 8,7 => 9,8 => 9,9 => 9},
+             9 => {1 => 7,2 => 7,3 => 7,4 => 8, 5 => 8,6 => 8,7 => 9,8 => 9,9 => 9},
+            );
+
+my %board = map { $_ => { map { $_ => 0 } (1 .. NUM_COLS) } } 1 .. NUM_ROWS;
+my %row   = map { $_ => { map { $_ => 1 } (1 .. NUM_COLS) } } 1 .. NUM_ROWS;
+my %col   = map { $_ => { map { $_ => 1 } (1 .. NUM_COLS) } } 1 .. NUM_ROWS;
+my %sq    = map { $_ => { map { $_ => 1 } (1 .. NUM_COLS) } } 1 .. NUM_ROWS;
+
+my %available;
+
+sub printBoard
+{
+  foreach my $row (1 ..NUM_ROWS)
+  {
+    print ' ',join ' ',$board{$row}{1},$board{$row}{2},$board{$row}{3},'|';
+    print ' ',join ' ',$board{$row}{4},$board{$row}{5},$board{$row}{6},'|';
+    say   ' ',join ' ',$board{$row}{7},$board{$row}{8},$board{$row}{9};
+
+    say LINE if $row == 3 || $row == 6;
+  }
+}
+
+# fill a square randomly
+#
+sub initPuzzle
+{
+  my @rows = @_;
+  my @cols = @_;
+
+  my @pool = (1 .. NUM_ROWS);
+  my $num;
+
+  foreach my $row (@rows)
+  {
+    foreach my $col (@cols)
+    {
+      $num = splice(@pool,rand(@pool),1);
+
+      $board{$row}{$col} = $num;
+
+      $row{$row}{$num} = $col{$col}{$num} = $sq{$sqmap{$row}{$col}}{$num} = 0;
+    }
+  }
+}
+
+sub initAvailable
+{
+  my $key;
+
+  foreach my $row (1 .. NUM_ROWS)
+  {
+    foreach my $col (1 .. NUM_COLS)
+    {
+      next if $board{$row}{$col};
+
+      $key = join ',',$row,$col;
+
+      my $r = [];
+
+      $available{$key} = $r;
+
+      push @{$available{$key}},grep { $row{$row}{$_} && $col{$col}{$_} && $sq{$sqmap{$row}{$col}}{$_} } (1 .. 9);
+    }
+  }
+}
+
+sub determineAvailable
+{
+  my $key;
+
+  foreach my $row (1 .. NUM_ROWS)
+  {
+    foreach my $col (1 .. NUM_COLS)
+    {
+      next if $board{$row}{$col};
+
+      $key = join ',',$row,$col;
+
+      @{$available{$key}} = ();
+
+      push @{$available{$key}},grep { $row{$row}{$_} && $col{$col}{$_} && $sq{$sqmap{$row}{$col}}{$_} } (1 .. 9);
+    }
+  }
+}
+
+sub solveBoard
+{
+  my $first = shift;
+  my $index = shift;
+  
+  my ($key,@keys);
+  my ($num,$row,$col);
+
+  for($first .. NUM_SOLVED)
+  {
+    @keys = sort { scalar(@{$available{$a}}) <=> scalar(@{$available{$b}}) } keys %available;
+
+    $key = $keys[$index];
+
+    if(scalar(@{$available{$key}}) == 0)
+    {
+      solveBoard($_,$index);
+    }
+    $num = $available{$key}[rand(@{$available{$key}})];
+
+    ($row,$col) = split ',',$key;
+
+    $board{$row}{$col} = $num;
+
+    $row{$row}{$num} = $col{$col}{$num} = $sq{$sqmap{$row}{$col}}{$num} = 0;
+
+    delete $available{$key};
+
+    determineAvailable();
+  }
+}
+
+sub blankBoard
+{
+  my $blanks = shift;
+  
+  my $row;
+  my $col;
+
+  for(1 .. $blanks)
+  {
+    $row = rand(NUM_ROWS) + 1;
+    $col = rand(NUM_COLS) + 1;
+
+    redo if $board{$row}{$col} eq '_';
+
+    $board{$row}{$col} = '_';
+  }
+}
+
+# randomly assign values to squares
+#
+initPuzzle(1 .. 3); # top left
+initPuzzle(4 .. 6); # center
+initPuzzle(7 .. 9); # bottom right
+
+# determine number usage for rows and columns
+#
+initAvailable();
+
+eval
+{
+  # we can throw an exception if we need too much bactracking while solving
+  #
+  solveBoard(1,0);
+};
+if ($@) {
+  warn "Recursion failed: $@";
+  exit -1;
+}
+blankBoard(NUM_BLANKED);
+printBoard();

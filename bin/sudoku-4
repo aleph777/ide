@@ -1,0 +1,23 @@
+#!/usr/bin/env -S perl -w   # -*-Perl-*-
+
+use Modern::Perl;
+use strict;
+use integer;
+
+use constant EM_DASH   => '—';
+use constant LINE      => join '',EM_DASH x 23,"\n";
+use constant SEPARATOR => join '',"\n\n",LINE,"\n\n";
+
+my @text;
+
+for (0 .. 3)
+{
+  my $t = [];
+
+  push @text,$t;
+
+  $? = -1;
+
+  @{$t} = qx(sudoku-1 2>>/dev/null) until $? == 0;
+}
+print join SEPARATOR,map { join '',@{$text[$_]} } 0 .. 3;
