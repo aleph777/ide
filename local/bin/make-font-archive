@@ -1,0 +1,15 @@
+#!/usr/bin/perl -w    # -*-Perl-*-
+
+use Modern::Perl;
+use File::Basename qw(basename);
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+use constant DIR_LOCAL => join '/',$ENV{HOME},'.fonts';
+use constant PATH_REPO  => join '/',$ENV{HOME},'ide/fonts.tar.xz';
+
+chdir DIR_LOCAL;
+
+my @folders = grep !/Monaspace/,grep { -d } glob './*';
+
+system join ' ','tar cvjf',PATH_REPO,map { join '',"'",$_,"'" } @folders;
