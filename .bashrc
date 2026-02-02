@@ -90,8 +90,10 @@ export PYTHONPATH="$IDE/lib/python"
 export EDITOR='nano'
 
 export EMACSDIR=$HOME/emacs
-export EMACSBIN=$EMACSDIR/src/emacs
-export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
+# export EMACSBIN=$EMACSDIR/src/emacs
+export EMACSBIN=/usr/bin/emacs
+# export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
+export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-x-resources'
 
 alias emacs="$EMACSBIN $EMACSARGS"
 alias emacsclient="$EMACSDIR/lib-src/emacsclient -n -c"
