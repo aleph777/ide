@@ -3,10 +3,12 @@
 #include <cstdio>
 #include <iostream>
 #include <vector>
+#include <utility>
+#include <cstdlib>
 
 #define DIMENSION_BOARD 8
 
-#define LINE "+--------+--------+--------+--------+--------+--------+--------+--------+\n"
+#define LINE "+————————+————————+————————+————————+————————+————————+————————+————————+\n"
 
 using namespace std;
 

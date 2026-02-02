@@ -1,14 +1,5 @@
-/*=============================================================================
-  Copyright © 2022 - 2022 -  NailPro INC.  All Rights Reserved.
-
-  Redistribution of this file, in original or modified form, without
-  prior written consent of NailPro INC is prohibited.
-
--------------------------------------------------------------------------------
-
-=============================================================================*/
-#ifndef NAILPRO_MAP_H_
-#define NAILPRO_MAP_H_
+#ifndef MAP_H_
+#define MAP_H_
 
 #include <map>
 
