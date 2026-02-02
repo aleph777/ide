@@ -19,7 +19,35 @@
 
 ;;; Code:
 
+(defvar ligature-def '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                       "\\\\" "://"))
+
+(defun message--with-timestamp (format-string &rest args)
+  "Add FORMAT-STRING timestamp (using ARGS) to `*Messages*' buffer."
+  (when (and (>   (length  format-string) 0)
+             (not (string= format-string " ")))
+    (let ((deactivate-mark nil))
+      (save-mark-and-excursion
+        (with-current-buffer "*Messages*"
+          (let ((inhibit-read-only t))
+            (goto-char (point-max))
+            (when (not (bolp)) (newline))
+            (insert (format-time-string "[%T.%3N] " (current-time)))))))))
+
 (message "Loading early-init.el...")
+
+(advice-add 'message :before 'message--with-timestamp)
 
 ;; garbage collection
 ;;
@@ -77,18 +105,18 @@
 
 ;; -----------------------------------------------------------------------------
 
-(if (and (featurep 'native-compile)
-         (fboundp 'native-comp-available-p)
-         (native-comp-available-p))
-    ;; Activate `native-compile'
-    (progn
-      (setq native-comp-deferred-compilation t)
-      (setq native-comp-speed                2)
-      ;; (setq package-native-compile           t)
-      (setq native-comp-async-report-warnings-errors 'silent)
-    )
-  ;; Deactivate the `native-compile' feature if it is not available
-  (setq features (delq 'native-compile features)))
+;; (if (and (featurep 'native-compile)
+;;          (fboundp 'native-comp-available-p)
+;;          (native-comp-available-p))
+;;     ;; Activate `native-compile'
+;;     (progn
+;;       (setq native-comp-deferred-compilation t)
+;;       (setq native-comp-speed                2)
+;;       ;; (setq package-native-compile           t)
+;;       (setq native-comp-async-report-warnings-errors 'silent)
+;;     )
+;;   ;; Deactivate the `native-compile' feature if it is not available
+;;   (setq features (delq 'native-compile features)))
 
 ;; Suppress compiler warnings and don't inundate users with their popups.
 ;; (setq native-comp-async-report-warnings-errors
