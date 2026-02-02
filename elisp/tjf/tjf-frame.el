@@ -80,7 +80,7 @@
 
 (defvar tjf:frame/default-width)
 (defvar tjf:frame/default-height)
-(setq tjf:frame/default-width   (- (/ (x-display-pixel-width)  (frame-char-width) 4) 8))
+(setq tjf:frame/default-width   (- (/ (x-display-pixel-width)  (frame-char-width) 2)   8))
 (setq tjf:frame/default-height  (- (/ (x-display-pixel-height) (frame-char-height) ) 10))
 
 (defvar tjf:frame/default-size (list (cons 'width tjf:frame/default-width) (cons 'height tjf:frame/default-height)))

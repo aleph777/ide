@@ -55,7 +55,7 @@
 (setq   tjf:cpp/debug "-g")
 
 (defvar tjf:cpp/dialect)
-(setq   tjf:cpp/dialect "c++17")
+(setq   tjf:cpp/dialect "c++20")
 
 (defvar tjf:cpp/includes)
 (setq   tjf:cpp/includes "-I.")
@@ -74,6 +74,26 @@
 
 (defvar tjf:cpp/warnings)
 (setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
+
+(defvar tjf:cpp/build-menu
+  '("Build"
+    ["Syntax  Check"   tjf:cpp/syntax-check    t]
+    ["Static Analysis" tjf:cpp/check           t]
+    ["Compile File"    tjf:cpp/compile-file    t]
+    ["Compile Program" tjf:cpp/compile-program t]
+    "---"
+    ["Make"    tjf:cpp/make t]
+    ["Make..." compile      t]
+    "---"
+    ["Set Compiler..."           tjf:cpp/set-compiler     t]
+    ["Set Debug Level..."        tjf:cpp/set-debug        t]
+    ["Set Dialect..."            tjf:cpp/set-dialect      t]
+    ["Set Linker Flags..."       tjf:cpp/set-ldflags      t]
+    ["Set Optimization Level..." tjf:cpp/set-optimization t]
+    ["Set Warning Flags..."      tjf:cpp/set-warnings     t]
+    "---"
+    ["Set Make Flags..." tjf:cpp/set-makeflags t]
+    ))
 
 (defun tjf:cpp/check ()
   "Run ‘cppcheck’ on buffer."
@@ -196,26 +216,6 @@
   "Compile current buffer (syntax check only)."
   (interactive)
   (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) "-fsyntax-only" ,(basename)))))
-
-(defvar tjf:cpp/build-menu
-  '("Build"
-    ["Syntax  Check"   tjf:cpp/syntax-check    t]
-    ["Static Analysis" tjf:cpp/check           t]
-    ["Compile File"    tjf:cpp/compile-file    t]
-    ["Compile Program" tjf:cpp/compile-program t]
-    "---"
-    ["Make"    tjf:cpp/make t]
-    ["Make..." compile      t]
-    "---"
-    ["Set Compiler..."           tjf:cpp/set-compiler     t]
-    ["Set Debug Level..."        tjf:cpp/set-debug        t]
-    ["Set Dialect..."            tjf:cpp/set-dialect      t]
-    ["Set Linker Flags..."       tjf:cpp/set-ldflags      t]
-    ["Set Optimization Level..." tjf:cpp/set-optimization t]
-    ["Set Warning Flags..."      tjf:cpp/set-warnings     t]
-    "---"
-    ["Set Make Flags..." tjf:cpp/set-makeflags t]
-    ))
 
 ;;
 (message "Loading tjf-cpp...done")

@@ -126,10 +126,10 @@
 (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
 (tool-bar-add-item "lock"        'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))
-(tool-bar-add-item "lock_open"   'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
+(tool-bar-add-item "unlock"      'read-only-mode   'unlock :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-unlock?))
 (tool-bar-add-item "save"        'save-buffer      'save   :label "" :help "Save buffer"      :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-save?) )
 (tool-bar-add-item "save-as"     'write-file       'saveas :label "" :help "Save buffer as/Write region...")
-(tool-bar-add-item "refresh"     'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
+(tool-bar-add-item "revert"      'revert-buffer    'revert :label "" :help "Revert buffer"    :visible '(tjf:mode/is-not-shell-mode?) :enable '(tjf:flags/enable-revert?))
 (define-key-after (default-value 'tool-bar-map) [separator-2] menu-bar-separator)
 
 ;;
@@ -152,11 +152,11 @@
 ;;
 ;; Cursor movement
 ;;
-(tool-bar-add-item "home"     'beginning-of-buffer  'home      :label "" :help "Home")
-(tool-bar-add-item "end"      'end-of-buffer        'end       :label "" :help "End")
-(tool-bar-add-item "up"       'scroll-down-command  'page-up   :label "" :help "Page Up")
-(tool-bar-add-item "down"     'scroll-up-command    'page-down :label "" :help "Page Down")
-(tool-bar-add-item "goto"     'goto-line            'goto      :label "" :help "Goto line.../Saved point")
+(tool-bar-add-item "top"     'beginning-of-buffer  'home      :label "" :help "Home")
+(tool-bar-add-item "bottom"  'end-of-buffer        'end       :label "" :help "End")
+(tool-bar-add-item "north"   'scroll-down-command  'page-up   :label "" :help "Page Up")
+(tool-bar-add-item "south"   'scroll-up-command    'page-down :label "" :help "Page Down")
+(tool-bar-add-item "goto"    'goto-line            'goto      :label "" :help "Goto line.../Saved point")
 
 (define-key-after (default-value 'tool-bar-map) [separator-5] menu-bar-separator)
 
@@ -165,8 +165,8 @@
 ;;
 ;; (tool-bar-add-item "00-hide"    'hs-hide-block             'hide :label "" :help "Hide block" :visible 'hs-minor-mode)
 ;; (tool-bar-add-item "00-show"    'hs-show-block             'show :label "" :help "Show block" :visible 'hs-minor-mode)
-(tool-bar-add-item "up-circle"   'search-word-backward 'backward :label "" :help "Search backward")
-(tool-bar-add-item "down-circle" 'search-word-forward  'forward  :label "" :help "Search forward")
+(tool-bar-add-item "sb"   'search-word-backward 'backward :label "" :help "Search backward")
+(tool-bar-add-item "sf" 'search-word-forward  'forward  :label "" :help "Search forward")
 (tool-bar-add-item "search"      'tjf:search/occur     'search   :label "" :help "Show matching lines...")
 (tool-bar-add-item "replace"     'anzu-query-replace   'replace  :label "" :help "Find & replace/Find & replace regexp..." :visible '(tjf:flags/visible-replace?))
 
@@ -178,16 +178,16 @@
 
 (define-key-after  (default-value 'tool-bar-map) [separator-7] menu-bar-separator)
 
-(tool-bar-add-item "zoom-in"  'text-scale-increase                'zoom-in  :label "")
-(tool-bar-add-item "zoom-out" 'text-scale-decrease                'zoom-out :label "")
+(tool-bar-add-item "text+" 'text-scale-increase                'zoom-in  :label "")
+(tool-bar-add-item "text-" 'text-scale-decrease                'zoom-out :label "")
 
 (define-key-after  (default-value 'tool-bar-map) [separator-8] menu-bar-separator)
 
 (tool-bar-add-item "tree"     'treemacs                           'tree     :label "" :help "Toggle treemacs")
 
-(tool-bar-add-item "up"          'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:mode/is-shell-mode?) :label "" :help "Previous input")
-(tool-bar-add-item "down"        'tjf:toolbar/next-input     'down-arrow :visible '(tjf:mode/is-shell-mode?) :label "" :help "Next input")
-(tool-bar-add-item "delete-exit" 'comint-delete-output       'cancel     :visible '(tjf:mode/is-shell-mode?) :label "" :help "Flush output")
+(tool-bar-add-item "prev" 'tjf:toolbar/previous-input 'up-arrow   :visible '(tjf:mode/is-shell-mode?) :label "" :help "Previous input")
+(tool-bar-add-item "next" 'tjf:toolbar/next-input     'down-arrow :visible '(tjf:mode/is-shell-mode?) :label "" :help "Next input")
+(tool-bar-add-item "del"  'comint-delete-output       'cancel     :visible '(tjf:mode/is-shell-mode?) :label "" :help "Flush output")
 
 ;;
 ;; Control

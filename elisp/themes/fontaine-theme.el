@@ -1,6 +1,6 @@
 ;;; fontaine-theme.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2025  Tom Fontaine
+;;         Copyright © 2016-2026  Tom Fontaine
 ;; Author: Tom Fontaine
 ;; Date:   19-Aug-2016
 
@@ -236,49 +236,59 @@
 ;;   Iosevka,Iosevka Light Extended:style=Light Extended,Regular
 
 (let* ((font-family-list (font-family-list))
-       (anka            (car (member "Anka/Coder"                   font-family-list)))
-       (bitstream       (car (member "Bitstream Vera Sans Mono"     font-family-list)))
-       (camingo         (car (member "CamingoCode"                  font-family-list)))
-       (consolas        (car (member "Consolas"                     font-family-list)))
-       (courier         (car (member "Courier 10 Pitch"             font-family-list)))
-       (courier-prime   (car (member "Courier Prime Code"           font-family-list)))
-       (cousine         (car (member "Cousine"                      font-family-list)))
-       (dm              (car (member "DM Mono"                      font-family-list)))
-       (envy            (car (member "Envy Code R"                  font-family-list)))
-       (fantasque       (car (member "Fantasque Sans Mono"          font-family-list)))
-       (firacode        (car (member "Fira Code"                    font-family-list)))
-       (hack            (car (member "Hack Nerd Font"               font-family-list)))
-       (hermit          (car (member "Hermit"                       font-family-list)))
-       (ia-writer       (car (member "iA Writer Mono S"             font-family-list)))
-       (inconsolata     (car (member "Inconsolata"                  font-family-list)))
-       (input           (car (member "Input Mono"                   font-family-list)))
-       (intel-one       (car (member "IntelOne Mono"                font-family-list)))
-       (iosevka         (car (member "Iosevka"                      font-family-list)))
-       (jet             (car (member "JetBrains Mono"               font-family-list)))
-       (julia           (car (member "JuliaMono"                    font-family-list)))
-       (liberation      (car (member "Liberation Mono"              font-family-list)))
-       (lilex           (car (member "Lilex"                        font-family-list)))
-       (lotion          (car (member "Lotion"                       font-family-list)))
-       (luculent        (car (member "Luculent"                     font-family-list)))
-       (meslo           (car (member "Meslo LG S DZ"                font-family-list)))
-       (monofoki        (car (member "Monofoki"                     font-family-list)))
-       (monoid          (car (member "Monoid"                       font-family-list)))
-       (recursive       (car (member "Recursive Mono Linear Static" font-family-list)))
-       (source-code-pro (car (member "Source Code Pro"              font-family-list)))
-       (space           (car (member "Space Mono"                   font-family-list)))
-       (twilio          (car (member "Twilio Sans Mono Retina"      font-family-list)))
-       (ubuntu          (car (member "Ubuntu Mono"                  font-family-list)))
-       (victor          (car (member "Victor Mono"                  font-family-list)))
+       (anka              (car (member "Anka/Coder"                   font-family-list)))
+       (bitstream         (car (member "Bitstream Vera Sans Mono"     font-family-list)))
+       (camingo           (car (member "CamingoCode"                  font-family-list)))
+       (consolas          (car (member "Consolas"                     font-family-list)))
+       (courier           (car (member "Courier 10 Pitch"             font-family-list)))
+       (courier-prime     (car (member "Courier Prime Code"           font-family-list)))
+       (cousine           (car (member "Cousine"                      font-family-list)))
+       (dm                (car (member "DM Mono"                      font-family-list)))
+       (envy              (car (member "Envy Code R"                  font-family-list)))
+       (fantasque         (car (member "Fantasque Sans Mono"          font-family-list)))
+       (firacode          (car (member "Fira Code"                    font-family-list)))
+       (go-mono           (car (member "Go Mono"                      font-family-list)))
+       (hack              (car (member "Hack Nerd Font"               font-family-list)))
+       (hermit            (car (member "Hermit"                       font-family-list)))
+       (ia-writer         (car (member "iA Writer Mono S"             font-family-list)))
+       (inconsolata       (car (member "Inconsolata"                  font-family-list)))
+       (input             (car (member "Input Mono"                   font-family-list)))
+       (intel-one         (car (member "IntelOne Mono"                font-family-list)))
+       (iosevka           (car (member "Iosevka"                      font-family-list)))
+       (jet               (car (member "JetBrains Mono"               font-family-list)))
+       (julia             (car (member "JuliaMono"                    font-family-list)))
+       (liberation        (car (member "Liberation Mono"              font-family-list)))
+       (lilex             (car (member "Lilex"                        font-family-list)))
+       (lotion            (car (member "Lotion"                       font-family-list)))
+       (luculent          (car (member "Luculent"                     font-family-list)))
+       (meslo             (car (member "Meslo LG S DZ"                font-family-list)))
+       (monaspace-argon   (car (member "Monaspace Argon"              font-family-list)))
+       (monaspace-krypton (car (member "Monaspace Krypton"            font-family-list)))
+       (monaspace-radon   (car (member "Monaspace Radon"              font-family-list)))
+       (monofoki          (car (member "Monofoki"                     font-family-list)))
+       (monoid            (car (member "Monoid"                       font-family-list)))
+       (recursive         (car (member "Recursive Mono Linear Static" font-family-list)))
+       (source-code-pro   (car (member "Source Code Pro"              font-family-list)))
+       (space             (car (member "Space Mono"                   font-family-list)))
+       (twilio            (car (member "Twilio Sans Mono Retina"      font-family-list)))
+       (ubuntu            (car (member "Ubuntu Mono"                  font-family-list)))
+       (victor            (car (member "Victor Mono"                  font-family-list)))
 
-       (avenir-next (car (member "Avenir Next Rounded Pro" font-family-list)))
-       (dejavu-sans (car (member "DejaVu Sans"             font-family-list)))
-       (inter       (car (member "Inter V"                 font-family-list)))
-       (nimbus-sans (car (member "Nimbus Sans"             font-family-list)))
-       (noto-sans   (car (member "Noto Sans"               font-family-list)))
-       (open-sans   (car (member "Open Sans"               font-family-list)))
-       (roboto      (car (member "Roboto"                  font-family-list)))
-       (segoe-ui    (car (member "Segoe UI"                font-family-list)))
-       (source-sans (car (member "Source Sans Pro"         font-family-list)))
+       (avenir-next           (car (member "Avenir Next Rounded Pro" font-family-list)))
+       (dejavu-sans           (car (member "DejaVu Sans"             font-family-list)))
+       (go                    (car (member "Go"                      font-family-list)))
+       (inter                 (car (member "Inter V"                 font-family-list)))
+       (monaspace-argon-var   (car (member "Monaspace Argon"         font-family-list)))
+       (monaspace-krypton-var (car (member "Monaspace Krypton"       font-family-list)))
+       (monaspace-neon-var    (car (member "Monaspace Neon"          font-family-list)))
+       (monaspace-radon-var   (car (member "Monaspace Radon"         font-family-list)))
+       (monaspace-xenon-var   (car (member "Monaspace Xenon"         font-family-list)))
+       (nimbus-sans           (car (member "Nimbus Sans"             font-family-list)))
+       (noto-sans             (car (member "Noto Sans"               font-family-list)))
+       (open-sans             (car (member "Open Sans"               font-family-list)))
+       (roboto                (car (member "Roboto"                  font-family-list)))
+       (segoe-ui              (car (member "Segoe UI"                font-family-list)))
+       (source-sans           (car (member "Source Sans Pro"         font-family-list)))
 
        (fontaine/fixed-pitch-family
         (or hack bitstream envy ubuntu fantasque
@@ -286,13 +296,16 @@
             meslo twilio camingo dm source-code-pro iosevka courier-prime
             ia-writer monoid firacode
             hermit intel-one
+            go-mono monaspace-argon monaspace-krypton monaspace-radon
             space
             luculent inconsolata lotion
             victor
             firacode
             courier))
 
-       (fontaine/variable-pitch-family (or inter nimbus-sans roboto avenir-next noto-sans source-sans dejavu-sans open-sans segoe-ui))
+       (fontaine/variable-pitch-family (or inter nimbus-sans roboto go avenir-next noto-sans source-sans monaspace-argon
+                                           monaspace-krypton monaspace-neon monaspace-radon monaspace-xenon dejavu-sans
+                                           open-sans segoe-ui))
 
        (fontaine/fixed-pitch-height    184)
        (fontaine/variable-pitch-height (/ (* 3 fontaine/fixed-pitch-height) 4))
@@ -342,7 +355,7 @@
        ;; theme palette backgrounds - minimum (vs. black) WCAG AA, preferably WCAG AAA
 
        (fontaine/bg-black   mint-x/black)
-       (fontaine/bg-gray    x11/gray95)
+       (fontaine/bg-gray    x11/gray80)
        (fontaine/bg-white   x11/white)
 
        (fontaine/bg-red          indian/georgia-peach)
@@ -453,7 +466,6 @@
                       :family fontaine/variable-pitch-family
                       :height fontaine/variable-pitch-height)
 
-  ;; (defface powerline-base `((t (:inherit mode-line :family variable-pitch :weight bold))) "" :group 'mode-line-faces)
   (defface powerline-base `((t (:inherit variable-pitch :weight bold))) "" :group 'mode-line-faces)
 
 (custom-theme-set-faces

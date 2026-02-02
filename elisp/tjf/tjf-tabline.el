@@ -1,6 +1,6 @@
 ;;; tjf-tabline.el --- Display tab bar in tab-line -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*- ;; -*-no-byte-compile: t
 
-;;         Copyright © 2021-2025 Tom Fontaine
+;;         Copyright © 2021-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   03-Feb-2021
@@ -183,6 +183,7 @@
 
 (message "Loading tjf-tabline...")
 (require 'powerline)
+(require 'tjf-powerline)
 
 ;;
 ;;; Options
@@ -711,16 +712,23 @@ If IMAGE is non-nil, try to use that image, else use STRING.
 If only the ENABLED-BUTTON image is provided, a DISABLED-BUTTON image
 is derived from it.")
 
-(defvar tjf:tabline/height 20)
-(defvar tjf:tabline/left  (powerline-wave-right 'tjf:tabline/default nil tjf:tabline/height))
-(defvar tjf:tabline/right (powerline-wave-left  nil 'tjf:tabline/default tjf:tabline/height))
+(defvar tjf:tabline/height)
+;; (setq   tjf:tabline/height 20)
+(setq   tjf:tabline/height 32)
+
+(defvar tjf:tabline/left)
+(setq   tjf:tabline/left  (powerline-wave-right 'tjf:tabline/default nil tjf:tabline/height))
+
+(defvar tjf:tabline/right)
+(setq   tjf:tabline/right (powerline-wave-left  nil 'tjf:tabline/default tjf:tabline/height))
 
 (defun tjf:tabline/label-function (tab)
   (powerline-render (list tjf:tabline/left (format " %s " (car tab)) tjf:tabline/right)))
 
-(defvar tjf:tabline/tab-label-function #'tjf:tabline/label-function
+(defvar tjf:tabline/tab-label-function nil
   "Function that obtains a tab label displayed on the tab bar.
 The function is passed a tab and should return a string.")
+(setq tjf:tabline/tab-label-function #'tjf:tabline/label-function)
 
 ;;; Home button
 ;;
@@ -1959,7 +1967,7 @@ Run as `tjf:tabline/init-hook'."
   (setq tjf:tabline/buffers nil
         tjf:tabline/buffer-show-groups nil
         tjf:tabline/current-tabset-function 'tjf:tabline/buffer-tabs
-        tjf:tabline/tab-label-function 'tjf:tabline/buffer-tab-label
+        tjf:tabline/tab-label-function 'tjf:tabline/label-function
         tjf:tabline/select-tab-function 'tjf:tabline/buffer-select-tab
         tjf:tabline/help-on-tab-function 'tjf:tabline/buffer-help-on-tab
         tjf:tabline/button-label-function 'tjf:tabline/buffer-button-label

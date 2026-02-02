@@ -76,7 +76,7 @@
 (require 'tjf-sort)
 (require 'tjf-tools)
 (require 'tjf-view)
-(require 'undo-tree)
+(require 'undo-fu)
 
 (define-key global-map [menu-bar] (make-sparse-keymap "menu-bar"))
 (define-key global-map [menu-bar buffer] (cons "Window" global-buffers-menu-map))
@@ -99,7 +99,7 @@
     ["Emacs Command Apropos... " command-apropos    :active t :key-sequence nil]
     ["Info"                      info               :active t :key-sequence [C-h i]]
     ["Unix Manpage…"             manual-entry       :active t :key-sequence nil]
-    "---"
+    "—————————"
     ["Feature?..." tjf:menu-bar/feature :active t]
     ))
 

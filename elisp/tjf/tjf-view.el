@@ -77,6 +77,93 @@
 (setq   tjf:view/which-function-mode 'off)
 (make-variable-buffer-local 'tjf:view/which-function-mode)
 
+(defvar tjf:view/menu
+  '("View"
+    ["Absolute Line Numbers" tjf:view/line-numbers-absolute-toggle :style toggle :selected (tjf:view/is-line-numbers-absolute?)]
+    ["Relative Line Numbers" tjf:view/line-numbers-relative-toggle :style toggle :selected (tjf:view/is-line-numbers-relative?)]
+    ["Which Function"        tjf:view/which-function-mode          :style toggle :selected (tjf:view/is-which-function-mode?)]
+    ["Whitespace"            whitespace-mode                       :style toggle :selected whitespace-mode]
+    ["Line Wrap"             visual-line-mode                      :style toggle :selected word-wrap]
+    "---"
+    ["Local Clipboard" tjf:clipboard/view :enable (get-buffer tjf:clipboard/name)]
+    "---"
+    ["Fullscreen" toggle-frame-fullscreen :style toggle :selected (tjf:flags/is-fullscreen?)                                        :keys "Alt-F11"]
+    ["Maximized"  toggle-frame-maximized  :style toggle :selected (tjf:flags/is-maxmized?)   :enable (tjf:flags/is-not-fullscreen?) :keys "Alt-F10"]
+    "---"
+    ("Hide/Show"
+     ["Hide/Show Enabled"  hs-minor-mode :style toggle :selected hs-minor-mode]
+     "---"
+     ["Hide Block"    hs-hide-block    :enable hs-minor-mode :help "Hide the code or comment block at point"]
+     ["Show Block"    hs-show-block    :enable hs-minor-mode :help "Show the code or comment block at point"]
+     ["Hide All"      hs-hide-all      :enable hs-minor-mode :help "Hide all the blocks in the buffer"]
+     ["Show All"      hs-show-all      :enable hs-minor-mode :help "Show all the blocks in the buffer"]
+     ["Hide Level"    hs-hide-level    :enable hs-minor-mode :help "Hide all block at levels below the current block"]
+     ["Toggle Hiding" hs-toggle-hiding :enable hs-minor-mode :help "Toggle the hiding state of the current block"]
+     "----"
+     ["Hide comments when hiding all" (setq hs-hide-comments-when-hiding-all (not hs-hide-comments-when-hiding-all)) :style toggle :selected hs-hide-comments-when-hiding-all]
+     ("Reveal on isearch"
+      ["Code blocks"             (setq hs-isearch-open 'code)    :style radio :selected (eq hs-isearch-open 'code)]
+      ["Comment blocks"          (setq hs-isearch-open 'comment) :style radio :selected (eq hs-isearch-open 'comment)]
+      ["Code and Comment blocks" (setq hs-isearch-open t)        :style radio :selected (eq hs-isearch-open t)]
+      ["None"                    (setq hs-isearch-open nil)      :style radio :selected (eq hs-isearch-open nil)]))
+    "---"
+    ["Change Local Font"  change-local-font  t]
+    ["Reset default font" reset-default-font t]
+    "---"
+    ["Increase Text Size" text-scale-increase t]
+    ["Decrease Text Size" text-scale-decrease t]
+    ["Reset Text Size"    (text-scale-mode 0) t]
+    "---"
+    ["Properties"  tjf:view/properties]
+    "---"
+    ["Diminish Minor Modes" diminish-minor-modes]
+    "---"
+    ["List Faces"            list-faces-display]
+    ["Show Face Under Point" (describe-char (point))]
+    "---"
+    ["Recenter Window"   recenter]
+    ["Reposition Window" reposition-window]
+    "---"
+    ("Window"
+     ["Make New Window"       tjf:frame/make-new]
+     ["Make Window Invisible" make-frame-invisible :enable (delete-frame-enabled-p)]
+     ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
+     "---"
+     ["Reset Window Size"     tjf:frame/reset-size :enable (tjf:flags/is-not-fullscreen?)]
+     ["Set Window Half Size"  tjf:frame/half-size  t]
+     ("Background Color"
+      ["Set Background Color"  tjf:color/set-background-random]
+
+      ["Set Blue Background Color"    tjf:color/set-background-blue]
+      ["Set Cyan Background Color"    tjf:color/set-background-cyan]
+      ["Set Gray Background Color"    tjf:color/set-background-gray]
+      ["Set Green Background Color"   tjf:color/set-background-green]
+      ["Set Magenta Background Color" tjf:color/set-background-magenta]
+      ["Set Red Background Color"     tjf:color/set-background-red]
+      ["Set Yellow Background Color"  tjf:color/set-background-yellow]
+      "---"
+      ["Decrease Hue"                 tjf:color/decrease-hue-background]
+      ["Increase Hue"                 tjf:color/increase-hue-background]
+      ["Decrease Saturation"          tjf:color/desaturate-background]
+      ["Increase Saturation"          tjf:color/saturate-background]
+      ["Decrease Luminance"           tjf:color/darken-background]
+      ["Increase Luminance"           tjf:color/brighten-background])
+     "---"
+     ["Query Window Font "   (message (tjf:frame/font   'modeline))]
+     ["Query Window Size "   (message (tjf:frame/size   'modeline))]
+     ["Query Window Colors " (message (tjf:frame/colors 'modeline))])
+    ("Pane"
+     ["Split Pane Vertically"   split-window-vertically]
+     ["Split Pane Horizontally" split-window-horizontally]
+     "---"
+     ["Delete Other Panes" delete-other-windows :enable (not (one-window-p))]
+     ["Delete Pane"        delete-window        :enable (not (one-window-p))]
+     "---"
+     ["Balance Panes" balance-windows :enable (not (one-window-p))]
+     "---"
+     ["Reset Minimum Height" reset-window-min-height :enable (not (= window-min-height 4))])
+    ))
+
 (defun tjf:view/change-local-font ()
   "Change the currently displayed font."
   (interactive)
@@ -276,93 +363,6 @@ is already narrowed."
   (interactive)
   (setq tjf:view/which-function-mode (if (eq tjf:view/which-function-mode 'off) 'on 'off))
   (which-function-mode))
-
-(defvar tjf:view/menu
-  '("View"
-    ["Absolute Line Numbers" tjf:view/line-numbers-absolute-toggle :style toggle :selected (tjf:view/is-line-numbers-absolute?)]
-    ["Relative Line Numbers" tjf:view/line-numbers-relative-toggle :style toggle :selected (tjf:view/is-line-numbers-relative?)]
-    ["Which Function"        tjf:view/which-function-mode          :style toggle :selected (tjf:view/is-which-function-mode?)]
-    ["Whitespace"            whitespace-mode                       :style toggle :selected whitespace-mode]
-    ["Line Wrap"             visual-line-mode                      :style toggle :selected word-wrap]
-    "---"
-    ["Local Clipboard" tjf:clipboard/view :enable (get-buffer tjf:clipboard/name)]
-    "---"
-    ["Fullscreen" toggle-frame-fullscreen :style toggle :selected (tjf:flags/is-fullscreen?)                                        :keys "Alt-F11"]
-    ["Maximized"  toggle-frame-maximized  :style toggle :selected (tjf:flags/is-maxmized?)   :enable (tjf:flags/is-not-fullscreen?) :keys "Alt-F10"]
-    "---"
-    ("Hide/Show"
-     ["Hide/Show Enabled"  hs-minor-mode :style toggle :selected hs-minor-mode]
-     "---"
-     ["Hide Block"    hs-hide-block    :enable hs-minor-mode :help "Hide the code or comment block at point"]
-     ["Show Block"    hs-show-block    :enable hs-minor-mode :help "Show the code or comment block at point"]
-     ["Hide All"      hs-hide-all      :enable hs-minor-mode :help "Hide all the blocks in the buffer"]
-     ["Show All"      hs-show-all      :enable hs-minor-mode :help "Show all the blocks in the buffer"]
-     ["Hide Level"    hs-hide-level    :enable hs-minor-mode :help "Hide all block at levels below the current block"]
-     ["Toggle Hiding" hs-toggle-hiding :enable hs-minor-mode :help "Toggle the hiding state of the current block"]
-     "----"
-     ["Hide comments when hiding all" (setq hs-hide-comments-when-hiding-all (not hs-hide-comments-when-hiding-all)) :style toggle :selected hs-hide-comments-when-hiding-all]
-     ("Reveal on isearch"
-      ["Code blocks"             (setq hs-isearch-open 'code)    :style radio :selected (eq hs-isearch-open 'code)]
-      ["Comment blocks"          (setq hs-isearch-open 'comment) :style radio :selected (eq hs-isearch-open 'comment)]
-      ["Code and Comment blocks" (setq hs-isearch-open t)        :style radio :selected (eq hs-isearch-open t)]
-      ["None"                    (setq hs-isearch-open nil)      :style radio :selected (eq hs-isearch-open nil)]))
-    "---"
-    ["Change Local Font"  change-local-font  t]
-    ["Reset default font" reset-default-font t]
-    "---"
-    ["Increase Text Size" text-scale-increase t]
-    ["Decrease Text Size" text-scale-decrease t]
-    ["Reset Text Size"    (text-scale-mode 0) t]
-    "---"
-    ["Properties"  tjf:view/properties]
-    "---"
-    ["Diminish Minor Modes" diminish-minor-modes]
-    "---"
-    ["List Faces"            list-faces-display]
-    ["Show Face Under Point" (describe-char (point))]
-    "---"
-    ["Recenter Window"   recenter]
-    ["Reposition Window" reposition-window]
-    "---"
-    ("Window"
-     ["Make New Window"       tjf:frame/make-new]
-     ["Make Window Invisible" make-frame-invisible :enable (delete-frame-enabled-p)]
-     ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
-     "---"
-     ["Reset Window Size"     tjf:frame/reset-size :enable (tjf:flags/is-not-fullscreen?)]
-     ["Set Window Half Size"  tjf:frame/half-size  t]
-     ("Background Color"
-      ["Set Background Color"  tjf:color/set-background-random]
-
-      ["Set Blue Background Color"    tjf:color/set-background-blue]
-      ["Set Cyan Background Color"    tjf:color/set-background-cyan]
-      ["Set Gray Background Color"    tjf:color/set-background-gray]
-      ["Set Green Background Color"   tjf:color/set-background-green]
-      ["Set Magenta Background Color" tjf:color/set-background-magenta]
-      ["Set Red Background Color"     tjf:color/set-background-red]
-      ["Set Yellow Background Color"  tjf:color/set-background-yellow]
-      "---"
-      ["Decrease Hue"                 tjf:color/decrease-hue-background]
-      ["Increase Hue"                 tjf:color/increase-hue-background]
-      ["Decrease Saturation"          tjf:color/desaturate-background]
-      ["Increase Saturation"          tjf:color/saturate-background]
-      ["Decrease Luminance"           tjf:color/darken-background]
-      ["Increase Luminance"           tjf:color/brighten-background])
-     "---"
-     ["Query Window Font "   (message (tjf:frame/font   'modeline))]
-     ["Query Window Size "   (message (tjf:frame/size   'modeline))]
-     ["Query Window Colors " (message (tjf:frame/colors 'modeline))])
-    ("Pane"
-     ["Split Pane Vertically"   split-window-vertically]
-     ["Split Pane Horizontally" split-window-horizontally]
-     "---"
-     ["Delete Other Panes" delete-other-windows :enable (not (one-window-p))]
-     ["Delete Pane"        delete-window        :enable (not (one-window-p))]
-     "---"
-     ["Balance Panes" balance-windows :enable (not (one-window-p))]
-     "---"
-     ["Reset Minimum Height" reset-window-min-height :enable (not (= window-min-height 4))])
-    ))
 ;;
 (message "Loading tjf-view...done")
 (provide 'tjf-view)

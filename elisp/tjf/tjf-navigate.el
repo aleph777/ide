@@ -109,7 +109,6 @@
   (easy-menu-add-item nil '("Navigate") ["Goto saved point" tjf:navigate/goto-saved-point t] "Start of function/class")
   (easy-menu-add-item nil '("Navigate") ["Save point"       tjf:navigate/save-point       t] "Goto Saved Point")
   (easy-menu-add-item nil '("Navigate") ["Go to line..."    goto-line                     t] "Save Point")
-
   )
 
 (defun tjf:navigate/save-point ()

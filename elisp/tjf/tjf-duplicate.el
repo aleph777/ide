@@ -47,7 +47,7 @@
 (require 'tjf-flags)
 (require 'tjf-macro)
 (require 'tjf-tools)
-(require 'undo-tree)
+(require 'undo-fu)
 
 ;;
 (defvar tjf:duplicate/using-tabs nil)
@@ -152,7 +152,7 @@ will re-create the equivalent amount of whitespace."
       (tjf:duplicate/skip-to-next-word-on-line)
       (setq dup-string (buffer-substring-no-properties dupbeg-point (point)))
       (when tabs?
-        (undo-tree-undo)))
+		(undo-fu-only-undo)))
     (insert dup-string)))
 
 (defun tjf:duplicate/tabs (dup-offset)
@@ -206,7 +206,7 @@ length as would be created by the other duplicate functions."
       (setq dup-fmt (concat "%" (format "%d" (- (point) dupbeg-point)) "s"))
       (setq dup-string (format dup-fmt " "))
       (when tabs?
-        (undo-tree-undo)))
+        (undo-fu-only-undo)))
     (insert dup-string)))
 
 (defun tjf:duplicate/spaces-tabs (dup-offset)
@@ -221,6 +221,7 @@ length as would be created by the other duplicate functions."
       (if (>= dup-line end-line)
           (error "Can't go forward that many lines"))))
   (let ((column-limit (current-column))
+        (dup-fmt      nil)
         (dup-string   nil)
         (dupbeg-point nil))
     (save-excursion

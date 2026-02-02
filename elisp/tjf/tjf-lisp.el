@@ -66,6 +66,30 @@
  ("Variables" "^\\s-*(defvar\\(?:-local\\)?\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)[[:space:]\n]+[^)]" 1)
  ("Types" "^\\s-*(\\(cl-def\\(?:struct\\|type\\)\\|def\\(?:class\\|face\\|group\\|ine-\\(?:condition\\|error\\|widget\\)\\|package\\|struct\\|t\\(?:\\(?:hem\\|yp\\)e\\)\\)\\)\\s-+'?\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)))
 
+(defvar tjf:lisp/build-menu-text
+  '("Build"
+    ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
+    ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
+    "---"
+    ["Byte Compile File..."      byte-compile-file]
+    ["Byte Recompile Directory" (byte-recompile-directory "." 0 t)]
+))
+
+(defvar tjf:lisp/mode-menu-text
+  '("Lisp"
+    ["Complete Symbol" completion-at-point :active t]
+    "---"
+    ["Beginning Of Defun" beginning-of-defun :active t]
+    ["End Of Defun"       end-of-defun       :active t]
+    ["Mark Defun"         mark-defun         :active t]
+    "---"
+    ["Evaluate Defun"  eval-defun  :active t          ]
+    ["Evaluate Buffer" eval-buffer :active t          ]
+    ["Evaluate Region" eval-region :active mark-active]
+    "---"
+    ["Insert Skeleton" tjf:lisp/insert-skeleton :enable (buffer-file-name)]
+    ))
+
 (defun tjf:lisp/byte-recompile ()
   "Recompile directory."
   (byte-recompile-directory 0))
@@ -108,30 +132,6 @@
   (easy-menu-define tjf:lisp/build-menu emacs-lisp-mode-map       "Build" tjf:lisp/build-menu-text)
 
   (setq lisp-imenu-generic-expression tjf:lisp/imenu-generic-expression))
-
-(defvar tjf:lisp/build-menu-text
-  '("Build"
-    ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
-    ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
-    "---"
-    ["Byte Compile File..."      byte-compile-file]
-    ["Byte Recompile Directory" (byte-recompile-directory "." 0 t)]
-))
-
-(defvar tjf:lisp/mode-menu-text
-  '("Lisp"
-    ["Complete Symbol" completion-at-point :active t]
-    "---"
-    ["Beginning Of Defun" beginning-of-defun :active t]
-    ["End Of Defun"       end-of-defun       :active t]
-    ["Mark Defun"         mark-defun         :active t]
-    "---"
-    ["Evaluate Defun"  eval-defun  :active t          ]
-    ["Evaluate Buffer" eval-buffer :active t          ]
-    ["Evaluate Region" eval-region :active mark-active]
-    "---"
-    ["Insert Skeleton" tjf:lisp/insert-skeleton :enable (buffer-file-name)]
-    ))
 
 ;;
 (message "Loading tjf-lisp...setting up minor mode menus...")

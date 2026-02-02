@@ -73,6 +73,26 @@
 (defvar tjf:c/warnings)
 (defvar tjf:c/warnings "-Wall -Wextra -Wconversion")
 
+(defvar tjf:c/build-menu
+  '("Build"
+    ["Syntax  Check"   tjf:c/syntax-check    t]
+    ["Static Analysis" tjf:c/check           t]
+    ["Compile File"    tjf:c/compile-file    t]
+    ["Compile Program" tjf:c/compile-program t]
+    "---"
+    ["Make"    tjf:c/make t]
+    ["Make..." compile    t]
+    "---"
+    ["Set Compiler..."           tjf:c/set-compiler     t]
+    ["Set Debug Level..."        tjf:c/set-debug        t]
+    ["Set Dialect..."            tjf:c/set-dialect      t]
+    ["Set Linker Flags..."       tjf:c/set-ldflags      t]
+    ["Set Optimization Level..." tjf:c/set-optimization t]
+    ["Set Warning Flags..."      tjf:c/set-warnings     t]
+    "---"
+    ["Set Make Flags..." tjf:c/set-makeflags t]
+    ))
+
 (defun tjf:c/check ()
   "Run ‘cppcheck’ on buffer."
   (interactive)
@@ -86,7 +106,7 @@
 
 (defun tjf:c/flags ()
   "Return the compiler flags."
-  (join " " `(,tjf:c/std ,tjf:cpp/includes ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
+  (join " " `(,tjf:c/std ,tjf:c/includes ,tjf:c/debug ,tjf:c/optimization ,tjf:c/warnings)))
 
 (defun tjf:c/compile-file ()
   "Compile the current file."
@@ -157,7 +177,7 @@
   (interactive)
   (let ((warnings (read-shell-command "Warnings: " tjf:c/warnings)))
     (unless (string= warnings tjf:c/warnings)
-      (tjf:cc/set-warnings warnings))))
+      (tjf:c/set-warnings warnings))))
 
 (defun tjf:c/config ()
   "C mode config function."
@@ -191,26 +211,6 @@
   "Compile the current buffer (syntax check only)."
   (interactive)
   (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) "-fsyntax-only" ,(basename)))))
-
-(defvar tjf:c/build-menu
-  '("Build"
-    ["Syntax  Check"   tjf:c/syntax-check    t]
-    ["Static Analysis" tjf:c/check           t]
-    ["Compile File"    tjf:c/compile-file    t]
-    ["Compile Program" tjf:c/compile-program t]
-    "---"
-    ["Make"    tjf:c/make t]
-    ["Make..." compile    t]
-    "---"
-    ["Set Compiler..."           tjf:c/set-compiler     t]
-    ["Set Debug Level..."        tjf:c/set-debug        t]
-    ["Set Dialect..."            tjf:c/set-dialect      t]
-    ["Set Linker Flags..."       tjf:c/set-ldflags      t]
-    ["Set Optimization Level..." tjf:c/set-optimization t]
-    ["Set Warning Flags..."      tjf:c/set-warnings     t]
-    "---"
-    ["Set Make Flags..." tjf:c/set-makeflags t]
-    ))
 
 ;;
 (message "Loading tjf-c...done")

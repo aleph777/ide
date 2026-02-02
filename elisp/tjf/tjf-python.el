@@ -43,7 +43,7 @@
 
 (require 'python)
 (require 'flycheck)
-(require 'smartparens-python)
+;; (require 'smartparens-python)
 (require 'tjf-edit)
 
 (message "Loading tjf-python...")

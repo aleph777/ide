@@ -131,7 +131,6 @@
                 string)))
         bookmarks
         "")))))
-)
 
 (defun tjf:bookmark/defun ()
   "Drops a temporary breadcrumb/bookmark at the beginning of the current defun."

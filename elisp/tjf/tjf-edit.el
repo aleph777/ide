@@ -423,15 +423,15 @@ the cursor prior to the inserted newline."
     "---"
      ["Delete Entire Buffer"          erase-buffer                 :enable (tjf:flags/enable-write?)]
      ["Delete to Beginning of Buffer" tjf:edit/delete-to-beginning :enable (tjf:flags/enable-write?)]
-     ["Delete to End of Buffer"       tjf:edit/delete-to-end       :enable (tjf:flags/enable-write?)])
+     ["Delete to End of Buffer"       tjf:edit/delete-to-end       :enable (tjf:flags/enable-write?)]
     ("Line"
      ["Delete All Text on Line"     tjf:edit/clear-line    :enable (tjf:flags/enable-write?)]
      ["Delete Entire Line"          tjf:edit/delete-line   :enable (tjf:flags/enable-write?)]
      ["Delete to Beginning of Line" tjf:edit/delete-to-bol :enable (tjf:flags/enable-write?)]
      ["Delete to End of Line"       tjf:edit/delete-to-eol :enable (tjf:flags/enable-write?)])
     ("Word"
-     ["Delete Backward Word" backward-kill-word :enable (tjf:flags/enable-write?)])
-     ["Delete Forward Word"  kill-word          :enable (tjf:flags/enable-write?)]))
+     ["Delete Backward Word" backward-kill-word :enable (tjf:flags/enable-write?)]
+     ["Delete Forward Word"  kill-word          :enable (tjf:flags/enable-write?)])))
 
 (defvar tjf:edit/menu-indent
   '("Indent"

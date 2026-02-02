@@ -72,7 +72,7 @@
   "Return the guard symbold for the current buffer."
   (let ((filename (upcase (s-replace "-" "_" (basename-no-ext))))
         (ext      (upcase (file-extension))))
-    (concat "NAILPRO" "_" filename "_" ext "_")))
+    (concat filename "_" ext "_")))
 
 (defun tjf:cc/insert-boilerplate ()
   "Insert a C/C++ module boilerplate for ‘(basename)’."
