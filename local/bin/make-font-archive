@@ -12,4 +12,4 @@ chdir DIR_LOCAL;
 
 my @folders = grep !/Monaspace/,grep { -d } glob './*';
 
-system join ' ','tar cvjf',PATH_REPO,map { join '',"'",$_,"'" } @folders;
+system join ' ','tar cvJf',PATH_REPO,map { join '',"'",$_,"'" } @folders;
