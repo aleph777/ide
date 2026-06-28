@@ -113,6 +113,7 @@ public:
       }
       println("\n{}", line);
     }
+    TextColor::reset();
   }
 
 private:
