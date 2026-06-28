@@ -55,13 +55,7 @@
 
 (load custom-file)
 
-(if t
-    (cl-pushnew tjf:user/dir-initialize load-path :test 'string=)
-  (cl-pushnew tjf:user/dir-experiment load-path :test 'string=)
-  (require 'init))
-
 ;;
 (message "Loading .emacs.el...done")
-(provide 'init)
 
 ;;; .emacs.el ends here
