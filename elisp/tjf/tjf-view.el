@@ -191,9 +191,10 @@
 
 (defun tjf:view/get-desktop ()
   "Call ‘cinnamon’ or ‘gnome-shell’ to retrieve GNOME version."
-  (let ((cin (shell-command-to-string "which cinnamon")))
+  (let* ((cex "cinnamon-session")
+         (cin (shell-command-to-string (concat "which " cex))))
     (unless (equal cin "")
-        (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "cinnamon --version"))
+        (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string (concat cex " --version")))
       (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "gnome-shell --version")))))
 
 (defun tjf:view/diminish ()
@@ -302,7 +303,7 @@ is already narrowed."
   (with-output-to-temp-buffer "*Properties*"
     (princ (format "File Name:   %s\n" (buffer-file-name)))
     (princ (format "Buffer Name: %s\n" (buffer-name)))
-    (princ (format "Major Mode:  %s\n" mode-name))
+    (princ (format "Major Mode:  %s\n" (if (listp mode-name)(car mode-name) mode-name)))
     (princ (format "Buffer Size: %d lines, %d Bytes\n" (count-lines (point-min) (point-max)) (1- (point-max))))
     (princ (format "Point:       %d\n" (point)))
     (let ((page-list (tjf:view/page)))
