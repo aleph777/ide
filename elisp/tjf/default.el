@@ -457,6 +457,7 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   :config
+  (eglot-inlay-hints-mode 0)
   (add-to-list 'eglot-server-programs '((c-ts-mode cc-mode) .
                                         ("clangd"
                                          "-j=8"
