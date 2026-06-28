@@ -149,7 +149,7 @@ if [[ -z "$THIS_VERSIONID" ]]; then
 fi
 
 BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+RESET=$(tput sgr0)
 
 BLACK=$(tput setaf 0)
 RED=$(tput setaf 1)
@@ -165,7 +165,7 @@ if [[ "$THIS_ARCH" = "x86_64" ]]; then
 else
     PROMPT_COLOR=${BOLD}${YELLOW}
 fi
-export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '$NORMAL
+export PS1='${PROMPT_COLOR}\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> $RESET'
 
 # ==============================================================================
 
