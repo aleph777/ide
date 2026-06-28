@@ -77,9 +77,14 @@ alias gtag='git for-each-ref --sort=creatordate --format "%(refname)" refs/tags 
 
 # setting up video resolution
 #
-alias set1920x1080='xrandr --newmode $(cvt 1920 1080 | cut -d" " -f2- | tail -1) && xrandr --addmode Virtual1 "1920x1080_60.00"'
-alias newmode='xrandr --newmode "1920x1080_60.00"  173.00  1920 2048 2248 2576  1080 1083 1088 1120 -hsync +vsync'
-alias addmode='xrandr --addmode Virtual1 "1920x1080_60.00"'
+# export CVT=$(cvt 3840 2160 | cut -d" " -f2- | tail -1)
+# export CVT_MODE_NAME=$(echo $CVT | cut -d" " -f1)
+export CVT='"3840x2160" 712.75 3840 4160 4576 5312 2160 2163 2168 2237 -hsync +vsync'
+export CVT_MODE_NAME='"3840x2160"'
+export CVT_MONITOR='Virtual1'
+export CVT_NEWMODE="xrandr --newmode $CVT"
+export CVT_ADDMODE="xrandr --addmode $CVT_MONITOR $CVT_MODE_NAME"
+export CVT_SET="$CVT_NEWMODE && $CVT_ADDMODE"
 
 export PERLLIB="$IDE/lib:$IDE/local/lib"
 export PERL5LIB="$PERLLIB"
@@ -90,16 +95,15 @@ export PYTHONPATH="$IDE/lib/python"
 export EDITOR='nano'
 
 export EMACSDIR=$HOME/emacs
-# export EMACSBIN=$EMACSDIR/src/emacs
-export EMACSBIN=/usr/bin/emacs
-# export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
-export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-x-resources'
+export EMACSBIN=$EMACSDIR/src/emacs
+export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
 
 alias emacs="$EMACSBIN $EMACSARGS"
 alias emacsclient="$EMACSDIR/lib-src/emacsclient -n -c"
-alias emacsdaemon='emacs --daemon'
+alias emacsdaemon="$EMACSBIN --daemon"
 alias emacsstop="emacsclient --eval '(kill-emacs)'"
 alias emacsclone='git clone https://git.savannah.gnu.org/git/emacs.git'
+alias emacsclone31='git clone -b emacs-31 https://github.com/emacs-mirror/emacs.git'
 
 # Ignore these commands
 #
