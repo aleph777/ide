@@ -45,7 +45,7 @@ alias flake8='flake8 --ignore E221,E303,E501'
 
 # apt
 #
-alias up='sudo apt update && sudo apt upgrade'
+alias up='sudo apt update && sudo apt upgrade -y'
 
 # Git
 #
@@ -168,13 +168,17 @@ export PS1=${PROMPT_COLOR}'\h[${THIS_ARCH} ${THIS_ID} ${THIS_VERSION_ID}] \W> '$
 export LOCAL_INSTALL_DIR=$($CLEANPATH $LOCAL_INSTALL_DIR:/home/fontaine/.local)
 export PATH=$($CLEANPATH $PATH:$LOCAL_INSTALL_DIR/bin)
 export LD_LIBRARY_PATH=$($CLEANPATH $LD_LIBRARY_PATH:$LOCAL_INSTALL_DIR/lib:/usr/local/lib)
-
-ppverbosefunc() {
-    cd ~/Workspace/tenbeauty/build/path_planner_cpp/src
-    export GLOG_alsologtostderr=true
-    export GLOG_stderrthreshold=0
-    export GLOG_v="$1"
-}
-
-export CMAKE_PREFIX_PATH=$($CLEANPATH $CMAKE_PREFIX_PATH:/usr/aarch64-linux-gnu)
-export AARCH64GCC_DIR=/usr
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/home/fontaine/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/home/fontaine/miniconda3/etc/profile.d/conda.sh" ]; then
+#         . "/home/fontaine/miniconda3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/home/fontaine/miniconda3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
+# <<< conda initialize <<<
