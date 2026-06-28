@@ -1,3 +1,5 @@
+// -*- C++ -*-
+
 #include <algorithm>
 #include <ctime>
 #include <cstdio>
