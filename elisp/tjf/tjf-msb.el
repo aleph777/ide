@@ -107,7 +107,8 @@
         ((tjf:mode/is-mode? 'awk-mode)                  2003 "Awk Files (%d)")
         ;; B 2010
         ((tjf:mode/is-mode? 'bat-mode)                  2010 "Batch Files (%d)")
-        ((tjf:mode/is-mode? tjf:mode/bibtext-mode)      2011 "Bibtex Files (%d)")
+        ((tjf:mode/is-mode? 'bazel-mode)                2011 "Bazel Files (%d)")
+        ((tjf:mode/is-mode? tjf:mode/bibtext-mode)      2012 "Bibtex Files (%d)")
         ;; C 2020
         ((tjf:mode/is-mode? tjf:mode/c-mode)            2020 "C Files  (%d)")
         ((tjf:mode/is-mode? 'csharp-mode)               2021 "C# Files  (%d)")
@@ -142,6 +143,7 @@
         ((tjf:mode/is-mode? tjf:mode/json-mode)         2092 "JSON Files (%d)")
         ((tjf:mode/is-mode? tjf:mode/julia-mode)        2093 "Julia Files (%d)")
         ;; K 3000
+        ((tjf:mode/is-mode? 'kotlin-mode)               3000 "Kotlin Files (%d)")
         ;; L 3010
         ((tjf:mode/is-mode? 'latex-mode)                3010 "Latex Files (%d)")
         ((tjf:mode/is-mode? 'lisp-mode)                 3011 "Lisp Files (%d)")
@@ -186,10 +188,10 @@
 
         ;; OTHER 5000
         ((and buffer-file-name (string-match "^\\.[^/]*$" (buffer-name)) 'no-multi) 5000 "Hidden Files (%d)")
-        ((and buffer-file-name 'no-multi)                                           5001 "Other Files (%d)")
-        ((and (string-match "^copy of " (buffer-name)) 'no-multi)                   5002 "Copy Buffers (%d)")
-        ((and (eq major-mode 'compilation-mode) 'no-multi)                          5010 "Compilation Log (%d)")
-        ((and msb-display-invisible-buffers-p (msb-invisible-buffer-p) 'no-multi)   5020 "Invisible Buffers (%d)")
+        ((and buffer-file-name                                           'no-multi) 5001 "Other Files (%d)")
+        ((and (string-match "^copy of " (buffer-name))                   'no-multi) 5002 "Copy Buffers (%d)")
+        ((and (eq major-mode 'compilation-mode)                          'no-multi) 5010 "Compilation Log (%d)")
+        ((and msb-display-invisible-buffers-p (msb-invisible-buffer-p)   'no-multi) 5020 "Invisible Buffers (%d)")
         ;; Catchup for all non-file buffers
         ('no-multi                                                                  5099 "Other Buffers (%d)")))
 
