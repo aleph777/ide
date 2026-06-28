@@ -272,7 +272,7 @@
 ;;lobal-set-key [(control meta super l)] '
 (define-key help-map [(control k)]       'describe-key)
 
-;
+                                        ;
 ;; ==================== m ====================
 ;;
 ;;lobal-set-key [(control m)]            'newline
@@ -547,14 +547,14 @@
 ;;lobal-set-key [(meta    super 0)]      '
 ;;lobal-set-key [(control meta super 0)] '
 
-; ==================== 1 ====================
+                                        ; ==================== 1 ====================
 ;;
 ;;lobal-set-key [(control 1)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(meta    1)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   1)] ' DO NOT USE
 ;;lobal-set-key [(control meta  1)]      '
-;(global-set-key [(control super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
-;(global-set-key [(meta    super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
+                                        ;(global-set-key [(control super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
+                                        ;(global-set-key [(meta    super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
 ;;lobal-set-key [(control meta super 1)] '
 
 ;; ==================== 2 ====================
@@ -732,7 +732,7 @@
 
 ;; ==================== ' ====================
 ;;
-;;lobal-set-key [(control \')] '
+(global-set-key [(control \')] 'ergoemacs-select-text-in-quote)
 ;;lobal-set-key [(meta    \')] 'abbrev-prefix-mark)
 (global-set-key [(super   \')] 'xah-insert-single-quote)
 ;;lobal-set-key [(control meta  \')]      '
@@ -1161,7 +1161,7 @@
 ;;lobal-set-key [(meta    left)] 'left-word)
 ;;lobal-set-key [(super   left)] 'search-word-backward)
 ;;lobal-set-key [(control meta  left)] ' DOES NOT REGISTER
-;;lobal-set-key [(control shift left)] 'ergoemacs-backward-open-bracket
+(global-set-key [(control shift left)] 'ergoemacs-backward-open-bracket)
 ;;lobal-set-key [(control super left)] ' DO NOT USE
 (global-set-key [(meta    super left)] 'backward-symbol)
 ;;lobal-set-key [(control meta super left)] '
@@ -1185,7 +1185,7 @@
 (global-set-key [(meta    right)] 'tjf:navigate/forward-word)
 ;;lobal-set-key [(super   right)] 'search-word-forward)
 ;;lobal-set-key [(control meta  right)] ' DOES NOT REGISTER
-;;lobal-set-key [(control shift right)] 'ergoemacs-forward-open-bracket
+(global-set-key [(control shift right)] 'ergoemacs-forward-open-bracket)
 ;;lobal-set-key [(control super right)] ' DO NOT USE
 (global-set-key [(meta    super right)] 'tjf:navigate/forward-symbol)
 ;;lobal-set-key [(control meta super right)] '
@@ -1239,7 +1239,7 @@
 (global-set-key [kp-enter]           'tjf:duplicate/previous)
 ;;lobal-set-key [(control kp-enter)] ' DO NOT USE ... messes up C-enter
 (global-set-key [(meta    kp-enter)] 'tjf:edit/insert-newline-before)
-;global-set-key [(super   kp-enter)] ')
+                                        ;global-set-key [(super   kp-enter)] ')
 ;;lobal-set-key [(control meta  kp-enter)]      ' DO NOT USE
 ;;lobal-set-key [(control super kp-enter)]      '
 ;;lobal-set-key [(meta    super kp-enter)]      '
@@ -1261,7 +1261,7 @@
 (global-set-key [kp-0] 'tjf:duplicate/line-or-region)
 ;;lobal-set-key [(control kp-0)] ' DO NOT USE ... digit argument
 (global-set-key [(meta    kp-0)] 'tjf:duplicate/line-or-region)
-;global-set-key [(super   kp-0)] '
+                                        ;global-set-key [(super   kp-0)] '
 
 ;;lobal-set-key [(control meta  kp-0)] ' DO NOT USE
 (global-set-key [(control super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
@@ -1348,7 +1348,7 @@
 (global-set-key [(meta    super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
 ;;lobal-set-key [(control meta super kp-4)] '
 
-;(global-set-key [kp-left]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
+                                        ;(global-set-key [kp-left]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
 ;;lobal-set-key [(control kp-left)] ' DO NOT USE ... digit argument
 (global-set-key [(meta    kp-left)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
 ;;lobal-set-key [(super   kp-left)] '
