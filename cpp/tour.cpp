@@ -1,9 +1,11 @@
 // -*- C++ -*-
 
 #include <algorithm>
+#include <compare>
 #include <ctime>
 #include <cstdio>
 #include <iostream>
+#include <string>
 #include <vector>
 #include <utility>
 #include <cstdlib>
@@ -12,7 +14,12 @@
 
 #define LINE "+————————+————————+————————+————————+————————+————————+————————+————————+\n"
 
-using namespace std;
+using std::cerr;
+using std::cout;
+
+using std::pair;
+using std::string;
+using std::vector;
 
 using Columns = vector<int>;
 using Board   = vector<Columns>;
@@ -32,11 +39,15 @@ class Tour
 {
     Board board;
 
+    const string bold; // BOLD => "\e[1m"
     const Delta delta;
 
+
+
 public:
-    Tour() :
-        board({}),
+  Tour()
+      : board({}),
+        bold("\e[1m"),
         delta({RowCol(-2, -1), RowCol(-2, 1),
                RowCol(-1, -2), RowCol(-1, 2),
                RowCol(1, -2),  RowCol(1,  2),
@@ -87,12 +98,12 @@ public:
             const auto x1 = m.first.first;
             const auto y1 = m.first.second;
 
-            cout << "TRYING... " << x1 << ", " << y1 << ": " << n+1 << "\n";
+            cerr << "TRYING... " << x1 << ", " << y1 << ": " << n+1 << "\n";
 
             if(solve(x1, y1, n+1))
                 return true;
 
-            cout << "FAILED: " << x1 << ", " << y1 << ": " << n+1 << "\n";
+            cerr << "FAILED: " << x1 << ", " << y1 << ": " << n+1 << "\n";
 
             board[x1][y1] = 0;
         }
@@ -101,7 +112,7 @@ public:
 
     void show()
     {
-        cout << "\n" << LINE;
+        cout << "\n" << bold << LINE;
 
         for(auto i = 0; i < DIMENSION_BOARD; ++i)
         {
