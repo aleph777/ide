@@ -49,13 +49,13 @@
 
 ;;
 (defvar tjf:cpp/compiler)
-(setq   tjf:cpp/compiler "g++")
+(setq   tjf:cpp/compiler "g++-14")
 
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
 
 (defvar tjf:cpp/dialect)
-(setq   tjf:cpp/dialect "c++20")
+(setq   tjf:cpp/dialect "c++23")
 
 (defvar tjf:cpp/includes)
 (setq   tjf:cpp/includes "-I.")
