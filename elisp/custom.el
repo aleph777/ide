@@ -19,7 +19,8 @@
  '(custom-safe-themes t nil nil "Customized with use-package imenu")
  '(flycheck-flake8-maximum-line-length 200)
  '(native-comp-async-report-warnings-errors nil)
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(anaconda-mode anzu bash-completion bazel blamer bm cape clang-capf clean-aindent-mode consult-eglot corfu-prescient cpp-auto-include csv-mode ctrlf diminish emojify ergoemacs-mode flycheck git-gutter go-mode helpful indent-bars jinx js2-mode julia-mode kind-icon kotlin-mode langtool loccur marginalia markdown-ts-mode mic-paren minions modern-cpp-font-lock modern-sh orderless paradox perl-ts-mode pos-tip powerline powerthesaurus rainbow-delimiters rainbow-mode rust-mode shift-number smartparens smooth-scrolling textsize track-changes treemacs-magit treesit-auto treesit-fold undo-fu undo-tree unicode-fonts vertico-prescient volatile-highlights ws-butler yaml-mode))
  '(paradox-github-token t)
  '(rainbow-x-colors nil)
  '(safe-local-variable-values
