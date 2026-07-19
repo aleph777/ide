@@ -605,4 +605,13 @@ sub parseThemeColors
   }
 }
 
+sub getHslInfo
+{
+  my $this = shift;
+
+  my ($hue,$saturation,$luminosity) = @_;
+
+  return $color{$hue[$hue]}{SUBTYPE};
+}
+
 1;
