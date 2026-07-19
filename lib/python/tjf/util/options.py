@@ -1,6 +1,6 @@
 # -*-coding: utf-8-*- ; -*-Python-*-
 
-#         Copyright © 2022-2025 Tom Fontaine
+#         Copyright © 2022-2026 Tom Fontaine
 
 # Title:  options.py
 # Date:   19-Apr-2022

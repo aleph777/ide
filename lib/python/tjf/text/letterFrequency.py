@@ -1,7 +1,7 @@
 # -*-coding: utf-8-*- ; -*-Python-*-
 
 
-#         Copyright © 2022-2025 Tom Fontaine
+#         Copyright © 2022-2026 Tom Fontaine
 
 # Title:  letterFrequency.py
 # Date:   30-Mar-2022
