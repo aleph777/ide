@@ -13,7 +13,6 @@
 
 #include <concepts>
 #include <string>
-#include <vector>
 
 template <typename T, typename Data>
 concept PersistentStorage = requires(T s, const Data &d, std::string key) {

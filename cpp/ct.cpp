@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <concepts>
+#include <cmath>
 
 // 1. Define the Requirement (The Concept)
 template <typename T>
