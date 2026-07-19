@@ -16,6 +16,7 @@
 (defvar is-linux?     (eq system-type 'gnu/linux))
 (defvar is-macos?     (eq system-type 'darwin))
 (defvar is-windows?   (eq system-type 'windows-nt))
+(defvar is-wsl?       (not (equal user-login-name "fontaine")))
 
 (defvar is-linux-gui? (and is-linux? is-gui?))
 
