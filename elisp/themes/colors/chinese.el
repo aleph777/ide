@@ -1,23 +1,23 @@
 ;;; chinese.el --- color definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2020-2024  Tom Fontaine
+;;         Copyright © 2020-2026  Tom Fontaine
 
-(defconst chinese/anti-flash-white  "#f1f2f6")
-(defconst chinese/baywharf          "#747d8c")
-(defconst chinese/bright-greek      "#3742fa")
-(defconst chinese/bruschetta-tomato "#ff6348")
-(defconst chinese/city-lights       "#dfe4ea")
-(defconst chinese/clear-chill       "#1e90ff")
-(defconst chinese/coral             "#ff7f50")
-(defconst chinese/french-sky-blue   "#70a1ff")
-(defconst chinese/golden-sand       "#eccc68")
-(defconst chinese/grisaille         "#57606f")
-(defconst chinese/lime-soap         "#7bed9f")
-(defconst chinese/orange            "#ffa502")
-(defconst chinese/peace             "#a4b0be")
-(defconst chinese/prestige-blue     "#2f3542")
-(defconst chinese/saturated-sky     "#5352ed")
-(defconst chinese/twinkle-blue      "#ced6e0")
-(defconst chinese/ufo-green         "#2ed573")
-(defconst chinese/watermelon        "#ff4757")
-(defconst chinese/wild-watermelon   "#ff6b81")
+(defconst chinese/anti-flash-white  "#f1f2f6") ;; white gray (blue-cyan), text: black
+(defconst chinese/baywharf          "#747d8c") ;; medium gray (blue-cyan), text: white
+(defconst chinese/bright-greek      "#3742fa") ;; medium blue, text: white
+(defconst chinese/bruschetta-tomato "#ff6348") ;; light red-yellow, text: black
+(defconst chinese/city-lights       "#dfe4ea") ;; white gray (blue-cyan), text: black
+(defconst chinese/clear-chill       "#1e90ff") ;; medium cyan-blue, text: black
+(defconst chinese/coral             "#ff7f50") ;; light red-yellow, text: black
+(defconst chinese/french-sky-blue   "#70a1ff") ;; light blue-cyan, text: black
+(defconst chinese/golden-sand       "#eccc68") ;; light yellow-red, text: black
+(defconst chinese/grisaille         "#57606f") ;; medium gray (blue-cyan), text: white
+(defconst chinese/lime-soap         "#7bed9f") ;; light green-cyan, text: black
+(defconst chinese/orange            "#ffa502") ;; medium yellow-red, text: black
+(defconst chinese/peace             "#a4b0be") ;; light gray (blue-cyan), text: black
+(defconst chinese/prestige-blue     "#2f3542") ;; dark blue-cyan, text: white
+(defconst chinese/saturated-sky     "#5352ed") ;; medium blue, text: white
+(defconst chinese/twinkle-blue      "#ced6e0") ;; light gray (blue-cyan), text: black
+(defconst chinese/ufo-green         "#2ed573") ;; medium green-cyan, text: black
+(defconst chinese/watermelon        "#ff4757") ;; light red, text: white
+(defconst chinese/wild-watermelon   "#ff6b81") ;; light red-magenta, text: black
