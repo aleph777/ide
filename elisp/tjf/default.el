@@ -337,10 +337,38 @@
   (minions-mode 1)
   (message "Config minions...done"))
 
-(use-package msb                  :ensure nil
+
+(use-package msb                  :ensure nil :after tjf-mode
+  :init
+  (defconst msb--too-many-menus
+    '(((and (boundp 'server-buffer-clients) server-buffer-clients 'multi)    1010 "Clients (%d)")
+      ((and buffer-file-name (buffer-modified-p) 'multi)                     1020 "Changed files (%d)")
+      ((eq major-mode 'dired-mode)                                           1030 "Dired (%d)" msb-dired-item-handler msb-sort-by-directory)
+      ((and (get-buffer-process (current-buffer)) 'multi)                    1040 "Processes (%d)")
+      ((and (boundp 'vc-mode) vc-mode 'multi)                                1050 "Version Control (%d)")
+      ((and msb-display-invisible-buffers-p (msb-invisible-buffer-p) 'multi) 1090 "Invisible buffers (%d)")
+
+      ;; S 3080
+      ((tjf:mode/is-mode? 'scheme-mode)               3080 "Scheme Files (%d)")
+      ((tjf:mode/is-mode? tjf:mode/sh-script-mode)    3082 "Shell Scripts (%d)")
+      ((tjf:mode/is-mode? 'sql-mode)                  3083 "SQL Scripts (%d)")
+
+      ((and (not buffer-file-name) 'no-multi)                                5099 "Other non-file buffers (%d)")
+      ((and (string-match "/\\.[^/]*$" buffer-file-name) 'multi)             5000 "Hidden Files (%d)")
+      ((eq major-mode 'Man-mode)                                             5030 "Manuals (%d)")
+      ;; OTHER 5000
+      ((and buffer-file-name                         'no-multi) 5001 "Other Files (%d)")
+      ((and (string-match "^copy of " (buffer-name)) 'no-multi) 5002 "Copy Buffers (%d)")
+      ((and (eq major-mode 'compilation-mode)        'no-multi) 5010 "Compilation Log (%d)")
+      ))
+
+  :custom
+  (msb-menu-cond                   msb--too-many-menus)
+  (msb-display-invisible-buffers-p nil)
+  (msb-max-menu-items              nil)
   :config
-  (setq msb-display-invisible-buffers-p     t)
-  (setq msb-max-menu-items                  nil))
+  (msb-mode 1)
+  (message "Config msb...done"))
 
 (use-package powerline            :ensure t
   :custom
@@ -368,10 +396,6 @@
   (require 'tjf-menubar)
   :hook
   (menu-bar-update . tjf:navigate/menu))
-
-(use-package tjf-msb              :ensure nil :after msb
-  :config
-  (msb-mode))
 
 (use-package tjf-powerline        :ensure nil :after powerline
   :hook
@@ -459,6 +483,7 @@
   :hook
   (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1)))
   :config
+  (add-to-list 'eglot-server-programs '((perl-ts-mode cperl-mode) . ("pls")))
   (add-to-list 'eglot-server-programs '((c-ts-mode cc-mode) .
                                         ("clangd"
                                          "-j=8"
@@ -792,6 +817,99 @@
   :custom
   (auto-save-file-name-transforms `((".*"   ,tjf:user/dir-autosave t)))
   (backup-directory-alist         `((".*" . ,tjf:user/dir-backup)))
+  (auto-mode-alist
+   '(("\\.\\(deb\\|[oi]pk\\)\\'" . archive-mode)
+     ("\\.[sS]\\'" . asm-mode)
+     ("\\.asm\\'"  . asm-mode)
+     ("\\(acinclude\\|aclocal\\|acsite\\)\\.m4\\'" . autoconf-mode)
+     ("configure\\.\\(ac\\|in\\)\\'"               . autoconf-mode)
+     ("\\.awk\\'"             . awk-mode)
+     ("\\.bz\\'"              . bazel-mode)
+     ("\\.c\\'"               . c-mode)
+     ("\\.\\(C\\|H\\)\\'"     . c-mode)
+     ("\\.xs\\'"              . c-mode)
+     ("\\.h\\'"               . c-or-c++-mode)
+     ("\\.[ch]\\(pp\\|xx\\|\\+\\+\\)\\'" . c++-mode)
+     ("\\.\\(CC\\|HH\\)\\'"              . c++-mode)
+     ("\\.\\(cc\\|hh\\)\\'"              . c++-mode)
+     ("\\.\\(proto\\|tpp\\)\\'"          . c++-mode)
+     ("\\(?:CMakeLists\\.txt\\|\\.cmake\\)\\'" . cmake-mode)
+     ("\\`/etc/\\(?:acpid?/.+\\|aliases\\(?:\\.d/.+\\)?\\|default/.+\\|group-?\\|hosts\\..+\\|inittab\\|ksysguarddrc\\|passwd-?\\|shadow-?\\|sysconfig/.+\\)\\'" . conf-mode)
+     ("/\\.?\\(?:gitconfig\\|gnokiirc\\|hgrc\\|kde.*rc\\|mime\\.types\\|wgetrc\\)\\'" . conf-mode)
+     ("[/.]c\\(?:on\\)?f\\(?:i?g\\)?\\(?:\\.[a-zA-Z0-9._-]+\\)?\\'"                   . conf-mode-maybe)
+     ("/\\.\\(?:gtk\\|net\\|nvidia-settings-\\|screen\\|xmp\\)rc\\'"                  . conf-mode)
+     ("\\.ini\\'"      . conf-mode)
+     ("\\.cs\\'"       . csharp-mode)
+     ("\\.css\\'"      . css-mode)
+     ("\\.csv\\'"      . csv-mode)
+     ("\\.el\\'"       . emacs-lisp-mode)
+     ("\\.emacs\\'"    . emacs-lisp-mode)
+     ("\\.f9[05]\\'"   . f90-mode)
+     ("\\.f0[38]\\'"   . f90-mode)
+     ("\\.[fF]\\'"     . fortran-mode)
+     ("\\.for\\'"      . fortran-mode)
+     ("\\.go\\'"       . go-mode)
+     ("\\.bmp\\'"      . image-mode)
+     ("\\.cmyka?\\'"   . image-mode)
+     ("\\.gif\\'"      . image-mode)
+     ("\\.icon?\\'"    . image-mode)
+     ("\\.jpe?g\\'"    . image-mode)
+     ("\\.p[bpgn]m\\'" . image-mode)
+     ("\\.png\\'"      . image-mode)
+     ("\\.rgba?\\'"    . image-mode)
+     ("\\.svgz?\\'"    . image-mode)
+     ("\\.tga\\'"      . image-mode)
+     ("\\.tiff?\\'"    . image-mode)
+     ("\\.webp\\'"     . image-mode)
+     ("\\.x[bp]m\\'"   . image-mode)
+     ("\\.xcf\\'"      . image-mode)
+     ("\\.java\\'"     . java-mode)
+     ("\\.zst\\'"      . jka-compr)
+     ("\\.dz\\'"       . jka-compr)
+     ("\\.xz\\'"       . jka-compr)
+     ("\\.lzma\\'"     . jka-compr)
+     ("\\.lz\\'"       . jka-compr)
+     ("\\.g?z\\'"      . jka-compr)
+     ("\\.bz2\\'"      . jka-compr)
+     ("\\.Z\\'"        . jka-compr)
+     ("\\.json\\'"     . json-mode)
+     ("\\.ltx\\'"      . latex-mode)
+     ("\\.l\\'"        . lisp-mode)
+     ("\\.li?sp\\'"    . lisp-mode)
+     ("\\.am\\'"                    . makefile-automake-mode)
+     ("\\.mk\\'"                    . makefile-gmake-mode)
+     ("\\.make\\'"                  . makefile-gmake-mode)
+     ("[Mm]akefile\\'"              . makefile-gmake-mode)
+     ("Imakefile\\'"                . makefile-imake-mode)
+     ("Makeppfile\\(?:\\.mk\\)?\\'" . makefile-makepp-mode)
+     ("\\.makepp\\'"                . makefile-makepp-mode)
+     ("\\.mk\\'"                    . makefile-gmake-mode)
+     ("\\.man\\'"     . nroff-mode)
+     ("\\.[1-9]\\'"   . nroff-mode)
+     ("\\.org\\'"     . org)
+     ("\\.py[iw]?\\'" . python-mode)
+     ("\\.p\\'"       . pascal-mode)
+     ("\\.pas\\'"     . pascal-mode)
+     ("\\.\\([pP]\\([Llm]\\|erl\\|od\\)\\|al\\)\\'" . cperl-mode)
+     ("\\.[eE]?[pP][sS]\\'" . ps-mode)
+     ("\\.r\\'"             . rust-mode)
+     ("\\.rb\\'"            . ruby-mode)
+     ("\\.[ckz]?sh\\'\\|\\.shar\\'\\|/\\.z?profile\\'"                                                  . sh-mode)
+     ("\\.bash\\'"                                                                                      . sh-mode)
+     ("\\(/\\|\\`\\)\\.\\(bash_\\(profile\\|history\\|log\\(in\\|out\\)\\)\\|z?log\\(in\\|out\\)\\)\\'" . sh-mode)
+     ("\\(/\\|\\`\\)\\.\\(shrc\\|zshrc\\|m?kshrc\\|bashrc\\|t?cshrc\\|esrc\\)\\'"                       . sh-mode)
+     ("\\(/\\|\\`\\)\\.\\([kz]shenv\\|xinitrc\\|startxrc\\|xsession\\)\\'"                              . sh-mode)
+     ("\\.sql\\'"       . sql-mode)
+     ("\\.tar\\'"       . tar-mode)
+     ("\\.tgz\\'"       . tar-mode)
+     ("\\.tbz2?\\'"     . tar-mode)
+     ("\\.txz\\'"       . tar-mode)
+     ("\\.tzst\\'"      . tar-mode)
+     ("\\.[tT]e[xX]\\'" . tex-mode)
+     ("\\.texinfo\\'"   . texinfo-mode)
+     ("\\.te?xi\\'"     . texinfo-mode)
+     ("\\.te?xt\\'"     . text-mode)
+     ("\\.ya?ml\\'"     . yaml-mode)))
   :config
   (message "Config files...done"))
 
@@ -903,7 +1021,7 @@
 
 (use-package tjf-lisp             :ensure nil
   :init
-  (require 'tjf-lisp)
+  (message "tjf-lisp[1] init!!!!!")
   :hook
   (emacs-lisp-mode       . tjf:lisp/hook)
   (lisp-interaction-mode . tjf:lisp/hook)
@@ -1044,7 +1162,8 @@
   :hook
   (markdown-mode              . jinx-mode)
   (paragraph-indent-text-mode . jinx-mode)
-  (text-mode                  . jinx-mode))
+  ;; (text-mode                  . jinx-mode)
+)
 
 (use-package json-ts-mode         :ensure nil :commands json-ts-mode)
 
@@ -1133,9 +1252,10 @@
   :hook
   (csharp-mode 'tjf:csharp/setup))
 
-(use-package tjf-perl             :ensure nil :after cperl-mode :commands tjf:perl/convert
+(use-package tjf-perl             :ensure nil :after perl-ts-mode
   :hook
-  (cperl-mode . tjf:perl/hook)
+  (cperl-mode   . tjf:perl/hook)
+  (perl-ts-mode . tjf:perl/hook)
   :config
   (tjf:perl/config)
   (add-to-list 'eglot-server-programs '(cperl-mode . ("perl" "-MPerl::LanguageServer" "-e" "Perl::LanguageServer::run"))))
