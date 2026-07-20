@@ -45,7 +45,7 @@
             (when (not (bolp)) (newline))
             (insert (format-time-string "[%T.%3N] " (current-time)))))))))
 
-(message "Loading early-init.el...")
+;; (message "Loading early-init.el...")
 
 (advice-add 'message :before 'message--with-timestamp)
 
@@ -131,5 +131,5 @@
 ;; (setq byte-compile-verbose minimal-emacs-debug)
 
 ;;
-(message "Loading early-init.el...done")
+;; (message "Loading early-init.el...done")
 ;;; early-init.el ends here
