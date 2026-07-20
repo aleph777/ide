@@ -60,12 +60,6 @@
   (require 'cape))
 
 ;;
-(defconst tjf:lisp/imenu-generic-expression
-  '(("Functions etc." "^\\s-*(\\(cl-def\\(?:generic\\|ine-compiler-macro\\|m\\(?:acro\\|ethod\\)\\|subst\\|un\\)\\|def\\(?:advice\\|generic\\|ine-\\(?:advice\\|compil\\(?:ation-mode\\|er-macro\\)\\|derived-mode\\|g\\(?:\\(?:eneric\\|lobal\\(?:\\(?:ized\\)?-minor\\)\\)-mode\\)\\|inline\\|m\\(?:ethod-combination\\|inor-mode\\|odify-macro\\)\\|s\\(?:etf-expander\\|keleton\\)\\)\\|m\\(?:acro\\|ethod\\)\\|s\\(?:etf\\|ubst\\)\\|un\\*?\\)\\|ert-deftest\\)\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)
- ("Variables" "^\\s-*(\\(def\\(?:c\\(?:onst\\(?:ant\\)?\\|ustom\\)\\|ine-symbol-macro\\|parameter\\)\\)\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)
- ("Variables" "^\\s-*(defvar\\(?:-local\\)?\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)[[:space:]\n]+[^)]" 1)
- ("Types" "^\\s-*(\\(cl-def\\(?:struct\\|type\\)\\|def\\(?:class\\|face\\|group\\|ine-\\(?:condition\\|error\\|widget\\)\\|package\\|struct\\|t\\(?:\\(?:hem\\|yp\\)e\\)\\)\\)\\s-+'?\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)))
-
 (defvar tjf:lisp/build-menu-text
   '("Build"
     ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
@@ -127,14 +121,14 @@
   (define-key lisp-interaction-mode-map [menu-bar] nil)
   (define-key emacs-lisp-mode-map       [menu-bar] nil)
   ;;
+  (message "Loading tjf-lisp...setting up minor mode menus...")
+
   (easy-menu-define tjf:lisp/menu       emacs-lisp-mode-map       "Lisp"  tjf:lisp/mode-menu-text)
   (easy-menu-define tjf:lisp/menu       lisp-interaction-mode-map "Lisp"  tjf:lisp/mode-menu-text)
   (easy-menu-define tjf:lisp/build-menu emacs-lisp-mode-map       "Build" tjf:lisp/build-menu-text)
-
-  (setq lisp-imenu-generic-expression tjf:lisp/imenu-generic-expression))
+  )
 
 ;;
-(message "Loading tjf-lisp...setting up minor mode menus...")
 
 ;;
 (message "Loading tjf-lisp...done")
