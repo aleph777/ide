@@ -86,6 +86,34 @@
 ;;; overload
 (defun cperl-define-key () nil)
 
+(defvar tjf:perl/menu)
+(setq   tjf:perl/menu
+        '(
+          ["Beginning Of Function" beginning-of-defun]
+          ["End Of Function"       end-of-defun      ]
+          ["Mark Function"         mark-defun        ]
+          "---"
+          ["Insert Home Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-home)]
+          ["Insert Work Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)]
+          ["Insert Shebang"      tjf:perl/insert-shebang]
+          ["Insert _ME_"         tjf:perl/insert-me     ]
+          ;; ["Insert Script Usage" tjf:perl/insert-usage  ]
+          "---"
+          ["Insert OO Module Template" tjf:perl/insert-oo-module-template]
+          ["Insert FN Module Template" tjf:perl/insert-fn-module-template]
+          "---"
+          ["Check Minimum Perl Version" tjf:perl/check-minimum-version]
+          ))
+
+;;
+(defvar tjf:perl/menu-build)
+(setq   tjf:perl/menu-build
+        '(
+          ["Syntax Check" (compile (concat "export PERLLIB=" tjf:perl/lib ";" tjf:perl/which " -c " (file-name-nondirectory (buffer-file-name))))]
+          ["Critique"     (compile (concat "critique " (file-name-nondirectory (buffer-file-name))))]
+          ))
+
+
 (defvar tjf:perl/lib)
 (setq   tjf:perl/lib (getenv "PERLLIB"))
 
@@ -184,37 +212,22 @@
   (define-key cperl-mode-map [(control ?h) ?f] nil)
   (define-key cperl-mode-map [(control ?h) ?v] nil)
 
+  ;; (easy-menu-define tjf-cpp-menu   c++-ts-mode-map "C++" (append '("C++") tjf:cc/menu-text))
+  ;; (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build" tjf:cpp/build-menu)
+
+  (if (eq major-mode 'cperl-mode)
+      (progn
+        (easy-menu-define tjf-perl-menu   cperl-mode-map "Perl" (append '("Perl") tjf:perl/menu))
+        (easy-menu-define perl-build-menu cperl-mode-map  "Perl Build" (append '("Build") tjf:perl/menu-build)))
+    (easy-menu-define tjf-perl-menu   perl-ts-mode-map "Perl" (append '("Perl") tjf:perl/menu))
+    (easy-menu-define perl-build-menu perl-ts-mode-map  "Perl Build" (append '("Build") tjf:perl/menu-build)))
+
   (if tjf:perl/lib
       (setq flycheck-perl-include-path (split-string tjf:perl/lib ":"))
     (let ((lib-home  (concat tjf:user/dir-home "lib"))
           (lib-local (concat tjf:user/dir-home "local/lib")))
       (setq flycheck-perl-include-path '(lib-home lib-local))
       (setq tjf:perl/lib (join ":" `(lib-home lib-local))))))
-
-;;
-(easy-menu-define tjf:perl/menu cperl-mode-map "tjf-Perl"
-  '("Perl"
-    ["Beginning Of Function" beginning-of-defun]
-    ["End Of Function"       end-of-defun      ]
-    ["Mark Function"         mark-defun        ]
-    "---"
-    ["Insert Home Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-home)]
-    ["Insert Work Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)]
-    ["Insert Shebang"      tjf:perl/insert-shebang]
-    ["Insert _ME_"         tjf:perl/insert-me     ]
-    ;; ["Insert Script Usage" tjf:perl/insert-usage  ]
-    "---"
-    ["Insert OO Module Template" tjf:perl/insert-oo-module-template]
-    ["Insert FN Module Template" tjf:perl/insert-fn-module-template]
-    "---"
-    ["Check Minimum Perl Version" tjf:perl/check-minimum-version]
-    ))
-
-(easy-menu-define tjf:perl/menu-build cperl-mode-map "Perl Build"
-  '("Build"
-    ["Syntax Check" (compile (concat "export PERLLIB=" tjf:perl/lib ";" tjf:perl/which " -c " (file-name-nondirectory (buffer-file-name))))]
-    ["Critique"     (compile (concat "critique " (file-name-nondirectory (buffer-file-name))))]
-    ))
 
 ;;
 (message "Loading tjf-perl...done")
