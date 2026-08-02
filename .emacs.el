@@ -32,7 +32,6 @@
 
 (defvar tjf:user/dir-autosave (concat tjf:user/dir-config "autosave/"))
 (defvar tjf:user/dir-backup   (concat tjf:user/dir-config "backup/"))
-(defvar tjf:user/dir-bookmark (concat tjf:user/dir-config "bookmark/"))
 
 (defvar tjf:user/dir-themes   (concat tjf:user/dir-elisp "themes/"))
 
@@ -42,8 +41,6 @@
 
 (defvar tjf:user/dir-initialize (concat tjf:user/dir-elisp "00_initialize/"))
 (defvar tjf:user/dir-experiment (concat tjf:user/dir-elisp "00_experiment/"))
-
-(defvar tjf:user/dir-tenbeauty  (concat tjf:user/dir-home "Workspace/tenbeauty/"))
 
 ;;
 (cl-pushnew tjf:user/dir-elisp-images image-load-path :test 'string=)
