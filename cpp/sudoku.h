@@ -9,7 +9,8 @@
 #include <pair>
 #include <vector>
 
-namespace sudoku {
+namespace sudoku
+{
 
 using map_utils;
 using std::array;
@@ -39,7 +40,8 @@ using MapSquareBool = UnorderedMap<Square, bool>;
 
 using MapRowColArrayNumber = UnorderedMap<RowCol, ArrayNumber>;
 
-class Sudoku {
+class Sudoku
+{
 public:
   Sudoku(unsigned revealed);
 
@@ -63,6 +65,6 @@ private:
   MapRowColArrayNumber available_;
 };
 
-}
+}  // namespace sudoku
 
 #endif

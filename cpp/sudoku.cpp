@@ -5,32 +5,53 @@
 #include <algorithm>
 #include <random>
 
-namespace sudoku {
+namespace sudoku
+{
 
 Sudoku::Sudoku(unsigned revealed)
-: revealed_(revealed),
-  sqmap_({{1,1},1}, {{1,2},1}, {{1,3},1},
-         {{2,1},1}, {{2,2},1}, {{2,3},1},
-         {{3,1},1}, {{3,2},1}, {{3,3},1},
-         {{1,4},2}, {{1,5},2}, {{1,6},2},
-         {{2,4},2}, {{2,5},2}, {{2,6},2},
-         {{3,4},2}, {{3,5},2}, {{3,6},2},
-         {{1,7},3}, {{1,8},3}, {{1,9},3},
-         {{2,7},3}, {{2,8},3}, {{2,9},3},
-         {{3,7},3}, {{3,8},3}, {{3,9},3}),
-  row_(),
-  col_(),
-  square_(),
-  board_(),
-  available_()
+    : revealed_(revealed),
+      sqmap_({{1, 1}, 1},
+             {{1, 2}, 1},
+             {{1, 3}, 1},
+             {{2, 1}, 1},
+             {{2, 2}, 1},
+             {{2, 3}, 1},
+             {{3, 1}, 1},
+             {{3, 2}, 1},
+             {{3, 3}, 1},
+             {{1, 4}, 2},
+             {{1, 5}, 2},
+             {{1, 6}, 2},
+             {{2, 4}, 2},
+             {{2, 5}, 2},
+             {{2, 6}, 2},
+             {{3, 4}, 2},
+             {{3, 5}, 2},
+             {{3, 6}, 2},
+             {{1, 7}, 3},
+             {{1, 8}, 3},
+             {{1, 9}, 3},
+             {{2, 7}, 3},
+             {{2, 8}, 3},
+             {{2, 9}, 3},
+             {{3, 7}, 3},
+             {{3, 8}, 3},
+             {{3, 9}, 3}),
+      row_(),
+      col_(),
+      square_(),
+      board_(),
+      available_()
 {
   init();
 }
 
-
-void Sudoku::init() {
-  for (auto r = 1; r <= 9; ++r) {
-    for (auto c = 1; c <= 9; ++c) {
+void Sudoku::init()
+{
+  for (auto r = 1; r <= 9; ++r)
+  {
+    for (auto c = 1; c <= 9; ++c)
+    {
       const RowCol rc({r, c});
 
       row_.set(rc, true);
@@ -46,12 +67,15 @@ void Sudoku::init() {
   SeedBoard(7, 9);
 }
 
-void Sudoku::SeedBoard(unsigned from, unsigned to) {
+void Sudoku::SeedBoard(unsigned from, unsigned to)
+{
   std::random_device rd;
   std::mt19937 gen(rd());
 
-  for (auto r = from; r <= to; ++r) {
-    for (auto c = from; c <= to; ++c) {
+  for (auto r = from; r <= to; ++r)
+  {
+    for (auto c = from; c <= to; ++c)
+    {
       std::uniform_int_distribution<> distr(0, static_cast<int>(an.size()) - 1);
 
       const RowCol rc({r, c});
@@ -76,17 +100,21 @@ void Sudoku::SeedBoard(unsigned from, unsigned to) {
   }
 }
 
-void Sudoku::ProcessAvailable() {
-  for (const auto& key : available_.keys()) {
+void Sudoku::ProcessAvailable()
+{
+  for (const auto& key : available_.keys())
+  {
     const Row row = key->first;
     const Col col = key->second;
 
     available_[key].clear();
 
-    for (auto n = 1; n <= 9; ++n) {
+    for (auto n = 1; n <= 9; ++n)
+    {
       const RowNum rn({row, n});
 
-      if (!row_.get(rn)) continue;
+      if (!row_.get(rn))
+        continue;
 
       const ColNum cn({col, n});
 
@@ -96,20 +124,22 @@ void Sudoku::ProcessAvailable() {
       const Sqaure sqaure(sqmap_.get(rc));
       const SqrNum sn({square, num});
 
-      if (!square_.get(sn)) continue;
+      if (!square_.get(sn))
+        continue;
 
       available_[key].emplace_back(n);
     }
   }
 }
 
-bool Sudoku::PlaceNumber() {
+bool Sudoku::PlaceNumber()
+{
   ProcessAvailable();
 
   auto keys(available_.keys());
 
-  std::sort(keys.begin(), keys.end(), [](const RowCol& a, const RowCol& b) {
-    return available_.get(a) < available_.get(b);});
+  std::sort(keys.begin(), keys.end(),
+            [](const RowCol& a, const RowCol& b) { return available_.get(a) < available_.get(b); });
 
   const auto key = keys.first();
 
@@ -117,26 +147,21 @@ bool Sudoku::PlaceNumber() {
     return false;
 
   const auto num = available_[key]
-// std::vector<int> numbers = {5, 2, 8, 1, 9};
-// std::sort(numbers.begin(), numbers.end(), [](int a, int b) {
-//     return a > b;
-// });
+      // std::vector<int> numbers = {5, 2, 8, 1, 9};
+      // std::sort(numbers.begin(), numbers.end(), [](int a, int b) {
+      //     return a > b;
+      // });
 
-  ArrayRowCol arc(
-      keys.begin(), keys.end(),
-                   [](const RowCol &a, const RowCol &b) {
-    return available_.get(a) < available_.get(b);});
+      ArrayRowCol arc(keys.begin(), keys.end(),
+                      [](const RowCol& a, const RowCol& b) { return available_.get(a) < available_.get(b); });
 
   // std::vector<T> v{ std::begin(l), std::end(l) };
-
 
   // std::sort(s.begin(), s.end(), std::greater<int>());
   std::sort()
 
-  VectorNumber tmp;
+      VectorNumber tmp;
 
   tmp.reserve(9);
-
-
 }
-}
+}  // namespace sudoku

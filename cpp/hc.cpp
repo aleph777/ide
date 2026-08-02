@@ -9,22 +9,26 @@
 using std::list;
 using std::println;
 
-int foo(int a, int b) { return a * b; }
-int bar(int a, int b) { return 0; }
+int foo(int a, int b)
+{
+  return a * b;
+}
 
-int main() {
+int bar(int a, int b)
+{
+  return 0;
+}
+
+int main()
+{
   auto hc = std::thread::hardware_concurrency();
-  auto nt =   hc == 0 ? 4 : hc;
+  auto nt = hc == 0 ? 4 : hc;
 
   ThreadPool pool(nt);
 
   // Enqueue a simple lambda
-  auto result1 = pool.enqueue([](int a, int b) {
-    return a + b;
-  }, 10, 20);
-  auto result2 = pool.enqueue([](int a, int b) {
-    return a + b;
-  }, 35, 20);
+  auto result1 = pool.enqueue([](int a, int b) { return a + b; }, 10, 20);
+  auto result2 = pool.enqueue([](int a, int b) { return a + b; }, 35, 20);
 
   println("Sum Result 1: {}", result1.get());
   println("Sum Result 2: {}", result2.get());
@@ -32,12 +36,12 @@ int main() {
   {
     list<decltype(result1)> results;
 
-    for (auto i = 1; i <= 10; ++i) {
-      results.emplace_back(pool.enqueue([](int a, int b) {
-        return a + b;
-      }, i*10, i*20));
+    for (auto i = 1; i <= 10; ++i)
+    {
+      results.emplace_back(pool.enqueue([](int a, int b) { return a + b; }, i * 10, i * 20));
     }
-    for (auto& result : results) {
+    for (auto& result : results)
+    {
       println("Sum Result: {}", result.get());
     }
   }
@@ -54,10 +58,12 @@ int main() {
 
     println("-----");
 
-    for (auto i = 1; i <= 10; ++i) {
-      results.emplace_back(pool.enqueue(f, i ,i));
+    for (auto i = 1; i <= 10; ++i)
+    {
+      results.emplace_back(pool.enqueue(f, i, i));
     }
-    for (auto& result : results) {
+    for (auto& result : results)
+    {
       println("Sum Result: {}", result.get());
     }
   }
