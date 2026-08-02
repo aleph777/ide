@@ -99,6 +99,7 @@ export EMACSBIN=$EMACSDIR/src/emacs
 export EMACSARGS='--no-site-file --no-site-lisp --no-splash --no-loadup --no-x-resources'
 
 alias emacs="$EMACSBIN $EMACSARGS"
+alias qmacs="$EMACSBIN -Q -l $HOME/early-init.el -l $HOME/.emacs.el"
 alias emacsclient="$EMACSDIR/lib-src/emacsclient -n -c"
 alias emacsdaemon="$EMACSBIN --daemon"
 alias emacsstop="emacsclient --eval '(kill-emacs)'"
