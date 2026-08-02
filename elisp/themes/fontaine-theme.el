@@ -473,7 +473,7 @@
    `(font-lock-function-name-face     ((t (:foreground ,theme/function :weight bold))))
    `(font-lock-keyword-face           ((t (:foreground ,theme/keyword  :weight bold))))
    `(font-lock-negation-char-face     ((t (:weight bold))))
-   `(font-lock-string-face            ((t (:foreground ,theme/string   :slant italic))))
+   `(font-lock-string-face            ((t (:foreground ,theme/string   :weight bold :slant italic))))
    `(font-lock-type-face              ((t (:foreground ,theme/type     :weight bold))))
    `(font-lock-variable-name-face     ((t (:foreground ,theme/variable :weight bold))))
    `(font-lock-warning-face           ((t (:inherit warning))))
