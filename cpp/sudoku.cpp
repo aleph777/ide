@@ -1,6 +1,4 @@
-// -*- C++ -*-
-
-#include "sudoku.h"
+#include "sudoku.hpp"
 
 #include <algorithm>
 #include <random>

@@ -1,6 +1,6 @@
 ;;; tjf-cpp.el --- C++ major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2025 Tom Fontaine
+;;         Copyright © 2021-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   10-Feb-2021
@@ -29,23 +29,11 @@
 
 ;;; Commentary:
 
-;; Revision: 13-Sep-2022 added ‘clang-capf’
-;;           16-Sep-2022 added ‘tjf:cpp/check’
-;;           27-Sep-2022 added ‘eglot’
-;;           20-Oct-2022 added ‘tjf:cpp/includes’ to ‘tjf:cpp/flags’
-;;           21-Oct-2022 added key definition for ‘tjf:cc/insert-docstring’
-;;                       added ‘tjf:cpp/set-includes’
-;;           04-Jan-2023 fixed ‘tjf:cpp/setup’
-;;           13-Apr-2023 removed ‘company-mode’ from completions
-;;           06-Jun-2023 changed from ‘tjf:cpp/setup’ to ‘tjf:cpp/hook’ and ‘tjf:cpp/config’
-;;           21-Mar-2025 fixed bug in ‘tjf:cpp/warnings’
-
 ;;; Code:
 
 (message "Loading tjf-cpp...")
-;; (require 'eglot)
-;; (require 'tjf-cc)
-;; (require 'tjf-macro)
+(require 'c-ts-mode)
+(require 'tjf-cc)
 
 ;;
 (defvar tjf:cpp/compiler)
@@ -75,23 +63,25 @@
 (defvar tjf:cpp/warnings)
 (setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
 
-(defvar tjf:cpp/build-menu
+(defvar tjf:cpp/build-menu)
+(setq tjf:cpp/build-menu
   '("Build"
     ["Syntax  Check"   tjf:cpp/syntax-check    t]
     ["Static Analysis" tjf:cpp/check           t]
     ["Compile File"    tjf:cpp/compile-file    t]
     ["Compile Program" tjf:cpp/compile-program t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Make"    tjf:cpp/make t]
     ["Make..." compile      t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Set Compiler..."           tjf:cpp/set-compiler     t]
     ["Set Debug Level..."        tjf:cpp/set-debug        t]
     ["Set Dialect..."            tjf:cpp/set-dialect      t]
+    ["Set Include Flags"...      tjf:cpp/set-includes     t]
     ["Set Linker Flags..."       tjf:cpp/set-ldflags      t]
     ["Set Optimization Level..." tjf:cpp/set-optimization t]
     ["Set Warning Flags..."      tjf:cpp/set-warnings     t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Set Make Flags..." tjf:cpp/set-makeflags t]
     ))
 
@@ -186,14 +176,14 @@
 
 (defun tjf:cpp/config ()
   "C++ mode config function."
-  (message "tjf:cpp/config...")
+  (treesit-install-language-grammar 'c)
+
   (define-key c++-ts-mode-map [menu-bar]    nil)
   (define-key c++-ts-mode-map [(control d)] nil)
   (define-key c++-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
 
   (easy-menu-define tjf-cpp-menu   c++-ts-mode-map "C++" (append '("C++") tjf:cc/menu-text))
-  (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build" tjf:cpp/build-menu)
-  (message "tjf:cpp/config...done"))
+  (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build" tjf:cpp/build-menu))
 
 (defun tjf:cpp/hook ()
   "C++ mode hook function."
@@ -201,12 +191,13 @@
   (setq-local completion-at-point-functions (cons #'clang-capf                completion-at-point-functions))
 
   (abbrev-mode   -1)
-  (flycheck-mode -1)
+  ;; (flymake-mode  -1)
+  (flycheck-mode  1)
 
-  (flymake-mode)
+  (remove-hook 'flymake-diagnostic-functions 'flymake-cc)
 
-  ;; (setq flycheck-gcc-language-standard   tjf:cpp/dialect)
-  ;; (setq flycheck-clang-language-standard tjf:cpp/dialect)
+  (setq flycheck-gcc-language-standard   tjf:cpp/dialect)
+  (setq flycheck-clang-language-standard tjf:cpp/dialect)
 
   (eglot-ensure)
 

@@ -1,6 +1,6 @@
 ;;; tjf-msb.el --- Msb menu definition -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   23-Jun-2016
@@ -28,19 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 26-Sep-2016 added `clips-log-mode'
-;;           13-Jun-2018 added ‘helpful-mode’ to ‘Help’ entry
-;;           24-Jun-2019 added ‘groovy’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           02-Jul-2021 added ‘julia-mode’
-;;           10-Jan-2023 added ‘cmake-mode’ and ‘csv-mode’
-;;           06-Jun-2023 added ‘c-ts-mode’ and ‘c++-ts-mode’
-;;           07-Jun-2023 added remaining ts-modes
-;;                       removed ‘tjf-flags’ dependency
-;;           24-Jul-2023 require tjf-mode
-;;           13-Jun-2024 added ‘dockerfile-ts-mode’
-;;
 
 ;;; Code:
 

@@ -1,6 +1,6 @@
 ;;; tjf-perl.el --- cperl-mode support for GNU Emacs -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2024 Tom Fontaine
+;;         Copyright © 1999-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -29,52 +29,10 @@
 
 ;;; Commentary:
 
-;; Revision: 22-Jun-2000 deleted ‘usr-perl-menu’ defvar and used ‘easy-menu-define’ instead of ‘easy-menu-add-item’
-;;           23-Jun-2000 added ‘usr-perl-shebang’, ‘usr-perl-insert-shebang’, changed defun names to ‘usr-perl-...’
-;;           26-Jun-2000 modified ‘usr-perl-insert-script-version’ to use trailing \n for used modules
-;;           17-Feb-2005 modified ‘usr-perl-insert-script-version’ to use TJF instead of ACC
-;;           18-Apr-2006 changed ‘usr-perl-shebang’ to use /local/bin/perl
-;;           01-Jun-2006 changed ‘usr-perl-insert-script-version’ to use MDC instead of TJF
-;;           22-Jun-2006 added ‘usr-perl-bin’
-;;                       changed ‘usr-perl-shebang’ to use ‘usr-perl-bin’
-;;           25-Aug-2006 changed ‘usr-perl-insert-shebang’ to detect for remote file name and adjust shebang
-;;           02-Feb-2010 added exit message
-;;           25-Mar-2015 updated ‘usr-perl-insert’ functions and associated menu entries
-;;           03-Apr-2015 added ‘usr-perl-insert-me’ and associated menu entry
-;;                       updated ‘usr-perl-insert-usage’ to use ‘usr-perl-insert-me’
-;;           14-Apr-2015 added ‘usr-perl-insert-oo-module-template’ and ‘usr-perl-insert-fn-module-template’
-;;                       revised associated menu entries
-;;           21-Apr-2015 fixed regex in ‘usr-perl-insert-usage’
-;;                       updated ‘usr-perl-insert-me’ to use ‘$__ME__’
-;;           09-Dec-2015 set TAB to ‘indent-for-tab-command’
-;;           17-Jan-2016 updated for new standard user interface
-;;           02-Feb-2016 added ‘neotree’
-;;           23-Feb-2016 added ‘cperl-init-faces’
-;;                       removed ‘neotree’
-;;           28-Feb-2016 refactored as ‘tjf-perl’
-;;           03-Mar-2016 updated to use ‘yasnippet’
-;;           09-Mar-2016 added use ‘v5.10’ to ‘perl-insert-script-header’
-;;           18-Apr-2016 updated for ‘use-package’
-;;           23-Jun-2016 removed globally set ‘semantic-mode’
-;;           07-Sep-2016 added ‘plsense’ support
-;;           14-Nov-2016 added ‘perl-init-faces’ to fix syntax highlighting
-;;           18-Jan-2017 removed ‘plsense’ support
-;;                       updated header formats
-;;           19-Jan-2017 disabled ‘abbrev-mode’
-;;           03-Jul-2017 set ‘flycheck-perl-include-path’ in ‘perl-setup’
-;;           05-Oct-2020 removed ‘perl-init-faces’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           07-Apr-2021 updated ‘tjf:perl/fill-out-template’
-;;           24-Sep-2022 fixed ‘tjf:perl/which’
-;;           02-Jun-2023 major clean up
-;;           06-Jun-2023 changed from ‘tjf:perl/setup’ to ‘tjf:perl/hook’ and ‘tjf:perl/config’
-;;           12-Jun-2023 fixed ‘tjf:perl/shebang’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-perl...")
-(require 'cperl-mode)
+(require 'perl-ts-mode)
 (require 'flycheck)
 (require 's)
 (require 'tjf-edit)
@@ -83,8 +41,9 @@
 (eval-when-compile
   (require 'cape))
 
-;;; overload
-(defun cperl-define-key () nil)
+;;
+(defvar tjf:perl/which)
+(setq   tjf:perl/which (string-trim-right (shell-command-to-string "which perl")))
 
 (defvar tjf:perl/menu)
 (setq   tjf:perl/menu
@@ -92,16 +51,16 @@
           ["Beginning Of Function" beginning-of-defun]
           ["End Of Function"       end-of-defun      ]
           ["Mark Function"         mark-defun        ]
-          "---"
+          ["---" nil :visible t :enable nil]
           ["Insert Home Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-home)]
           ["Insert Work Script Skeleton" (tjf:perl/insert-script-skeleton tjf:perl/template-file-script-header-work)]
           ["Insert Shebang"      tjf:perl/insert-shebang]
           ["Insert _ME_"         tjf:perl/insert-me     ]
           ;; ["Insert Script Usage" tjf:perl/insert-usage  ]
-          "---"
+          ["---" nil :visible t :enable nil]
           ["Insert OO Module Template" tjf:perl/insert-oo-module-template]
           ["Insert FN Module Template" tjf:perl/insert-fn-module-template]
-          "---"
+          ["---" nil :visible t :enable nil]
           ["Check Minimum Perl Version" tjf:perl/check-minimum-version]
           ))
 
@@ -113,9 +72,8 @@
           ["Critique"     (compile (concat "critique " (file-name-nondirectory (buffer-file-name))))]
           ))
 
-
 (defvar tjf:perl/lib)
-(setq   tjf:perl/lib (getenv "PERLLIB"))
+(setq   tjf:perl/lib (getenv "PERL5LIB"))
 
 (defvar tjf:perl/me)
 (setq   tjf:perl/me "use constant _ME_ => $0 =~ m=([^/]+)$=;")
@@ -137,9 +95,6 @@
 
 ;; (defvar tjf:perl/template-script-usage)
 ;; (setq   tjf:perl/template-script-usage (concat tjf:user/dir-elisp "templates/perl-script-usage.pl"))
-
-(defvar tjf:perl/which)
-(setq   tjf:perl/which (string-trim-right (shell-command-to-string "which perl")))
 
 (defun tjf:perl/check-minimum-version ()
   "Check the minimum required version of the current file."
@@ -209,18 +164,14 @@
 
 (defun tjf:perl/config ()
   "Perl mode config function."
-  (define-key cperl-mode-map [(control ?h) ?f] nil)
-  (define-key cperl-mode-map [(control ?h) ?v] nil)
-
-  ;; (easy-menu-define tjf-cpp-menu   c++-ts-mode-map "C++" (append '("C++") tjf:cc/menu-text))
-  ;; (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build" tjf:cpp/build-menu)
+  (treesit-install-language-grammar 'perl)
 
   (if (eq major-mode 'cperl-mode)
       (progn
-        (easy-menu-define tjf-perl-menu   cperl-mode-map "Perl" (append '("Perl") tjf:perl/menu))
+        (easy-menu-define tjf-perl-menu   cperl-mode-map "Perl"        (append '("Perl") tjf:perl/menu))
         (easy-menu-define perl-build-menu cperl-mode-map  "Perl Build" (append '("Build") tjf:perl/menu-build)))
-    (easy-menu-define tjf-perl-menu   perl-ts-mode-map "Perl" (append '("Perl") tjf:perl/menu))
-    (easy-menu-define perl-build-menu perl-ts-mode-map  "Perl Build" (append '("Build") tjf:perl/menu-build)))
+    (easy-menu-define tjf-perl-menu   perl-ts-mode-map "Perl"          (append '("Perl") tjf:perl/menu))
+    (easy-menu-define perl-build-menu perl-ts-mode-map "Perl Build"    (append '("Build") tjf:perl/menu-build)))
 
   (if tjf:perl/lib
       (setq flycheck-perl-include-path (split-string tjf:perl/lib ":"))

@@ -1,6 +1,6 @@
 ;;; tjf-frame.el --- Functions that control frame appearance -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2024 Tom Fontaine
+;;         Copyright © 1999-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -28,37 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 15-Sep-2000 added 1 column to c/c++ mode entries in usr-size-alist
-;;                       to get a full 80 columns
-;;           16-Nov-2001 revised for Emacs 21
-;;           04-Feb-2005 restored newframe method for manpages
-;;           29-May-2008 add ‘ssh-mode’ to ‘usr-size-alist’
-;;           02-Feb-2010 added exit message
-;;           03-Mar-2014 added ‘clips-mode’, ‘csharp-mode’, and ‘matlab-mode’ to ‘usr-size-alist’
-;;           10-Apr-2014 added ‘nxml-mode’ to ‘usr-size-alist’
-;;           06-May-2014 added log-mode to ‘usr-size-alist’
-;;           27-Mar-2015 added java-mode to ‘usr-size-alist’
-;;           30-Mar-2015 converted ‘current-frame’ to ‘alias selected-frame’
-;;           16-Jan-2016 added ‘makefile-modes’
-;;           26-Jan-2016 added ‘usr-fullscreen-p’ and ‘usr-maxmized-p’
-;;           29-Feb-2016 changed from ‘usr-’ to ‘u-’
-;;           02-Mar-2016 fixed problem with ‘query-frame-colors’
-;;                       added ‘comint-mode’ and ‘shell-mode’ to ‘frame-mode-size-alist’
-;;           03-Mar-2016 added ‘html-mode’, ‘html-helper-mode’, and ‘nxhtml-mode’ to ‘frame-mode-size-alist’
-;;                       added ‘javascript-mode’, ‘js2-mode’, and ‘espresso-mode’ to ‘frame-mode-size-alist’
-;;           13-Sep-2016 changed ‘default-frame-width’ to 120
-;;                       changed ‘alt-frame-width’ to 96
-;;           31-Jan-2017 added ‘json-mode’
-;;           11-Jun-2018 moved color functions to ‘colors.el’
-;;           14-Jun-2018 changed ‘alt-frame-width’ to 112 to accomodate toolbar
-;;                       added new major modes to ‘frame-mode-size-alist’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           09-Feb-2023 added ‘tjf:frame/half-size’
-;;           15-Feb-2023 changed ‘default-frame-width’ and ‘default-frame-height’ to use monitor settings
-;;                       fixed ‘tjf:frame/half-size’
-;;           21-Sep-2023 removed ‘tjf/size-alist’
-;;
 
 ;;; Code:
 
@@ -97,22 +66,6 @@
                                               (cons 'height tjf:frame/default-height)))))
 
 (defalias 'current-frame 'selected-frame)
-
-;;; overload
-(defun mouse-tear-off-window (click)
-  "Delete the window clicked on, and create a new frame displaying its buffer."
-  (interactive "e")
-  (mouse-minibuffer-check click)
-  (let* ((window    (posn-window (event-start click)))
-         (buf       (window-buffer window))
-         (width     tjf:frame/default-height)                                                     ;;; tjf
-         (height    tjf:frame/default-width)                                                      ;;; tjf
-         (frame     (make-frame (list (cons 'background-color (tjf:color/random-background-hex))  ;;; tjf
-                                      (cons 'width  width)                                        ;;; tjf
-                                      (cons 'height height)))))                                   ;;; tjf
-    (select-frame frame)
-    (switch-to-buffer buf)
-    (delete-window window)))
 
 ;;; overload
 (defun switch-to-buffer-other-frame (buffer-or-name &optional norecord)
@@ -219,6 +172,10 @@ documentation for additional customization information."
     (modify-frame-parameters
      (current-frame) (list (cons 'width  tjf:frame/default-width)
                            (cons 'height tjf:frame/default-height))))
+
+(defun tjf:frame/config ()
+  "Configure the initial frame."
+  (tjf:frame/reset-size))
 
 ;;
 (message "Loading tjf-frame...done")

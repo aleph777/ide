@@ -1,6 +1,6 @@
 ;;; tjf-c.el --- C major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2025 Tom Fontaine
+;;         Copyright © 2021-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   09-Feb-2021
@@ -29,25 +29,16 @@
 
 ;;; Commentary:
 
-;; Revision: 13-Sep-2022 Added ‘clang-capf’
-;;           16-Sep-2022 Added ‘tjf:c/check’
-;;           27-Sep-2022 Added ‘eglot’
-;;           20-Oct-2022 Added ‘tjf:c/includes’ to ‘tjf:c/flags’
-;;           21-Oct-2022 Added key definition for ‘tjf:cc/insert-docstring’
-;;                       Added ‘tjf:c/set-includes’
-;;           04-Jan-2023 Fixed ‘tjf:c/setup’
-;;           06-Jun-2023 changed from ‘tjf:c/setup’ to ‘tjf:c/hook’ and ‘tjf:c/config’
-
 ;;; Code:
 
 (message "Loading from tjf-c...")
-;; (require 'eglot)
-;; (require 'flycheck)
-;; (require 'tjf-cc)
+(require 'c-ts-mode)
+(require 'flycheck)
+(require 'tjf-cc)
 
 ;;
 (defvar tjf:c/compiler)
-(setq   tjf:c/compiler "gcc")
+(setq   tjf:c/compiler "gcc-14")
 
 (defvar tjf:c/debug)
 (setq   tjf:c/debug "-g")
@@ -181,6 +172,8 @@
 
 (defun tjf:c/config ()
   "C mode config function."
+  (treesit-install-language-grammar 'c)
+
   (define-key c-ts-mode-map [menu-bar]    nil)
   (define-key c-ts-mode-map [(control d)] nil)
   (define-key c-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
@@ -196,12 +189,13 @@
   (setq-local completion-at-point-functions (cons #'clang-capf                completion-at-point-functions))
 
   (abbrev-mode   -1)
-  (flycheck-mode -1)
+  ;; (flymake-mode  -1)
+  (flycheck-mode  1)
 
-  (flymake-mode)
+  (remove-hook 'flymake-diagnostic-functions 'flymake-cc)
 
-  ;; (setq flycheck-gcc-language-standard   tjf:c/dialect)
-  ;; (setq flycheck-clang-language-standard tjf:c/dialect)
+  (setq flycheck-gcc-language-standard   tjf:c/dialect)
+  (setq flycheck-clang-language-standard tjf:c/dialect)
 
   (eglot-ensure)
 

@@ -1,6 +1,6 @@
 ;;; tjf-clips.el --- CLIPS major mode support for GNU Emacs -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   11-Apr-2016
@@ -28,13 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 14-Aug-2016 Added `u-clips-menu'
-;;           15-Aug-2016 Added `u-clips-font-lock-keywords-1' and `u-clips-font-lock-keywords-2'
-;;           17-Aug-2016 Set `comment-start' in `clips-setup'
-;;           18-Sep-2016 Expanded syntax highlighting
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;
 
 ;;; Code:
 

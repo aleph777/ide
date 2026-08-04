@@ -1,6 +1,6 @@
 ;;; tjf-sort.el --- Sort submenu definition and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2024 Tom Fontaine
+;;         Copyright © 1999-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -29,12 +29,6 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Feb-2010 added exit message
-;;           29-Feb-2016 changed from `usr-' to `u-'
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           28-Jun-2023 fixed missing ‘interactive’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-sort...")
@@ -50,6 +44,21 @@
 (defvar tjf:sort/field-list (list  '"Sort by which field?"
                                    '("1"  .  1) '("2"  .  2) '("3"  .  3) '("4"  .  4)
                                    '("-4" . -4) '("-3" . -3) '("-2" . -2) '("-1" . -1)))
+
+(defvar tjf:sort/menu)
+(setq tjf:sort/menu
+  '("Sort"
+    ["Sort Buffer"                   (tjf:sort/do         1) :key-sequence nil]
+    ["Sort Buffer Numeric"           (tjf:sort/do-numeric 1) :key-sequence nil]
+    ["Sort Buffer by Fields"         (tjf:sort/do         0) :key-sequence nil]
+    ["Sort Buffer by Fields Numeric" (tjf:sort/do-numeric 0) :key-sequence nil]
+    ["Reverse Buffer"                (reverse-region      (point-min) (point-max)) :key-sequence nil]
+    ["---" nil :visible t :enable nil]
+    ["Sort Region"                   (tjf:sort/do         1) :active mark-active :key-sequence nil]
+    ["Sort Region Numeric"           (tjf:sort/do-numeric 1) :active mark-active :key-sequence nil]
+    ["Sort Region by Fields"         (tjf:sort/do         0) :active mark-active :key-sequence nil]
+    ["Sort Region by Fields Numeric" (tjf:sort/do-numeric 0) :active mark-active :key-sequence nil]
+    ["Reverse Region"                reverse-region          :active mark-active :key-sequence nil]))
 
 (defun tjf:sort/do (field)
   "Sort by FIELD."
@@ -102,20 +111,6 @@ and END.  BEG and END specify region to sort."
                                (string-to-number (buffer-substring (point) (save-excursion (forward-sexp 1) (point))))))
                    (function (lambda () (skip-chars-forward "^ \t\n")
                                (string-to-number (buffer-substring (point) (save-excursion (forward-sexp 1) (point))))))))
-
-(defvar tjf:sort/menu
-  '("Sort"
-    ["Sort Buffer"                   (tjf:sort/do         1) :key-sequence nil]
-    ["Sort Buffer Numeric"           (tjf:sort/do-numeric 1) :key-sequence nil]
-    ["Sort Buffer by Fields"         (tjf:sort/do         0) :key-sequence nil]
-    ["Sort Buffer by Fields Numeric" (tjf:sort/do-numeric 0) :key-sequence nil]
-    ["Reverse Buffer"                (reverse-region      (point-min) (point-max)) :key-sequence nil]
-    "---"
-    ["Sort Region"                   (tjf:sort/do         1) :active mark-active :key-sequence nil]
-    ["Sort Region Numeric"           (tjf:sort/do-numeric 1) :active mark-active :key-sequence nil]
-    ["Sort Region by Fields"         (tjf:sort/do         0) :active mark-active :key-sequence nil]
-    ["Sort Region by Fields Numeric" (tjf:sort/do-numeric 0) :active mark-active :key-sequence nil]
-    ["Reverse Region"                reverse-region          :active mark-active :key-sequence nil]))
 
 ;;
 (message "Loading tjf-sort...done")

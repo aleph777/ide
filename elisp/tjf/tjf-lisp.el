@@ -1,6 +1,6 @@
 ;;; tjf-lisp.el --- Support for various Lisp modes -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2001-2024 Tom Fontaine
+;;         Copyright © 2001-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   26-Nov-2001
@@ -29,26 +29,6 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Feb-2010 major overhaul
-;;           25-Mar-2015 changed obsolete eval-current-buffer to eval-buffer
-;;           14-Apr-2015 added menu "-defun" functions to menu
-;;           20-Oct-2015 changed obsolete lisp-complete-symbol to completion-at-point
-;;           02-Feb-2016 added neotree
-;;                       fixed byte-recompile-directory menu entry
-;;           28-Feb-2016 refactored as ‘u-lisp’
-;;           03-Mar-2016 updated to use ‘yasnippet’
-;;           18-Apr-2016 updated for ‘use-package’
-;;           23-Jun-2016 removed globally set ‘semantic-mode’
-;;           30-Dec-2016 modified header line in ‘lisp-insert-skeleton’
-;;           02-Jan-2017 added ‘u-lisp-imenu-generic-expression’
-;;           18-Jan-2017 updated ‘lisp-insert-skeleton’
-;;           13-Jun-2020 added foRCE to byte recompile directory menu entry
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           07-Apr-2021 updated ‘tjf:lisp/insert-skeleton’
-;;           13-Sep-2022 added ‘elisp-completion-at-point’
-;;           06-Jun-2023 changed from ‘tjf:lisp/setup’ to ‘tjf:lisp/hook’ and ‘tjf:lisp/config’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-lisp...")
@@ -60,27 +40,29 @@
   (require 'cape))
 
 ;;
-(defvar tjf:lisp/build-menu-text
+(defvar tjf:lisp/build-menu-text)
+(setq tjf:lisp/build-menu-text
   '("Build"
     ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
     ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Byte Compile File..."      byte-compile-file]
     ["Byte Recompile Directory" (byte-recompile-directory "." 0 t)]
 ))
 
-(defvar tjf:lisp/mode-menu-text
+(defvar tjf:lisp/mode-menu-text)
+(setq tjf:lisp/mode-menu-text
   '("Lisp"
     ["Complete Symbol" completion-at-point :active t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Beginning Of Defun" beginning-of-defun :active t]
     ["End Of Defun"       end-of-defun       :active t]
     ["Mark Defun"         mark-defun         :active t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Evaluate Defun"  eval-defun  :active t          ]
     ["Evaluate Buffer" eval-buffer :active t          ]
     ["Evaluate Region" eval-region :active mark-active]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Insert Skeleton" tjf:lisp/insert-skeleton :enable (buffer-file-name)]
     ))
 

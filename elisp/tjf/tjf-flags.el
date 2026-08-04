@@ -1,6 +1,6 @@
 ;;; tjf-flags.el --- Defintion of boolean flags used in menus and toolbars -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;          Copyright © 2016-2024 Tom Fontaine
+;;          Copyright © 2016-2026 Tom Fontaine
 
 ;; Author:  Tom Fontaine
 ;; Date:    26-Jan-2016
@@ -28,22 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 03-Feb-2016 changed ‘usr-enable-revert-p’ to not require buffer modification
-;;           04-Feb-2016 updated ‘usr-enable-undo-p’ and ‘usr-enable-redo-p’ for new ‘undo-tree’ version
-;;           25-Feb-2016 renamed as ‘u-flags’
-;;           25-Feb-2016 added ‘is-html-modes’ and ‘is-html-mode?’
-;;                       added ‘is-javascript-modes’ and ‘is-javascript-mode?’
-;;           16-Dec-2016 added support for mode-line CAPS LOCK indicator
-;;           14-Jan-2017 added ‘is-bookmark?’
-;;           17-Jan-2017 changed ‘defvar’s to ‘defconst’s
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           02-Jul-2021 reworked ‘tjf:flags/enable-undo-redo?’
-;;           28-Apr-2022 added ‘tjf:flags/using-tabs’
-;;           10-Apr-2023 added ‘is-feature?’
-;;           21-Jul-2023 removed modes
-;;           05-Dec-2024 fixed ‘tjf:flags/enable-undo-redo?’ for ‘undo-fu’
-;;
 
 ;;; Code:
 

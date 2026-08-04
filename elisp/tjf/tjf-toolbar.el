@@ -1,11 +1,10 @@
 ;;; tjf-toolbar.el --- Emacs toolbar revision -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;              Copyright © 2001-2025 Tom Fontaine
+;;              Copyright © 2001-2026 Tom Fontaine
 
 ;;
 ;; Author:      Tom Fontaine
 ;; Date:        30-Nov-2001
-;; Time-stamp: <09-Jan-2018 11:25:06 EST, modified by Tom Fontaine>
 ;;
 
 ;; Permission is hereby granted, free of charge, to any person obtaining a
@@ -31,42 +30,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 09-May-2006 upgraded for ssh
-;;                       added visible/enable functions
-;;           11-May-2008 revised for Emacs 22
-;;           13-Feb-2010 Added exit message
-;;                       Changed goto-line icon name
-;;           31-Aug-2012 Reworked for new icon set
-;;                       Added PageUp and PageDown
-;;           20-Sep-2012 Reworked usr-paste-p for MS-Windows
-;;           04-Jan-2013 Added eshell-mode to shell-p
-;;           04-Jun-2013 Added separators and null labels
-;;           30-May-2014 Added button for dabbrev-expand/lisp-complete-symbol
-;;           11-Jan-2016 Changed lisp-complete-symbol to completion-at-point
-;;           18-Jan-2016 Updated for new user interface
-;;           26-Jan-2016 Moved internal functions to usr-flags
-;;           22-Feb-2016 New icons
-;;                       Add "New file", "Lock/Unlock", and "Hide/Show"
-;;           26-Jan-2016 Changed to require ‘u-flags’, ‘u-navigate’, and ‘u-search’
-;;           09-May-2016 Changed ‘query-replace’ and ‘query-replace-regexp’ with ‘anzu’ versions
-;;           17-Nov-2016 Changed first icon to ‘view-file’
-;;           05-Jan-2017 Changed to Material icons
-;;           13-Jan-2017 Added ‘winner-undo’ amd ‘winner-redo’
-;;                       Added bookmark support
-;;           16-Jan-2017 Removed ‘tinysearch-search-word-*’
-;;           26-Apr-2017 Added ‘previous-input’ and ‘next-input’
-;;           06-May-2019 Added ‘treemacs’
-;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
-;;           20-Jul-2019 Changed tooltip on ‘view-file’ icon
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           10-Mar-2021 added SVG graphics
-;;           16-Apr-2022 added visibility control for ‘toggle-case’
-;;           03-Apr-2024 fixed icon names
-;;           05-Dec-2024 update for ‘undo-fu’
-;;           06-Dec-2024 added ‘noccur-project
-;;           13-Apr-2025 refixed button names
-;;
 
 ;;; Code:
 
@@ -122,7 +85,7 @@
 (tool-bar-add-item "view"   'view-file                 'view  :label "" :help "Browse file/Toggle Browse mode")
 (tool-bar-add-item "edit"   'find-file                 'open  :label "" :help "Open file/Open file in new window...")
 (tool-bar-add-item "add"    'tjf:file/new-empty-buffer 'new   :label "" :help "New file")
-(tool-bar-add-item "cancel" 'kill-this-buffer          'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
+(tool-bar-add-item "cancel" 'kill-current-buffer       'close :label "" :help "Discard current buffer/Discard current buffer & window" :visible '(tjf:mode/is-not-shell-mode?))
 (define-key-after (default-value 'tool-bar-map) [separator-1] menu-bar-separator)
 
 (tool-bar-add-item "lock"        'read-only-mode   'lock   :label "" :help "Toggle read-only" :visible '(tjf:toolbar/visible-lock?))

@@ -1,6 +1,6 @@
 ;;; tjf-powerline.el --- Powerline setup -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 by Tom Fontaine
+;;         Copyright © 2016-2026 by Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   30-Mar-2016
@@ -28,21 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 01-Apr-2016 cleaned up do-update-modeline-vars
-;;           09-May-2016 added `anzu'
-;;           14-Sep-2016 fixed `mode-line-inactive'
-;;           18-Sep-2016 moved `alias-face' to `u-macro'
-;;           23-May-2017 changed ‘powerline-red-face’ to ‘error’
-;;           13-Jun-2018 added ‘require’ for ‘u-flags’
-;;           03-Jul-2018 moved ‘powerline-vc’ to rhs face2
-;;           10-Jul-2019 added ‘require’ for ‘anzu’
-;;           28-Oct-2020 reworked  ‘powerline' changes
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           29-Aug-2022 using ‘%C’ for column format
-;;           02-Oct-2022 removed ‘tjf:powerline/column’
-;;           08-May-2023 added separate region info
-;;
 
 ;;; Code:
 
@@ -130,11 +115,12 @@
 (defvar tjf:powerline/encoding (tjf:powerline/encoding))
 
 (defun tjf:powerline/fill (face reserve)
-    "Return empty space using FACE and leaving RESERVE space on the right."
-    (setq reserve (* (- reserve 3) 0.825))
-    (propertize " "
-                'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
-                'face face))
+    "Return empty space using FACE and leaving f(RESERVE) space on the right."
+	(let* ((scale 0.675)
+		   (space (* (- reserve 3) scale)))
+      (propertize " "
+                  'display `((space :align-to (- (+ right right-fringe right-margin) ,space)))
+                  'face face)))
 
 (defun tjf:powerline/update-modeline-vars ()
   "Update the strings containing the modeline variables."
@@ -171,6 +157,8 @@
      (powerline-process face1)
      (powerline-narrow face1 'l)
      (powerline-raw " " face1)
+     (when (and (boundp 'flycheck-mode) flycheck-mode)
+       (powerline-raw flycheck-mode-line face1))
      (funcall separator-left face1 face2))))
 
 

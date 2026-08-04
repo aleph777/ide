@@ -1,7 +1,7 @@
 // -*- C++ -*-
 
-#ifndef UNORDERED_MAP_H_
-#define UNORDERED_MAP_H_
+#ifndef UNORDERED_MAP_HPP_
+#define UNORDERED_MAP_HPP_
 
 #include <unordered_map>
 
@@ -13,10 +13,12 @@
 #include <utility>
 #include <vector>
 
-namespace map_utils {
+namespace map_utils
+{
 
 template <typename T1, typename T2>
-class UnorderedMap {
+class UnorderedMap
+{
 public:
   UnorderedMap() : m_() {}
 
@@ -51,10 +53,12 @@ public:
    * @brief:    get the keys of the map
    * @return:   list of keys
    */
-  const std::list<T1> keys() const {
+  const std::list<T1> keys() const
+  {
     std::list<T1> list_keys;
 
-    for (const auto& key : m_ | std::views::keys) {
+    for (const auto& key : m_ | std::views::keys)
+    {
       list_keys.emplace_back(key);
     }
     return list_keys;
@@ -64,10 +68,12 @@ public:
    * @brief:    get the key/value pairs of the map
    * @return:   list of key/value pairs
    */
-  const std::list<std::pair<T1, T2>> key_value_pairs() const {
+  const std::list<std::pair<T1, T2>> key_value_pairs() const
+  {
     std::list<std::pair<T1, T2>> list_pairs;
 
-    for (auto const &[key, value] : m_) {
+    for (auto const& [key, value] : m_)
+    {
       list_pairs.emplace_back(std::pair<T1, T2>(key, value));
     }
     return list_pairs;
@@ -78,30 +84,32 @@ public:
    * @param:    key to remove
    * @return:   FOUND boolean
    */
-  inline bool remove(T1 key) { return m_.erase(key) == 1;}
+  inline bool remove(T1 key) { return m_.erase(key) == 1; }
 
   /*
    * @brief:    set the value of key
    * @param:    the key to insert
    * @param:    the associated value
    */
-    inline void set(T1 key, T2 value) { m_[key] = value; }
+  inline void set(T1 key, T2 value) { m_[key] = value; }
 
   /*
    * @brief:    set the value of key
    * @param:    the key to insert
    * @param:    the associated value
    */
-    inline void set(const std::pair<T1, T2>& lp) { set(lp->first, lp->second); }
+  inline void set(const std::pair<T1, T2>& lp) { set(lp->first, lp->second); }
 
   /*
    * @brief:    set the list of keys to value
    * @param:    the key list to insert
    * @param:    the associated value
    */
-  void set(const std::list<T1>& keys, T2 value) {
-    for (auto key : keys) {
-        set(key, value);
+  void set(const std::list<T1>& keys, T2 value)
+  {
+    for (auto key : keys)
+    {
+      set(key, value);
     }
   }
 
@@ -110,9 +118,11 @@ public:
    * @param:    the vector of keys to insert
    * @param:    the associated value
    */
-  void set(const std::vector<T1>& keys, T2 value) {
-    for (auto key : keys) {
-        set(key, value);
+  void set(const std::vector<T1>& keys, T2 value)
+  {
+    for (auto key : keys)
+    {
+      set(key, value);
     }
   }
 
@@ -121,11 +131,13 @@ public:
    * @param:    the key list to insert
    * @param:    the value list to insert
    */
-  void set(const std::list<T1> &k, const std::list<T2> &v) {
+  void set(const std::list<T1>& k, const std::list<T2>& v)
+  {
     assert(k.size() == v.size());
 
-    for (auto itk = k.begin(), itv = v.begin(); itk != k.end(); ++itk, ++itv) {
-        set(*itk, *itv);
+    for (auto itk = k.begin(), itv = v.begin(); itk != k.end(); ++itk, ++itv)
+    {
+      set(*itk, *itv);
     }
   }
 
@@ -134,11 +146,13 @@ public:
    * @param:    the vector of keys to insert
    * @param:    the vector of values to insert
    */
-  void set(const std::vector<T1>& k, const std::vector<T2>& v) {
+  void set(const std::vector<T1>& k, const std::vector<T2>& v)
+  {
     assert(k.size() == v.size());
 
-    for (auto i = 0; i < static_cast<int>(k.size()); ++i) {
-        set(k[i], v[i]);
+    for (auto i = 0; i < static_cast<int>(k.size()); ++i)
+    {
+      set(k[i], v[i]);
     }
   }
 
@@ -152,23 +166,31 @@ public:
    * @brief:    get the values of the map
    * @return:   list of values
    */
-  const std::list<T2> values() {
+  const std::list<T2> values()
+  {
     std::list<T2> list_values;
 
-    for (const auto& value : m_ | std::views::values) {
+    for (const auto& value : m_ | std::views::values)
+    {
       list_values.emplace_back(value);
     }
     return list_values;
   }
 
-  bool operator==(const UnorderedMap<T1, T2>& other) const {
-    if (size() != other.size()) return false;
+  bool operator==(const UnorderedMap<T1, T2>& other) const
+  {
+    if (size() != other.size())
+      return false;
 
-    for (auto key : other.keys()) {
-      if (!exists(key)) return false;
+    for (auto key : other.keys())
+    {
+      if (!exists(key))
+        return false;
     }
-    for (auto key : keys()) {
-      if (get(key) != other.get(key)) return false;
+    for (auto key : keys())
+    {
+      if (get(key) != other.get(key))
+        return false;
     }
     return true;
   }
@@ -177,9 +199,11 @@ public:
 
   T2& operator[](T1 key) { return m_[key]; };
 
-  friend std::ostream& operator<<(std::ostream& os, const UnorderedMap<T1, T2>& m) {
-      os << "{\n";
-    for (auto p : m.key_value_pairs()) {
+  friend std::ostream& operator<<(std::ostream& os, const UnorderedMap<T1, T2>& m)
+  {
+    os << "{\n";
+    for (auto p : m.key_value_pairs())
+    {
       os << "  {" << p.first << ", " << p.second << " }\n";
     }
     os << "}\n";
@@ -187,7 +211,7 @@ public:
     return os;
   }
 
- private:
+private:
   std::unordered_map<T1, T2> m_;
 };
 

@@ -1,6 +1,6 @@
 ;;; tjf-csharp.el --- CSharp major mode -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2015-2024 Tom Fontaine
+;;         Copyright © 2015-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   12-May-2015
@@ -28,15 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 18-Jan-2016 Updated for new user interface
-;;           02-Feb-2016 Added `neotree'
-;;           29-Feb-2016 Changed from `usr-' to `u-'
-;;                       Removed`neotree'
-;;           23-Jun-2016 Removed globally set `semantic-mode'
-;;           10-Mar-2017 Fixed ‘imenu’ handling
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;
 
 ;;; Code:
 

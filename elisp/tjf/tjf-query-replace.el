@@ -1,6 +1,6 @@
 ;;; tjf-query-replace.el --- Perl query-replace -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2001-2025 Tom Fontaine
+;;         Copyright © 2001-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   06-Dec-2001
@@ -28,9 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 03-Feb-2021 ‘tjf’ overhaul
-;;
 
 ;;; Code:
 

@@ -29,100 +29,12 @@
 
 ;;; Commentary:
 
-;; Revision: 22-Mar-2007 major revision/overhaul
-;;           16-May-2008 update for Emacs 22
-;;           11-Feb-2011 removed ‘redo’ - added ‘redo+’
-;;           13-Sep-2012 update for Emacs 24
-;;           26-Sep-2013 added mouse definitions from default.el
-;;           27-Sep-2013 removed entries for Sun function keys
-;;           13-Jun-2014 added ‘usr-tab-close-paren’
-;;           24-Mar-2015 bound ‘usr-open-line’ to M-return
-;;           25-Mar-2015 added ‘usr-capitalize-word’, ‘usr-downcase-word’, and ‘usr-upcase-word’
-;;           26-Mar-2015 fixed [mode-line C-mouse-2] definition
-;;                       removed [super tab] definition
-;;                       found problems in mode-line mouse bindings (not fixed!!!)
-;;           01-Apr-2015 fixed mode-line mouse bindings
-;;                       added secondary selection to ‘C-M-mouse-’
-;;           02-Apr-2015 added loading messages
-;;           04-May-2015 added ‘usr-move-line-down’
-;;           06-May-2015 changed ‘kp-N’ and ‘M-kp-N’ bindings to use lambda functions
-;;           03-Dec-2015 changed ‘M-kp-.’ to ‘completion-at-point’
-;;                       added ‘S-SPC’
-;;                       added ‘Scroll_Lock’ as ‘completion-at-point’
-;;           05-Jan-2016 added ‘tinyeat’, removed C-delete
-;;           18-Jan-2016 updated for new user interface
-;;           29-Jan-2016 added ‘eval-after-load’ for isearch definitions
-;;           03-Feb-2016 updated for more ergo
-;;                       added ‘xah-search-current-word’ for ‘C-f’
-;;           04-Feb-2016 added ‘usr-newline-and-indent’ for ‘C-S-return’
-;;           06-Feb-2016 added ‘usr-end-of-line’ and ‘usr-beginning-of-line’
-;;           23-Feb-2016 added ‘usr-occur’ and ‘usr-moccur’
-;;           25-Feb-2016 added ‘text-scale-increase’ and ‘text-scale-decrease’
-;;           26-Feb-2016 added ‘C-b’
-;;                       added ‘C-d’ as ‘duplicate-line-or-region’
-;;           28-Feb-2016 replaced ‘usr-’ functions with ‘u-’ functions
-;;           02-Mar-2016 changed ‘f6’ to ‘capitalize-word-or-region’
-;;           03-Mar-2016 removed ‘M-f’
-;;                       added ‘s-f1’ as ‘u-forward-symbol’
-;;                       added ‘s-f2’ as ‘backward-symbol’
-;;                       added ‘C-f1’ as ‘forward-word’
-;;                       added ‘kp-divide’ as ‘toggle-fill-paragraph-or-region’
-;;           19-Apr-2016 added ‘mouse-delete-window’ to "control left-fringe" and "control right-fringe"
-;;           21-Apr-2016 removed ‘modeline’ ‘mouse-1’" binding
-;;                       changed ‘modeline’ ‘C-mouse-1’ to delete-window
-;;                       changed ‘modeline’ ‘C-mouse-3’ to delete-other-windows
-;;                       changed ‘s-f6’ to ‘xah-toggle-letter-case’
-;;           26-Apr-2016 changed ‘C-e’ to ‘ergoemacs-extend-selection’ lambda function
-;;                       changed ‘C-kp-+’ to ‘shift-number-up’
-;;                       changed ‘C-kp--’ to ‘shift-number-down’
-;;           27-Apr-2016 changed ‘C-p’ to ‘pop-to-mark-command’
-;;           28-Apr-2016 changed ‘insert’ to ‘u-paste-clipboard’
-;;                       added ‘C-insert’ as ‘overwrite-mode’
-;;                       added ‘C-S-d’ as ‘duplicate-as-comment’
-;;           14-Aug-2016 added ‘M-insert’ as ‘insert-dd-mon-yyyy’
-;;                       added ‘s-insert’ as ‘insert-month-day-year’
-;;           25-Aug-2016 added ‘C-S-n’ as ‘narrow-or-widen-dwim’
-;;           29-Aug-2016 added ‘s-(’ as ‘xah-insert-paren’
-;;                       added ‘s-[’ as ‘xah-insert-bracket’
-;;                       added ‘s-{’ as ‘xah-insert-brace’
-;;                       added ‘s-\`’ as ‘xah-insert-emacs-quote’
-;;                       added ‘s-\’' as ‘xah-insert-single-quote’
-;;                       added ‘s-\"’ as ‘xah-insert-double-quote’
-;;                       added ‘C-i’ as ‘indent-region’
-;;           21-Sep-2016 added ‘s-r’ as ‘cua-rectangle-mark-mode’
-;;           12-Oct-2016 changed ‘s-r’ to ‘rectangle-mark-mode’
-;;           16-Dec-2016 changed ‘C-i’ to either ‘indent-region’ or ‘indent-for-tab-command’
-;;           13-Jan-2017 changed ‘C-N’ to ‘fancy-narrow-or-widen-dwim’
-;;                       added ‘C-L’ as ‘loccur-current’
-;;                       added ‘S-<’ as ‘xah-insert-lt’
-;;                       added ‘S->’ as ‘xah-insert-tag’
-;;                       changed ‘C-b’ to ‘bm-toggle’
-;;           16-Jan-2017 removed ‘tinysearch-search-word-*’
-;;           18-Jan-2017 changed ‘C-f1' to ‘insert-chs’
-;;                       added ‘C-f2’ as ‘insert-che’
-;;           19-Jan-2017 changed ‘C-N’ to ‘narrow-or-widen-dwim’
-;;                       added ‘C-S-mouse-1’ as ‘hs-mouse-toggle-hiding’
-;;           19-Sep-2017 added ‘M-pause’ as ‘sdcv-search’
-;;           16-Jan-2019 added ‘C-`’ (s-` does not register for Mint 19.1/Cinnamon 4)
-;;           16-Jun-2019 reformatted/reorganized
-;;           03-Sep-2019 added ‘C-S-mouse-3’ as ‘minions-minor-modes-menu’
-;;           15-Dec-2020 added ‘kp-*' for non-numlocked keypad keys
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           16-Mar-2021 removed ‘tinyeat-delete-whole-word’, ‘tinyeat-backward-preserve’, and ‘tinyeat-forward-preserve’
-;;                       fixed warnings on lambda functions
-;;           24-Mar-2021 added ‘consult-outline’ to ‘C-M-o’
-;;           28-Apr-2022 added ‘tjf:duplicate/tabs’
-;;           30-Sep-2022 added mode-line bindings for ‘mouse-8’, ‘mouse-9’, and ‘C-mouse-3’
-;;           07-Jun-2023 added ‘blamer-show-commit-info’ to ‘s-b’
-;;           15-Jun-2023 added ‘tjf:duplicate/spaces’ to ‘C-s-<Fn>’ and ‘M-s-<Fn>’
-;;           05-Dec-2024 update for ‘undo-fu’
-
 ;;; Code:
 
 (message "Loading tjf-keys...")
 (require 'anzu)
 (require 'bm)
-(require 'consult)
+;;(require 'consult)
 (require 'tjf-clipboard)
 (require 'tjf-duplicate)
 (require 'tjf-edit)
@@ -267,7 +179,7 @@
 ;;lobal-set-key [(super   l)]            ' DO NOT USE ... locks computer
 ;;lobal-set-key [(control meta  l)]      '
 (global-set-key [(control shift l)]      'loccur-current)
-(global-set-key [(control super l)]      'consult-line)
+;;(global-set-key [(control super l)]      'consult-line)
 ;;lobal-set-key [(meta    super l)]      '
 ;;lobal-set-key [(control meta super l)] '
 (define-key help-map [(control k)]       'describe-key)
@@ -300,8 +212,8 @@
 (global-set-key [(control o)]            'find-file)
 ;;lobal-set-key [(meta    o)]            ' PREFIX
 ;;lobal-set-key [(super   o)]            ' DO NOT USE ... ???
-(global-set-key [(control meta  o)]      'consult-outline)
-(global-set-key [(control shift o)]      'consult-outline)
+;;(global-set-key [(control meta  o)]      'consult-outline)
+;;(global-set-key [(control shift o)]      'consult-outline)
 (global-set-key [(control super o)]      'open-rectangle)
 ;;lobal-set-key [(meta    super o)]      '
 ;;lobal-set-key [(control meta super o)] '
@@ -1203,8 +1115,8 @@
 
 ;; ==================== kp-multiply ====================
 ;;
-(global-set-key [kp-multiply]           'dabbrev-expand)
-;;lobal-set-key [(control kp-multiply)] '
+(global-set-key [kp-multiply]           'dabbrev-completion)
+(global-set-key [(control kp-multiply)] 'dabbrev-expand)
 ;;lobal-set-key [(meta    kp-multiply)] '
 ;;lobal-set-key [(super   kp-multiply)] '
 ;;lobal-set-key [(control meta  kp-multiply)]      '

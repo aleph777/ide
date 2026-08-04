@@ -1,6 +1,6 @@
 ;;; tjf-duplicate.el --- Duplicate text from surrounding lines -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2005-2024 Tom Fontaine
+;;         Copyright © 2005-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   12-Jan-2005
@@ -28,18 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 02-Apr-2015 added loading messages
-;;           06-May-2015 removed ‘duplicate-previous-N’, ‘duplicate-next-N’ functions
-;;           26-Feb-2016 refactored ‘duplicate’ to better deal with TABs
-;;                       added ‘duplicate-line-or-region’
-;;           03-Mar-2016 fixed bug in ‘duplicate-line-or-region’
-;;           29-Apr-2016 added ‘duplicate-as-comment’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           28-Apr-2022 added ‘tjf:duplicate/tabs’
-;;           14-Jun-2023 added ‘tjf:duplicate/syntax-spaces’
-;;           10-Aug-2023 added ‘tjf:duplicate/skip-to-next-word-on-line’
-;;
 
 ;;; Code:
 

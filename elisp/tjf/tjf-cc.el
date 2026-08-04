@@ -1,6 +1,6 @@
 ;;; tjf-cc.el --- Common C/C++ major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2021-2024 Tom Fontaine
+;;         Copyright © 2021-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   09-Feb-2021
@@ -29,9 +29,6 @@
 
 ;;; Commentary:
 
-;; Revision: 21-Oct-2022 Added ‘tjf:cc/insert-docstring’
-;;           02-Feb-2023 Fixed ‘tjf:cc/insert-source-skeleton’
-
 ;;; Code:
 
 (message "Loading tjf-cc...")
@@ -42,8 +39,36 @@
 (require 'tjf-macro)
 
 ;;
+(defconst tjf:cc/bin-format  "clang-format-20")
+(defconst tjf:cc/file-format "clang-format.yml")
+(defconst tjf:cc/path-format (concat tjf:user/dir-config tjf:cc/file-format))
 
-(defvar tjf:cc/nproc (shell-command-to-string "nproc"))
+(defconst tjf:cc/nproc (string-trim-right (shell-command-to-string "nproc")))
+
+(defvar tjf:cc/menu-text)
+(setq tjf:cc/menu-text
+  '(
+    ["Insert Header File Skeleton" tjf:cc/insert-header-skeleton :active (tjf:flags/is-rw?)]
+    ["Insert Source File Skeleton" tjf:cc/insert-source-skeleton :active (tjf:flags/is-rw?)]
+    ["Insert Boilerplate"          tjf:cc/insert-boilerplate     :active (tjf:flags/is-rw?)]
+    ["Insert Header Guard"         tjf:cc/insert-header-guard    :active (tjf:flags/is-rw?)]
+    ["Insert Docstring Template"   tjf:cc/insert-docstring       :active (tjf:flags/is-rw?)]
+    ["Format File"                 tjf:cc/format                 :active (tjf:flags/is-rw?)]
+    "---"
+    ["Beginning Of Function" beginning-of-defun]
+    ["End Of Function"       end-of-defun      ]
+    ["Mark Function"         c-mark-function   ]
+    "---"
+    ["Fill Comment Paragraph"c-fill-paragraph :active (tjf:flags/is-rw?)]
+    ;;    ["Convert comment to docstring" u-docstring    :enable (or c++-mode java-mode)]
+    "---"
+    ["Backward Statement" c-beginning-of-statement]
+    ["Forward  Statement" c-end-of-statement      ]
+    "---"
+    ["Up Conditional"       c-up-conditional      ]
+    ["Backward Conditional" c-backward-conditional]
+    ["Forward  Conditional" c-forward-conditional ]
+    ))
 
 (defun tjf:cc/docstring ()
   "Convert C++-style comments '^ *//' to a docstring."
@@ -125,36 +150,10 @@
     (insert (concat "#include \"" inc-file "\"\n\n"))))
 
 (defun tjf:cc/format ()  
-  "Format the entire buffer or the region."  
-  (interactive "*")  
-  (with-buffer-or-region (beg end)                         
-                         (eglot-format beg end)))
-
-(defvar tjf:cc/menu-text
-  '(
-    ["Insert Header File Skeleton" tjf:cc/insert-header-skeleton :active (tjf:flags/is-rw?)]
-    ["Insert Source File Skeleton" tjf:cc/insert-source-skeleton :active (tjf:flags/is-rw?)]
-    ["Insert Boilerplate"          tjf:cc/insert-boilerplate     :active (tjf:flags/is-rw?)]
-    ["Insert Header Guard"         tjf:cc/insert-header-guard    :active (tjf:flags/is-rw?)]
-    ["Insert Docstring Template"   tjf:cc/insert-docstring       :active (tjf:flags/is-rw?)]
-    ["Format File"                 eglot-format                  :active (tjf:flags/is-rw?)]
-    "---"
-    ["Go to Definition" xref-find-definitions]
-    "---"
-    ["Beginning Of Function" beginning-of-defun]
-    ["End Of Function"       end-of-defun      ]
-    ["Mark Function"         c-mark-function   ]
-    "---"
-    ["Fill Comment Paragraph"c-fill-paragraph :active (tjf:flags/is-rw?)]
-    ;;    ["Convert comment to docstring" u-docstring    :enable (or c++-mode java-mode)]
-    "---"
-    ["Backward Statement" c-beginning-of-statement]
-    ["Forward  Statement" c-end-of-statement      ]
-    "---"
-    ["Up Conditional"       c-up-conditional      ]
-    ["Backward Conditional" c-backward-conditional]
-    ["Forward  Conditional" c-forward-conditional ]
-    ))
+  "Format the entire buffer or the region."
+  (interactive "*")
+  (let ((style (concat "--style=file:" tjf:cc/path-format)))
+    (call-process-region (point-min) (point-max) tjf:cc/bin-format t t t style)))
 
 ;;
 (message "Loading tjf-cc...done")

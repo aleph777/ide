@@ -177,8 +177,6 @@
 ;; allowing to easily show another buffer group by clicking on the
 ;; associated tab.
 
-;; Revision:
-
 ;;; Code:
 
 (message "Loading tjf-tabline...")

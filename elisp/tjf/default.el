@@ -371,6 +371,7 @@
   :custom
   (eglot-send-changes-idle-time 0.1)
   :hook
+  (find-file          . (lambda () (flymake-mode -1)))
   (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1)))
   :config
   (add-to-list 'eglot-server-programs '((perl-ts-mode cperl-mode) . ("pls")))
@@ -752,9 +753,10 @@
   (ergoemacs-mode 0)
   (message "Config ergoemacs-mode...done"))
 
-(use-package flycheck             :ensure t
-  :preface
-  (defvar flycheck-mode--set-explicitly nil)
+(use-package flycheck             :ensure t   :commands flycheck-mode
+  :hook ((prog-mode . flycheck-mode)
+         ;; Show diagnostics inline, next to the code (Error Lens style)
+         (prog-mode . flycheck-annotate-mode))
   :custom
   (flycheck-mode-line
    '(:eval
@@ -775,9 +777,44 @@
        (`interrupted " -")
        (`suspicious '(propertize " ?" 'face 'warning)))))
   :config
-  (setq flycheck-emacs-lisp-load-path 'inherit)
-  (global-flycheck-mode)
-  (message "Config flycheck...done"))
+  ;; Report Eglot's LSP diagnostics through Flycheck
+  (flycheck-eglot-mode 1))
+
+(use-package flymake              :ensure nil :commands flymake-mode
+  :hook
+  (prog-mode   . (lambda () (flymake-mode -1)))
+  (c++-ts-mode . (lambda () (flymake-mode -1)))
+  (c++-mode    . (lambda () (flymake-mode -1)))
+  (cc-mode     . (lambda () (flymake-mode -1)))
+  :config
+  (message "Somebody loaded flymake!!!"))
+
+;; (use-package flycheck             :ensure t
+;;   :preface
+;;   (defvar flycheck-mode--set-explicitly nil)
+;;   :custom
+;;   (flycheck-mode-line
+;;    '(:eval
+;;      (pcase flycheck-last-status-change
+;;        (`not-checked nil)
+;;        (`no-checker (propertize " -" 'face 'warning))
+;;        (`running    (propertize " ✷" 'face 'success))
+;;        (`errored    (propertize " !" 'face 'error))
+;;        (`finished
+;;         (let* ((error-counts (flycheck-count-errors flycheck-current-errors))
+;;                (no-errors    (cdr (assq 'error   error-counts)))
+;;                (no-warnings  (cdr (assq 'warning error-counts)))
+;;                (face (cond (no-errors   'error)
+;;                            (no-warnings 'warning)
+;;                            (t           'success))))
+;;           (propertize (format " %s/%s" (or no-errors 0) (or no-warnings 0))
+;;                       'face face)))
+;;        (`interrupted " -")
+;;        (`suspicious '(propertize " ?" 'face 'warning)))))
+;;   :config
+;;   (setq flycheck-emacs-lisp-load-path 'inherit)
+;;   (global-flycheck-mode)
+;;   (message "Config flycheck...done"))
 
 (use-package helpful              :ensure t
   :commands  (helpful-callable helpful-variable helpful-key)
@@ -926,7 +963,40 @@
 
 (use-package cc-mode              :ensure nil :commands (c-mode c++-mode)
   :config
-  (message "!!!!!!! HOLA !!!!!!"))
+  (message "Config cc-mode...done"))
+
+(use-package cperl-mode           :ensure nil :commands cperl-mode
+  :init
+  (mapc (lambda (pair)
+          (if (eq (cdr pair) 'perl-mode)
+              (setcdr pair 'cperl-mode)))
+        (append auto-mode-alist interpreter-mode-alist))
+  :custom
+  (cperl-hairy                        t)
+  (cperl-indent-region-fix-constructs nil)
+  ;;
+  :config
+  (defun cperl-define-key () nil)
+
+  (define-key cperl-mode-map [(control ?h) ?f] nil)
+  (define-key cperl-mode-map [(control ?h) ?v] nil)
+
+  (setq cperl-style-alist (append cperl-style-alist '(("TJF"
+                                                       (cperl-indent-level               .  2)
+                                                       (cperl-brace-offset               .  0)
+                                                       (cperl-continued-brace-offset     . -2)
+                                                       (cperl-label-offset               . -2)
+                                                       (cperl-extra-newline-before-brace .  t)
+                                                       (cperl-merge-trailing-else        .  nil)
+                                                       (cperl-continued-statement-offset .  2)))))
+  (cperl-set-style "TJF")
+  (cperl-init-faces)
+  (define-key cperl-mode-map [menu-bar] nil)
+  (define-key cperl-mode-map [?\t]      #'(lambda nil (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
+  (define-key cperl-mode-map "{"        nil)
+  (define-key cperl-mode-map "("        nil)
+  (define-key cperl-mode-map "["        nil)
+  (message "Config cperl-mode...done"))
 
 (use-package cpp-auto-include     :ensure t   :after tjf-cpp
   :config
@@ -994,7 +1064,7 @@
 
 (use-package markdown-ts-mode     :ensure t   :commands markdown-ts-mode)
 
-(use-package modern-cpp-font-lock :ensure t   :after cc-mode
+(use-package modern-cpp-font-lock :ensure t   :after cc-mode :disabled
   :diminish modern-c++-font-lock-mode
   :hook
   (c++-ts-mode . modern-c++-font-lock-mode)
@@ -1017,14 +1087,14 @@
 
 (use-package perl-ts-mode         :ensure t   :commands perl-ts-mode)
 
-(use-package python               :ensure nil :commands python-mode
+(use-package python               :ensure nil :commands python-mode :disabled
  :custom
   (python-indent-guess-indent-offset-verbose nil)
   :hook
   (python-mode . (lambda ()
-                   (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions))))
-  (python-ts-mode . (lambda ()
-                      (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions)))))
+                   (setq-local completion-at-point-functions (cons #'python-completion-at-point completion-at-point-functions)))))
+
+(use-package python-ts-mode       :ensure nil :commands python-ts-mode)
 
 (use-package rainbow-mode         :ensure nil :commands rainbow-mode)
 

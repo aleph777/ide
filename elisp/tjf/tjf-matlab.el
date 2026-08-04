@@ -1,6 +1,6 @@
 ;;; tjf-matlab.el --- MATLAB major mode support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   18-Apr-2016
@@ -28,11 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 23-Jun-2016 Removed globally set `semantic-mode'
-;;           17-Jan-2017 Added call to `matlab-cedet-setup'
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;
 
 ;;; Code:
 

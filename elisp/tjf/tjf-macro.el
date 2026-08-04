@@ -1,6 +1,6 @@
 ;;; tjf-macro.el --- Global macro definitions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   10-Jun-2016
@@ -29,32 +29,13 @@
 
 ;;; Commentary:
 
-;; Revision: 18-Sep-2016 Added ‘alias-face’
-;;           14-Jan-2017 Added ‘get-shell-command’
-;;           16-Jan-2017 Added ‘on-*’
-;;           17-Jan-2017 Fixed ‘with-word-or-region’
-;;                       Added ‘paragraph-beginning-position’, ‘paragraph-end-position’, and ‘with-paragraph-or-region’
-;;           28-Apr-2017 Added ‘basename*’ and ‘dirname’
-;;           17-Apr-2018 Added ‘diminish-modelist’
-;;           27-Jun-2019 Added ‘append-to-list’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           11-Mar-2021 Added ‘looking-at-word-or-symbol’
-;;                       Updated ‘word-beginning-position’ and ‘word-end-position’ to look for variables and function names
-;;           01-Oct-2022 Added ‘symbol-to-string’ and ‘string-to-symbol’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-macro...")
 (require 'diminish)
 (require 's)
 
-;; aliases, not macros
-(defalias 'join  's-join)
-(defalias 'split 's-split)
-
-;; macros
-
+;;
 (defvar word-symbol-syntax     "w_")
 (defvar not-word-symbol-syntax (concat "^" word-symbol-syntax))
 

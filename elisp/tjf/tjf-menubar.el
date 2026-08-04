@@ -1,6 +1,6 @@
 ;;; tjf-menubar.el --- Custom menubar support -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2024 Tom Fontaine
+;;         Copyright © 1999-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -29,40 +29,6 @@
 
 ;;; Commentary:
 
-;; Revision: 23-Jun-2000 Changed menu-bar-final-items to use ‘Help’ instead of ‘help-menu’
-;;                       Added usr-reset-window-min-height
-;;           16-Nov-2001 Revised for Emacs 21
-;;           20-Nov-2001 Added delete-whitespace-rectangle
-;;           06-Dec-2001 Removed ‘Faces’ from ‘Tools’ menu
-;;                       Removed items and references to ‘indented-text-mode’
-;;           07-Dec-2001 Added ‘pquery-replace’
-;;           22-Jun-2006 Added ‘usr-join-paragraphs’
-;;           02-Feb-2010 Added entry and exit messages
-;;                       Changed to ‘easy-menu-add-item’ for external easy submenus
-;;           06-May-2014 Changed from ‘toggle-read-only’ to read-only for Emacs 24.3
-;;           24-May-2014 Updated menu entry names for usability
-;;           27-May-2014 Added line number mode entry to Tools menu
-;;           17-Jun-2014 Added ‘usr-copy-buffer’ to Edit menu
-;;           24-Mar-2015 Changed ‘split-window’ to ‘split-window-vertically’
-;;           25-Mar-2015 Changed ‘unscroll’ to undo scroll and redo scroll (‘atim-unscroll’)
-;;                       Updated from ‘moccur’ to ‘multi-occur-in-matching-buffers’
-;;           27-Mar-2015 Added ‘apropos’ to Help menu
-;;           05-Jan-2016 Removed ‘usr-d2u’ and ‘usr-u2d’
-;;                       Added ‘usr-set-unix-file’, ‘usr-set-dos-file’, and ‘usr-set-mac-file’
-;;           18-Jan-2016 Updated for new user interface
-;;           04-Feb-2016 Added ‘ergoemacs-select-text-in-quote’
-;;           09-Feb-2016 Moved clipboard menu to just below Cut-Copy-Paste
-;;           10-Feb-2016 Added Insert Symbol menu to Tools
-;;           25-Feb-2016 Added library ‘u-navigate’
-;;                       Added library ‘u-search’
-;;                       Replaced ‘usr-flags’ with ‘u-flags’
-;;           14-Jan-2017 Added Bookmark menu
-;;           22-Jul-2019 Moved Bookmark menu to Navigate
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           15-Jul-2021 Sorted Edit menu
-;;           27-Sep-2022 Added ‘tjf:menu-bar/feature’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-menubar...")
@@ -77,18 +43,9 @@
 (require 'tjf-tools)
 (require 'tjf-view)
 (require 'undo-fu)
-
-(define-key global-map [menu-bar] (make-sparse-keymap "menu-bar"))
-(define-key global-map [menu-bar buffer] (cons "Window" global-buffers-menu-map))
-(setq menu-bar-final-items '(buffer help))
-
-(defun tjf:menu-bar/feature (feature)
-  "Show message indicating that FEATURE is a feature."
-  (interactive "sFeature: ")
-  (let ((feature-symbol (intern feature)))
-    (message "FEATURE: %s" (featurep feature-symbol))))
-
-(easy-menu-define help-menu global-map "Help"
+;;
+(defvar tjf:menubar/menu-help)
+(setq tjf:menubar/menu-help
   '("Help"
     ["Apropos..."                apropos            :active t :key-sequence nil]
     ["Where is..."               where-is           :active t :key-sequence [C-h w]]
@@ -99,53 +56,71 @@
     ["Emacs Command Apropos... " command-apropos    :active t :key-sequence nil]
     ["Info"                      info               :active t :key-sequence [C-h i]]
     ["Unix Manpage…"             manual-entry       :active t :key-sequence nil]
-    "—————————"
+    ["---" nil :visible t :enable nil]
     ["Feature?..." tjf:menu-bar/feature :active t]
     ))
 
-(easy-menu-define tools-menu     global-map "Tools"     tjf:tools/menu)
-(define-key-after tools-menu [diff-menu] '("Diff"  . menu-bar-ediff-menu) t)
-
-(defalias 'set-coding 'set-buffer-file-coding-system)
-
-(easy-menu-define encoding-menu global-map "Encoding"
+(defvar tjf:menubar/menu-encoding)
+(setq tjf:menubar/menu-encoding
   '("Encoding"
     ["UTF-8 Unix"    (set-coding 'utf-8-unix) :style toggle :selected (tjf:flags/is-utf-8-unix?) :enable (tjf:flags/enable-encoding?)]
     ["UTF-8 Windows" (set-coding 'utf-8-dos)  :style toggle :selected (tjf:flags/is-utf-8-dos?)  :enable (tjf:flags/enable-encoding?)]
     ["UTF-8 Mac"     (set-coding 'utf-8-mac)  :style toggle :selected (tjf:flags/is-utf-8-mac?)  :enable (tjf:flags/enable-encoding?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["UTF-8 With BOM Unix"    (set-coding 'utf-8-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-8-bom-unix?) :enable (tjf:flags/enable-encoding?)]
     ["UTF-8 With BOM Windows" (set-coding 'utf-8-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-8-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
     ["UTF-8 With BOM Mac"     (set-coding 'utf-8-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-8-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["UCS-2 BE BOM Unix"    (set-coding 'utf-16be-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-16be-bom-unix?) :enable (tjf:flags/enable-encoding?)]
     ["UCS-2 BE BOM Windows" (set-coding 'utf-16be-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-16be-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
     ["UCS-2 BE BOM Mac"     (set-coding 'utf-16be-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-16be-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["UCS-2 LE BOM Unix"    (set-coding 'utf-16le-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-16le-bom-unix?) :enable (tjf:flags/enable-encoding?)]
     ["UCS-2 LE BOM Windows" (set-coding 'utf-16le-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-16le-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
     ["UCS-2 LE BOM Mac"     (set-coding 'utf-16le-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-16le-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
     ))
 
-(easy-menu-define view-menu   global-map "View"   tjf:view/menu)
-(easy-menu-define search-menu global-map "Search" tjf:search/menu)
+(defalias 'set-coding 'set-buffer-file-coding-system)
 
-(easy-menu-define edit-menu global-map "Edit" tjf:edit/menu)
-(easy-menu-add-item nil '("Edit") tjf:clipboard/menu   'marker1)
-(define-key-after edit-menu [xxx1]      '(menu-item "--")                 'marker1)
-(define-key-after edit-menu [yank-menu] '("Select and Paste" . yank-menu) 'marker1)
-(define-key-after edit-menu [xxx2]      '(menu-item "--")                 'marker1)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-align                     'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-case                      'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-comment                   'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-delete                    'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-indent                    'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-justify                   'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-rectangle                 'marker2)
-(easy-menu-add-item nil '("Edit") tjf:sort/menu                           'marker2)
-(easy-menu-add-item nil '("Edit") tjf:edit/menu-whitespace                'marker2)
+(defun tjf:menu-bar/feature (feature)
+  "Show message indicating that FEATURE is a feature."
+  (interactive "sFeature: ")
+  (let ((feature-symbol (intern feature)))
+    (message "FEATURE: %s" (featurep feature-symbol))))
 
-(easy-menu-define file-menu global-map "File" tjf:file/menu)
+(defun tjf:menubar/config ()
+  "Re-configure the global menubar."
+  (define-key global-map [menu-bar] (make-sparse-keymap "menu-bar"))
+  (define-key global-map [menu-bar buffer] (cons "Window" global-buffers-menu-map))
+  (setq menu-bar-final-items '(buffer help))
+
+  (easy-menu-define help-menu  	  global-map "Help"  	tjf:menubar/menu-help)
+  (easy-menu-define tools-menu 	  global-map "Tools" 	tjf:tools/menu)
+
+  (define-key-after tools-menu [diff-menu] '("Diff"  . menu-bar-ediff-menu) t)
+
+  (easy-menu-define encoding-menu global-map "Encoding" tjf:menubar/menu-encoding)
+  (easy-menu-define view-menu     global-map "View"     tjf:view/menu)
+  (easy-menu-define search-menu   global-map "Search"   tjf:search/menu)
+  (easy-menu-define edit-menu     global-map "Edit"     tjf:edit/menu)
+
+  (easy-menu-add-item nil           '("Edit")  tjf:clipboard/menu 'marker1)
+
+  (define-key-after edit-menu [xxx1]      '(menu-item "--")                 'marker1)
+  (define-key-after edit-menu [yank-menu] '("Select and Paste" . yank-menu) 'marker1)
+  (define-key-after edit-menu [xxx2]      '(menu-item "--")                 'marker1)
+
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-align                     'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-case                      'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-comment                   'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-delete                    'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-indent                    'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-justify                   'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-rectangle                 'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:sort/menu                           'marker2)
+  (easy-menu-add-item nil '("Edit") tjf:edit/menu-whitespace                'marker2)
+
+  (easy-menu-define file-menu global-map "File" tjf:file/menu))
 
 ;;
 (message "Loading tjf-menubar...done")

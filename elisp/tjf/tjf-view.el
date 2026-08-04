@@ -1,6 +1,6 @@
 ;;; tjf-view.el --- View menu defintion and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016
@@ -29,34 +29,6 @@
 
 ;;; Commentary:
 
-;; Revision: 02-Mar-2016 added ‘query-frame-font’ to ‘tjf-view-menu’
-;;           11-Aug-2016 changed ‘usr-view-clipboard’ to ‘tjf-view-clipboard’
-;;           25-Aug-2016 added ‘narrow-or-widen-dwim’
-;;           13-Sep-2016 removed original ‘Hide/Show’ and ‘Folding’ menus
-;;                       added new ‘fold’ menu
-;;           15-Sep-2016 added ‘which-function-mode’
-;;           16-Dec-2016 added ‘linum-relative-mode’ and supporting functions
-;;           12-Jan-2017 changed ‘is-linum?’ to buffer local
-;;                       fixed toggle functions
-;;           02-Apr-2018 changed line-number functions to use ‘display-line-numbers’
-;;           17-Apr-2018 added ‘diminish-minor-modes' and added to ‘tjf-view-menu’
-;;                       fixed byte compile warnings
-;;           31-May-2018 added ‘get-os-version’ and ‘get-desktop’
-;;                       updated ‘display-properties’
-;;           20-Jun-2018 fixed ‘display-line-numbers-set’ with ‘bound-and-true-p’ check
-;;                       of ‘display-line-numbers-mode’
-;;           02-Jul-2018 changed menu text to eliminate reference to frame
-;;           06-Jul-2018 added ‘list-faces-display’
-;;                       moved randon background colors to submenu
-;;           21-Oct-2020 fixed ‘is-line-numbers-absolute?' and ‘is-line-numbers-relative?'
-;;           22-Jan-2021 added ‘what-cursor-position' to menu
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           08-May-2021 fixed reset frame size menu entry
-;;           14-Aug-2021 fixed ‘tjf:view/get-line-numbers’
-;;           09-Feb-2023 added entry for ‘tjf:frame/half-size’
-;;           13-Apr-2023 removed ‘company-mode’ from ‘diminish’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-view...")
@@ -77,22 +49,23 @@
 (setq   tjf:view/which-function-mode 'off)
 (make-variable-buffer-local 'tjf:view/which-function-mode)
 
-(defvar tjf:view/menu
+(defvar tjf:view/menu)
+(setq tjf:view/menu
   '("View"
     ["Absolute Line Numbers" tjf:view/line-numbers-absolute-toggle :style toggle :selected (tjf:view/is-line-numbers-absolute?)]
     ["Relative Line Numbers" tjf:view/line-numbers-relative-toggle :style toggle :selected (tjf:view/is-line-numbers-relative?)]
     ["Which Function"        tjf:view/which-function-mode          :style toggle :selected (tjf:view/is-which-function-mode?)]
     ["Whitespace"            whitespace-mode                       :style toggle :selected whitespace-mode]
     ["Line Wrap"             visual-line-mode                      :style toggle :selected word-wrap]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Local Clipboard" tjf:clipboard/view :enable (get-buffer tjf:clipboard/name)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Fullscreen" toggle-frame-fullscreen :style toggle :selected (tjf:flags/is-fullscreen?)                                        :keys "Alt-F11"]
     ["Maximized"  toggle-frame-maximized  :style toggle :selected (tjf:flags/is-maxmized?)   :enable (tjf:flags/is-not-fullscreen?) :keys "Alt-F10"]
-    "---"
+    ["---" nil :visible t :enable nil]
     ("Hide/Show"
      ["Hide/Show Enabled"  hs-minor-mode :style toggle :selected hs-minor-mode]
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Hide Block"    hs-hide-block    :enable hs-minor-mode :help "Hide the code or comment block at point"]
      ["Show Block"    hs-show-block    :enable hs-minor-mode :help "Show the code or comment block at point"]
      ["Hide All"      hs-hide-all      :enable hs-minor-mode :help "Hide all the blocks in the buffer"]
@@ -106,29 +79,29 @@
       ["Comment blocks"          (setq hs-isearch-open 'comment) :style radio :selected (eq hs-isearch-open 'comment)]
       ["Code and Comment blocks" (setq hs-isearch-open t)        :style radio :selected (eq hs-isearch-open t)]
       ["None"                    (setq hs-isearch-open nil)      :style radio :selected (eq hs-isearch-open nil)]))
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Change Local Font"  change-local-font  t]
     ["Reset default font" reset-default-font t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Increase Text Size" text-scale-increase t]
     ["Decrease Text Size" text-scale-decrease t]
     ["Reset Text Size"    (text-scale-mode 0) t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Properties"  tjf:view/properties]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Diminish Minor Modes" diminish-minor-modes]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["List Faces"            list-faces-display]
     ["Show Face Under Point" (describe-char (point))]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Recenter Window"   recenter]
     ["Reposition Window" reposition-window]
-    "---"
+    ["---" nil :visible t :enable nil]
     ("Window"
      ["Make New Window"       tjf:frame/make-new]
      ["Make Window Invisible" make-frame-invisible :enable (delete-frame-enabled-p)]
      ["Delete Window"         delete-frame         :enable (delete-frame-enabled-p)]
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Reset Window Size"     tjf:frame/reset-size :enable (tjf:flags/is-not-fullscreen?)]
      ["Set Window Half Size"  tjf:frame/half-size  t]
      ("Background Color"
@@ -141,26 +114,26 @@
       ["Set Magenta Background Color" tjf:color/set-background-magenta]
       ["Set Red Background Color"     tjf:color/set-background-red]
       ["Set Yellow Background Color"  tjf:color/set-background-yellow]
-      "---"
+      ["---" nil :visible t :enable nil]
       ["Decrease Hue"                 tjf:color/decrease-hue-background]
       ["Increase Hue"                 tjf:color/increase-hue-background]
       ["Decrease Saturation"          tjf:color/desaturate-background]
       ["Increase Saturation"          tjf:color/saturate-background]
       ["Decrease Luminance"           tjf:color/darken-background]
       ["Increase Luminance"           tjf:color/brighten-background])
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Query Window Font "   (message (tjf:frame/font   'modeline))]
      ["Query Window Size "   (message (tjf:frame/size   'modeline))]
      ["Query Window Colors " (message (tjf:frame/colors 'modeline))])
     ("Pane"
      ["Split Pane Vertically"   split-window-vertically]
      ["Split Pane Horizontally" split-window-horizontally]
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Delete Other Panes" delete-other-windows :enable (not (one-window-p))]
      ["Delete Pane"        delete-window        :enable (not (one-window-p))]
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Balance Panes" balance-windows :enable (not (one-window-p))]
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Reset Minimum Height" reset-window-min-height :enable (not (= window-min-height 4))])
     ))
 

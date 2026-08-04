@@ -1,6 +1,6 @@
 ;;; tjf-search.el --- Search menu and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Feb-2016
@@ -29,11 +29,6 @@
 
 ;;; Commentary:
 
-;; Revision: 16-Nov-2016 Fixed bug with `buffer-list'
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           02-Jul-2021 Added ‘tjf:search/add-to-isearch-search-ring’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-search...")
@@ -47,6 +42,30 @@
 ;;
 (defalias 'search-word-forward  'tjf:search/forward-word-at-point)
 (defalias 'search-word-backward 'tjf:search/backward-word-at-point)
+
+(defvar tjf:search/menu)
+(setq tjf:search/menu
+  '("Search"
+    ["Find..."                     tjf:search/occur       :active t]
+    ["Find (All Files)..."         tjf:search/multi-occur :active t]
+    ["---" nil :visible t :enable nil]
+    ["Map Replace"        query-mapreplace        :enable (tjf:flags/enable-write?)]
+    ["Map Replace Regexp" query-mapreplace-regexp :enable (tjf:flags/enable-write?)]
+    ["---" nil :visible t :enable nil]
+    ["Repeat Search Backward"        nonincremental-repeat-search-backward    :active t]
+    ["Repeat Search Forward"         nonincremental-repeat-search-forward     :active t]
+    ["Repeat Search Regexp Backward" nonincremental-repeat-re-search-backward :active t]
+    ["Repeat Search Regexp Forward"  nonincremental-repeat-re-search-forward  :active t]
+    ["---" nil :visible t :enable nil]
+    ["Replace..."        query-replace        :enable (tjf:flags/enable-write?)]
+    ["Replace Regexp..." query-replace-regexp :enable (tjf:flags/enable-write?)]
+    ["Perl Replace..."   tjf:query-replace/do :enable (tjf:flags/enable-write?)]
+    ["---" nil :visible t :enable nil]
+    ["Search Backward..."        search-backward        :active t]
+    ["Search Forward..."         search-forward         :active t]
+    ["Search Regexp Backward..." search-backward-regexp :active t]
+    ["Search Regexp Forward..."  search-forward-regexp  :active t]
+    ))
 
 (defun tjf:search/all-files ()
   "Find matching text in all open files (i.e. `multi-occur') for text
@@ -144,29 +163,6 @@
               (setq search-ring (cons isearch-str search-ring))
               (if (> (length search-ring) search-ring-max)
                   (setcdr (nthcdr (1- search-ring-max) search-ring) nil)))))))
-
-(defvar tjf:search/menu
-  '("Search"
-    ["Find..."                     tjf:search/occur       :active t]
-    ["Find (All Files)..."         tjf:search/multi-occur :active t]
-    "---"
-    ["Map Replace"        query-mapreplace        :enable (tjf:flags/enable-write?)]
-    ["Map Replace Regexp" query-mapreplace-regexp :enable (tjf:flags/enable-write?)]
-    "---"
-    ["Repeat Search Backward"        nonincremental-repeat-search-backward    :active t]
-    ["Repeat Search Forward"         nonincremental-repeat-search-forward     :active t]
-    ["Repeat Search Regexp Backward" nonincremental-repeat-re-search-backward :active t]
-    ["Repeat Search Regexp Forward"  nonincremental-repeat-re-search-forward  :active t]
-    "---"
-    ["Replace..."        query-replace        :enable (tjf:flags/enable-write?)]
-    ["Replace Regexp..." query-replace-regexp :enable (tjf:flags/enable-write?)]
-    ["Perl Replace..."   tjf:query-replace/do :enable (tjf:flags/enable-write?)]
-    "---"
-    ["Search Backward..."        search-backward        :active t]
-    ["Search Forward..."         search-forward         :active t]
-    ["Search Regexp Backward..." search-backward-regexp :active t]
-    ["Search Regexp Forward..."  search-forward-regexp  :active t]
-    ))
 
 ;;
 (message "Loading tjf-search...done")

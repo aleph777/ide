@@ -1,6 +1,6 @@
 ;;; tjf-edit.el --- Edit menu and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2025 Tom Fontaine
+;;         Copyright © 1999-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -29,58 +29,23 @@
 
 ;;; Commentary:
 
-;; Revision: 22-Jun-2000 Fixed regexp bug in usr-delete-forward-space
-;;                       Added (if (looking-at "[ \t]") to ‘usr-delete-backward-space’
-;;           07-Mar-2001 Added (require 'line-position)
-;;           09-Mar-2001 Added defalias ‘usr-kill-line’
-;;           13-Mar-2001 Added ‘usr-copy-rectangle’
-;;           20-Nov-2001 Changed ‘usr-trim-buffer’ to use ‘delete-trailing-whitespace’
-;;           04-Dec-2001 Added ‘usr-join-paragraph’
-;;           26-Dec-2001 Added ‘usr-join-paragraphs’
-;;           12-Jan-2005 Added ‘usr-move-line-up’
-;;           22-Jun-2006 Changed ‘usr-join-paragraphs’ to use ‘call-process-region’
-;;           23-Jun-2006 Added ‘usr-align-columns’ & ‘usr-align-equals’
-;;           14-May-2008 Changed ‘usr-align-columns’, ‘usr-align-equals’, and ‘usr-join-paragraph’ to use ‘user-bin’
-;;           02-Feb-2010 Added exit message
-;;           13-Jun-2014 Removed byte-compile-dynamic
-;;           24-Mar-2015 Fixed ‘usr-move-line-up’ after Emacs 24.4 changes
-;;           25-Mar-2015 Added ‘usr-capitalize-word’, ‘usr-downcase-word’, and ‘usr-upcase-word’
-;;           04-May-2015 Added ‘usr-move-line-down’
-;;           06-May-2015 Moved ‘saved-point’ to ‘usr-misc’
-;;           05-Jan-2016 Removed ‘usr-d2u’ and ‘usr-u2d’
-;;                       Added ‘usr-set-unix-file’, ‘usr-set-dos-file’, and ‘usr-set-mac-file’
-;;                       Changed ‘usr-align-columns’ to use ‘align-columns-1’
-;;           26-Feb-2016 Renamed to ‘u-edit’
-;;                       Changed ‘usr-kill-bol’ to use ‘line-beginning-position’
-;;           02-Mar-2016 Added ‘capitalize-word-or-region’, ‘downcase-word-or-region’, ‘upcase-word-or-region’, and
-;;                       ‘upcase-initials-word-or-region’
-;;                       Updated ‘edit-case-menu’
-;;                       Added ‘xah-toggle-letter-case’
-;;                       Changed "(if mark-active" to "(if (‘use-region-p’"
-;;           03-Mar-2016 Added ‘fill-paragraph-or-region’, ‘justify-paragraph-or-region’, ‘toggle-fill-paragraph-or-region’
-;;                       Updated ‘edit-justify-menu’
-;;                       Removed ‘join-paragraphs’
-;;           18-Mar-2016 Changed ‘*-word-or-region’ to not deactivate region
-;;           12-Oct-2016 Added ‘rectangle-mark-mode’ to edit-rectangle-menu
-;;                       Removed ‘comment-current-line’
-;;           16-Jan-2017 Added ‘insert-chs’ and ‘insert-che’
-;;           17-Jan-2017 Removed ‘*-whole-word’
-;;           22-Mar-2017 Added ‘cleanse-whitespace’
-;;           13-Jun-2018 Added ‘require’ for ‘u-navigate’
-;;                       Fixed ‘*-word-or-region’ definitions
-;;           24-Jun-2019 Added ‘toggle-char-case-at-point’
-;;           10-Jul-2019 Added ‘u/transpose-lines’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           11-Mar-2021 Removed ‘tjf:edit/delete-forward-whitespace’ and ‘tjf:edit/delete-backward-whitespace’
-;;                       Updated ‘tjf:edit/capitalize’, ‘tjf:edit/downcase’, and ‘tjf:edit/upcase’
-;;           07-Apr-2021 Added ‘tjf:edit/fill-skeleton’
-;;           28-Apr-2022 Changed ‘tjf:edit/cleanse-whitespace’ to use ‘tjf:flags/using-tabs’
-;;           02-May-2022 Restored ‘tjf:edit/copy-buffer’
-;;           29-Aug-2022 Fixed ‘tjf:edit/menu-justify’
-;;           10-Nov-2022 Removed ‘tjf:edit/insert-che’ and ‘tjf:eedit/insert-chs’
-;;           14-Nov-2023 Removed redundant ‘justify’ menu entries
-;;           19-Apr-2025 fixed ‘tjf:edit/cleanse-whitespace’
-;;
+;; Educational below?
+
+;; (defun tjf:edit/delete-whitespace-backward ()
+;;   "Delete whitespace from just prior to point to non-whitespace."
+;;   (interactive "*")
+;;   (if (looking-at "[[:space:]]")
+;;       (let ((point-sav (point)))
+;;         (skip-chars-backward "[:space:]")
+;;         (delete-region (point) point-sav))
+;;     (if (eolp)
+;;         (delete-trailing-whitespace))))
+
+;; (defun tjf:edit/delete-whitespace-forward ()
+;;   "Delete whitespace from point to non-whitespace."
+;;   (interactive "*")
+;;   (if (looking-at "[[:space:]]")
+;;       (delete-region (match-beginning 0) (match-end 0))))
 
 ;;; Code:
 
@@ -93,6 +58,112 @@
   (require 'tjf-macro))
 
 ;;
+(defvar tjf:edit/menu)
+(setq tjf:edit/menu
+  '("Edit"
+    ["Cut"   kill-region    :enable (tjf:flags/enable-modify-region?)]
+    ["Copy"  kill-ring-save :enable mark-active]
+    ["Paste" yank           :enable (tjf:flags/enable-paste?)]
+    ["marker1" nil :visible nil]
+    ["Select Quoted Text"     ergoemacs-select-text-in-quote]
+    ["Select All"             mark-whole-buffer             :key-sequence [C-a]]
+    ["Copy Buffer"            tjf:edit/copy-buffer          ]
+    ["Copy Buffer Name"       tjf:edit/copy-buffer-name     ]
+    ["Copy Buffer File Name"  tjf:edit/copy-buffer-file-name]
+    "---"
+    ["marker2" nil :visible nil]
+    ))
+
+(defvar tjf:edit/menu-align)
+(setq tjf:edit/menu-align
+  '("Align"
+    ["Align Columns Rectangle" pretty-rectangle       :enable (tjf:flags/enable-modify-region?)]
+    ["Align Columns Region"    tjf:edit/align-columns :enable (tjf:flags/enable-modify-region?)]
+    ["Align Equals"            tjf:edit/align-equals  :enable (tjf:flags/enable-modify-region?)]
+    ["Align Regexp..."         align-regexp           :enable (tjf:flags/enable-modify-region?)]))
+
+(defvar tjf:edit/menu-case)
+(setq tjf:edit/menu-case
+  '("Case"
+    ["Capitalize Word or Region" tjf:edit/capitalize    :enable (tjf:flags/enable-write?)]
+    ["Downcase Word or Region"   tjf:edit/downcase-word :enable (tjf:flags/enable-write?)]
+    ["Upcase Word or Region"     tjf:edit/upcase        :enable (tjf:flags/enable-write?)]))
+
+(defvar tjf:edit/menu-comment)
+(setq tjf:edit/menu-comment
+  '("Comment"
+    ["Comment Region"         comment-region      :enable (tjf:flags/enable-comment?)]
+    ["Delete Comments Region" comment-kill-region :enable (tjf:flags/enable-comment?)]
+    ["Uncomment Region"       uncomment-region    :enable (tjf:flags/enable-comment?)]))
+
+(defvar tjf:edit/menu-delete)
+(setq tjf:edit/menu-delete
+  '("Delete"
+    ["Flush Lines..." flush-lines :enable (tjf:flags/enable-write?)]
+    ["Keep Lines..."  keep-lines  :enable (tjf:flags/enable-write?)]
+    "---"
+     ["Delete Entire Buffer"          erase-buffer                 :enable (tjf:flags/enable-write?)]
+     ["Delete to Beginning of Buffer" tjf:edit/delete-to-beginning :enable (tjf:flags/enable-write?)]
+     ["Delete to End of Buffer"       tjf:edit/delete-to-end       :enable (tjf:flags/enable-write?)]
+    ("Line"
+     ["Delete All Text on Line"     tjf:edit/clear-line    :enable (tjf:flags/enable-write?)]
+     ["Delete Entire Line"          tjf:edit/delete-line   :enable (tjf:flags/enable-write?)]
+     ["Delete to Beginning of Line" tjf:edit/delete-to-bol :enable (tjf:flags/enable-write?)]
+     ["Delete to End of Line"       tjf:edit/delete-to-eol :enable (tjf:flags/enable-write?)])
+    ("Word"
+     ["Delete Backward Word" backward-kill-word :enable (tjf:flags/enable-write?)]
+     ["Delete Forward Word"  kill-word          :enable (tjf:flags/enable-write?)])))
+
+(defvar tjf:edit/menu-indent)
+(setq tjf:edit/menu-indent
+  '("Indent"
+    ["Indent Buffer" tjf:edit/indent :enable (tjf:flags/enable-buffer-operations?)]
+    ["Indent Region" tjf:edit/indent :enable (tjf:flags/enable-modify-region?)]))
+
+(defvar tjf:edit/menu-justify)
+(setq tjf:edit/menu-justify
+  '("Justify"
+    ["Canonically Space Region" canonically-space-region :enable (tjf:flags/enable-space-region?)]
+    "---"
+    ["Center Justify" (tjf:edit/justify 'center) :enable (tjf:flags/enable-write?)]
+    ["Full Justify"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-write?)]
+    ["Left Justify"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-write?)]
+    ["Right Justify"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-write?)]
+    "---"
+    ["Set Fill Column..." set-fill-column]
+    "---"
+    ["Toggle Fill"                tjf:edit/toggle-fill :enable (tjf:flags/enable-write?)]
+    ["Unfill Paragraph or Region" tjf:edit/unfill      :enable (tjf:flags/enable-write?)]))
+
+(defvar tjf:edit/menu-rectangle)
+(setq tjf:edit/menu-rectangle
+  '("Rectangle"
+    ["Rectangle Mark Mode" rectangle-mark-mode]
+    "---"
+    ["Clear Rectangle"              clear-rectangle             :enable (tjf:flags/enable-modify-region?)]
+    ["Delete Whitespace Rectangle"  delete-whitespace-rectangle :enable (tjf:flags/enable-modify-region?)]
+    ["Cut Rectangle"                kill-rectangle              :enable (tjf:flags/enable-modify-region?)]
+    ["Copy Rectangle"               copy-rectangle-as-kill      :enable mark-active]
+    ["Open Rectangle"               open-rectangle              :enable (tjf:flags/enable-modify-region?)]
+    ["Paste Rectangle"              yank-rectangle              :enable (tjf:flags/enable-write?)]))
+
+(defvar tjf:edit/menu-whitespace)
+(setq tjf:edit/menu-whitespace
+  '("Whitespace"
+    ["Cleanse Whitespace"          tjf:edit/cleanse-whitespace :enable (tjf:flags/enable-write?)]
+    "---"
+    ["Compress Blank Lines"        delete-blank-lines                  :enable (tjf:flags/enable-write?)]
+    ["Delete Backward Whitespace"  tjf:edit/delete-whitespace-backward :enable (tjf:flags/enable-write?)]
+    ["Delete Forward Whitespace"   tjf:edit/delete-whitespace-forward  :enable (tjf:flags/enable-write?)]
+    ["Delete Whitespace"           delete-horizontal-space             :enable (tjf:flags/enable-write?)]
+    ["Trim Excess Whitespace "     delete-trailing-whitespace          :enable (tjf:flags/enable-write?)]
+    "---"
+    ["Fix Indentation Whitespace" tjf:edit/spaceify-indetation :enable (tjf:flags/enable-write?)]
+    ["Tabify Buffer"              tjf:edit/tabify              :enable (tjf:flags/enable-buffer-operations?)]
+    ["Tabify Region"              tjf:edit/tabify              :enable (tjf:flags/enable-modify-region?)]
+    ["Untabify Buffer"            tjf:edit/untabify            :enable (tjf:flags/enable-buffer-operations?)]
+    ["Untabify Region"            tjf:edit/untabify            :enable (tjf:flags/enable-modify-region?)]))
+
 (defun tjf:edit/align-columns (beg end)
   "Align columns in lines within the specified region (BEG to END)."
   (interactive "r")
@@ -243,22 +314,6 @@
   (if (looking-at-word-or-symbol)
       (delete-region (word-beginning-position) (word-end-position))))
 
-;; (defun tjf:edit/delete-whitespace-backward ()
-;;   "Delete whitespace from just prior to point to non-whitespace."
-;;   (interactive "*")
-;;   (if (looking-at "[[:space:]]")
-;;       (let ((point-sav (point)))
-;;         (skip-chars-backward "[:space:]")
-;;         (delete-region (point) point-sav))
-;;     (if (eolp)
-;;         (delete-trailing-whitespace))))
-
-;; (defun tjf:edit/delete-whitespace-forward ()
-;;   "Delete whitespace from point to non-whitespace."
-;;   (interactive "*")
-;;   (if (looking-at "[[:space:]]")
-;;       (delete-region (match-beginning 0) (match-end 0))))
-
 (defun tjf:edit/downcase ()
   "Convert the word at current point or the selected region to lowercase."
   (interactive "*")
@@ -381,103 +436,6 @@ the cursor prior to the inserted newline."
   (with-word-or-region (beg end)
                        (upcase-region beg end (region-noncontiguous-p))
                        (goto-char end)))
-
-(defvar tjf:edit/menu
-  '("Edit"
-    ["Cut"   kill-region    :enable (tjf:flags/enable-modify-region?)]
-    ["Copy"  kill-ring-save :enable mark-active]
-    ["Paste" yank           :enable (tjf:flags/enable-paste?)]
-    ["marker1" nil :visible nil]
-    ["Select Quoted Text"     ergoemacs-select-text-in-quote]
-    ["Select All"             mark-whole-buffer             :key-sequence [C-a]]
-    ["Copy Buffer"            tjf:edit/copy-buffer          ]
-    ["Copy Buffer Name"       tjf:edit/copy-buffer-name     ]
-    ["Copy Buffer File Name"  tjf:edit/copy-buffer-file-name]
-    "---"
-    ["marker2" nil :visible nil]
-    ))
-
-(defvar tjf:edit/menu-align
-  '("Align"
-    ["Align Columns Rectangle" pretty-rectangle       :enable (tjf:flags/enable-modify-region?)]
-    ["Align Columns Region"    tjf:edit/align-columns :enable (tjf:flags/enable-modify-region?)]
-    ["Align Equals"            tjf:edit/align-equals  :enable (tjf:flags/enable-modify-region?)]
-    ["Align Regexp..."         align-regexp           :enable (tjf:flags/enable-modify-region?)]))
-
-(defvar tjf:edit/menu-case
-  '("Case"
-    ["Capitalize Word or Region" tjf:edit/capitalize    :enable (tjf:flags/enable-write?)]
-    ["Downcase Word or Region"   tjf:edit/downcase-word :enable (tjf:flags/enable-write?)]
-    ["Upcase Word or Region"     tjf:edit/upcase        :enable (tjf:flags/enable-write?)]))
-
-(defvar tjf:edit/menu-comment
-  '("Comment"
-    ["Comment Region"         comment-region      :enable (tjf:flags/enable-comment?)]
-    ["Delete Comments Region" comment-kill-region :enable (tjf:flags/enable-comment?)]
-    ["Uncomment Region"       uncomment-region    :enable (tjf:flags/enable-comment?)]))
-
-(defvar tjf:edit/menu-delete
-  '("Delete"
-    ["Flush Lines..." flush-lines :enable (tjf:flags/enable-write?)]
-    ["Keep Lines..."  keep-lines  :enable (tjf:flags/enable-write?)]
-    "---"
-     ["Delete Entire Buffer"          erase-buffer                 :enable (tjf:flags/enable-write?)]
-     ["Delete to Beginning of Buffer" tjf:edit/delete-to-beginning :enable (tjf:flags/enable-write?)]
-     ["Delete to End of Buffer"       tjf:edit/delete-to-end       :enable (tjf:flags/enable-write?)]
-    ("Line"
-     ["Delete All Text on Line"     tjf:edit/clear-line    :enable (tjf:flags/enable-write?)]
-     ["Delete Entire Line"          tjf:edit/delete-line   :enable (tjf:flags/enable-write?)]
-     ["Delete to Beginning of Line" tjf:edit/delete-to-bol :enable (tjf:flags/enable-write?)]
-     ["Delete to End of Line"       tjf:edit/delete-to-eol :enable (tjf:flags/enable-write?)])
-    ("Word"
-     ["Delete Backward Word" backward-kill-word :enable (tjf:flags/enable-write?)]
-     ["Delete Forward Word"  kill-word          :enable (tjf:flags/enable-write?)])))
-
-(defvar tjf:edit/menu-indent
-  '("Indent"
-    ["Indent Buffer" tjf:edit/indent :enable (tjf:flags/enable-buffer-operations?)]
-    ["Indent Region" tjf:edit/indent :enable (tjf:flags/enable-modify-region?)]))
-
-(defvar tjf:edit/menu-justify
-  '("Justify"
-    ["Canonically Space Region" canonically-space-region :enable (tjf:flags/enable-space-region?)]
-    "---"
-    ["Center Justify" (tjf:edit/justify 'center) :enable (tjf:flags/enable-write?)]
-    ["Full Justify"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-write?)]
-    ["Left Justify"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-write?)]
-    ["Right Justify"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-write?)]
-    "---"
-    ["Set Fill Column..." set-fill-column]
-    "---"
-    ["Toggle Fill"                tjf:edit/toggle-fill :enable (tjf:flags/enable-write?)]
-    ["Unfill Paragraph or Region" tjf:edit/unfill      :enable (tjf:flags/enable-write?)]))
-
-(defvar tjf:edit/menu-rectangle
-  '("Rectangle"
-    ["Rectangle Mark Mode" rectangle-mark-mode]
-    "---"
-    ["Clear Rectangle"              clear-rectangle             :enable (tjf:flags/enable-modify-region?)]
-    ["Delete Whitespace Rectangle"  delete-whitespace-rectangle :enable (tjf:flags/enable-modify-region?)]
-    ["Cut Rectangle"                kill-rectangle              :enable (tjf:flags/enable-modify-region?)]
-    ["Copy Rectangle"               copy-rectangle-as-kill      :enable mark-active]
-    ["Open Rectangle"               open-rectangle              :enable (tjf:flags/enable-modify-region?)]
-    ["Paste Rectangle"              yank-rectangle              :enable (tjf:flags/enable-write?)]))
-
-(defvar tjf:edit/menu-whitespace
-  '("Whitespace"
-    ["Cleanse Whitespace"          tjf:edit/cleanse-whitespace :enable (tjf:flags/enable-write?)]
-    "---"
-    ["Compress Blank Lines"        delete-blank-lines                  :enable (tjf:flags/enable-write?)]
-    ["Delete Backward Whitespace"  tjf:edit/delete-whitespace-backward :enable (tjf:flags/enable-write?)]
-    ["Delete Forward Whitespace"   tjf:edit/delete-whitespace-forward  :enable (tjf:flags/enable-write?)]
-    ["Delete Whitespace"           delete-horizontal-space             :enable (tjf:flags/enable-write?)]
-    ["Trim Excess Whitespace "     delete-trailing-whitespace          :enable (tjf:flags/enable-write?)]
-    "---"
-    ["Fix Indentation Whitespace" tjf:edit/spaceify-indetation :enable (tjf:flags/enable-write?)]
-    ["Tabify Buffer"              tjf:edit/tabify              :enable (tjf:flags/enable-buffer-operations?)]
-    ["Tabify Region"              tjf:edit/tabify              :enable (tjf:flags/enable-modify-region?)]
-    ["Untabify Buffer"            tjf:edit/untabify            :enable (tjf:flags/enable-buffer-operations?)]
-    ["Untabify Region"            tjf:edit/untabify            :enable (tjf:flags/enable-modify-region?)]))
 
 ;;
 (message "Loading tjf-edit...done")

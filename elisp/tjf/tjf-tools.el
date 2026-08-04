@@ -1,6 +1,6 @@
 ;;; tjf-tools.el --- Tools menu definition and associated functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016
@@ -29,87 +29,15 @@
 
 ;;; Commentary:
 
-;; Revision: 18-Mar-2016 added a few missing letters
-;;           16-Jan-2017 added "Check Language" to Tools menu
-;;           17-Jan-2017 added ‘*-unicode-name-at-point’
-;;                       added ‘copyright-update’
-;;           17-Apr-2018 added ‘magit-status’
-;;           31-May-2018 added ‘powerthesaurus-lookup-word’
-;;           14-Jun-2018 added ‘declutter’
-;;           06-Jul-2018 added ‘paradox-list-packages’
-;;           10-Jul-2019 completed Greek alphabet
-;;           19-Jul-2019 added ‘open-new-shell’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           16-Apr-2022 added menu entry for convert to python mode
-;;           10-Nov-2022 added ‘tjf:tools/insert-che’ and ‘tjf:tools/insert-chs
-;;                       fixed menu entries
-;;           31-May-2023 added ‘is-feature?’
-;;           07-Jun-2023 added ‘blamer-show-posframe-commit-info’ to Tools menu
-;;           09-Jun-2023 changed ‘paradox-list-packages’ to ‘elpaca-manager’
-;;           09-Dec-2024 removed ‘check feature’
-;;           05-Mar-2025 changed ‘elpaca-manager’ to ‘paradox-list-packages’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-tools...")
 (require 'tjf-flags)
 
 ;;
-(defun tjf:tools/current-line ()
-  "Return the line number of the current line in the selected window."
-  (+ (count-lines (window-start) (point))
-     (if (= (current-column) 0) 1 0)
-     -1))
 
-(defun tjf:tools/get-random-value (list)
-  "Return a random value from input LIST."
-  (eval (nth (random (length list)) list)))
-
-(defun tjf:tools/get-unicode-name-at-point ()
-  "Get the unicode name of the character at point."
-  (interactive "P")
-  (let* ((char-code (elt (thing-at-point 'char) 0))
-         (name       (get-char-code-property char-code 'name)))
-    ;; (setq name (get-char-code-property char-code 'name))
-    (when (or (not name)
-              (= ?< (elt name 0)))
-      (setq name (get-char-code-property char-code 'old-name)))
-    name))
-
-(defun tjf:tools/insert-che ()
-  "Insert closing \"cut here end\" snippet."
-  (interactive "*")
-  (insert "--8<---------------cut here---------------end--------------->8---\n"))
-
-(defun tjf:tools/insert-chs ()
-  "Insert opening \"cut here start\" snippet."
-  (interactive "*")
-  (insert "--8<---------------cut here---------------start------------->8---\n"))
-
-(defun tjf:tools/open-new-shell ()
-  "Open a new shell buffer."
-  (interactive)
-  (let* ((shell-number 1)
-         (shell-buffer-name "*shell <1>*"))
-    (while (not (equal nil (get-buffer shell-buffer-name)))
-      (setq shell-number (1+ shell-number)
-            shell-buffer-name (format "*shell <%d>*" shell-number)))
-    (shell (get-buffer-create shell-buffer-name))))
-
-(defun tjf:tools/print-elements-of-list (list)
-  "Print each element of LIST on a line of its own."
-  (interactive)
-  (while list
-    (print (car list))
-    (setq list (cdr list))))
-
-(defun tjf:tools/show-unicode-name-at-point ()
-  "Get the unicode name of the character at point."
-  (interactive)
-  (message "%s" (tjf:tools/get-unicode-name-at-point)))
-
-(defvar tjf:tools/menu
+(defvar tjf:tools/menu)
+(setq tjf:tools/menu
   '("Tools"
     ["Insert Unicode Character..." insert-char :enable (tjf:flags/enable-write?) :key-sequence nil]
     ("Insert Symbol"
@@ -124,24 +52,24 @@
       ["↖	North West Arrow" (insert "↖") :enable (tjf:flags/enable-write?)]
       ["↘	South East Arrow" (insert "↘") :enable (tjf:flags/enable-write?)]
       ["↙	South West Arrow" (insert "↙") :enable (tjf:flags/enable-write?)]
-      "---"
+      ["---" nil :visible t :enable nil]
       ["⇇	Leftwards Paired Arrows"  (insert "⇇") :enable (tjf:flags/enable-write?)]
       ["⇉	Rightwards Paired Arrows" (insert "⇉") :enable (tjf:flags/enable-write?)]
       ["⇈	Upwards Paired Arrow"     (insert "⇈") :enable (tjf:flags/enable-write?)]
       ["⇊	Downwards Paired Arrow"   (insert "⇊") :enable (tjf:flags/enable-write?)]
-      "---"
+      ["---" nil :visible t :enable nil]
       ["⇆	Leftwards Arrow Over Rightwards Arrow"      (insert "⇆") :enable (tjf:flags/enable-write?)]
       ["⇄	Rightwards Arrow Over Leftwards Arrow"      (insert "⇄") :enable (tjf:flags/enable-write?)]
       ["⇅	Upwards Arrow Leftwards Of Downwards Arrow" (insert "⇅") :enable (tjf:flags/enable-write?)]
       ["⇵	Downwards Arrow Leftwards of Upwards Arrow" (insert "⇵") :enable (tjf:flags/enable-write?)]
-      "---"
+      ["---" nil :visible t :enable nil]
       ["⇐	Leftwards Double Arrow"  (insert "⇐") :enable (tjf:flags/enable-write?)]
       ["⇒	Rightwards Double Arrow" (insert "⇒") :enable (tjf:flags/enable-write?)]
       ["⇑	Upwards Double Arrow"    (insert "⇑") :enable (tjf:flags/enable-write?)]
       ["⇓	Downwards Double Arrow"  (insert "⇓") :enable (tjf:flags/enable-write?)]
       ["⇔	Left Right Double Arrow" (insert "⇔") :enable (tjf:flags/enable-write?)]
       ["⇕	Up Down Double Arrow"    (insert "⇕") :enable (tjf:flags/enable-write?)]
-      "---"
+      ["---" nil :visible t :enable nil]
       ["↻	Clockwise Open Circle Arrow"     (insert "↻") :enable (tjf:flags/enable-write?)]
       ["↺	Anticlockwise Open Circle Arrow" (insert "↺") :enable (tjf:flags/enable-write?)])
      ("Currency"
@@ -209,7 +137,7 @@
       ["Χ Greek Capital Letter Chi"     (insert "Χ") :enable (tjf:flags/enable-write?)]
       ["Ψ Greek Capital Letter Psi"     (insert "Ψ") :enable (tjf:flags/enable-write?)]
       ["Ω Greek Capital Letter Omega"   (insert "Ω") :enable (tjf:flags/enable-write?)]
-      "---"
+      ["---" nil :visible t :enable nil]
       ["α	Greek Small Letter Alpha"   (insert "α") :enable (tjf:flags/enable-write?)]
       ["β	Greek Small Letter Beta"    (insert "β") :enable (tjf:flags/enable-write?)]
       ["γ	Greek Small Letter Gamma"   (insert "γ") :enable (tjf:flags/enable-write?)]
@@ -413,43 +341,96 @@
       ["¨	Spacing Diaresis"              (insert "¨") :enable (tjf:flags/enable-write?)]
       ))
     ["Show Unicode Name" show-unicode-name-at-point t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Git Status" magit-status                     t]
     ["Git Blame"  blamer-show-posframe-commit-info t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Open New Shell" tjf:tools/open-new-shell t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Check Language"             langtool-check             :enable (tjf:flags/enable-write?)]
     ["Insert Synonym..."          powerthesaurus-lookup-word :enable (tjf:flags/enable-write?)]
     ["Look up word definition..." sdcv-search                :active t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Insert ‘Cut Here’ Start" tjf:tools/insert-chs :enable (tjf:flags/enable-write?)]
     ["Insert ‘Cut Here’ End"   tjf:tools/insert-che :enable (tjf:flags/enable-write?)]
     ["Update Copyright"        copyright-update     :enable (tjf:flags/enable-write?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Read from URL..." declutter :active t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["List Packages"    paradox-list-packages :active t]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Complete Symbol"        completion-at-point                :enable (tjf:flags/enable-write?)]
     ["Complete Word Fragment" ispell-complete-word-interior-frag :enable (tjf:flags/enable-write?)]
     ["Complete Word Spelling" ispell-complete-word               :enable (tjf:flags/enable-write?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Initialize Perl Mode"   tjf:perl/convert   :visible (tjf:flags/visible-convert-to-perl?)   :key-sequence nil]
     ["Initialize Python Mode" tjf:python/convert :visible (tjf:flags/visible-convert-to-python?) :key-sequence nil]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Adaptive Fill" filladapt-mode :style toggle :selected filladapt-mode]
     ["Enriched Text" enriched-mode  :style toggle :selected enriched-mode :enable (tjf:flags/enable-enriched-mode?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Auto-update This File" auto-revert-mode      :style toggle :selected auto-revert-mode]
     ["Tail Update This File" auto-revert-tail-mode :style toggle :selected auto-revert-tail-mode]
     ("Spelling"
      ["Flyspell Mode" flyspell-mode :style toggle :selected flyspell-mode :enable (tjf:flags/enable-write?)]
-     "---"
+     ["---" nil :visible t :enable nil]
      ["Spell Check Word"   ispell-word   :active t]
      ["Spell Check Buffer" ispell-buffer :active t]
      ["Spell Check Region" ispell-region :active mark-active])
     ))
+
+(defun tjf:tools/current-line ()
+  "Return the line number of the current line in the selected window."
+  (+ (count-lines (window-start) (point))
+     (if (= (current-column) 0) 1 0)
+     -1))
+
+(defun tjf:tools/get-random-value (list)
+  "Return a random value from input LIST."
+  (eval (nth (random (length list)) list)))
+
+(defun tjf:tools/get-unicode-name-at-point ()
+  "Get the unicode name of the character at point."
+  (interactive "P")
+  (let* ((char-code (elt (thing-at-point 'char) 0))
+         (name       (get-char-code-property char-code 'name)))
+    ;; (setq name (get-char-code-property char-code 'name))
+    (when (or (not name)
+              (= ?< (elt name 0)))
+      (setq name (get-char-code-property char-code 'old-name)))
+    name))
+
+(defun tjf:tools/insert-che ()
+  "Insert closing \"cut here end\" snippet."
+  (interactive "*")
+  (insert "--8<---------------cut here---------------end--------------->8---\n"))
+
+(defun tjf:tools/insert-chs ()
+  "Insert opening \"cut here start\" snippet."
+  (interactive "*")
+  (insert "--8<---------------cut here---------------start------------->8---\n"))
+
+(defun tjf:tools/open-new-shell ()
+  "Open a new shell buffer."
+  (interactive)
+  (let* ((shell-number 1)
+         (shell-buffer-name "*shell <1>*"))
+    (while (not (equal nil (get-buffer shell-buffer-name)))
+      (setq shell-number (1+ shell-number)
+            shell-buffer-name (format "*shell <%d>*" shell-number)))
+    (shell (get-buffer-create shell-buffer-name))))
+
+(defun tjf:tools/print-elements-of-list (list)
+  "Print each element of LIST on a line of its own."
+  (interactive)
+  (while list
+    (print (car list))
+    (setq list (cdr list))))
+
+(defun tjf:tools/show-unicode-name-at-point ()
+  "Get the unicode name of the character at point."
+  (interactive)
+  (message "%s" (tjf:tools/get-unicode-name-at-point)))
 
 ;;
 (message "Loading tjf-tools...done")

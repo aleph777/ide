@@ -23,11 +23,11 @@
 
 ;;; Commentary:
 
-;; Revision:
+;; Does this file belong in elisp/themes?
 
-;;
 ;;; Code:
 
+;;
 (defvar tjf:fonts/fixed    nil "Preferred available monospace/fixed-width font.")
 (defvar tjf:fonts/variable nil "Preferred available variable width font.")
 

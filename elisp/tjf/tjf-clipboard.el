@@ -1,6 +1,6 @@
 ;;; tjf-clipboard.el --- Local clipboard implementation -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 1999-2024 Tom Fontaine
+;;         Copyright © 1999-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   15-Dec-1999
@@ -29,25 +29,36 @@
 
 ;;; Commentary:
 
-;; Revision: 22-Jun-2000 Fixed interactive bug in `usr-copy-clipboard'
-;;           07-Mar-2001 Added Xemacs support
-;;           29-Dec-2004 Modified `usr-select-clipboard' to use format statements
-;;           02-Feb-2010 Added exit message
-;;           17-Jun-2014 Removed `byte-compile-dynamic'
-;;           29-Jan-2016 Changed menu order
-;;           29-Feb-2016 Changed from `usr-' to `u-'
-;;           27-Jun-2019 Added ‘u/paste-clipboard-n’
-;;                       Added ‘u/clipboard-buffer’
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;           13-Jun-2023 fixed bug in ‘tjf:clipboard/paste-n’
-;;
-
 ;;; Code:
 
 (message "Loading tjf-clipboard...")
 (require 'tjf-flags)
 
 ;;
+(defvar tjf:clipboard/menu
+  '("Clipboard"
+    (tjf:clipboard/select-title
+     ["0" (tjf:clipboard/select 0) :style toggle :selected (tjf:clipboard/selected? 0)]
+     ["1" (tjf:clipboard/select 1) :style toggle :selected (tjf:clipboard/selected? 1)]
+     ["2" (tjf:clipboard/select 2) :style toggle :selected (tjf:clipboard/selected? 2)]
+     ["3" (tjf:clipboard/select 3) :style toggle :selected (tjf:clipboard/selected? 3)]
+     ["4" (tjf:clipboard/select 4) :style toggle :selected (tjf:clipboard/selected? 4)]
+     ["5" (tjf:clipboard/select 5) :style toggle :selected (tjf:clipboard/selected? 5)]
+     ["6" (tjf:clipboard/select 6) :style toggle :selected (tjf:clipboard/selected? 6)]
+     ["7" (tjf:clipboard/select 7) :style toggle :selected (tjf:clipboard/selected? 7)]
+     ["8" (tjf:clipboard/select 8) :style toggle :selected (tjf:clipboard/selected? 8)]
+     ["9" (tjf:clipboard/select 9) :style toggle :selected (tjf:clipboard/selected? 9)])
+    ["---" nil :visible t :enable nil]
+    ["Cut to Clipboard"     tjf:clipboard/cut   :enable (tjf:flags/enable-modify-region?)]
+    ["Copy to Clipboard"    tjf:clipboard/copy  :enable mark-active]
+    ["Paste from Clipboard" tjf:clipboard/paste :enable (tjf:clipboard/enable-paste?)]
+    ["---" nil :visible t :enable nil]
+    ["Append to Clipboard"  tjf:clipboard/append  :enable mark-active]
+    ["Prepend to Clipboard" tjf:clipboard/prepend :enable mark-active]
+    ["---" nil :visible t :enable nil]
+    ["View Clipboard" tjf:clipboard/view :enable (get-buffer tjf:clipboard/name)]
+    ))
+
 (defvar tjf:clipboard/number 0 "The number of the selected clipboard buffer.")
 
 (defvar tjf:clipboard/name nil "The name of the selected clipboard buffer.")
@@ -124,30 +135,6 @@
   "View the contents of the clipboard buffer."
   (interactive)
   (switch-to-buffer-other-window (get-buffer-create tjf:clipboard/name)))
-
-(defvar tjf:clipboard/menu
-  '("Clipboard"
-    (tjf:clipboard/select-title
-     ["0" (tjf:clipboard/select 0) :style toggle :selected (tjf:clipboard/selected? 0)]
-     ["1" (tjf:clipboard/select 1) :style toggle :selected (tjf:clipboard/selected? 1)]
-     ["2" (tjf:clipboard/select 2) :style toggle :selected (tjf:clipboard/selected? 2)]
-     ["3" (tjf:clipboard/select 3) :style toggle :selected (tjf:clipboard/selected? 3)]
-     ["4" (tjf:clipboard/select 4) :style toggle :selected (tjf:clipboard/selected? 4)]
-     ["5" (tjf:clipboard/select 5) :style toggle :selected (tjf:clipboard/selected? 5)]
-     ["6" (tjf:clipboard/select 6) :style toggle :selected (tjf:clipboard/selected? 6)]
-     ["7" (tjf:clipboard/select 7) :style toggle :selected (tjf:clipboard/selected? 7)]
-     ["8" (tjf:clipboard/select 8) :style toggle :selected (tjf:clipboard/selected? 8)]
-     ["9" (tjf:clipboard/select 9) :style toggle :selected (tjf:clipboard/selected? 9)])
-    "---"
-    ["Cut to Clipboard"     tjf:clipboard/cut   :enable (tjf:flags/enable-modify-region?)]
-    ["Copy to Clipboard"    tjf:clipboard/copy  :enable mark-active]
-    ["Paste from Clipboard" tjf:clipboard/paste :enable (tjf:clipboard/enable-paste?)]
-    "---"
-    ["Append to Clipboard"  tjf:clipboard/append  :enable mark-active]
-    ["Prepend to Clipboard" tjf:clipboard/prepend :enable mark-active]
-    "---"
-    ["View Clipboard" tjf:clipboard/view :enable (get-buffer tjf:clipboard/name)]
-    ))
 
 (setq tjf:clipboard/name         (tjf:clipboard/get-name tjf:clipboard/number))
 (setq tjf:clipboard/select-title (tjf:clipboard/get-select-title tjf:clipboard/number))

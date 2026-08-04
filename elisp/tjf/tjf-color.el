@@ -1,6 +1,6 @@
 ;;; tjf-color.el --- Color functions -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2017-2024 Tom Fontaine
+;;         Copyright © 2017-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   25-Jan-2017
@@ -28,12 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 11-Jun-2018 Added functions from ‘u-frame.el’
-;;           30-Jul-2019 Added ‘get-background-color’
-;;           17-Sep-2020 Reworked color functions and renamed to `color/'
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;
 
 ;;; Code:
 

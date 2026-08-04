@@ -1,6 +1,6 @@
 ;;; tjf-date.el --- Date support for GNU Emacs -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2016-2024 Tom Fontaine
+;;         Copyright © 2016-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   28-Feb-2016
@@ -28,16 +28,6 @@
 ;; dealings in the software.
 
 ;;; Commentary:
-
-;; Revision: 11-Aug-2016 Use `format-time-string'
-;;           14-Aug-2016 Added `insert-dd-mon-yyyy'
-;;                       Added `insert-month-day-year'
-;;           03-Feb-2021 ‘tjf’ overhaul
-;;
-
-;;; Code:
-
-(message "Loading tjf-date...")
 
 ;; ===== format-time-string =====
 
@@ -70,10 +60,15 @@
 ;; %R is like "%H:%M", %T is like "%H:%M:%S", %r is like "%I:%M:%S %p".
 ;; %X is the locale’s "preferred" time format.
 
-(defvar tjf:date/dd-mon-yyyy    "%d-%b-%Y")
-(defvar tjf:date/month-day-year "%B %d, %Y")
-(defvar tjf:date/yyyy-mm-dd     "%F")
-(defvar tjf:date/timestamp      "%F%H%M%S")
+;;; Code:
+
+(message "Loading tjf-date...")
+
+;; 
+(defconst tjf:date/dd-mon-yyyy    "%d-%b-%Y")
+(defconst tjf:date/month-day-year "%B %d, %Y")
+(defconst tjf:date/yyyy-mm-dd     "%F")
+(defconst tjf:date/timestamp      "%F%H%M%S")
 
 (defun tjf:date/today (date-format)
   "Return today's date in DATE-FORMAT."

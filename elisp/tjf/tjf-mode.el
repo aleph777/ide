@@ -1,6 +1,6 @@
 ;;; tjf-mode.el --- major mode groupings -*-lexical-binding: t-*- ;; -*-Emacs-Lisp-*-
 
-;;         Copyright © 2023-2024 Tom Fontaine
+;;         Copyright © 2023-2026 Tom Fontaine
 
 ;; Author: Tom Fontaine
 ;; Date:   24-Jul-2023
@@ -29,14 +29,9 @@
 
 ;;; Commentary:
 
-;; Revision:    25-Mar-2024 added  ‘conf-colon-mode’
-
 ;;; Code:
 
 (message "Loading tjf-mode...")
-
-;;
-
 
 ;;
 (defconst tjf:mode/bibtext-mode    (list 'bibtex-mode 'bibtex-style-mode))
