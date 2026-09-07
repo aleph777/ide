@@ -35,7 +35,6 @@
 (require 'tjf-flags)
 
 ;;
-
 (defvar tjf:tools/menu)
 (setq tjf:tools/menu
   '("Tools"

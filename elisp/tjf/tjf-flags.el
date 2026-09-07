@@ -48,7 +48,7 @@
 
 (defun tjf:flags/enable-enriched-mode? ()
   "Boolean: should ‘enriched-mode’?"
-  (memq major-mode tjf:flags/enriched-modes))
+  (memq major-mode tjf:mode/enriched-mode))
 
 (defun tjf:flags/enable-modify-region? ()
   "Boolean: should menu entries that change region be enabled?"
@@ -83,7 +83,7 @@
 
 (defun tjf:flags/enable-space-region? ()
   "Boolean: should ‘canonically-space-region’ be enabled?"
-  (and mark-active (tjf:flags/is-rw?) (memq major-mode tjf:flags/space-modes)))
+  (and mark-active (tjf:flags/is-rw?) (memq major-mode tjf:mode/space-mode)))
 
 (defun tjf:flags/enable-undo-redo? ()  
   "Boolean: should ‘undo/redo’ be enabled?"  
@@ -194,7 +194,7 @@ This depends on major mode having setup syntax table properly."
 
 (defun tjf:flags/visible-convert-to-perl? ()
   "Boolean: should ‘convert-to-perl’ be visible?"
-  (or (eq major-mode 'fundamental-mode) (tjf:flags/is-text-mode?)))
+  (or (eq major-mode 'fundamental-mode) (tjf:mode/is-mode? tjf:mode/text-mode)))
 
 (defalias 'tjf:flags/visible-convert-to-python? 'tjf:flags/visible-convert-to-perl?)
 

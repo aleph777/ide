@@ -39,35 +39,87 @@
 (require 'tjf-macro)
 
 ;;
-(defconst tjf:cc/bin-format  "clang-format-20")
-(defconst tjf:cc/file-format "clang-format.yml")
-(defconst tjf:cc/path-format (concat tjf:user/dir-config tjf:cc/file-format))
+(defvar tjf:cc/nproc)
+(setq   tjf:cc/nproc (get-shell-output "nproc"))
 
-(defconst tjf:cc/nproc (string-trim-right (shell-command-to-string "nproc")))
+(defvar tjf:cc/gcc)
+(setq   tjf:cc/gcc (first-executable '("gcc-16"
+                                       "gcc-15"
+                                       "gcc-14"
+                                       "gcc-13"
+                                       "gcc-12"
+                                       "gcc-11"
+                                       "gcc")))
 
-(defvar tjf:cc/menu-text)
-(setq tjf:cc/menu-text
+(defvar tjf:cc/gcc-version)
+(setq   tjf:cc/gcc-version (car (cdr (s-split "-" tjf:cc/gcc))))
+
+(defvar tjf:cc/clang)
+(setq   tjf:cc/clang (first-executable '("clang-22"
+                                         "clang-21"
+                                         "clang-20"
+                                         "clang-19"
+                                         "clang-18"
+                                         "clang-17"
+                                         "clang")))
+
+(defvar tjf:cc/clang-version)
+(setq   tjf:cc/clang-version (car (cdr (s-split "-" tjf:cc/clang))))
+
+(defvar tjf:cc/clangd)
+(setq   tjf:cc/clangd (join "-" (list "clangd" tjf:cc/clang-version)))
+
+(defvar tjf:cc/clang-format)
+(setq   tjf:cc/clang-format (join "-" (list "clang-format" tjf:cc/clang-version)))
+
+(defvar tjf:cc/clang-tidy)
+(setq   tjf:cc/clang-tidy (join "-" (list "clang-tidy" tjf:cc/clang-version)))
+
+(defvar tjf:cc/file-format)
+(setq   tjf:cc/file-format (concat tjf:cc/clang-format ".yml"))
+
+(defvar tjf:cc/path-format)
+(setq   tjf:cc/path-format (first-file-exists (list (concat tjf:user/dir-home    "code/Core/" tjf:cc/file-format)
+                                                    (concat tjf:user/dir-home    "Core/"      tjf:cc/file-format)
+                                                    (concat tjf:user/dir-config  "clang/"     tjf:cc/file-format)
+                                                    ".clang-format")))
+
+(defvar tjf:cc/menu)
+(setq tjf:cc/menu
   '(
     ["Insert Header File Skeleton" tjf:cc/insert-header-skeleton :active (tjf:flags/is-rw?)]
     ["Insert Source File Skeleton" tjf:cc/insert-source-skeleton :active (tjf:flags/is-rw?)]
     ["Insert Boilerplate"          tjf:cc/insert-boilerplate     :active (tjf:flags/is-rw?)]
     ["Insert Header Guard"         tjf:cc/insert-header-guard    :active (tjf:flags/is-rw?)]
     ["Insert Docstring Template"   tjf:cc/insert-docstring       :active (tjf:flags/is-rw?)]
-    ["Format File"                 tjf:cc/format                 :active (tjf:flags/is-rw?)]
+    ;; ["Format File"                 tjf:cc/format                 :active (tjf:flags/is-rw?)]
+    "---"
+    ("Format"
+     ["Format Buffer or Region" tjf:cc/format :active (tjf:flags/is-rw?)]
+     "---"
+     ["Format Buffer or Region (Chromium)"  (tjf:cc/format "chromium")  :active (tjf:flags/is-rw?)]
+     ["Format Buffer or Region (Gnu)"       (tjf:cc/format "gnu")       :active (tjf:flags/is-rw?)]
+     ["Format Buffer or Region (Google)"    (tjf:cc/format "google")    :active (tjf:flags/is-rw?)]
+     ["Format Buffer or Region (LLVM)"      (tjf:cc/format "llvm")      :active (tjf:flags/is-rw?)]
+     ["Format Buffer or Region (Microsoft)" (tjf:cc/format "microsoft") :active (tjf:flags/is-rw?)]
+     ["Format Buffer or Region (Mozilla)"   (tjf:cc/format "mozilla")   :active (tjf:flags/is-rw?)]
+     ["Format Buffer or Region (WebKit)"    (tjf:cc/format "webkit")    :active (tjf:flags/is-rw?)]
+     )
     "---"
     ["Beginning Of Function" beginning-of-defun]
     ["End Of Function"       end-of-defun      ]
     ["Mark Function"         c-mark-function   ]
-    "---"
-    ["Fill Comment Paragraph"c-fill-paragraph :active (tjf:flags/is-rw?)]
-    ;;    ["Convert comment to docstring" u-docstring    :enable (or c++-mode java-mode)]
-    "---"
+    ["---" nil :visible t :enable nil]
+    ["Fill Comment Paragraph" c-fill-paragraph :active (tjf:flags/is-rw?)]
+    [tjf:menu-separator-1! nil :visible t :enable nil]
     ["Backward Statement" c-beginning-of-statement]
     ["Forward  Statement" c-end-of-statement      ]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Up Conditional"       c-up-conditional      ]
     ["Backward Conditional" c-backward-conditional]
     ["Forward  Conditional" c-forward-conditional ]
+    ["---" nil :visible t :enable nil]
+    ["Check Mode Readiness" tjf:cc/ready]
     ))
 
 (defun tjf:cc/docstring ()
@@ -109,10 +161,11 @@
     (save-excursion
       ;; (search-forward "<<<FILENAME>>>" (point-max) t)
       ;; (replace-match (basename) t)
-      ;; (search-forward "<<<CHOLDER>>>")
-      ;; (replace-match tjf:user/copyright-holder t)
       (search-forward "<<<YEAR>>>")
-      (replace-match year t))))
+      (replace-match year t)
+      (search-forward "<<<CHOLDER>>>")
+      (replace-match tjf:user/copyright-holder t)
+      )))
 
 (defun tjf:cc/insert-docstring ()
   "Insert a docstring template at the beginning of the function at point."
@@ -138,22 +191,38 @@
   (tjf:cc/insert-header-guard)
   (tjf:cc/insert-boilerplate))
 
+(defun tjf:cc/insert-default-include ()
+  "Insert an #include  statement."
+  (let* ((ccext    (file-extension))
+         (ext      (if (string= ccext ".c") ".h" ".hpp"))
+         (inc-file (concat (basename-no-ext) ext)))
+      (save-excursion
+        (goto-char (point-min))
+        (insert (concat "\n#include \"" inc-file "\"\n\n")))))
+
 (defun tjf:cc/insert-source-skeleton ()
   "Insert a source file skeleton."
   (interactive "*")
-  (goto-char (point-min))
-  (let* ((ccext    (file-extension))
-         (ext      (if (string= ccext ".c") ".h" ".h"))
-         (inc-file (concat (basename-no-ext) ext)))
-    (tjf:cc/insert-boilerplate)
-    (goto-char (point-max))
-    (insert (concat "#include \"" inc-file "\"\n\n"))))
+  (tjf:cc/insert-default-include)
+  (tjf:cc/insert-boilerplate))
 
-(defun tjf:cc/format ()  
+(defun tjf:cc/ready ()
+  "Display readiness of treesitter."
+  (interactive)
+  (message (if (or (and (eq major-mode 'c-ts-mode)   (treesit-ready-p 'c))
+                   (and (eq major-mode 'c++-ts-mode) (treesit-ready-p 'cpp)))
+               "Ready"
+             "NOT ready")))
+
+(defun tjf:cc/format (&optional style)
   "Format the entire buffer or the region."
   (interactive "*")
-  (let ((style (concat "--style=file:" tjf:cc/path-format)))
-    (call-process-region (point-min) (point-max) tjf:cc/bin-format t t t style)))
+  (save-excursion
+    (let ((args (if style
+                    (concat "--style=" style)
+                  (concat "--style=file:" tjf:cc/path-format))))
+      (with-buffer-or-region (beg end)
+                             (call-process-region beg end tjf:cc/clang-format t t t args)))))
 
 ;;
 (message "Loading tjf-cc...done")

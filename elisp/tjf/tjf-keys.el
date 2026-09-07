@@ -66,8 +66,8 @@
 ;;
 (global-set-key [(control b)]            'bm-toggle)
 ;;lobal-set-key [(meta    b)]            'backward-word)
-(global-set-key [(super   b)]            'blamer-show-posframe-commit-info)
-;;lobal-set-key [(control meta  b)]      '
+;; (global-set-key [(super   b)]            'blamer-show-posframe-commit-info)
+(global-set-key [(control meta  b)]      'blamer-show-posframe-commit-info)
 ;;lobal-set-key [(control shift b)]      '
 ;;lobal-set-key [(control super b)]      '
 ;;lobal-set-key [(meta    super b)]      '
@@ -78,9 +78,9 @@
 ;;lobal-set-key [(control c)]            'COPY
 ;;lobal-set-key [(meta    c)]            'capitalize-word)
 ;;lobal-set-key [(super   c)]            '
-;;lobal-set-key [(control meta  c)]      '
+(global-set-key [(control meta  c)]      'copy-rectangle-as-kill)
 ;;lobal-set-key [(control shift c)]      '
-(global-set-key [(control super c)]      'copy-rectangle-as-kill)
+;; (global-set-key [(control super c)]      'copy-rectangle-as-kill)
 ;;lobal-set-key [(meta    super c)]      '
 ;;lobal-set-key [(control meta super c)] '
 
@@ -110,8 +110,8 @@
 ;;
 (global-set-key [(control f)]            'tjf:search/current-word-or-region)
 ;;lobal-set-key [(meta    f)]            'forward-word)
-(global-set-key [(super   f)]            'tjf:search/all-files)
-;;lobal-set-key [(control meta  f)]      '
+;; (global-set-key [(super   f)]            'tjf:search/all-files)
+(global-set-key [(control meta  f)]      'tjf:search/all-files)
 (global-set-key [(control shift f)]      'tjf:search/buffer)
 ;;lobal-set-key [(control super f)]      '
 ;;lobal-set-key [(meta    super f)]      '
@@ -119,7 +119,7 @@
 
 ;; ==================== g ====================
 ;;
-(global-set-key [(control g)]            'goto-line)
+;; (global-set-key [(control g)]            'keyboard-quit)
 ;;lobal-set-key [(meta    g)]            'PREFIX
 ;;lobal-set-key [(super   g)]            ')
 ;;lobal-set-key [(control shift g)]      '
@@ -132,21 +132,21 @@
 ;;lobal-set-key [(control h)]            '...HELP...
 ;;lobal-set-key [(meta    h)]            'mark-paragraph)
 ;;lobal-set-key [(super   h)]            'DO NOT USE
-;;lobal-set-key [(control meta  h)]      '
-(global-set-key [(control shift h)]      'anzu-query-replace)
-(global-set-key [(control super h)]      'hs-hide-block)
+(global-set-key [(control meta  h)]      'hs-hide-block)
+(global-set-key [(control shift h)]      'anzu-query-replace-regexp)
+;; (global-set-key [(control super h)]      'hs-hide-block)
 ;;lobal-set-key [(meta    super h)]      '
-(global-set-key [(control meta super h)] 'anzu-query-replace-regexp)
+;; (global-set-key [(control meta super h)] 'anzu-query-replace-regexp)
 
 ;; ==================== i ====================
 ;;
 (global-set-key [(control i)]            #'(lambda () (interactive) (if mark-active (indent-region (region-beginning) (region-end)) (indent-for-tab-command))))
 ;;lobal-set-key [(meta    i)]            'tab-to-tab-stop
 ;;lobal-set-key [(super   i)]            '
-;;lobal-set-key [(control meta  i)]      '
-;;lobal-set-key [(control shift i)]      '
-(global-set-key [(control super i)]      'tjf:edit/insert-chs)
-(global-set-key [(meta    super i)]      'tjf:edit/insert-che)
+(global-set-key [(control meta  i)]      'tjf:edit/insert-chs)
+(global-set-key [(control shift i)]      'tjf:edit/insert-che)
+;; (global-set-key [(control super i)]      'tjf:edit/insert-chs)
+;; (global-set-key [(meta    super i)]      'tjf:edit/insert-che)
 ;;lobal-set-key [(control meta super i)] '
 
 ;; ==================== j ====================
@@ -162,7 +162,7 @@
 
 ;; ==================== k ====================
 ;;
-(global-set-key [(control k)]            'comment-line)
+(global-set-key [(control k)]            'xah-comment-dwim)
 ;;lobal-set-key [(meta    k)]            'kill-sentence)
 ;;lobal-set-key [(super   k)]            '
 ;;lobal-set-key [(control meta  k)]      '
@@ -171,20 +171,20 @@
 ;;lobal-set-key [(meta    super k)]      '
 ;;lobal-set-key [(control meta super k)] '
 
+(define-key help-map [(control k)]       'describe-key)
 
 ;; ==================== l ====================
 ;;
 ;;lobal-set-key [(control l)]            'recenter-top-bottom
 ;;lobal-set-key [(meta    l)]            'downcase-word)
 ;;lobal-set-key [(super   l)]            ' DO NOT USE ... locks computer
-;;lobal-set-key [(control meta  l)]      '
+(global-set-key [(control meta  l)]      'consult-line)
 (global-set-key [(control shift l)]      'loccur-current)
-;;(global-set-key [(control super l)]      'consult-line)
+;; (global-set-key [(control super l)]      'consult-line)
 ;;lobal-set-key [(meta    super l)]      '
 ;;lobal-set-key [(control meta super l)] '
-(define-key help-map [(control k)]       'describe-key)
 
-                                        ;
+;
 ;; ==================== m ====================
 ;;
 ;;lobal-set-key [(control m)]            'newline
@@ -212,9 +212,9 @@
 (global-set-key [(control o)]            'find-file)
 ;;lobal-set-key [(meta    o)]            ' PREFIX
 ;;lobal-set-key [(super   o)]            ' DO NOT USE ... ???
-;;(global-set-key [(control meta  o)]      'consult-outline)
-;;(global-set-key [(control shift o)]      'consult-outline)
-(global-set-key [(control super o)]      'open-rectangle)
+(global-set-key [(control meta  o)]      'consult-outline)
+(global-set-key [(control shift o)]      'open-rectangle)
+;; (global-set-key [(control super o)]      'open-rectangle)
 ;;lobal-set-key [(meta    super o)]      '
 ;;lobal-set-key [(control meta super o)] '
 
@@ -231,11 +231,11 @@
 
 ;; ==================== q ====================
 ;;
-(global-set-key [(control q)]            'keyboard-quit)
+(global-set-key [(control q)]            'quoted-insert)
 ;;lobal-set-key [(meta    q)]            'fill-paragraph)
 ;;lobal-set-key [(super   q)]            '
 ;;lobal-set-key [(control meta  q)]      '
-(global-set-key [(control shift q)]      'quoted-insert)
+;; (global-set-key [(control shift q)]      'quoted-insert)
 ;;lobal-set-key [(control super q)]      '
 ;;lobal-set-key [(meta    super q)]      '
 ;;lobal-set-key [(control meta super q)] '
@@ -244,8 +244,8 @@
 ;;
 ;;lobal-set-key [(control r)]            'isearch-backward
 ;;lobal-set-key [(meta    r)]            'move-to-window-line-top-bottom)
-(global-set-key [(super   r)]            'rectangle-mark-mode)
-;;lobal-set-key [(control meta  r)]      '
+;; (global-set-key [(super   r)]            'rectangle-mark-mode)
+(global-set-key [(control meta  r)]      'rectangle-mark-mode)
 ;;lobal-set-key [(control shift r)]      '
 ;;lobal-set-key [(control super r)]      '
 ;;lobal-set-key [(meta    super r)]      '
@@ -257,8 +257,8 @@
 (global-set-key [(meta    s)]            'write-file)
 ;;lobal-set-key [(super   s)]            ' DO NOT USE ... key not registered
 (global-set-key [(control meta  s)]      'tjf:tools/open-new-shell)
-(global-set-key [(control shift s)]      'save-buffer)
-(global-set-key [(control super s)]      'hs-show-block)
+;; (global-set-key [(control shift s)]      'save-buffer)
+;; (global-set-key [(control super s)]      'hs-show-block)
 ;;lobal-set-key [(meta    super s)]      '
 ;;lobal-set-key [(control meta super s)] '
 
@@ -267,9 +267,9 @@
 (global-set-key [(control t)]            'xah-toggle-letter-case)
 ;;lobal-set-key [(meta    t)]            'transpose-words)
 ;;lobal-set-key [(super   t)]            ' DO NOT USE
-;;lobal-set-key [(control meta  t)]      ' DO NOT USE
-(global-set-key [(control shift t)]      'ergoemacs-toggle-camel-case)
-(global-set-key [(control super t)]      'tjf:edit/toggle-char-case-at-point)
+(global-set-key [(control meta  t)]      'ergoemacs-toggle-camel-case)
+;; (global-set-key [(control shift t)]      'ergoemacs-toggle-camel-case)
+;; (global-set-key [(control super t)]      'tjf:edit/toggle-char-case-at-point)
 ;;lobal-set-key [(meta    super t)]      ')
 ;;lobal-set-key [(control meta super t)] '
 
@@ -288,10 +288,10 @@
 ;;
 ;;lobal-set-key [(control v)]            'PASTE)
 ;;lobal-set-key [(meta    v)]            'delete-selection-repeat-replace-region)
-;;lobal-set-key [(super   v)]            '
-;;lobal-set-key [(control meta  v)]      '
+;; (global-set-key [(super   v)]            'yank-rectangle)
+(global-set-key [(control meta  v)]      'yank-rectangle)
 ;;lobal-set-key [(control shift v)]      '
-(global-set-key [(control super v)]      'yank-rectangle)
+;;(global-set-key [(control super v)]      'yank-rectangle)
 ;;lobal-set-key [(meta    super v)]      '
 ;;lobal-set-key [(control meta super v)] '
 
@@ -302,8 +302,8 @@
 ;;lobal-set-key [(super   w)]            '
 ;;lobal-set-key [(control meta  w)]      '
 ;;lobal-set-key [(control shift w)]      '
-(global-set-key [(control super w)]      'winner-undo)
-(global-set-key [(meta    super w)]      'winner-redo)
+;; (global-set-key [(control super w)]      'winner-undo)
+;; (global-set-key [(meta    super w)]      'winner-redo)
 ;;lobal-set-key [(control meta super w)] '
 
 ;; ==================== x ====================
@@ -311,9 +311,9 @@
 ;;lobal-set-key [(control x)]            'CUT)
 ;;lobal-set-key [(meta    x)]            ' DUH ... M-x
 ;;lobal-set-key [(super   x)]            '
-;;lobal-set-key [(control meta  x)]      '
+;;lobal-set-key [(control meta  x)]      'kill-rectangle)
 ;;lobal-set-key [(control shift x)]      ' PREFIX
-(global-set-key [(control super x)]      'kill-rectangle)
+;;(global-set-key [(control super x)]      'kill-rectangle)
 ;;lobal-set-key [(meta    super x)]      '
 ;;lobal-set-key [(control meta super x)] '
 
@@ -341,6 +341,7 @@
 
 ;; ==================== ! ====================
 ;;
+(global-set-key [(control !)] 'xah-insert-bracket)
 ;;lobal-set-key [(control !)]            '
 ;;lobal-set-key [(meta    !)]            'shell-command)
 ;;lobal-set-key [(super   !)]            'DO NOT USE
@@ -445,7 +446,7 @@
 ;;lobal-set-key [(meta    /)] 'dabbrev-expand)
 ;;lobal-set-key [(super   /)] '
 ;;lobal-set-key [(control meta  /)]      '
-(global-set-key [(control super /)]      'tjf:frame/half-size)
+(global-set-key [(control meta /)]      'tjf:frame/half-size)
 ;;lobal-set-key [(meta    super /)]      '
 ;;lobal-set-key [(control meta super /)] '
 
@@ -459,14 +460,14 @@
 ;;lobal-set-key [(meta    super 0)]      '
 ;;lobal-set-key [(control meta super 0)] '
 
-                                        ; ==================== 1 ====================
+; ==================== 1 ====================
 ;;
 ;;lobal-set-key [(control 1)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(meta    1)] ' DO NOT USE ... digit argument
 ;;lobal-set-key [(super   1)] ' DO NOT USE
 ;;lobal-set-key [(control meta  1)]      '
-                                        ;(global-set-key [(control super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
-                                        ;(global-set-key [(meta    super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
+;(global-set-key [(control super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
+;(global-set-key [(meta    super 1)]      #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
 ;;lobal-set-key [(control meta super 1)] '
 
 ;; ==================== 2 ====================
@@ -554,10 +555,9 @@
 ;;lobal-set-key [(control    SPC)] 'cua-set-mark)
 ;;lobal-set-key [(meta       SPC)] ' KEY NOT REGISTERED
 ;;lobal-set-key [(super      SPC)] ' DO NOT USE
-(global-set-key [?\M-\S- ] 'just-one-space)
-(global-set-key [?\s- ]    'ergoemacs-shrink-whitespaces)  ;; autoloaded — [(super SPC)]
-;;lobal-set-key [(control meta  SPC)] 'mark-sexp)
-(global-set-key [?\C-\s- ] 'ergoemacs-shrink-whitespaces)
+(global-set-key [?\M-\S- ] 'tjf:edit/one-space)
+;;(global-set-key [?\s- ]    'ergoemacs-shrink-whitespaces)  ;; autoloaded — [(super SPC)]
+(global-set-key [?\C-\M- ] 'ergoemacs-shrink-whitespaces)
 ;;lobal-set-key [(meta    super SPC)] '
 ;;lobal-set-key [(control meta super SPC)] '
 
@@ -585,7 +585,7 @@
 ;;
 (global-set-key [(control <)] 'xah-insert-lt)
 ;;lobal-set-key [(meta    <)] 'beginning-of-buffer)
-(global-set-key [(super   <)] 'xah-insert-lt)
+;;(global-set-key [(super   <)] 'xah-insert-lt)
 ;;lobal-set-key [(control meta  <)]      '
 ;;lobal-set-key [(control super <)]      '
 ;;lobal-set-key [(meta    super <)]      '
@@ -606,7 +606,7 @@
 ;;
 (global-set-key [(control >)] 'xah-insert-tag)
 ;;lobal-set-key [(meta    >)] 'end-of-buffer)
-(global-set-key [(super   >)] 'xah-insert-tag)
+;;(global-set-key [(super   >)] 'xah-insert-tag)
 ;;lobal-set-key [(control meta  >)]      '
 ;;lobal-set-key [(control super >)]      '
 ;;lobal-set-key [(meta    super >)]      '
@@ -636,7 +636,7 @@
 ;;
 ;;lobal-set-key [(control \")] '
 ;;lobal-set-key [(meta    \")] '
-(global-set-key [(super   \")] 'xah-insert-double-quote)
+(global-set-key [(control \")] 'xah-insert-double-quote)
 ;;lobal-set-key [(control meta  \")]      '
 ;;lobal-set-key [(control super \")]      '
 ;;lobal-set-key [(meta    super \")]      '
@@ -644,9 +644,9 @@
 
 ;; ==================== ' ====================
 ;;
-(global-set-key [(control \')] 'ergoemacs-select-text-in-quote)
+;;lobal-set-key [(control \')] '
 ;;lobal-set-key [(meta    \')] 'abbrev-prefix-mark)
-(global-set-key [(super   \')] 'xah-insert-single-quote)
+(global-set-key [(control \')] 'xah-insert-single-quote)
 ;;lobal-set-key [(control meta  \')]      '
 ;;lobal-set-key [(control super \')]      '
 ;;lobal-set-key [(meta    super \')]      '
@@ -655,7 +655,7 @@
 ;; ==================== ( ====================
 ;;
 ;;lobal-set-key [(control \()] '
-;;lobal-set-key [(meta    \()] 'insert-parentheses)
+(global-set-key [(meta    \()] 'xah-insert-paren)
 ;;lobal-set-key [(super   \()] 'xah-insert-paren KEY NOT REGISTERED ???)
 ;;lobal-set-key [(control meta  \()]      '
 ;;lobal-set-key [(control super \()]      '
@@ -676,7 +676,7 @@
 ;;
 ;;lobal-set-key [(control \[)] '
 ;;lobal-set-key [(meta    \[)] '
-(global-set-key [(super   \[)] 'xah-insert-bracket)
+;; (global-set-key [(control \[)] 'xah-insert-bracket)
 ;;lobal-set-key [(control meta  \[)]      '
 ;;lobal-set-key [(control super \[)]      '
 ;;lobal-set-key [(meta    super \[)]      '
@@ -684,7 +684,7 @@
 
 ;; ==================== \ ====================
 ;;
-;;lobal-set-key [(control \\)] 'toggle-input-method)
+;;lobal-set-key [(control \\)] 'xah-insert-bracket)
 ;;lobal-set-key [(meta    \\)] 'delete-horizontal-space)
 ;;lobal-set-key [(super   \\)] '
 ;;lobal-set-key [(control meta  \\)]      '
@@ -716,7 +716,7 @@
 ;;
 ;;lobal-set-key [(control \{)] '
 ;;lobal-set-key [(meta    \{)] 'backward-paragraph)
-(global-set-key [(super   \{)] 'xah-insert-brace)
+(global-set-key [(control \{)] 'xah-insert-brace)
 ;;lobal-set-key [(control meta  \{)]      '
 ;;lobal-set-key [(control super \{)]      '
 ;;lobal-set-key [(meta    super \{)]      '
@@ -779,7 +779,7 @@
 ;;lobal-set-key [(meta    tab)] ' DO  NOT USE
 ;;lobal-set-key [(super   tab)] ' DO  NOT USE
 ;;lobal-set-key [(control meta  tab)] ' DO  NOT USE
-(global-set-key [(control super tab)] 'clean-aindent--bsunindent)
+;;(global-set-key [(control super tab)] 'clean-aindent--bsunindent)
 ;;lobal-set-key [(meta    super tab)] ')
 ;;lobal-set-key [(control meta super tab)] '
 
@@ -801,10 +801,10 @@
 (global-set-key [f1]           'tjf:navigate/forward-word)
 (global-set-key [(control f1)] 'tjf:edit/insert-chs)
 ;;lobal-set-key [(meta    f1)] ' DO NOT USE
-(global-set-key [(super   f1)] 'tjf:navigate/forward-symbol)
+;; (global-set-key [(super   f1)] 'tjf:navigate/forward-symbol)
 ;;lobal-set-key [(control meta  f1)] ' DO NOT USE
-(global-set-key [(control super f1)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
-(global-set-key [(meta    super f1)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
+;; (global-set-key [(control super f1)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -1)))
+;; (global-set-key [(meta    super f1)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  1)))
 ;;lobal-set-key [(control meta super f1)] ' DO NOT USE
 
 ;; ==================== f2 ====================
@@ -812,10 +812,10 @@
 (global-set-key [f2]           'backward-word)
 (global-set-key [(control f2)] 'tjf:edit/insert-che)
 ;;lobal-set-key [(meta    f2)] ' DO NOT USE
-(global-set-key [(super   f2)] 'backward-symbol)
+;; (global-set-key [(super   f2)] 'backward-symbol)
 ;;lobal-set-key [(control super f2)]      '
-(global-set-key [(control super f2)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -2)))
-(global-set-key [(meta    super f2)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  2)))
+;; (global-set-key [(control super f2)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -2)))
+;; (global-set-key [(meta    super f2)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  2)))
 ;;lobal-set-key [(control meta super f2)] ' DO NOT USE
 
 ;; ==================== f3 ====================
@@ -825,8 +825,8 @@
 ;;lobal-set-key [(meta    f3)] ' DO NOT USE
 ;;lobal-set-key [(super   f3)] '
 ;;lobal-set-key [(control meta  f3)]      ' DO NOT USE
-(global-set-key [(control super f3)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -3)))
-(global-set-key [(meta    super f3)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  3)))
+;; (global-set-key [(control super f3)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -3)))
+;; (global-set-key [(meta    super f3)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  3)))
 ;;lobal-set-key [(control meta super f3)] ' DO NOT USE
 
 ;; ==================== f4 ====================
@@ -836,8 +836,8 @@
 ;;lobal-set-key [(meta    f4)] ' DO NOT USE
 ;;lobal-set-key [(super   f4)] '
 ;;lobal-set-key [(control meta  f4)]      ' DO NOT USE
-(global-set-key [(control super f4)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -4)))
-(global-set-key [(meta    super f4)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  4)))
+;; (global-set-key [(control super f4)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -4)))
+;; (global-set-key [(meta    super f4)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  4)))
 ;;lobal-set-key [(control meta super f4)] ' DO NOT USE
 
 ;; ==================== f5 ====================
@@ -847,8 +847,8 @@
 ;;lobal-set-key [(meta    f5)] ' DO NOT USE
 ;;lobal-set-key [(super   f5)] '
 ;;lobal-set-key [(control meta  f5)]      ' DO NOT USE
-(global-set-key [(control super f5)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -5)))
-(global-set-key [(meta    super f5)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  5)))
+;; (global-set-key [(control super f5)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -5)))
+;; (global-set-key [(meta    super f5)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  5)))
 ;;lobal-set-key [(control meta super f5)] ' DO NOT USE
 
 ;; ==================== f6 ====================
@@ -858,8 +858,8 @@
 ;;lobal-set-key [(meta    f6)] ' DO NOT USE
 ;;lobal-set-key [(super f6)]   'xah-toggle-letter-case)
 ;;lobal-set-key [(control meta  f6)]      ' DO NOT USE
-(global-set-key [(control super f6)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -6)))
-(global-set-key [(meta    super f6)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  6)))
+;; (global-set-key [(control super f6)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -6)))
+;; (global-set-key [(meta    super f6)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  6)))
 ;;lobal-set-key [(control meta super f6)] ' DO NOT USE
 
 ;; ==================== f7 ====================
@@ -869,8 +869,8 @@
 ;;lobal-set-key [(meta    f7)] ' DO NOT USE
 ;;lobal-set-key [(super   f7)] '
 ;;lobal-set-key [(control meta  f7)]      ' DO NOT USE
-(global-set-key [(control super f7)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -7)))
-(global-set-key [(meta    super f7)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  7)))
+;; (global-set-key [(control super f7)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -7)))
+;; (global-set-key [(meta    super f7)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  7)))
 ;;lobal-set-key [(control super f7)]      '
 ;;lobal-set-key [(meta    super f7)]      '
 ;;lobal-set-key [(control meta super f7)] ' DO NOT USE
@@ -882,8 +882,8 @@
 ;;lobal-set-key [(meta    f8)] ' DO NOT USE
 ;;lobal-set-key [(super   f8)] '
 ;;lobal-set-key [(control meta  f8)]      ' DO NOT USE
-(global-set-key [(control super f8)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -8)))
-(global-set-key [(meta    super f8)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  8)))
+;; (global-set-key [(control super f8)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -8)))
+;; (global-set-key [(meta    super f8)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  8)))
 ;;lobal-set-key [(control super f8)]      '
 ;;lobal-set-key [(meta    super f8)]      '
 ;;lobal-set-key [(control meta super f8)] ' DO NOT USE
@@ -895,8 +895,8 @@
 ;;lobal-set-key [(meta    f9)] ' DO NOT        USE
 ;;lobal-set-key [(super   f9)] '
 ;;lobal-set-key [(control meta  f9)]      ' DO NOT USE
-(global-set-key [(control super 9)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -9)))
-(global-set-key [(meta    super 9)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  9)))
+;; (global-set-key [(control super 9)] #'(lambda () (interactive "*") (tjf:duplicate/spaces -9)))
+;; (global-set-key [(meta    super 9)] #'(lambda () (interactive "*") (tjf:duplicate/spaces  9)))
 ;;lobal-set-key [(control super f9)]      '
 ;;lobal-set-key [(meta    super f9)]      '
 ;;lobal-set-key [(control meta super f9)] ' DO NOT USE
@@ -973,8 +973,8 @@
 (global-set-key [(meta    return)] 'tjf:edit/insert-newline-before)
 ;;lobal-set-key [(super   return)] '
 ;;lobal-set-key [(control meta  return)] ')
-(global-set-key [(control super return)] 'tjf:edit/insert-newline-after-and-indent)
-(global-set-key [(meta    super return)] 'tjf:edit/insert-newline-before-and-indent)
+;; (global-set-key [(control super return)] 'tjf:edit/insert-newline-after-and-indent)
+;; (global-set-key [(meta    super return)] 'tjf:edit/insert-newline-before-and-indent)
 ;;lobal-set-key [(control meta super return)] '
 
 ;; ==================== insert ====================
@@ -982,8 +982,8 @@
 (global-set-key [insert]           'tjf:clipboard/paste)
 (global-set-key [(control insert)] 'overwrite-mode)
 (global-set-key [(meta    insert)] 'tjf:date/insert-dd-mon-yyyy)
-(global-set-key [(super   insert)] 'tjf:date/insert-month-day-year)
-(global-set-key [(control meta  insert)] #'(lambda () (insert user-full-name)))
+(global-set-key [(control meta insert)] 'tjf:date/insert-month-day-year)
+;; (global-set-key [(control meta  insert)] #'(lambda () (insert user-full-name)))
 ;;lobal-set-key [(control super insert)]      '
 ;;lobal-set-key [(meta    super insert)]      '
 ;;lobal-set-key [(control meta super insert)] '
@@ -1004,10 +1004,10 @@
 (global-set-key [delete]           'delete-char)
 (global-set-key [(control delete)] 'tjf:edit/delete-forward) ;; autoloaded
 ;;lobal-set-key [(meta    delete)] 'clean-aindent--bsunindent)
-(global-set-key [(super   delete)] #'(lambda nil (interactive) (delete-region (point-min) (point-max))))
+;;(global-set-key [(super   delete)] #'(lambda nil (interactive) (delete-region (point-min) (point-max))))
 ;;lobal-set-key [(control meta  delete)] ' DO NOT USE
-(global-set-key [(control super delete)] #'(lambda nil (interactive) (delete-region (point) (point-max))))
-(global-set-key [(meta    super delete)] #'(lambda nil (interactive) (delete-region (point-min) (point))))
+;; (global-set-key [(control super delete)] #'(lambda nil (interactive) (delete-region (point) (point-max))))
+;; (global-set-key [(meta    super delete)] #'(lambda nil (interactive) (delete-region (point-min) (point))))
 ;;lobal-set-key [(control meta super delete)] ' DOES NOT REGISTER
 
 ;; ==================== home ====================
@@ -1073,9 +1073,9 @@
 ;;lobal-set-key [(meta    left)] 'left-word)
 ;;lobal-set-key [(super   left)] 'search-word-backward)
 ;;lobal-set-key [(control meta  left)] ' DOES NOT REGISTER
-(global-set-key [(control shift left)] 'ergoemacs-backward-open-bracket)
+;;lobal-set-key [(control shift left)] 'ergoemacs-backward-open-bracket
 ;;lobal-set-key [(control super left)] ' DO NOT USE
-(global-set-key [(meta    super left)] 'backward-symbol)
+;;(global-set-key [(meta    super left)] 'backward-symbol)
 ;;lobal-set-key [(control meta super left)] '
 
 ;; ==================== down ====================
@@ -1097,9 +1097,9 @@
 (global-set-key [(meta    right)] 'tjf:navigate/forward-word)
 ;;lobal-set-key [(super   right)] 'search-word-forward)
 ;;lobal-set-key [(control meta  right)] ' DOES NOT REGISTER
-(global-set-key [(control shift right)] 'ergoemacs-forward-open-bracket)
+;;lobal-set-key [(control shift right)] 'ergoemacs-forward-open-bracket
 ;;lobal-set-key [(control super right)] ' DO NOT USE
-(global-set-key [(meta    super right)] 'tjf:navigate/forward-symbol)
+;;(global-set-key [(meta    super right)] 'tjf:navigate/forward-symbol)
 ;;lobal-set-key [(control meta super right)] '
 
 ;; ==================== kp-divide ====================
@@ -1109,7 +1109,7 @@
 ;;lobal-set-key [(meta    kp-divide)] 'dabbrev-expand)
 ;;lobal-set-key [(super   kp-divide)] '
 ;;lobal-set-key [(control meta  kp-divide)]      '
-(global-set-key [(control super kp-divide)]      'tjf:frame/half-size)
+;;(global-set-key [(control super kp-divide)]      'tjf:frame/half-size)
 ;;lobal-set-key [(meta    super kp-divide)]      '
 ;;lobal-set-key [(control meta super kp-divide)] 'tjf:edit/
 
@@ -1151,7 +1151,7 @@
 (global-set-key [kp-enter]           'tjf:duplicate/previous)
 ;;lobal-set-key [(control kp-enter)] ' DO NOT USE ... messes up C-enter
 (global-set-key [(meta    kp-enter)] 'tjf:edit/insert-newline-before)
-                                        ;global-set-key [(super   kp-enter)] ')
+;global-set-key [(super   kp-enter)] ')
 ;;lobal-set-key [(control meta  kp-enter)]      ' DO NOT USE
 ;;lobal-set-key [(control super kp-enter)]      '
 ;;lobal-set-key [(meta    super kp-enter)]      '
@@ -1173,11 +1173,11 @@
 (global-set-key [kp-0] 'tjf:duplicate/line-or-region)
 ;;lobal-set-key [(control kp-0)] ' DO NOT USE ... digit argument
 (global-set-key [(meta    kp-0)] 'tjf:duplicate/line-or-region)
-                                        ;global-set-key [(super   kp-0)] '
+;global-set-key [(super   kp-0)] '
 
 ;;lobal-set-key [(control meta  kp-0)] ' DO NOT USE
-(global-set-key [(control super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
-(global-set-key [(meta    super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
+;; (global-set-key [(control super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
+;; (global-set-key [(meta    super kp-0)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
 ;;lobal-set-key [(control meta super kp-0)] '
 
 (global-set-key [kp-insert] 'duplicate-line-or-region)
@@ -1185,8 +1185,8 @@
 (global-set-key [(meta    kp-insert)] 'duplicate-line-or-region)
 ;;lobal-set-key [(super   kp-insert)] '
 ;;lobal-set-key [(control meta  kp-insert)] ' DO NOT USE
-(global-set-key [(control super kp-insert)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
-(global-set-key [(meta    super kp-insert)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
+;; (global-set-key [(control super kp-insert)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  0)))
+;; (global-set-key [(meta    super kp-insert)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 0)))
 ;;lobal-set-key [(control meta super kp-insert)] '
 
 ;; ==================== kp-1/kp-end ====================
@@ -1196,8 +1196,8 @@
 (global-set-key [(meta    kp-1)] 'tjf:duplicate/next)
 ;;lobal-set-key [(super   kp-1)] '
 ;;lobal-set-key [(control meta  kp-1)] ' DO NOT USE
-(global-set-key [(control super kp-1)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
-(global-set-key [(meta    super kp-1)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
+;; (global-set-key [(control super kp-1)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
+;; (global-set-key [(meta    super kp-1)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
 ;;lobal-set-key [(control meta super kp-1)] '
 
 (global-set-key [kp-end] 'tjf:duplicate/previous)
@@ -1205,8 +1205,8 @@
 (global-set-key [(meta    kp-end)] 'tjf:duplicate/next)
 ;;lobal-set-key [(super   kp-end)] '
 ;;lobal-set-key [(control meta  kp-end)] ' DO NOT USE
-(global-set-key [(control super kp-end)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
-(global-set-key [(meta    super kp-end)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
+;; (global-set-key [(control super kp-end)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  1)))
+;; (global-set-key [(meta    super kp-end)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 1)))
 ;;lobal-set-key [(control meta super kp-end)] '
 
 ;; ==================== kp-2/kp-down ====================
@@ -1216,8 +1216,8 @@
 (global-set-key [(meta    kp-2)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 2)))
 ;;lobal-set-key [(super   kp-2)] '
 ;;lobal-set-key [(control meta  kp-2)] ' DO NOT USE
-(global-set-key [(control super kp-2)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
-(global-set-key [(meta    super kp-2)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
+;; (global-set-key [(control super kp-2)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
+;; (global-set-key [(meta    super kp-2)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
 ;;lobal-set-key [(control meta super kp-2)] '
 
 (global-set-key [kp-down]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -2)))
@@ -1225,8 +1225,8 @@
 (global-set-key [(meta    kp-down)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 2)))
 ;;lobal-set-key [(super   kp-down)] '
 ;;lobal-set-key [(control meta  kp-down)] ' DO NOT USE
-(global-set-key [(control super kp-down)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
-(global-set-key [(meta    super kp-down)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
+;; (global-set-key [(control super kp-down)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  2)))
+;; (global-set-key [(meta    super kp-down)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 2)))
 ;;lobal-set-key [(control meta super kp-down)] '
 
 ;; ==================== kp-3/kp-next ====================
@@ -1236,8 +1236,8 @@
 (global-set-key [(meta    kp-3)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 3)))
 ;;lobal-set-key [(super   kp-3)] '
 ;;lobal-set-key [(control meta  kp-3)] ' DO NOT USE
-(global-set-key [(control super kp-3)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
-(global-set-key [(meta    super kp-3)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
+;; (global-set-key [(control super kp-3)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
+;; (global-set-key [(meta    super kp-3)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
 ;;lobal-set-key [(control meta super kp-3)] '
 
 (global-set-key [kp-next]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -3)))
@@ -1245,8 +1245,8 @@
 (global-set-key [(meta    kp-next)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 3)))
 ;;lobal-set-key [(super   kp-next)] '
 ;;lobal-set-key [(control meta  kp-next)] ' DO NOT USE
-(global-set-key [(control super kp-next)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
-(global-set-key [(meta    super kp-next)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
+;; (global-set-key [(control super kp-next)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  3)))
+;; (global-set-key [(meta    super kp-next)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 3)))
 ;;lobal-set-key [(control meta super kp-next)] '
 
 ;; ==================== kp-4/kp-left ====================
@@ -1256,17 +1256,17 @@
 (global-set-key [(meta    kp-4)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
 ;;lobal-set-key [(super   kp-4)] '
 ;;lobal-set-key [(control meta  kp-4)] ' DO NOT USE
-(global-set-key [(control super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
-(global-set-key [(meta    super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
+;; (global-set-key [(control super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
+;; (global-set-key [(meta    super kp-4)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
 ;;lobal-set-key [(control meta super kp-4)] '
 
-                                        ;(global-set-key [kp-left]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
+(global-set-key [kp-left]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -4)))
 ;;lobal-set-key [(control kp-left)] ' DO NOT USE ... digit argument
 (global-set-key [(meta    kp-left)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 4)))
 ;;lobal-set-key [(super   kp-left)] '
 ;;lobal-set-key [(control meta  kp-left)] ' DO NOT USE
-(global-set-key [(control super kp-left)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
-(global-set-key [(meta    super kp-left)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
+;; (global-set-key [(control super kp-left)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  4)))
+;; (global-set-key [(meta    super kp-left)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 4)))
 ;;lobal-set-key [(control meta super kp-left)] '
 
 ;; ==================== kp-5/kp-begin ====================
@@ -1276,18 +1276,19 @@
 (global-set-key [(meta    kp-5)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 5)))
 ;;lobal-set-key [(super   kp-5)] '
 ;;lobal-set-key [(control meta  kp-5)] ' DO NOT USE
-(global-set-key [(control super kp-5)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
-(global-set-key [(meta    super kp-5)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
+;; (global-set-key [(control super kp-5)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
+;; (global-set-key [(meta    super kp-5)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
 ;;lobal-set-key [(control meta super kp-5)] '
 
 (global-set-key [kp-begin]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -5)))
 ;;lobal-set-key [(control kp-begin)] ' DO NOT USE ... digit argument
 (global-set-key [(meta    kp-begin)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 5)))
 ;;lobal-set-key [(super   kp-begin)] '
-;;lobal-set-key [(control meta  kp-begin)] ' DO NOT USE
-(global-set-key [(control super kp-begin)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
-(global-set-key [(meta    super kp-begin)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
-;;lobal-set-key [(control meta super kp-begin)] '
+;; ;;lobal-set-key [(control meta  kp-begin)] ' DO NOT USE
+;; (global-set-key [(control super kp-begin)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  5)))
+;; (global-set-key [(meta    super kp-begin)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 5)))
+;; ;
+                                        ;lobal-set-key [(control meta super kp-begin)] '
 
 ;; ==================== kp-6/kp-right ====================
 ;;
@@ -1296,8 +1297,8 @@
 (global-set-key [(meta kp-6)]    #'(lambda () (interactive "*") (tjf:duplicate/syntax 6)))
 ;;lobal-set-key [(super   kp-6)] '
 ;;lobal-set-key [(control meta  kp-6)] ' DO NOT USE
-(global-set-key [(control super kp-6)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
-(global-set-key [(meta    super kp-6)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
+;; (global-set-key [(control super kp-6)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
+;; (global-set-key [(meta    super kp-6)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
 ;;lobal-set-key [(control meta super kp-6)] '
 
 (global-set-key [kp-right]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -6)))
@@ -1305,8 +1306,8 @@
 (global-set-key [(meta kp-right)]    #'(lambda () (interactive "*") (tjf:duplicate/syntax 6)))
 ;;lobal-set-key [(super   kp-right)] '
 ;;lobal-set-key [(control meta  kp-right)] ' DO NOT USE
-(global-set-key [(control super kp-right)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
-(global-set-key [(meta    super kp-right)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
+;; (global-set-key [(control super kp-right)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  6)))
+;; (global-set-key [(meta    super kp-right)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 6)))
 ;;lobal-set-key [(control meta super kp-right)] '
 
 ;; ==================== kp-7/kp-home ====================
@@ -1316,8 +1317,8 @@
 (global-set-key [(meta    kp-7)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 7)))
 ;;lobal-set-key [(super   kp-7)] '
 ;;lobal-set-key [(control meta  kp-7)] ' DO NOT USE
-(global-set-key [(control super kp-7)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
-(global-set-key [(meta    super kp-7)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
+;; (global-set-key [(control super kp-7)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
+;; (global-set-key [(meta    super kp-7)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
 ;;lobal-set-key [(control meta super kp-7)] '
 
 (global-set-key [kp-home]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -7)))
@@ -1325,8 +1326,8 @@
 (global-set-key [(meta    kp-home)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 7)))
 ;;lobal-set-key [(super   kp-home)] '
 ;;lobal-set-key [(control meta  kp-home)] ' DO NOT USE
-(global-set-key [(control super kp-home)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
-(global-set-key [(meta    super kp-home)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
+;; (global-set-key [(control super kp-home)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  7)))
+;; (global-set-key [(meta    super kp-home)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 7)))
 ;;lobal-set-key [(control meta super kp-home)] '
 
 ;; ==================== kp-8/kp-up ====================
@@ -1336,8 +1337,8 @@
 (global-set-key [(meta    kp-8)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 8)))
 ;;lobal-set-key [(super   kp-8)] '
 ;;lobal-set-key [(control meta  kp-8)] ' DO NOT USE
-(global-set-key [(control super kp-8)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
-(global-set-key [(meta    super kp-8)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
+;; (global-set-key [(control super kp-8)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
+;; (global-set-key [(meta    super kp-8)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
 ;;lobal-set-key [(control meta super kp-8)] '
 
 (global-set-key [kp-up]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -8)))
@@ -1345,8 +1346,8 @@
 (global-set-key [(meta    kp-up)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 8)))
 ;;lobal-set-key [(super   kp-up)] '
 ;;lobal-set-key [(control meta  kp-up)] ' DO NOT USE
-(global-set-key [(control super kp-up)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
-(global-set-key [(meta    super kp-up)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
+;; (global-set-key [(control super kp-up)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  8)))
+;; (global-set-key [(meta    super kp-up)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 8)))
 ;;lobal-set-key [(control meta super kp-up)] '
 
 ;; ==================== kp-9/kp-prior ====================
@@ -1356,8 +1357,8 @@
 (global-set-key [(meta    kp-9)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 9)))
 ;;lobal-set-key [(super   kp-9)] '
 ;;lobal-set-key [(control meta  kp-9)] ' DO NOT USE
-(global-set-key [(control super kp-9)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
-(global-set-key [(meta    super kp-9)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
+;; (global-set-key [(control super kp-9)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
+;; (global-set-key [(meta    super kp-9)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
 ;;lobal-set-key [(control meta super kp-9)] '
 
 (global-set-key [kp-prior]           #'(lambda () (interactive "*") (tjf:duplicate/syntax -9)))
@@ -1365,8 +1366,8 @@
 (global-set-key [(meta    kp-prior)] #'(lambda () (interactive "*") (tjf:duplicate/syntax 9)))
 ;;lobal-set-key [(super   kp-prior)] '
 ;;lobal-set-key [(control meta  kp-prior)] ' DO NOT USE
-(global-set-key [(control super kp-prior)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
-(global-set-key [(meta    super kp-prior)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
+;; (global-set-key [(control super kp-prior)] #'(lambda () (interactive "*") (tjf:clipboard/copy-n  9)))
+;; (global-set-key [(meta    super kp-prior)] #'(lambda () (interactive "*") (tjf:clipboard/paste-n 9)))
 ;;lobal-set-key [(control meta super kp-prior)] '
 
 ;;; ================================================================================
@@ -1463,9 +1464,9 @@
 ;;
 ;; Fringe Mouse
 ;;
-(global-set-key [left-fringe  mouse-1] 'bm-toggle-mouse)
-(global-set-key [left-fringe  mouse-4] 'bm-previous-mouse)
-(global-set-key [left-fringe  mouse-5] 'bm-next-mouse)
+;; (global-set-key [left-fringe  mouse-1] 'bm-toggle-mouse)
+;; (global-set-key [left-fringe  mouse-4] 'bm-previous-mouse)
+;; (global-set-key [left-fringe  mouse-5] 'bm-next-mouse)
 ;; (global-set-key [right-fringe mouse-1] 'mouse-delete-other-windows)
 ;; (global-set-key [right-fringe mouse-2] 'split-window-horizontally)
 

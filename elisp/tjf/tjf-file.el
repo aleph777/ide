@@ -35,7 +35,7 @@
 (require 'tjf-frame)
 (require 'tjf-flags)
 
-;; 
+;;
 (defvar tjf:file/menu)
 (setq tjf:file/menu
   '("File"

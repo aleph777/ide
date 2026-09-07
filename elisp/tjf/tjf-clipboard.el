@@ -35,7 +35,8 @@
 (require 'tjf-flags)
 
 ;;
-(defvar tjf:clipboard/menu
+(defvar tjf:clipboard/menu)
+(setq   tjf:clipboard/menu
   '("Clipboard"
     (tjf:clipboard/select-title
      ["0" (tjf:clipboard/select 0) :style toggle :selected (tjf:clipboard/selected? 0)]

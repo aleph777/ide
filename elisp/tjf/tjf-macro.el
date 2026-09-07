@@ -52,7 +52,7 @@
 
 (defmacro get-shell-output (body)
   "Return the output of BODY minus the line terminator."
-  (nth 0 (split-string (shell-command-to-string ,@body) nil)))
+  `(nth 0 (split-string (shell-command-to-string ,body) "\n")))
 
 (defmacro on-cygwin (statement &rest statements)
   "Evaluate the enclosed body (STATEMENT & STATEMENTS) only when run on Cygwin."
@@ -173,7 +173,7 @@ when there is no mark set.
   "Replace all occurences of REGEXP with REPLACEMENT-STRING from point
 to POINT-END (defaults to ‘point-max’)."
   (while (re-search-forward regexp (or point-end (point-max)) t)
-      (replace-match replacement-string t)))
+    (replace-match replacement-string t)))
 
 (defsubst string-to-symbol (string)
   "Convert STRING to a symbol."
@@ -181,13 +181,27 @@ to POINT-END (defaults to ‘point-max’)."
 
 (defsubst symbol-to-string (symbol)
   "Convert SYMBOL to a string."
-  (symbol-name 'symbol))
+  (symbol-name symbol))
 
 (defsubst replace-matches-nre (str replacement-string &optional point-end)
   "Replace all occurences of STR with REPLACEMENT-STRING from point to
 POINT-END (defaults to ‘point-max’)."
   (while (search-forward str (or point-end (point-max)) t)
-      (replace-match replacement-string t)))
+    (replace-match replacement-string t)))
+
+(defun executable? (exe)
+  "Return EXE if EXE is executable or nil."
+  (let* ((fixexe (replace-regexp-in-string "\(\[+ \]\)" "\\\1" exe t t))
+         (which  (concat "which " fixexe)))
+    (unless (string= "" (get-shell-output which)) exe)))
+
+(defun first-executable (exes)
+  "Return first found executable in EXES."
+  (car (seq-filter 'executable? exes)))
+
+(defun first-file-exists (files)
+  "Return first existing file in FILES."
+  (car (seq-filter 'file-exists-p files)))
 
 (defun looking-at-word-or-symbol ()
   "Return t if character after point is a word character or a symbol character."

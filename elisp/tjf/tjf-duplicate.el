@@ -39,7 +39,7 @@
 
 ;;
 (defvar tjf:duplicate/using-tabs nil)
-(setq tjf:duplicate/using-tabs   nil)
+(setq tjf:duplicate/using-tabs   t)
 
 (defsubst tjf:duplicate/skip-to-next-word-on-line ()
   "Move to the beginning of the next word on the current line."

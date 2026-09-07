@@ -29,6 +29,10 @@
 
 ;;; Commentary:
 
+;;; Code:
+
+(message "Loading tjf-date...")
+
 ;; ===== format-time-string =====
 
 ;; %Y is the year, %y within the century, %C the century.
@@ -60,15 +64,10 @@
 ;; %R is like "%H:%M", %T is like "%H:%M:%S", %r is like "%I:%M:%S %p".
 ;; %X is the locale’s "preferred" time format.
 
-;;; Code:
-
-(message "Loading tjf-date...")
-
-;; 
-(defconst tjf:date/dd-mon-yyyy    "%d-%b-%Y")
-(defconst tjf:date/month-day-year "%B %d, %Y")
-(defconst tjf:date/yyyy-mm-dd     "%F")
-(defconst tjf:date/timestamp      "%F%H%M%S")
+(defvar tjf:date/dd-mon-yyyy    "%d-%b-%Y")
+(defvar tjf:date/month-day-year "%B %d, %Y")
+(defvar tjf:date/yyyy-mm-dd     "%F")
+(defvar tjf:date/timestamp      "%F%H%M%S")
 
 (defun tjf:date/today (date-format)
   "Return today's date in DATE-FORMAT."

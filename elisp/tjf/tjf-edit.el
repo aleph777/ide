@@ -29,24 +29,6 @@
 
 ;;; Commentary:
 
-;; Educational below?
-
-;; (defun tjf:edit/delete-whitespace-backward ()
-;;   "Delete whitespace from just prior to point to non-whitespace."
-;;   (interactive "*")
-;;   (if (looking-at "[[:space:]]")
-;;       (let ((point-sav (point)))
-;;         (skip-chars-backward "[:space:]")
-;;         (delete-region (point) point-sav))
-;;     (if (eolp)
-;;         (delete-trailing-whitespace))))
-
-;; (defun tjf:edit/delete-whitespace-forward ()
-;;   "Delete whitespace from point to non-whitespace."
-;;   (interactive "*")
-;;   (if (looking-at "[[:space:]]")
-;;       (delete-region (match-beginning 0) (match-end 0))))
-
 ;;; Code:
 
 (message "Loading tjf-edit...")
@@ -70,7 +52,7 @@
     ["Copy Buffer"            tjf:edit/copy-buffer          ]
     ["Copy Buffer Name"       tjf:edit/copy-buffer-name     ]
     ["Copy Buffer File Name"  tjf:edit/copy-buffer-file-name]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["marker2" nil :visible nil]
     ))
 
@@ -78,30 +60,31 @@
 (setq tjf:edit/menu-align
   '("Align"
     ["Align Columns Rectangle" pretty-rectangle       :enable (tjf:flags/enable-modify-region?)]
-    ["Align Columns Region"    tjf:edit/align-columns :enable (tjf:flags/enable-modify-region?)]
+    ["Align Columns"           tjf:edit/align-columns :enable (tjf:flags/enable-modify-region?)]
     ["Align Equals"            tjf:edit/align-equals  :enable (tjf:flags/enable-modify-region?)]
     ["Align Regexp..."         align-regexp           :enable (tjf:flags/enable-modify-region?)]))
 
 (defvar tjf:edit/menu-case)
 (setq tjf:edit/menu-case
   '("Case"
-    ["Capitalize Word or Region" tjf:edit/capitalize    :enable (tjf:flags/enable-write?)]
-    ["Downcase Word or Region"   tjf:edit/downcase-word :enable (tjf:flags/enable-write?)]
-    ["Upcase Word or Region"     tjf:edit/upcase        :enable (tjf:flags/enable-write?)]))
+    ["Capitalize"        tjf:edit/capitalize         :enable (tjf:flags/enable-write?)]
+    ["Downcase"          tjf:edit/downcase-word      :enable (tjf:flags/enable-write?)]
+    ["Upcase"            tjf:edit/upcase             :enable (tjf:flags/enable-write?)]
+    ["Toggle Camel Case" ergoemacs-toggle-camel-case :enable (tjf:flags/enable-write?)]))
 
 (defvar tjf:edit/menu-comment)
 (setq tjf:edit/menu-comment
   '("Comment"
-    ["Comment Region"         comment-region      :enable (tjf:flags/enable-comment?)]
-    ["Delete Comments Region" comment-kill-region :enable (tjf:flags/enable-comment?)]
-    ["Uncomment Region"       uncomment-region    :enable (tjf:flags/enable-comment?)]))
+    ["Comment"         comment-region      :enable (tjf:flags/enable-comment?)]
+    ["Uncomment"       uncomment-region    :enable (tjf:flags/enable-comment?)]
+    ["Delete Comments" comment-kill-region :enable (tjf:flags/enable-comment?)]))
 
 (defvar tjf:edit/menu-delete)
 (setq tjf:edit/menu-delete
   '("Delete"
     ["Flush Lines..." flush-lines :enable (tjf:flags/enable-write?)]
     ["Keep Lines..."  keep-lines  :enable (tjf:flags/enable-write?)]
-    "---"
+    ["---" nil :visible t :enable nil]
      ["Delete Entire Buffer"          erase-buffer                 :enable (tjf:flags/enable-write?)]
      ["Delete to Beginning of Buffer" tjf:edit/delete-to-beginning :enable (tjf:flags/enable-write?)]
      ["Delete to End of Buffer"       tjf:edit/delete-to-end       :enable (tjf:flags/enable-write?)]
@@ -114,24 +97,23 @@
      ["Delete Backward Word" backward-kill-word :enable (tjf:flags/enable-write?)]
      ["Delete Forward Word"  kill-word          :enable (tjf:flags/enable-write?)])))
 
-(defvar tjf:edit/menu-indent)
+(defvar tjf:edit/menu-indent) ;; !!! menu no longer needed !!!
 (setq tjf:edit/menu-indent
   '("Indent"
-    ["Indent Buffer" tjf:edit/indent :enable (tjf:flags/enable-buffer-operations?)]
-    ["Indent Region" tjf:edit/indent :enable (tjf:flags/enable-modify-region?)]))
+    ["Indent" tjf:edit/indent :enable (tjf:flags/enable-modify-region?)]))
 
 (defvar tjf:edit/menu-justify)
 (setq tjf:edit/menu-justify
   '("Justify"
     ["Canonically Space Region" canonically-space-region :enable (tjf:flags/enable-space-region?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Center Justify" (tjf:edit/justify 'center) :enable (tjf:flags/enable-write?)]
     ["Full Justify"   (tjf:edit/justify 'full)   :enable (tjf:flags/enable-write?)]
     ["Left Justify"   (tjf:edit/justify 'left)   :enable (tjf:flags/enable-write?)]
     ["Right Justify"  (tjf:edit/justify 'right)  :enable (tjf:flags/enable-write?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Set Fill Column..." set-fill-column]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Toggle Fill"                tjf:edit/toggle-fill :enable (tjf:flags/enable-write?)]
     ["Unfill Paragraph or Region" tjf:edit/unfill      :enable (tjf:flags/enable-write?)]))
 
@@ -139,7 +121,7 @@
 (setq tjf:edit/menu-rectangle
   '("Rectangle"
     ["Rectangle Mark Mode" rectangle-mark-mode]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Clear Rectangle"              clear-rectangle             :enable (tjf:flags/enable-modify-region?)]
     ["Delete Whitespace Rectangle"  delete-whitespace-rectangle :enable (tjf:flags/enable-modify-region?)]
     ["Cut Rectangle"                kill-rectangle              :enable (tjf:flags/enable-modify-region?)]
@@ -151,18 +133,19 @@
 (setq tjf:edit/menu-whitespace
   '("Whitespace"
     ["Cleanse Whitespace"          tjf:edit/cleanse-whitespace :enable (tjf:flags/enable-write?)]
-    "---"
+    [tjf:emdash-line nil :visible t :enable nil]
     ["Compress Blank Lines"        delete-blank-lines                  :enable (tjf:flags/enable-write?)]
     ["Delete Backward Whitespace"  tjf:edit/delete-whitespace-backward :enable (tjf:flags/enable-write?)]
     ["Delete Forward Whitespace"   tjf:edit/delete-whitespace-forward  :enable (tjf:flags/enable-write?)]
     ["Delete Whitespace"           delete-horizontal-space             :enable (tjf:flags/enable-write?)]
     ["Trim Excess Whitespace "     delete-trailing-whitespace          :enable (tjf:flags/enable-write?)]
-    "---"
+    ["---" nil :visible t :enable nil]
     ["Fix Indentation Whitespace" tjf:edit/spaceify-indetation :enable (tjf:flags/enable-write?)]
-    ["Tabify Buffer"              tjf:edit/tabify              :enable (tjf:flags/enable-buffer-operations?)]
-    ["Tabify Region"              tjf:edit/tabify              :enable (tjf:flags/enable-modify-region?)]
-    ["Untabify Buffer"            tjf:edit/untabify            :enable (tjf:flags/enable-buffer-operations?)]
-    ["Untabify Region"            tjf:edit/untabify            :enable (tjf:flags/enable-modify-region?)]))
+    ["Tabify"                     tjf:edit/tabify              :enable (tjf:flags/enable-buffer-operations?)]
+    ["Untabify"                   tjf:edit/untabify            :enable (tjf:flags/enable-modify-region?)]
+    ["---" nil :visible t :enable nil]
+    ["DOS 2 Unix"                 tjf:edit/dos2unix            :enable (tjf:flags/enable-buffer-operations?)])
+  )
 
 (defun tjf:edit/align-columns (beg end)
   "Align columns in lines within the specified region (BEG to END)."
@@ -259,6 +242,11 @@
   (beginning-of-line)
   (kill-line 1))
 
+(defun tjf:edit/dos2unix ()
+  "Remove DOS file endings from buffer."
+  (interactive "*")
+  (call-process-region (point-min) (point-max) "dos2unix" t t))
+
 (defun tjf:edit/fill-skeleton (match-text replace-text)
   "Use MATCH-TEXT to fill REPLACE-TEXT into skeleton."
   (save-excursion
@@ -313,6 +301,38 @@
   (interactive "*")
   (if (looking-at-word-or-symbol)
       (delete-region (word-beginning-position) (word-end-position))))
+
+(defun tjf:edit/delete-whitespace-backward ()
+  "Delete whitespace from just prior to point to non-whitespace."
+  (let ((here (point))
+        (there nil))
+    (save-excursion
+      (skip-chars-backward "[:space:]")
+      (setq there (point))
+      (delete-region there here))))
+
+(defun tjf:edit/delete-whitespace-forward ()
+  "Delete whitespace from point to non-whitespace."
+  (interactive "*")
+  (if (looking-at "[[:space:]]")
+      (let ((here (point))
+            (there nil))
+        (save-excursion
+          (skip-chars-forward "[:space:]")
+          (setq there (point))
+          (delete-region here there)))))
+
+(defun tjf:edit/one-space ()
+  "Delete all whitesoace around ppint leaving just a single space."
+  (interactive "*")
+  (if (looking-at "[[:space:]]")
+      (progn
+        (tjf:edit/delete-whitespace-forward)
+        (backward-char)
+        (tjf:edit/delete-whitespace-backward)
+        (forward-char))
+    (message "!SPACE")
+    (insert-char ?\s)))
 
 (defun tjf:edit/downcase ()
   "Convert the word at current point or the selected region to lowercase."

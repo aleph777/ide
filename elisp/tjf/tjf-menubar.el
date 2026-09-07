@@ -43,10 +43,11 @@
 (require 'tjf-tools)
 (require 'tjf-view)
 (require 'undo-fu)
+
 ;;
 (defvar tjf:menubar/menu-help)
 (setq tjf:menubar/menu-help
-  '("Help"
+   '("Help"
     ["Apropos..."                apropos            :active t :key-sequence nil]
     ["Where is..."               where-is           :active t :key-sequence [C-h w]]
     ["Describe Key..."           describe-key       :active t :key-sequence [C-h k]]
@@ -57,36 +58,35 @@
     ["Info"                      info               :active t :key-sequence [C-h i]]
     ["Unix Manpage…"             manual-entry       :active t :key-sequence nil]
     ["---" nil :visible t :enable nil]
-    ["Feature?..." tjf:menu-bar/feature :active t]
+    ["Feature?..." tjf:flags/is-feature? :active t]
     ))
 
 (defvar tjf:menubar/menu-encoding)
 (setq tjf:menubar/menu-encoding
-  '("Encoding"
-    ["UTF-8 Unix"    (set-coding 'utf-8-unix) :style toggle :selected (tjf:flags/is-utf-8-unix?) :enable (tjf:flags/enable-encoding?)]
-    ["UTF-8 Windows" (set-coding 'utf-8-dos)  :style toggle :selected (tjf:flags/is-utf-8-dos?)  :enable (tjf:flags/enable-encoding?)]
-    ["UTF-8 Mac"     (set-coding 'utf-8-mac)  :style toggle :selected (tjf:flags/is-utf-8-mac?)  :enable (tjf:flags/enable-encoding?)]
-    ["---" nil :visible t :enable nil]
-    ["UTF-8 With BOM Unix"    (set-coding 'utf-8-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-8-bom-unix?) :enable (tjf:flags/enable-encoding?)]
-    ["UTF-8 With BOM Windows" (set-coding 'utf-8-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-8-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
-    ["UTF-8 With BOM Mac"     (set-coding 'utf-8-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-8-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
-    ["---" nil :visible t :enable nil]
-    ["UCS-2 BE BOM Unix"    (set-coding 'utf-16be-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-16be-bom-unix?) :enable (tjf:flags/enable-encoding?)]
-    ["UCS-2 BE BOM Windows" (set-coding 'utf-16be-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-16be-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
-    ["UCS-2 BE BOM Mac"     (set-coding 'utf-16be-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-16be-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
-    ["---" nil :visible t :enable nil]
-    ["UCS-2 LE BOM Unix"    (set-coding 'utf-16le-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-16le-bom-unix?) :enable (tjf:flags/enable-encoding?)]
-    ["UCS-2 LE BOM Windows" (set-coding 'utf-16le-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-16le-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
-    ["UCS-2 LE BOM Mac"     (set-coding 'utf-16le-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-16le-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
-    ))
+      '("Encoding"
+        ["UTF-8 Unix"    (set-coding 'utf-8-unix) :style toggle :selected (tjf:flags/is-utf-8-unix?) :enable (tjf:flags/enable-encoding?)]
+        ["UTF-8 Windows" (set-coding 'utf-8-dos)  :style toggle :selected (tjf:flags/is-utf-8-dos?)  :enable (tjf:flags/enable-encoding?)]
+        ["UTF-8 Mac"     (set-coding 'utf-8-mac)  :style toggle :selected (tjf:flags/is-utf-8-mac?)  :enable (tjf:flags/enable-encoding?)]
+        ["---" nil :visible t :enable nil]
+        ["UTF-8 With BOM Unix"    (set-coding 'utf-8-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-8-bom-unix?) :enable (tjf:flags/enable-encoding?)]
+        ["UTF-8 With BOM Windows" (set-coding 'utf-8-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-8-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
+        ["UTF-8 With BOM Mac"     (set-coding 'utf-8-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-8-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
+        ["---" nil :visible t :enable nil]
+        ["UCS-2 BE BOM Unix"    (set-coding 'utf-16be-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-16be-bom-unix?) :enable (tjf:flags/enable-encoding?)]
+        ["UCS-2 BE BOM Windows" (set-coding 'utf-16be-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-16be-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
+        ["UCS-2 BE BOM Mac"     (set-coding 'utf-16be-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-16be-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
+        ["---"  nil :visible t :enable nil]
+        ["UCS-2 LE BOM Unix"    (set-coding 'utf-16le-with-signature-unix) :style toggle :selected (tjf:flags/is-utf-16le-bom-unix?) :enable (tjf:flags/enable-encoding?)]
+        ["UCS-2 LE BOM Windows" (set-coding 'utf-16le-with-signature-dos)  :style toggle :selected (tjf:flags/is-utf-16le-bom-dos?)  :enable (tjf:flags/enable-encoding?)]
+        ["UCS-2 LE BOM Mac"     (set-coding 'utf-16le-with-signature-mac)  :style toggle :selected (tjf:flags/is-utf-16le-bom-mac?)  :enable (tjf:flags/enable-encoding?)]
+        ))
 
 (defalias 'set-coding 'set-buffer-file-coding-system)
 
-(defun tjf:menu-bar/feature (feature)
-  "Show message indicating that FEATURE is a feature."
-  (interactive "sFeature: ")
-  (let ((feature-symbol (intern feature)))
-    (message "FEATURE: %s" (featurep feature-symbol))))
+(defun tjf:menubar/update ()
+  "Force update of stale menu-bar."
+  (interactive)
+  (menu-bar-update-buffers t))
 
 (defun tjf:menubar/config ()
   "Re-configure the global menubar."

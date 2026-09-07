@@ -40,18 +40,14 @@
   (require 'cape))
 
 ;;
-(defvar tjf:lisp/build-menu-text)
-(setq tjf:lisp/build-menu-text
-  '("Build"
-    ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
-    ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
-    ["---" nil :visible t :enable nil]
-    ["Byte Compile File..."      byte-compile-file]
-    ["Byte Recompile Directory" (byte-recompile-directory "." 0 t)]
-))
+(defconst tjf:lisp/imenu-generic-expression
+  '(("Functions etc." "^\\s-*(\\(cl-def\\(?:generic\\|ine-compiler-macro\\|m\\(?:acro\\|ethod\\)\\|subst\\|un\\)\\|def\\(?:advice\\|generic\\|ine-\\(?:advice\\|compil\\(?:ation-mode\\|er-macro\\)\\|derived-mode\\|g\\(?:\\(?:eneric\\|lobal\\(?:\\(?:ized\\)?-minor\\)\\)-mode\\)\\|inline\\|m\\(?:ethod-combination\\|inor-mode\\|odify-macro\\)\\|s\\(?:etf-expander\\|keleton\\)\\)\\|m\\(?:acro\\|ethod\\)\\|s\\(?:etf\\|ubst\\)\\|un\\*?\\)\\|ert-deftest\\)\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)
+ ("Variables" "^\\s-*(\\(def\\(?:c\\(?:onst\\(?:ant\\)?\\|ustom\\)\\|ine-symbol-macro\\|parameter\\)\\)\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)
+ ("Variables" "^\\s-*(defvar\\(?:-local\\)?\\s-+\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)[[:space:]\n]+[^)]" 1)
+ ("Types" "^\\s-*(\\(cl-def\\(?:struct\\|type\\)\\|def\\(?:class\\|face\\|group\\|ine-\\(?:condition\\|error\\|widget\\)\\|package\\|struct\\|t\\(?:\\(?:hem\\|yp\\)e\\)\\)\\)\\s-+'?\\(\\(?:\\sw\\|\\s_\\|\\\\.\\)+\\)" 2)))
 
-(defvar tjf:lisp/mode-menu-text)
-(setq tjf:lisp/mode-menu-text
+(defvar tjf:lisp/menu)
+(setq tjf:lisp/menu
   '("Lisp"
     ["Complete Symbol" completion-at-point :active t]
     ["---" nil :visible t :enable nil]
@@ -65,6 +61,16 @@
     ["---" nil :visible t :enable nil]
     ["Insert Skeleton" tjf:lisp/insert-skeleton :enable (buffer-file-name)]
     ))
+
+(defvar tjf:lisp/menu-build)
+(setq tjf:lisp/menu-build
+  '("Build"
+    ["Byte Compile This File" emacs-lisp-byte-compile          :enable (buffer-file-name)]
+    ["Byte Compile And Load"  emacs-lisp-byte-compile-and-load :enable (buffer-file-name)]
+    ["---" nil :visible t :enable nil]
+    ["Byte Compile File..."      byte-compile-file]
+    ["Byte Recompile Directory" (byte-recompile-directory "." 0 t)]
+))
 
 (defun tjf:lisp/byte-recompile ()
   "Recompile directory."
@@ -87,30 +93,32 @@
 
 (defun tjf:lisp/hook ()
   "Lisp mode hook function."
-  (setq-local completion-at-point-functions '(elisp-completion-at-point
-                                              cape-symbol
-                                              eglot-completion-at-point
-                                              cape-keyword
-                                              cape-dabbrev
-                                              cape-file
-                                              consult-history))
+  (setq-local completion-at-point-functions (list (cape-capf-super
+                                                   #'elisp-completion-at-point
+                                                   #'cape-elisp-symbol
+                                                   #'cape-keyword
+                                                   #'cape-dabbrev
+                                                   #'cape-file)))
   (imenu-add-to-menubar "Navigate"))
 
 (defun tjf:lisp/config ()
   "Lisp mode config function."
+  ;; (treesit-install-language-grammar 'elisp)
+
+  (define-key emacs-lisp-mode-map       [menu-bar] nil)
+  (define-key lisp-interaction-mode-map [menu-bar] nil)
   (define-key lisp-mode-map             [menu-bar] nil)
   (define-key lisp-mode-shared-map      [menu-bar] nil)
-  (define-key lisp-interaction-mode-map [menu-bar] nil)
-  (define-key emacs-lisp-mode-map       [menu-bar] nil)
   ;;
-  (message "Loading tjf-lisp...setting up minor mode menus...")
+  (easy-menu-define tjf-lisp-menu       lisp-interaction-mode-map "Lisp"  tjf:lisp/menu)
 
-  (easy-menu-define tjf:lisp/menu       emacs-lisp-mode-map       "Lisp"  tjf:lisp/mode-menu-text)
-  (easy-menu-define tjf:lisp/menu       lisp-interaction-mode-map "Lisp"  tjf:lisp/mode-menu-text)
-  (easy-menu-define tjf:lisp/build-menu emacs-lisp-mode-map       "Build" tjf:lisp/build-menu-text)
-  )
+  (easy-menu-define tjf-lisp-menu       emacs-lisp-mode-map  "Lisp"  tjf:lisp/menu)
+  (easy-menu-define tjf-lisp-build-menu emacs-lisp-mode-map  "Build" tjf:lisp/menu-build)
+
+  (setq lisp-imenu-generic-expression tjf:lisp/imenu-generic-expression))
 
 ;;
+(message "Loading tjf-lisp...setting up minor mode menus...")
 
 ;;
 (message "Loading tjf-lisp...done")

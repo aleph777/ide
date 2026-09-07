@@ -36,6 +36,7 @@
 (require 'tjf-color)
 (require 'tjf-flags)
 (require 'tjf-frame)
+(require 'tjf-macro)
 
 (eval-when-compile
   (require 'display-line-numbers)
@@ -57,6 +58,8 @@
     ["Which Function"        tjf:view/which-function-mode          :style toggle :selected (tjf:view/is-which-function-mode?)]
     ["Whitespace"            whitespace-mode                       :style toggle :selected whitespace-mode]
     ["Line Wrap"             visual-line-mode                      :style toggle :selected word-wrap]
+    ["---" nil :visible t :enable nil]
+    ["Force Window Update" tjf:menubar/update t]
     ["---" nil :visible t :enable nil]
     ["Local Clipboard" tjf:clipboard/view :enable (get-buffer tjf:clipboard/name)]
     ["---" nil :visible t :enable nil]
@@ -163,12 +166,11 @@
         (t                                   'fucked)))
 
 (defun tjf:view/get-desktop ()
-  "Call ‘cinnamon’ or ‘gnome-shell’ to retrieve GNOME version."
-  (let* ((cex "cinnamon-session")
-         (cin (shell-command-to-string (concat "which " cex))))
-    (unless (equal cin "")
-        (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string (concat cex " --version")))
-      (replace-regexp-in-string "[\t\n\r]+" "" (shell-command-to-string "gnome-shell --version")))))
+  "Retrieve Desktop version."
+  (if is-wsl?
+      (get-shell-output "/usr/libexec/wsl-pro-service version 2>>/dev/null")
+    (or (get-shell-output "gnome-shell --version")
+        (get-shell-output "cinnamon-session --version"))))
 
 (defun tjf:view/diminish ()
   "Clear minor mode lighters from modeline."
@@ -188,9 +190,7 @@
 
 (defun tjf:view/get-os-version ()
   "Call ‘lsb_release’ to retrieve OS version."
-  (replace-regexp-in-string
-   "Description:\\|[\t\n\r]+" ""
-   (shell-command-to-string "lsb_release -d")))
+  (get-shell-output "lsb_release -ds"))
 
 (defun tjf:view/is-line-numbers-absolute? ()
   "Return boolean t if ‘display-line-numbers’ absolute mode is chosen."

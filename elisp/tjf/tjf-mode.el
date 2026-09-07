@@ -32,30 +32,33 @@
 ;;; Code:
 
 (message "Loading tjf-mode...")
-
 ;;
 (defconst tjf:mode/bibtext-mode    (list 'bibtex-mode 'bibtex-style-mode))
-(defconst tjf:mode/c-mode          (list 'c-ts-mode 'c-mode))
+(defconst tjf:mode/c-mode          (list 'c-ts-mode 'c-mode 'objc-mode))
 (defconst tjf:mode/c++-mode        (list 'c++-ts-mode 'c++-mode))
 (defconst tjf:mode/cmake-mode      (list 'cmake-ts-mode 'cmake-mode))
 (defconst tjf:mode/conf-mode       (list 'conf-mode 'conf-colon-mode 'conf-desktop-mode 'conf-javaprop-mode 'conf-ppd-mode
-                                          'conf-space-mode 'conf-toml-mode 'conf-unix-mode 'conf-windows-mode 'conf-xdefaults-mode))
+                                    'conf-space-mode 'conf-toml-mode 'conf-unix-mode 'conf-windows-mode 'conf-xdefaults-mode))
+(defconst tjf:mode/csharp-mode     (list 'csharp-ts-mode 'csharp-mode))
+(defconst tjf:mode/css-mode        (list 'css-ts-mode 'css-mode))
+(defconst tjf:mode/erlang-mode     (list 'erlang-ts-mode 'erlang-mode))
 (defconst tjf:mode/fortran-mode    (list 'fortran-mode 'f90-mode))
 (defconst tjf:mode/go-mode         (list 'go-ts-mode 'go-mode))
 (defconst tjf:mode/help-mode       (list 'help-mode 'helpful-mode))
 (defconst tjf:mode/html-mode       (list 'html-ts-mode 'html-mode 'html-helper-mode 'nxhtml-mode))
 (defconst tjf:mode/java-mode       (list 'java-ts-mode 'java-mode))
-(defconst tjf:mode/javascript-mode (list 'espresso-mode 'javascript-mode 'js-mode 'js2-mode))
+(defconst tjf:mode/javascript-mode (list 'espresso-mode 'javascript-mode 'js-ts-mode 'js-mode 'js2-mode))
 (defconst tjf:mode/json-mode       (list 'json-ts-mode 'json-mode))
 (defconst tjf:mode/julia-mode      (list 'julia-ts-mode 'julia-mode))
-(defconst tjf:mode/make-mode       (list 'makefile-automake-mode 'makefile-bsdmake-mode 'makefile-gmake-mode
-                                          'makefile-imake-mode 'makefile-makepp-mode 'makefile-mode))
+(defconst tjf:mode/log-mode        (list 'log-view-mode 'change-log-mode))
+(defconst tjf:mode/lua-mode        (list 'lua-ts-mode 'lua-mode))
+(defconst tjf:mode/make-mode       (list 'makefile-automake-mode 'makefile-bsdmake-mode 'makefile-gmake-mode 'makefile-imake-mode 'makefile-makepp-mode 'makefile-mode))
 (defconst tjf:mode/package-mode    (list 'package-menu-mode 'paradox-menu-mode))
 (defconst tjf:mode/perl-mode       (list 'cperl-mode 'perl-ts-mode 'perl-mode))
 (defconst tjf:mode/python-mode     (list 'python-ts-mode 'python-mode))
 (defconst tjf:mode/ruby-mode       (list 'ruby-ts-mode 'ruby-mode))
 (defconst tjf:mode/rust-mode       (list 'rust-ts-mode 'rust-mode))
-(defconst tjf:mode/sh-script-mode  (list 'sh-mode 'shell-script-mode))
+(defconst tjf:mode/sh-script-mode  (list 'sh-mode 'shell-script-mode 'bash-ts-mode 'bash-mode))
 (defconst tjf:mode/shell-mode      (list 'eshell-mode 'shell-mode))
 (defconst tjf:mode/text-mode       (list 'text-mode 'indented-text-mode))
 (defconst tjf:mode/xml-mode        (list 'nxml-mode 'xml-mode))
@@ -65,6 +68,7 @@
 ;;
 (defconst tjf:mode/enriched-mode (list 'fundamental-mode 'indented-text-mode 'text-mode))
 (defconst tjf:mode/space-mode    (list 'fundamental-mode 'indented-text-mode 'text-mode))
+
 
 (defun tjf:mode/is-mode? (mode-or-list)
   "Check if ‘MODE-OR-LIST’ is ‘major-mode’."

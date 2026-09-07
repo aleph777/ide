@@ -32,24 +32,49 @@
 ;;; Code:
 
 (message "Loading tjf-cpp...")
-(require 'c-ts-mode)
+(require 'eglot)
 (require 'tjf-cc)
+(require 'tjf-macro)
 
 ;;
+(defvar tjf:cpp/g++)
+(setq   tjf:cpp/g++ (first-executable '("g++-16"
+                                        "g++-15"
+                                        "g++-14"
+                                        "g++-13"
+                                        "g++-12"
+                                        "g++-11"
+                                        "g++")))
+
+(defvar tjf:cpp/clang++)
+(setq   tjf:cpp/clang++ (first-executable '("clang++-22"
+                                            "clang++-21"
+                                            "clang++-20"
+                                            "clang++-19"
+                                            "clang++-18"
+                                            "clang++-17"
+                                            "clang++")))
+
 (defvar tjf:cpp/compiler)
-(setq   tjf:cpp/compiler "g++-14")
+(setq   tjf:cpp/compiler (or tjf:cpp/g++ tjf:cpp/clang++))
 
 (defvar tjf:cpp/debug)
 (setq   tjf:cpp/debug "-g")
 
-(defvar tjf:cpp/dialect)
-(setq   tjf:cpp/dialect "c++23")
+(defvar tjf:cpp/cxxstd)
+(setq   tjf:cpp/cxxstd "c++23")
 
-(defvar tjf:cpp/includes)
-(setq   tjf:cpp/includes "-I.")
+(defvar tjf:cpp/oflags)
+(setq   tjf:cpp/oflags "-fPIC")
+
+(defvar tjf:cpp/iflags)
+(setq   tjf:cpp/iflags "-I.")
+
+(defvar tjf:cpp/wflags)
+(setq   tjf:cpp/wflags "-Wall -Wextra -Wpedantic -Werror")
 
 (defvar tjf:cpp/ldflags)
-(setq   tjf:cpp/ldflags "-lm -pthread")
+(setq   tjf:cpp/ldflags "-pie -lm -pthread")
 
 (defvar tjf:cpp/makeflags)
 (setq   tjf:cpp/makeflags "")
@@ -57,61 +82,60 @@
 (defvar tjf:cpp/optimization)
 (setq   tjf:cpp/optimization "-O")
 
-(defvar tjf:cpp/std)
-(setq   tjf:cpp/std (concat "-std=" tjf:cpp/dialect))
-
-(defvar tjf:cpp/warnings)
-(setq   tjf:cpp/warnings "-Wall -Wextra -Wconversion")
-
-(defvar tjf:cpp/build-menu)
-(setq tjf:cpp/build-menu
-  '("Build"
-    ["Syntax  Check"   tjf:cpp/syntax-check    t]
-    ["Static Analysis" tjf:cpp/check           t]
-    ["Compile File"    tjf:cpp/compile-file    t]
-    ["Compile Program" tjf:cpp/compile-program t]
-    ["---" nil :visible t :enable nil]
-    ["Make"    tjf:cpp/make t]
-    ["Make..." compile      t]
-    ["---" nil :visible t :enable nil]
-    ["Set Compiler..."           tjf:cpp/set-compiler     t]
-    ["Set Debug Level..."        tjf:cpp/set-debug        t]
-    ["Set Dialect..."            tjf:cpp/set-dialect      t]
-    ["Set Include Flags"...      tjf:cpp/set-includes     t]
-    ["Set Linker Flags..."       tjf:cpp/set-ldflags      t]
-    ["Set Optimization Level..." tjf:cpp/set-optimization t]
-    ["Set Warning Flags..."      tjf:cpp/set-warnings     t]
-    ["---" nil :visible t :enable nil]
-    ["Set Make Flags..." tjf:cpp/set-makeflags t]
-    ))
+(defvar tjf:cpp/menu-build)
+(setq tjf:cpp/menu-build
+      '("Build"
+        ["Syntax  Check"   tjf:cpp/syntax-check    t]
+        ["Static Analysis" tjf:cpp/check           t]
+        ["Compile File"    tjf:cpp/compile-file    t]
+        ["Compile Program" tjf:cpp/compile-program t]
+        ["---" nil :visible t :enable nil]
+        ["Make"    tjf:cpp/make t]
+        ["Make..." compile      t]
+        ["---" nil :visible t :enable nil]
+        ["Set Compiler..."           tjf:cpp/set-compiler     t]
+        ["Set Dialect..."            tjf:cpp/set-dialect      t]
+        ["Set Include Flags..."      tjf:cpp/set-includes     t]
+        ["Set Warning Flags..."      tjf:cpp/set-warnings     t]
+        ["Set Other Flags..."        tjf:cpp/set-others       t]
+        ["Set Linker Flags..."       tjf:cpp/set-ldflags      t]
+        ["Set Debug Level..."        tjf:cpp/set-debug        t]
+        ["Set Optimization Level..." tjf:cpp/set-optimization t]
+        ["---" nil :visible t :enable nil]
+        ["Set Make Flags..." tjf:cpp/set-makeflags t]
+        ))
 
 (defun tjf:cpp/check ()
   "Run ‘cppcheck’ on buffer."
   (interactive)
   (let ((tmp (join "/" `("/tmp" ,(basename))))
         (buf (current-buffer))
-        (std (concat "-" tjf:cpp/std)))
-    (if (string-equal tjf:cpp/dialect "c++2a")
-        (setq std "--std=c++20"))
+        (std  (if tjf:cpp/cxxstd (concat "--std=" tjf:cpp/cxxstd))))
     (with-temp-buffer
       (insert-buffer-substring buf)
       (write-file tmp)
       (compile (join " " `("cppcheck" "--language=c++" ,std ,tmp))))))
 
+(defun tjf:cpp/syntax-check ()
+  "Compile current buffer (syntax check only)."
+  (interactive)
+  (let ((std  (if tjf:cpp/cxxstd (concat "--std=" tjf:cpp/cxxstd)))
+        (flags (join " " `( ,tjf:cpp/iflags ,tjf:cpp/wflags))))
+    (compile (join " " `(,tjf:cpp/compiler ,std ,flags "-fsyntax-only" ,(basename))))))
+
 (defun tjf:cpp/compile-file ()
   "Compile current buffer."
   (interactive)
-  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
+  (let ((std (if tjf:cpp/cxxstd (concat "--std=" tjf:cpp/cxxstd)))
+        (flags (join " " `( ,tjf:cpp/iflags ,tjf:cpp/wflags ,tjf:cpp/oflags))))
+    (compile (join " " `(,tjf:cpp/compiler ,std ,flags ,(basename) "-o" ,(concat (basename-no-ext) ".o"))))))
 
 (defun tjf:cpp/compile-program ()
   "Compile and link the current file."
   (interactive)
-  ;; (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
-  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) ,tjf:cpp/ldflags ,(basename) "-o" ,(basename-no-ext)))))
-
-(defun tjf:cpp/flags ()
-  "Return the compiler flags."
-  (join " " `(,tjf:cpp/std ,tjf:cpp/includes ,tjf:cpp/debug ,tjf:cpp/optimization ,tjf:cpp/warnings)))
+  (let ((std (if tjf:cpp/cxxstd (concat "--std=" tjf:cpp/cxxstd)))
+        (flags (join " " `( ,tjf:cpp/iflags ,tjf:cpp/wflags ,tjf:cpp/oflags "-fPIE" ,tjf:cpp/ldflags))))
+    (compile (join " " `(,tjf:cpp/compiler ,std ,flags ,(basename) "-o" ,(basename-no-ext))))))
 
 (defun tjf:cpp/make ()
   "Build using make."
@@ -135,16 +159,16 @@
 (defun tjf:cpp/set-dialect ()
   "Allow the user to set ‘DIALECT’."
   (interactive)
-  (let ((dialect (read-shell-command "Dialect: " tjf:cpp/dialect)))
-    (setq tjf:cpp/dialect dialect)
-    (setq tjf:cpp/std (concat "-std=" dialect))))
+  (let ((dialect (read-shell-command "Dialect: " tjf:cpp/cxxstd)))
+    (unless (string= dialect tjf:cpp/cxxstd)
+      (setq tjf:cpp/cxxstd dialect))))
 
 (defun tjf:cpp/set-includes ()
   "Allow the user to set -I flags."
   (interactive)
-  (let ((flags (read-shell-command "Include flags: " tjf:cpp/includes)))
-    (unless (string= flags tjf:cpp/includes)
-      (setq tjf:cpp/includes flags))))
+  (let ((flags (read-shell-command "Include flags: " tjf:cpp/iflags)))
+    (unless (string= flags tjf:cpp/iflags)
+      (setq tjf:cpp/iflags flags))))
 
 (defun tjf:cpp/set-ldflags ()
   "Allow the user to set ‘LDFLAGS’."
@@ -167,46 +191,60 @@
     (unless (string= optimization tjf:cpp/optimization)
       (setq tjf:cpp/optimization optimization))))
 
+(defun tjf:cpp/set-others ()
+  "Allow the user to set ‘OTHERS’."
+  (interactive)
+  (let ((others (read-shell-command "Others: " tjf:cpp/oflags)))
+    (unless (string= others tjf:cpp/oflags)
+      (setq tjf:cpp/oflags others))))
+
 (defun tjf:cpp/set-warnings ()
   "Allow the user to set ‘WARNINGS’."
   (interactive)
-  (let ((warnings (read-shell-command "Warnings: " tjf:cpp/warnings)))
-    (unless (string= warnings tjf:cpp/warnings)
-      (setq tjf:cpp/warnings warnings))))
+  (let ((warnings (read-shell-command "Warnings: " tjf:cpp/wflags)))
+    (unless (string= warnings tjf:cpp/wflags)
+      (setq tjf:cpp/wflags warnings))))
 
 (defun tjf:cpp/config ()
   "C++ mode config function."
-  (treesit-install-language-grammar 'c)
+  ;; (treesit-install-language-grammar 'cpp)
 
-  (define-key c++-ts-mode-map [menu-bar]    nil)
-  (define-key c++-ts-mode-map [(control d)] nil)
-  (define-key c++-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
+  (if (eq major-mode 'c++-ts-mode)
+      (progn
+        (define-key c++-ts-mode-map [menu-bar]    nil)
+        (define-key c++-ts-mode-map [(control d)] nil)
+        (define-key c++-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
 
-  (easy-menu-define tjf-cpp-menu   c++-ts-mode-map "C++" (append '("C++") tjf:cc/menu-text))
-  (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build" tjf:cpp/build-menu))
+        (easy-menu-define tjf-cpp-menu   c++-ts-mode-map "C++" (append '("C++") tjf:cc/menu))
+        (easy-menu-define cpp-build-menu c++-ts-mode-map "C++ Build"            tjf:cpp/menu-build))
+
+    (define-key c++-mode-map [menu-bar]    nil)
+    (define-key c++-mode-map [(control d)] nil)
+    (define-key c++-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
+
+    (easy-menu-define tjf-cpp-menu   c++-mode-map "C++" (append '("C++") tjf:cc/menu))
+    (easy-menu-define cpp-build-menu c++-mode-map "C++ Build"            tjf:cpp/menu-build)))
 
 (defun tjf:cpp/hook ()
   "C++ mode hook function."
-  (setq-local completion-at-point-functions (cons #'eglot-completion-at-point completion-at-point-functions))
-  (setq-local completion-at-point-functions (cons #'clang-capf                completion-at-point-functions))
+  (setq-local completion-at-point-functions
+              (list (cape-capf-super
+                     #'eglot-completion-at-point
+                     #'cape-keyword
+                     #'cape-dabbrev
+                     #'cape-file)))
 
   (abbrev-mode   -1)
-  ;; (flymake-mode  -1)
-  (flycheck-mode  1)
+  (flycheck-mode -1)
 
-  (remove-hook 'flymake-diagnostic-functions 'flymake-cc)
+  (flymake-mode)
 
-  (setq flycheck-gcc-language-standard   tjf:cpp/dialect)
-  (setq flycheck-clang-language-standard tjf:cpp/dialect)
+  ;; (setq flycheck-gcc-language-standard   tjf:cpp/dialect)
+  ;; (setq flycheck-clang-language-standard tjf:cpp/dialect)
 
   (eglot-ensure)
 
   (imenu-add-to-menubar "Navigate"))
-
-(defun tjf:cpp/syntax-check ()
-  "Compile current buffer (syntax check only)."
-  (interactive)
-  (compile (join " " `(,tjf:cpp/compiler ,(tjf:cpp/flags) "-fsyntax-only" ,(basename)))))
 
 ;;
 (message "Loading tjf-cpp...done")

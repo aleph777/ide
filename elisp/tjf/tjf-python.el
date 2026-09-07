@@ -31,12 +31,28 @@
 
 ;;; Code:
 
-(message "Loading tjf-python...")
-(require 'python-ts-mode)
-(require 'flycheck)
+(require 'python)
+;; (require 'flycheck)
+;; (require 'smartparens-python)
 (require 'tjf-edit)
 
-;;
+(message "Loading tjf-python...")
+
+(defvar tjf:python/coding)
+(setq   tjf:python/coding "# -*-coding: utf-8-*- ; -*-Python-*-")
+
+(defvar tjf:python/shebang)
+(setq   tjf:python/shebang (concat "#!/usr/bin/env -S python3 " tjf:python/coding))
+
+(defvar tjf:python/me)
+(setq   tjf:python/me "__me__ = os.path.basename(__file__)")
+
+(defvar tjf:python/module-template)
+(setq   tjf:python/module-template (concat tjf:user/dir-elisp "templates/python-module-header-work.py"))
+
+(defvar tjf:python/script-template)
+(setq   tjf:python/script-template (concat tjf:user/dir-elisp "templates/python-script-header-work.py"))
+
 (defvar tjf:python/menu)
 (setq tjf:python/menu
   '("Python"
@@ -64,31 +80,21 @@
     ["---" nil :visible t :enable nil]
     ["Check file"      python-check          :help "Check file for errors"]
     ["Help on symbol"  python-eldoc-at-point :help "Get help on symbol at point"]
-    ["Complete symbol" completion-at-point   :help "Complete symbol before point"]))
-
-(defvar tjf:python/shebang)
-(setq   tjf:python/shebang "#!/usr/bin/env -S python3  # -*-coding: utf-8-*- ; -*-Python-*-")
-
-(defvar tjf:python/me)
-(setq   tjf:python/me "__me__ = os.path.basename(__file__)")
-
-(defvar tjf:python/module-template)
-(setq   tjf:python/module-template (concat tjf:user/dir-elisp "templates/python-module-header-work.py"))
-
-(defvar tjf:python/script-template)
-(setq   tjf:python/script-template (concat tjf:user/dir-elisp "templates/python-script-header-work.py"))
+    ["Complete symbol" completion-at-point   :help "Complete symbol before point"]
+    ["---" nil :visible t :enable nil]
+    ["Check Mode Readiness" tjf:python/ready]
+))
 
 (defun tjf:python/config ()
   "Python mode config function."
-  (treesit-install-language-grammar 'python)
-  (easy-menu-define tjf:python/menu python-mode-map "Python Mode menu" tjf:python/menu))
+  (easy-menu-define tjf-python-menu python-mode-map "Python" tjf:python/menu)
+)
 
 ;;;###autoload
 (defun tjf:python/convert ()
   "Convert the current file into Python."
   (interactive "*")
-  (goto-char (point-min))
-  (insert (concat tjf:python/shebang "\n\n"))
+  (insert (concat tjf:python/coding "\n\n"))
   (set-auto-mode))
 
 (defun tjf:python/hook ()
@@ -100,7 +106,7 @@
                                               cape-dabbrev
                                               cape-file
                                               cape-history))
-  (flycheck-mode -1)
+  ;; (flycheck-mode -1)
   (setq-local imenu-create-index-function #'python-imenu-create-index) ;; only language where this is defined
   (imenu-add-to-menubar "Navigate"))
 
@@ -144,6 +150,10 @@
   (interactive "*")
   (insert-file-contents (concat tjf:user/dir-elisp "templates/python-script-usage.py")))
 
+(defun tjf:python/ready ()
+  "Display readiness of treesitter."
+  (interactive)
+  (message (if (treesit-ready-p 'python) "Ready" "NOT ready")))
 
 ;;
 (message "Loading tjf-python...done")

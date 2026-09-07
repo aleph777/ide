@@ -116,7 +116,7 @@
 
 (defun tjf:powerline/fill (face reserve)
     "Return empty space using FACE and leaving f(RESERVE) space on the right."
-	(let* ((scale 0.675)
+	(let* ((scale 0.9)
 		   (space (* (- reserve 3) scale)))
       (propertize " "
                   'display `((space :align-to (- (+ right right-fringe right-margin) ,space)))
@@ -157,8 +157,6 @@
      (powerline-process face1)
      (powerline-narrow face1 'l)
      (powerline-raw " " face1)
-     (when (and (boundp 'flycheck-mode) flycheck-mode)
-       (powerline-raw flycheck-mode-line face1))
      (funcall separator-left face1 face2))))
 
 

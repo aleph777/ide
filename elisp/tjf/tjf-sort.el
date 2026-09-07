@@ -48,29 +48,43 @@
 (defvar tjf:sort/menu)
 (setq tjf:sort/menu
   '("Sort"
-    ["Sort Buffer"                   (tjf:sort/do         1) :key-sequence nil]
-    ["Sort Buffer Numeric"           (tjf:sort/do-numeric 1) :key-sequence nil]
-    ["Sort Buffer by Fields"         (tjf:sort/do         0) :key-sequence nil]
-    ["Sort Buffer by Fields Numeric" (tjf:sort/do-numeric 0) :key-sequence nil]
-    ["Reverse Buffer"                (reverse-region      (point-min) (point-max)) :key-sequence nil]
+    ["Sort"                   tjf:sort/alpha         :key-sequence nil :enable '(tjf:flags/is-rw?)]
+    ["Sort by Fields"         tjf:sort/alpha-field   :key-sequence nil :enable '(tjf:flags/is-rw?)]
     ["---" nil :visible t :enable nil]
-    ["Sort Region"                   (tjf:sort/do         1) :active mark-active :key-sequence nil]
-    ["Sort Region Numeric"           (tjf:sort/do-numeric 1) :active mark-active :key-sequence nil]
-    ["Sort Region by Fields"         (tjf:sort/do         0) :active mark-active :key-sequence nil]
-    ["Sort Region by Fields Numeric" (tjf:sort/do-numeric 0) :active mark-active :key-sequence nil]
-    ["Reverse Region"                reverse-region          :active mark-active :key-sequence nil]))
+    ["Sort Numeric"           tjf:sort/numeric       :key-sequence nil :enable '(tjf:flags/is-rw?)]
+    ["Sort by Fields Numeric" tjf:sort/numeric-field :key-sequence nil :enable '(tjf:flags/is-rw?)]
+    ["---" nil :visible t :enable nil]
+    ["Reverse"                tjf:sort/reverse       :key-sequence nil :enable '(tjf:flags/is-rw?)]))
 
-(defun tjf:sort/do (field)
-  "Sort by FIELD."
+(defun tjf:sort/reverse ()
+  "Reverse lines in buffer or region"
   (interactive "*")
   (with-buffer-or-region (beg end)
-                         (tjf:sort/fields field beg end)))
+                         (reverse-region beg end)))
 
-(defun tjf:sort/do-numeric (field)
-  "Sort numerically by FIELD."
+(defun tjf:sort/alpha ()
+  "Sort alpabetically."
   (interactive "*")
   (with-buffer-or-region (beg end)
-                         (tjf:sort/fields-numeric field beg end)))
+                         (tjf:sort/fields 1 beg end)))
+
+(defun tjf:sort/alpha-field ()
+  "Sort alpabetically by field."
+  (interactive "*")
+  (with-buffer-or-region (beg end)
+                         (tjf:sort/fields 0 beg end)))
+
+(defun tjf:sort/numeric ()
+  "Sort numerically by field."
+  (interactive "*")
+  (with-buffer-or-region (beg end)
+                         (tjf:sort/fields-numeric 1 beg end)))
+
+(defun tjf:sort/numeric-field ()
+  "Sort numerically by field."
+  (interactive "*")
+  (with-buffer-or-region (beg end)
+                         (tjf:sort/fields-numeric 0 beg end)))
 
 (defun tjf:sort/fields (field beg end)
   "Sort lines in region lexicographically by the ARGth field of each

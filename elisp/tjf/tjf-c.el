@@ -35,10 +35,19 @@
 (require 'c-ts-mode)
 (require 'flycheck)
 (require 'tjf-cc)
-
+(require 'tjf-macro)
 ;;
+(defvar tjf:c/gcc)
+(setq   tjf:c/gcc tjf:cc/gcc)
+
+(defvar tjf:c/clang)
+(setq   tjf:c/clang tjf:cc/clang)
+
+(defvar tjf:c/cflags)
+(setq   tjf:c/cflags "-fPIC")
+
 (defvar tjf:c/compiler)
-(setq   tjf:c/compiler "gcc-14")
+(setq   tjf:c/compiler (or tjf:c/gcc tjf:c/clang))
 
 (defvar tjf:c/debug)
 (setq   tjf:c/debug "-g")
@@ -50,7 +59,7 @@
 (setq   tjf:c/includes "-I.")
 
 (defvar tjf:c/ldflags)
-(setq   tjf:c/ldflags "-lm -pthread")
+(setq   tjf:c/ldflags "-pie -lm -pthread")
 
 (defvar tjf:c/makeflags)
 (setq   tjf:c/makeflags "")
@@ -62,25 +71,27 @@
 (setq   tjf:c/std (concat "-std=" tjf:c/dialect))
 
 (defvar tjf:c/warnings)
-(defvar tjf:c/warnings "-Wall -Wextra -Wconversion")
+(defvar tjf:c/warnings "-Wall -Wextra -Wpedantic -Werror")
 
-(defvar tjf:c/build-menu
+(defvar tjf:c/menu-build)
+(setq tjf:c/menu-build
   '("Build"
     ["Syntax  Check"   tjf:c/syntax-check    t]
     ["Static Analysis" tjf:c/check           t]
     ["Compile File"    tjf:c/compile-file    t]
     ["Compile Program" tjf:c/compile-program t]
-    "---"
+    ["---" :visible t :enable nil]
     ["Make"    tjf:c/make t]
     ["Make..." compile    t]
-    "---"
+    ["---" :visible t :enable nil]
     ["Set Compiler..."           tjf:c/set-compiler     t]
     ["Set Debug Level..."        tjf:c/set-debug        t]
     ["Set Dialect..."            tjf:c/set-dialect      t]
+    ["Set Compiler Flags..."     tjf:c/set-cflags       t]
     ["Set Linker Flags..."       tjf:c/set-ldflags      t]
     ["Set Optimization Level..." tjf:c/set-optimization t]
     ["Set Warning Flags..."      tjf:c/set-warnings     t]
-    "---"
+    ["---" :visible t :enable nil]
     ["Set Make Flags..." tjf:c/set-makeflags t]
     ))
 
@@ -102,12 +113,12 @@
 (defun tjf:c/compile-file ()
   "Compile the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
+  (compile (join " " `(,tjf:c/compiler ,tjf:c/cflags ,(tjf:c/flags) ,(basename) "-o" ,(concat (basename-no-ext) ".o")))))
 
 (defun tjf:c/compile-program ()
   "Compile and link the current file."
   (interactive)
-  (compile (join " " `(,tjf:c/compiler ,(tjf:c/flags) ,(basename) "-o" ,(basename-no-ext)))))
+  (compile (join " " `(,tjf:c/compiler "-fPIE" ,tjf:c/ldflags ,(tjf:c/flags) ,(basename) "-o" ,(basename-no-ext)))))
 
 (defun tjf:c/make ()
   "Make the current program."
@@ -149,6 +160,13 @@
     (unless (string= flags tjf:c/ldflags)
       (setq tjf:c/ldflags flags))))
 
+(defun tjf:c/set-cflags ()
+  "Allow the user to set ‘CFLAGS’."
+  (interactive)
+  (let ((flags (read-shell-command "Linker Flags: " tjf:c/cflags)))
+    (unless (string= flags tjf:c/cflags)
+      (setq tjf:c/cflags flags))))
+
 (defun tjf:c/set-makeflags ()
   "Allow the user to set ‘MAKE’ flags."
   (interactive)
@@ -172,21 +190,25 @@
 
 (defun tjf:c/config ()
   "C mode config function."
-  (treesit-install-language-grammar 'c)
+  ;; (treesit-install-language-grammar 'c)
 
   (define-key c-ts-mode-map [menu-bar]    nil)
   (define-key c-ts-mode-map [(control d)] nil)
   (define-key c-ts-mode-map [(control super \;)] 'tjf:cc/insert-docstring)
 
-  (easy-menu-define tjf-cpp-menu   c-ts-mode-map "C" (append '("C") tjf:cc/menu-text))
-  (easy-menu-define cpp-build-menu c-ts-mode-map "C Build" tjf:c/build-menu))
+  (easy-menu-define tjf-cpp-menu   c-ts-mode-map "C" (append '("C") tjf:cc/menu))
+  (easy-menu-define cpp-build-menu c-ts-mode-map "C Build" tjf:c/menu-build))
 
 (defun tjf:c/hook ()
   "C mode hook function."
   (setq-local comment-start "// ")
   (setq-local comment-end "")
-  (setq-local completion-at-point-functions (cons #'eglot-completion-at-point completion-at-point-functions))
-  (setq-local completion-at-point-functions (cons #'clang-capf                completion-at-point-functions))
+  (setq-local completion-at-point-functions
+              (list (cape-capf-super
+                     #'eglot-completion-at-point
+                     #'cape-keyword
+                     #'cape-dabbrev
+                     #'cape-file)))
 
   (abbrev-mode   -1)
   ;; (flymake-mode  -1)
