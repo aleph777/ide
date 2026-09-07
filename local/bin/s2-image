@@ -1,0 +1,29 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::Basename;
+use v5.10;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my @suffixes = qw(gif jpg png svg);
+
+foreach my $suffix (@suffixes)
+{
+  my $or = join '','(?:',join('|',grep !/$suffix/,@suffixes),')';
+
+  $or =~ s/jpg/jpe?g/;
+
+  my $rx = qr/$or/;
+
+  my @files = qx(pfind . -suffix $suffix);
+
+  chomp @files;
+
+  foreach my $file (@files)
+  {
+    my ($type) = qx(file -i "$file");
+
+    print $type if $type =~ /$rx/;
+  }
+}

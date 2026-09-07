@@ -1,0 +1,29 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use v5.10;
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+chdir "$ENV{HOME}/code/Core";
+
+my $rx_0_255   = qr/(?:\d|[1-9]\d|1\d\d|2(?:[0-4]\d|5[0-5]))/;
+my $rx_ip_addr = qr/(?:$rx_0_255\.){3}$rx_0_255/o;
+
+my @pom_xml = qx(find . -name "pom.xml");
+
+chomp @pom_xml;
+
+my @url = grep !/$rx_ip_addr/o,qx(perl -Mv5.10 -e 'while (<>) { say \$1 if /<url>(https[^<]+)/; }' @pom_xml);
+
+my @package_lock_json = qx(find . -name \"package-lock*.json\");
+
+chomp @package_lock_json;
+
+my @npm = qx(perl -Mv5.10 -e 'while (<>) { say \$1  if /resolved.+(https[^"]+)/; }' @package_lock_json);
+
+chomp @npm;
+
+my %dir = map { $_ => 1 } map { /(https:\/\/[^\/]+)/ } @npm;
+
+push @url,keys %dir;

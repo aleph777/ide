@@ -1,0 +1,31 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::IO;
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my @files = qx(s2-find @ARGV);
+
+chomp @files;
+
+my %type;
+
+foreach my $file (@files)
+{
+  # $file =~ s/^$file$/'$file'/;
+
+  my ($response) = qx(file -i '$file');
+
+  chomp $response;
+
+  my $type = (split '=',$response)[-1];
+
+  say "$type: $file" if $response !~ /(?:us-ascii|utf-8)/;
+
+  $type{$type} = 0 unless exists $type{$type};
+
+  ++$type{$type};
+}
+say join ': ',$_,$type{$_} for sort keys %type;

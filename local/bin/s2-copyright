@@ -1,0 +1,189 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+# use Modern::Perl;
+# use utf8;
+# # use charnames ':full';
+# use charnames qq(:full);
+
+# my $text = 'Copyright 2014–present Olivier Lalonde';
+
+# # Match specific en dash by hex code
+# if ($text =~ /(2014\x{2013}present)/) {
+#     print "Found en dash $1 (hex)\n";
+# }
+
+# # Match specific en dash by name
+# if ($text =~ /\N{EN DASH}/) {
+#     print "Found en dash (name)\n";
+# }
+
+# # Match any kind of dash punctuation (includes hyphen, em dash, etc.)
+# if ($text =~ /2014[\p{Pd}]present/) {
+#     print "Found a dash character\n";
+# }
+# my $char = '–'; # En dash
+# my $code = ord($char);
+# my $name = charnames::viacode($code);
+# exit;
+
+use Modern::Perl;
+use File::IO;
+
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+sub get_regexp
+{
+  my $opt  = shift;
+  my $list = shift;
+
+  return join ' ',$opt,join('',"'(?:",join('|',@{$list}),")'");
+}
+
+push @ARGV,'.' unless @ARGV > 0;
+
+my @no_name = qw(adminconsole [Dd]ebugger history LICENSE metadata opensource [Ss]im stage/dpkg\. [Tt]est yocto);
+my $no_name = get_regexp('-no-name',\@no_name);
+
+my @no_suffix = qw([[:xdigit:]]+\.js map md pdf);
+my $no_suffix = get_regexp('-no-suffix',\@no_suffix);
+
+my @cmd_base = qw(pfind -no-dir -no-zero-size -no-bin -no-link);
+
+my @cmd = (@cmd_base,$no_name,$no_suffix,@ARGV);
+
+my @files = qx(@cmd);
+
+chomp @files;
+
+my @skip_line = ('sed -e',
+                 'copyright$',
+                 'copyright(?:\.|--)',
+                 'copyright (?:and|interest|law|notice)',
+                 '--COPYRIGHT--,BSD',
+                 'COPYRIGHT HOLDERS?',
+                 'copyrighted by',
+                 'copyRightToLeft',
+                 'CopyrightUserC',
+                 'HeaderCopyright',
+                 'vnd\.debian\.copyright'
+                );
+
+# -no-name '(?:adminconsole|[Dd]ebugger|history|metadata|opensource|[Ss]im|stage/dpkg\.|[Tt]est|yocto)'
+
+my $skip_line = join '|',@skip_line;
+
+my $rx_skip_line = qr/(?:$skip_line)/o;
+
+# copyright: '© 2013–2025 Denis Pushkarev
+
+my $rx_copyright_1  = qr/copyright ?\(c\)/i;
+my $rx_copyright_2  = qr/\(c\) copyright/i;
+my $rx_copyright_3  = qr/copyright=©/i;
+my $rx_copyright_4  = qr/copyright [12]/i;
+my $rx_copyright_5  = qr/COPYRIGHT: /;
+my $rx_copyright_6  = qr/COPYRIGHT ?: [12]/i;
+my $rx_copyright_7  = qr/Copyright �/i;
+my $rx_copyright_8  = qr/Copyright : .[^,]+,/i;
+my $rx_copyright_9  = qr/Copyright &copy; [12]/i;
+my $rx_copyright_10 = qr/copyright: '©/i;
+
+my $rx_year = qr/[12]\d{3}/;
+my $rx_term = qr/(?:$rx_year)(?: *[\p{Pd}] *(?:$rx_year|present))?/o;
+
+my $rx_holder = qr/[^\d][^.,"]+/;
+
+my %holder;
+
+binmode STDOUT, ':utf8';
+
+my $io = File::IO->new(chomp => 1, utf8 => 1);
+
+my ($term, $holder);
+
+foreach my $file (@files)
+{
+  $io->get(path => $file);
+
+  foreach my $line (@{$io->contents})
+  {
+    next unless $line =~ /copyright/i;
+    next if     length $line > 255 || $line =~ /$rx_skip_line/o;
+
+    if (($term,$holder) = $line =~ /$rx_copyright_1 ($rx_term),? ($rx_holder)[.,"]?/o)
+    {
+      say '===== C1 ===== ',"($line)";
+      say '===== C1 ===== ',"($term,$holder)";
+    }
+    elsif (($holder) = $line =~ /$rx_copyright_1 ($rx_holder)/o)
+    {
+      say '===== C1a ===== ',"($file)";
+      say '===== C1a ===== ',"($line)\n";
+      say '===== C1a ===== ',"($holder)";
+    }
+    elsif (($term,$holder) = $line =~ /$rx_copyright_2 ($rx_term) ($rx_holder)/o)
+    {
+      say '===== C2 ===== ',"($line)";
+      say '===== C2 ===== ',"($term,$holder)";
+    }
+    elsif ($line =~ /$rx_copyright_3/o)
+    {
+      say '===== C3 ===== ',"($file)";
+      say '===== C3 ===== ',"($line)";
+    }
+    elsif ($line =~ /$rx_copyright_4/o)
+    {
+      ($term,$holder) = $line =~ /copyright ($rx_term),? ($rx_holder)/io;
+
+      if (defined $term && $holder)
+      {
+        say '===== C4 ===== ',"($line)";
+        say '===== C4 ===== ',"($term,$holder)";
+      }
+    }
+    elsif ($line =~ /$rx_copyright_5/o)
+    {
+      say '===== C5 ===== ',"($file)";
+      say '===== C5 ===== ',"($line)";
+    }
+    elsif ($line =~ /$rx_copyright_6/o)
+    {
+      say '===== C6 ===== ',"($file)";
+      say '===== C6 ===== ',"($line)";
+    }
+    elsif ($line =~ /$rx_copyright_7/o)
+    {
+      say '===== C7 ===== ',"($file)";
+      say '===== C7 ===== ',"($line)";
+    }
+    elsif ($line =~ /$rx_copyright_8/o)
+    {
+      say '===== C8 ===== ',"($file)";
+      say '===== C8 ===== ',"($line)";
+    }
+    elsif ($line =~ /$rx_copyright_9/o)
+    {
+      say '===== C9 ===== ',"($file)";
+      say '===== C9 ===== ',"($line)";
+    }
+    elsif ($line =~ /$rx_copyright_10/o)
+    {
+      say '===== C10 ===== ',"($file)";
+      say '===== C10 ===== ',"($line)";
+    }
+    elsif ($line =~ /copyright ([^<]+) /io)
+    {
+      say '===== C00 ===== ',"($file)";
+      say '===== C00 ===== ',"($line)";
+
+      say '===== C00 ===== ',$1;
+    }
+    else
+    {
+      say '===== UNKNOWN ===== ',"$file: $line";
+    }
+    next unless defined $holder;
+    $holder{$holder} = [] unless exists $holder{$holder};
+    last;
+  }
+}

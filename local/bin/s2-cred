@@ -1,0 +1,47 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::S2;
+use File::Core;
+use File::Tmp;
+
+use Cwd qw(abs_path);
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+use constant _THING_ => qq('gxvcQmSwgRyUML8W9Kukbmg7JBllXtT5qgKle1uWFJFo9TksWjcGANAPHLkwTLbn');
+use constant _NPROC_ => substr((qx(nproc)),0,-1);
+
+my @files;
+
+my @dirs = grep { -d } @ARGV ? @ARGV : '.';
+
+my $sudo;
+
+if (grep /Core/,map { abs_path $_ }  @dirs)
+{
+  $sudo = 0;
+
+  my $f = File::Core->new(contents => \@files,dirs => \@dirs);
+
+  $f->get(charset => 'text');
+}
+else
+{
+  $sudo = 1;
+
+  my $f = File::S2->new(contents => \@files,dirs => \@dirs);
+
+  $f->get(sudo => 1,charset => 'text');
+}
+my $tmp = File::Tmp->new(newline => 1,suffix => 'cred.s2');
+
+$tmp->put(contents => \@files);
+
+my $c = join ' ','cat',$tmp->path;
+my $x = join ' ','xargs -P',_NPROC_,'-n 1';
+my $g = join ' ',$sudo ? 'sudo' : (),'grep -Hn',_THING_;
+
+my $cmd = "$c | $x $g";
+
+system "$cmd";

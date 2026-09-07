@@ -1,0 +1,43 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use File::Basename;
+use v5.10;
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my $rx_suffix = qr/\.[^.\/]+$/;
+
+sub get_suffix
+{
+  return (fileparse(basename(shift),qr/$rx_suffix/o))[2];
+}
+
+my @files = qx(find . -type f);
+
+chomp @files;
+
+my %suffix;
+
+@files = grep { !-z $_ } grep /$rx_suffix/o,@files;
+
+foreach my $file (@files)
+{
+  my $suffix = substr(get_suffix($file),1);
+
+  next if exists $suffix{$suffix};
+
+  my ($type) = qx(file -i "$file");
+
+  chomp $type;
+
+  $suffix{$suffix} = $type =~ /text/;
+}
+my $ts = join '','(?:',join('|',sort grep { $suffix{$_} } keys %suffix),')';
+
+foreach my $file (grep /$ts$/o,@files)
+{
+  my @grep = qx(grep -in 'password *=[^=]' "$file");
+
+  print "$file:$_" for @grep;
+}

@@ -1,0 +1,45 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::S2;
+use File::Core;
+use Util::Find;
+use Util::GetOpt;
+
+use Cwd qw(abs_path);
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my @dirs = grep { -d } @ARGV ? @ARGV : '.';
+
+my $sudo;
+
+my @files;
+
+if (grep /Core/,map { abs_path $_ }  @dirs)
+{
+  $sudo = 0;
+
+  my $f = File::Core->new(contents => \@files,dirs => \@dirs);
+
+  $f->get(charset => 'text');
+}
+else
+{
+  $sudo = 1;
+
+  my $f = File::S2->new(contents => \@files,dirs => \@dirs);
+
+  $f->get(sudo => 1,charset => 'text');
+}
+if (grep { !-d } @ARGV)
+{
+  my %option;
+
+  my $f = Util::Find->new(  option => \%option);
+  my $o = Util::GetOpt->new(option => \%option);
+
+  $o->get(args1 => $f->args1, args2 => $f->args1,bare1 => $f->bare1, bare2 => $f->bare1,group => 'cilv');
+  $f->get(contents => \@files,useFind => 0);
+}
+say $_ for @files;

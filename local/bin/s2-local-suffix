@@ -1,0 +1,46 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::Basename;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my $rx_suffix = qr/\.[^.\/]+$/;
+
+sub get_suffix
+{
+  return (fileparse(basename(shift),qr/$rx_suffix/o))[2];
+}
+
+my @dirs = grep { -d } @ARGV ? @ARGV : '.';
+
+my @files = qx(sudo find @dirs -name "*.*");
+
+chomp @files;
+
+my %suffix = map { get_suffix($_) => 1 } grep /$rx_suffix/o,@files;
+
+my %sftype;
+
+foreach my $suffix (sort keys %suffix)
+{
+  my @files = qx(sudo find @dirs -name '*$suffix');
+
+  chomp @files;
+
+  foreach my $file (@files)
+  {
+    my ($ftype)         = qx(sudo file -i "$file");
+    my ($xxx,$charset) = split ': ',$ftype;
+
+    chomp $charset;
+
+    die "$file: ($ftype)" unless defined $ftype;
+
+    $sftype{$suffix}{$charset} = 1 unless exists $sftype{$suffix}{$charset};
+  }
+}
+foreach  my $suffix (sort keys %sftype)
+{
+  say sprintf('%-22s | %s',$suffix,$_ ) for sort keys %{$sftype{$suffix}};
+}

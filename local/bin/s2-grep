@@ -1,0 +1,59 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::Tmp;
+use Util::Find;
+use Util::GetOpt;
+
+use Cwd qw(abs_path);
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my %option;
+
+my $f = Util::Find->new(  option => \%option);
+my $o = Util::GetOpt->new(option => \%option);
+
+push @{$f->args1},qw(m A B C);
+push @{$f->bare1},qw(l);
+
+# not everything will be implemented
+#
+$o->get(args1 => $f->args1, args2 => $f->args1,bare1 => $f->bare1, bare2 => $f->bare1,group => 'cilv');
+
+my $grep_opts = '-PHn';
+
+if (exists $option{'l'})
+{
+  $grep_opts = '-Pl';
+}
+elsif (exists $option{'c'})
+{
+  $grep_opts = '-Pc';
+}
+else
+{
+  $grep_opts = join ' ',$grep_opts,join(' ',map { "-$_" } grep { exists $option{$_} } qw(i v));
+  $grep_opts = join ' ',$grep_opts,map { "-$_ $option{$_}" } grep { exists $option{$_} } qw(m A B C);
+}
+my $thing = shift @ARGV;
+
+my @dirs  = grep { -d } @ARGV ? @ARGV : '.';
+
+my $sudo = grep !/Core/,map { abs_path $_ } @dirs;
+my $tmp  = File::Tmp->new(newline => 1,suffix => 'grep.s2');
+
+my @files = qx(s2-find @dirs);
+
+chomp @files;
+
+$f->get(contents => \@files,useFind => 0);
+
+$tmp->put(contents => \@files);
+
+my $c = join ' ','cat',$tmp->path;
+my $g = join ' ',$sudo ? 'sudo' : (),"grep $grep_opts '$thing'";
+
+my $cmd = "$c | xargs $g";
+
+system "$cmd";

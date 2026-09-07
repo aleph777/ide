@@ -1,0 +1,46 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::IO;
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my $dir = join '/',$ENV{HOME},'code/Core';
+
+chdir $dir;
+
+my @files = qx(s2-find . -suffix sh);
+
+chomp @files;
+
+my $io = File::IO->new(chomp => 1);
+
+my %shell;
+
+foreach my $file (@files)
+{
+  my @text;
+
+  $io->get(path => $file, contents => \@text);
+
+  my $shell = $text[0];
+
+  $shell =~ s/\s+$//;
+  $shell =~ s/^#!\s+/#!/;
+
+  $shell = 'NONE' unless $shell =~ /^#!/;
+
+  say 'ASH:  ',$file if $shell =~ m=^#!/bin/ash=;
+  say 'TCSH: ',$file if $shell =~ m=^#!/bin/tcsh=;
+
+  if (exists $shell{$shell})
+  {
+    ++$shell{$shell};
+  }
+  else
+  {
+    $shell{$shell} = 1;
+  }
+}
+say join ': ',$_,$shell{$_} for sort { $shell{$b} <=> $shell{$a} } keys %shell;

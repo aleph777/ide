@@ -1,0 +1,18 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::IO;
+use charnames ':full';
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my $i = 0;
+
+binmode STDOUT, ':utf8';
+
+open my $fh, '<:encoding(UTF-8)', $ARGV[0] or die $!;
+
+say say join(': ',$_,charnames::viacode(ord($_))),(/\p{Pd}/ ? ' -- is a DASH' : ' -- is not a DASH') while <$fh>;
+
+close $fh;

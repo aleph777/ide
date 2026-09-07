@@ -1,0 +1,32 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+use Modern::Perl;
+use File::IO;
+use strict;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my $io = File::IO->new(chomp => 1);
+
+my @files = qx(pfind @ARGV);
+
+chomp @files;
+
+foreach my $file (@files)
+{
+  $io->get(path => $file);
+
+  my $i = 0;
+  foreach my $line (@{$io->contents})
+  {
+    ++$i;
+
+    my $len = length $line;
+
+    if ($len > 10000)
+    {
+      say "$len: file";
+      last;
+    }
+  }
+}
