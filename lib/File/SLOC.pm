@@ -1,6 +1,6 @@
 # File::SLOC --- Provides a SLOC object based on sloccount -*-Perl-*-
 
-#         Copyright © 2015-2025 Tom Fontaine
+#         Copyright © 2015-2026 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   17-Apr-2015

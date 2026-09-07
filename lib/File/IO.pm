@@ -1,6 +1,6 @@
 # File::IO --- Provides a file object   -*-Perl-*-
 
-#         Copyright © 2007-2025 Tom Fontaine
+#         Copyright © 2007-2026 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   31-Jan-2007
@@ -184,6 +184,8 @@ sub get
     else
     {
       my $mode = '<';
+
+      $mode .= ':encoding(UTF-8)' if $utf8;
 
       if(substr($filename,0,1) eq '|')
       {
