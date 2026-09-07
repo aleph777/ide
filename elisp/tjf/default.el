@@ -34,16 +34,45 @@
 (message "Configuring from default.el...")
 
 ;;
-(enable-theme 'fontaine)
+(enable-theme 'honeywell)
+
+(defvar ligature-def '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                       ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                       "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                       "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                       "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                       "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                       "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                       "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                       ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                       "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                       "##" "#(" "#?" "#_" "%%" ".=" ".-" ".." ".?" "+>" "++" "?:"
+                       "?=" "?." "??" ";;" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)"
+                       "\\\\" "://"))
+
+(defun message--with-timestamp (format-string &rest args)
+  "Add FORMAT-STRING timestamp (using ARGS) to `*Messages*' buffer."
+  (when (and (>   (length  format-string) 0)
+             (not (string= format-string " ")))
+    (let ((deactivate-mark nil))
+      (save-mark-and-excursion
+        (with-current-buffer "*Messages*"
+          (let ((inhibit-read-only t))
+            (goto-char (point-max))
+            (when (not (bolp)) (newline))
+            (insert (format-time-string "[%T.%3N] " (current-time)))))))))
+
+(advice-add 'message :before 'message--with-timestamp)
 
 (defvar tjf:default/package-initialize nil
   "Package initialization guard.")
 
 (unless tjf:default/package-initialize
   (package-initialize)
-  (add-to-list 'package-archives '("melpa"        . "https://melpa.org/packages/")       t)
-  (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-  (add-to-list 'package-archives '("non-gnu"      . "https://elpa.nongnu.org/nongnu/")   t)
+  (setq package-archives (list))
+  (add-to-list 'package-archives '("melpa"        . "https://melpa.org/packages/")                 t)
+  (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/")          t)
+  ;; (add-to-list 'package-archives '("non-gnu"      . "https://elpa.nongnu.org/nongnu/")   t)
 
   (setq package-archive-priorities '(("gnu"				.	10)
 									 ("non-gnu"			.	20)
@@ -145,7 +174,8 @@
   (fast-but-imprecise-scrolling    t)
   (font-lock-maximum-decoration    t)
   (fill-column                     8192)
-  (gnutls-min-prime-bits           80)
+  (gnutls-min-prime-bits           nil)
+  (imenu-sort-function             'imenu--sort-by-name)
   (initial-scratch-message         nil)
   (line-spacing                    0)
   (mode-require-final-newline      nil)
@@ -179,7 +209,92 @@
 (use-package tjf-menubar          :ensure nil :demand
   ;; :hook
   :config
+  (defun menu-bar-update-buffers (&optional force)
+    "If user discards the Buffers item, play along."
+    (and (lookup-key (current-global-map) [menu-bar buffer])
+         (or force (frame-or-buffer-changed-p))
+         (let ((buffers (buffer-list))
+	           frames buffers-menu)
+           ;; Ignore the initial frame if present.  It can happen if
+           ;; Emacs was started as a daemon.  (bug#53740)
+           (dolist (frame (frame-list))
+             (unless (frame-initial-p frame)
+               (push frame frames)))
+	       ;; Make the menu of buffers proper.
+	       (setq buffers-menu
+                 (let ((i 0)
+		               (limit (and (integerp buffers-menu-max-size)
+				                   (> buffers-menu-max-size 1)
+				                   buffers-menu-max-size))
+                       alist)
+		           ;; Put into each element of buffer-list
+		           ;; the name for actual display,
+		           ;; perhaps truncated in the middle.
+                   (while buffers
+                     (let* ((buf (pop buffers))
+                            (name (buffer-name buf)))
+                       (unless (eq ?\s (aref name 0))
+                         (push (menu-bar-update-buffers-1
+                                (cons buf
+				                      (if (and (integerp buffers-menu-buffer-name-length)
+					                           (> (length name) buffers-menu-buffer-name-length))
+					                      (concat
+					                       (substring
+					                        name 0 (/ buffers-menu-buffer-name-length 2))
+					                       "..."
+					                       (substring
+					                        name (- (/ buffers-menu-buffer-name-length 2))))
+				                        name)
+                                      ))
+                               alist)
+                         ;; If requested, list only the N most recently
+                         ;; selected buffers.
+                         (when (eql limit (setq i (1+ i)))
+                           (setq buffers nil)))))
+		           (list (menu-bar-buffer-vector alist))))
+
+	       ;; Make a Frames menu if we have more than one frame.
+	       (when (cdr frames)
+	         (let* ((frames-vec (make-vector (length frames) nil))
+                    (frames-menu
+                     (cons 'keymap
+                           (list "Select Frame" frames-vec)))
+                    (i 0))
+               (dolist (frame frames)
+                 (aset frames-vec i
+                       (cons
+                        (frame-parameter frame 'name)
+                        (lambda ()
+                          (interactive) (menu-bar-select-frame frame))))
+                 (setq i (1+ i)))
+	           ;; Put it after the normal buffers
+	           (setq buffers-menu
+		             (nconc buffers-menu
+			                `((frames-separator "--")
+			                  (frames menu-item "Frames" ,frames-menu))))))
+
+	       ;; Add in some normal commands at the end of the menu.
+	       (setq buffers-menu
+	             (nconc buffers-menu menu-bar-buffers-menu-command-entries))
+
+           ;; We used to "(define-key (current-global-map) [menu-bar buffer]"
+           ;; but that did not do the right thing when the [menu-bar buffer]
+           ;; entry above had been moved (e.g. to a parent keymap).
+	       (define-key global-map [menu-bar buffer] (cons "Window" global-buffers-menu-map)))))
   (tjf:menubar/config))
+
+(use-package msb                  :ensure nil :commands msb-mode
+  :custom
+  (msb-display-invisible-buffers-p t)
+  (msb-display-most-recently-used  10)
+  (msb-max-menu-items              nil)
+  :config
+  (message "Config msb...done") )
+
+(use-package tjf-msb              :ensure nil
+  :config
+  (setq msb-menu-cond tjf:msb/menus)
+  (msb-mode))
 
 (use-package tjf-tabline          :ensure nil
   :custom
@@ -218,14 +333,16 @@
   (message "Config git-gutter...done"))
 
 (use-package indent-bars          :ensure t   :after treesit
+  :vc (:url "https://github.com/jdtsmith/indent-bars.git")
   :custom
   (indent-bars-treesit-support nil)
   (indent-bars-treesit-ignore-blank-lines-types '("module"))
   ;; Add other languages as needed
   (indent-bars-treesit-scope
-   '((c    function_definition for_statement if_statement while_statement)
-	 (c++  function_definition class_definition for_statement if_statement while_statement)
-	 (perl function_definition class_definition for_statement if_statement while_statement)
+   '((c      function_definition                  for_statement if_statement while_statement)
+	 (c++    function_definition class_definition for_statement if_statement while_statement)
+	 (perl   function_definition class_definition for_statement if_statement while_statement)
+     (python function_definition class_definition for_statement if_statement while_statement with_statement)
 	 ))
   :hook
   (paragraph-indent-text-mode . indent-bars-mode)
@@ -246,7 +363,7 @@
 
 (use-package powerline            :ensure t
   :custom
-   (powerline-gui-use-vcs-glyph t)
+  (powerline-gui-use-vcs-glyph t)
   :config
   (message "powerline config...done"))
 
@@ -314,17 +431,19 @@
 				 (corfu-mode            1)
 				 (corfu-popupinfo-mode -1)
 				 (corfu-history-mode    1)))
-				 
+
   ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
   ;; :hook ((prog-mode . corfu-mode)
   ;;        (shell-mode . corfu-mode)
   ;;        (eshell-mode . corfu-mode))
 
-  :init
-  ;; (defvar corfu-mode--set-explicitly)
-  ;; Enable optional extension modes:
   :config
   (message "Config corfu...done"))
+
+(use-package corfu-prescient     :ensure t   :after prescient
+  :config
+  (corfu-prescient-mode +1)
+  (message "Config corfu-prescient...done"))
 
 (use-package consult-eglot        :ensure t   :after eglot :disabled
   :config
@@ -375,21 +494,10 @@
   (eglot-managed-mode . (lambda () (eglot-inlay-hints-mode -1)))
   :config
   (add-to-list 'eglot-server-programs '((perl-ts-mode cperl-mode) . ("pls")))
-  (add-to-list 'eglot-server-programs '((c-ts-mode cc-mode) .
-                                        ("clangd"
-                                         "-j=8"
-                                         "--compile-commands-dir=~/ide/cpp"
-                                         "--log=error"
-                                         "--malloc-trim"
-                                         "--background-index"
-                                         "--clang-tidy"
-                                         "--completion-style=detailed"
-                                         "--pch-storage=memory"
-                                         "--header-insertion=iwyu"
-                                         "--header-insertion-decorators=0")))
   (message "Config eglot...done"))
 
-(use-package kind-icon            :ensure t   :after marginalia
+(use-package kind-icon            :ensure nil :after marginalia
+  ;; :vc (:url "https://github.com/jdtsmith/kind-icon.git")
   :if
   (display-graphic-p)
   :config
@@ -433,18 +541,22 @@
 
 (use-package prescient            :ensure t   :after vertico
   :custom
-  (prescient-history-length           1000)
-  (vertico-prescient-enable-filtering t)
+  (prescient-history-length 1000)
   :config
   (prescient-persist-mode +1)
-  (corfu-prescient-mode   +1)
-  (vertico-prescient-mode +1)
   (message "Config prescient...done"))
 
 (use-package vertico              :ensure t   :after cape
   :config
   (vertico-mode 1)
   (message "Config vertico...done"))
+
+(use-package vertico-prescient     :ensure t   :after prescient
+  :custom
+  (vertico-prescient-enable-filtering t)
+  :config
+  (vertico-prescient-mode +1)
+  (message "Config vertico-prescient...done"))
 
 ;; ================================= TJF =========================================
 
@@ -468,7 +580,7 @@
   :config
   (tjf:frame/config))
 
-(use-package tjf-lisp             :ensure nil
+(use-package tjf-lisp             :ensure nil :demand
   :init
   (message "tjf-lisp[1] init!!!!!")
   :hook
@@ -733,8 +845,8 @@
 
 (use-package blamer               :ensure t
   :custom
- (blamer-avatar-folder      "~/.config/emacs/blamer/avatars/")
- (blamer-smart-background-p nil)
+  (blamer-avatar-folder      "~/.config/emacs/blamer/avatars/")
+  (blamer-smart-background-p nil)
   :config
   (global-blamer-mode -1)
   (message "Config blamer...done"))
@@ -777,8 +889,8 @@
        (`interrupted " -")
        (`suspicious '(propertize " ?" 'face 'warning)))))
   :config
-  ;; Report Eglot's LSP diagnostics through Flycheck
-  (flycheck-eglot-mode 1))
+  (flycheck-eglot-mode 1) ;; Report Eglot's LSP diagnostics through Flycheck
+  (message "Somebody loaded flycheck!!!"))
 
 (use-package flymake              :ensure nil :commands flymake-mode
   :hook
@@ -914,15 +1026,52 @@
   :config
   (message "Config treemacs-magit...done"))
 
-(use-package treesit-auto         :ensure t
+(use-package treesit              :ensure nil :demand
+  :config
+  ;; Emacs 31 Configuration Example
+  (setq treesit-auto-install-grammar 'always)
+  (setq treesit-enabled-modes        t))
+
+(use-package treesit-auto         :ensure t   :after treesit
   :preface
   (defvar treesit-auto-mode--set-explicitly nil)
   :custom
-  (treesit-auto-install t)
+  (treesit-auto-install-all t)
   :config
+  (unless (treesit-ready-p 'bash)
+    (treesit-install-language-grammar 'bash))
+  (unless (treesit-ready-p 'c)
+    (treesit-install-language-grammar 'c))
+  (unless (treesit-ready-p 'cpp)
+    (treesit-install-language-grammar 'c))
+  (unless (treesit-ready-p 'perl)
+    (treesit-install-language-grammar 'perl))
+  (unless (treesit-ready-p 'python)
+    (treesit-install-language-grammar 'python))
   (setq treesit-font-lock-level 4)
   (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  (global-treesit-auto-mode 1)
+  (message "Config treesit-auto...done"))
+
+;; Commands for enabling treesit-fold:
+
+;; treesit-fold-mode                   enable treesit-fold-mode in the current buffer.
+;; global-treesit-fold-mode            enable treesit-fold-mode whenever tree-sitter is turned on and the major mode is supported by treesit-fold.
+;; treesit-fold-indicators-mode        enable treesit-fold with indicators in the current buffer. See plugins section.
+;; global-treesit-fold-indicators-mode enable treesit-fold with indicators globally. See plugins section.
+;; treesit-fold-line-comment-mode      enable line comment folding.
+
+;;  treesit-fold-close            fold the current syntax node.
+;;  treesit-fold-open             open the outermost fold of the current syntax node. Keep the sub-folds close.
+;;  treesit-fold-open-recursively open all folds inside the current syntax node.
+;;  treesit-fold-close-all        close all foldable syntax nodes in the current buffer.
+;;  treesit-fold-open-all         open all folded syntax nodes in the current buffer.
+;;  treesit-fold-toggle           toggle the syntax node at `point'.
+
+(use-package treesit-fold         :ensure t   :commands (treesit-fold-mode global-treesit-fold-mode
+                                                                           treesit-fold-indicators-mode global-treesit-fold-indicators-mode
+                                                                           treesit-fold-line-comment-mode)
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold.git"))
 
 (use-package ws-butler            :ensure t
   :diminish ws-butler-mode
@@ -940,6 +1089,15 @@
   (python-mode . anaconda-mode)
   (python-mode . anaconda-eldoc-mode))
 
+(use-package awk-ts-mode          :ensure t   :commands awk-ts-mode)
+
+(use-package apparmor-mode        :ensure t   :commands apparmor-mode)
+
+(use-package bash-completion      :ensure t   :after shell
+  :config
+  (bash-completion-setup)
+  (message "Config bash-completion...done"))
+
 (use-package bazel                :ensure t   :commands bazel-mode
   :hook
   (bazel-mode . (lambda ()
@@ -947,11 +1105,6 @@
                               (cons #'bazel-completion-at-point completion-at-point-functions))))
   :config
   (message "Config bazel...done"))
-
-(use-package bash-completion      :ensure t   :after shell
-  :config
-  (bash-completion-setup)
-  (message "Config bash-completion...done"))
 
 (use-package c-ts-mode            :ensure nil :after cc-mode
   :config
@@ -998,6 +1151,11 @@
   (define-key cperl-mode-map "["        nil)
   (message "Config cperl-mode...done"))
 
+(use-package cmake-ts-mode         :ensure nil :commands (cmake-ts-mode cmake-mode)
+  :config
+  (message "Config cmake-ts-mode...done")
+  )
+
 (use-package cpp-auto-include     :ensure t   :after tjf-cpp
   :config
   (cpp-auto-include)
@@ -1008,19 +1166,20 @@
   (message "Config csharp-mode...done"))
 
 (use-package csv-mode             :ensure t :commands csv-mode
+  :vc (:url "https://github.com/emacsmirror/csv-mode.git")
   :init
   (defun csv-highlight (&optional separator)
     (interactive (list (when current-prefix-arg (read-char "Separator: "))))
     (font-lock-mode 1)
     (let* ((separator (or separator ?\,))
            (n (count-matches (string separator) (line-beginning-position) (line-end-position)))
-           (colors (loop for i from 0 to 1.0 by (/ 2.0 n)
-                         collect (apply 'color-rgb-to-hex
-                                        (color-hsl-to-rgb i 0.3 0.5)))))
-      (loop for i from 2 to n by 2
-            for c in colors
-            for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
-            do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
+           (colors (cl-loop for i from 0 to 1.0 by (/ 2.0 n)
+                            collect (apply 'color-rgb-to-hex
+                                           (color-hsl-to-rgb i 0.3 0.5)))))
+      (cl-loop for i from 2 to n by 2
+               for c in colors
+               for r = (format "^\\([^%c\n]+%c\\)\\{%d\\}" separator separator i)
+               do (font-lock-add-keywords nil `((,r (1 '(face (:foreground ,c)))))))))
   :hook
   (csv-mode . csv-guess-set-separator)
   (csv-mode . csv-highlight)
@@ -1035,25 +1194,47 @@
   :diminish face-remap-mode
   buffer-face-mode)
 
+(use-package go-ts-mode           :ensure nil :commands go-ts-mode)
+
 (use-package hideshow             :ensure nil :commands hs-minor-mode
   :diminish hs-minor-mode
   :hook
   (prog-mode-hook . hs-minor-mode))
+
+(use-package html-ts-mode         :ensure t   :commands html-ts-mode)
 
 (use-package jinx                 :ensure t   :commands jinx-mode
   :hook
   (markdown-mode              . jinx-mode)
   (paragraph-indent-text-mode . jinx-mode)
   ;; (text-mode                  . jinx-mode)
-)
+  )
 
-(use-package json-ts-mode         :ensure nil :commands json-ts-mode)
+(use-package java-ts-mode         :ensure nil :commands (java-ts-mode java-mode)
+  :config
+  (message "Config java-ts-mode...done")
+  )
+
+(use-package js-ts-mode           :ensure nil :commands js-ts-mode)
+
+(use-package json-ts-mode         :ensure nil :commands (json-ts-mode json-mode)
+  :config
+  (message "Config json-ts-mode...done")
+  )
+
+(use-package julia-ts-mode        :ensure t   :commands julia-ts-mode)
+
+(use-package kotlin-ts-mode       :ensure t   :commands kotlin-ts-mode)
+
+(use-package lua-ts-mode          :ensure nil :commands lua-ts-mode)
 
 (use-package make-mode            :ensure nil :commands makefile-gmake-mode
   :hook
   (makefile-gmake-mode . (lambda ()
                            (setq-local completion-at-point-functions
                                        (cons #'makefile-completions-at-point completion-at-point-functions)))))
+
+(use-package makefile-ts-mode     :ensure t   :commands makefile-ts-mode :disabled)
 
 (use-package magit                :ensure t   :commands magit-status)
 
@@ -1062,7 +1243,17 @@
   (markdown-mode . (lambda ()
                      (setq-local completion-at-point-functions (cons #'markdown-complete-at-point completion-at-point-functions)))))
 
-(use-package markdown-ts-mode     :ensure t   :commands markdown-ts-mode)
+(use-package markdown-ts-mode     :ensure t   :commands markdown-ts-mode :disabled
+  :hook
+  (markdown-ts-mode . (lambda ()
+                        (setq-local completion-at-point-functions (cons #'markdown-complete-at-point completion-at-point-functions)))))
+
+(use-package md-ts-mode           :ensure t   :commands (markdown-mode md-ts-mode markdown-ts-mode)
+  :hook
+  (md-ts-mode . (lambda ()
+                  (setq-local completion-at-point-functions (cons #'markdown-complete-at-point completion-at-point-functions))))
+  :config
+  (message "Config md-ts-mode...done"))
 
 (use-package modern-cpp-font-lock :ensure t   :after cc-mode :disabled
   :diminish modern-c++-font-lock-mode
@@ -1072,7 +1263,7 @@
   :config
   (message "Config modern-cpp-font-lock...done"))
 
-(use-package modern-sh            :ensure t
+(use-package modern-sh            :ensure t   :disabled
   :commands modern-sh-mode
   :hook
   (sh-mode . modern-sh-mode)
@@ -1083,12 +1274,16 @@
   :hook
   (org-mode . visual-line-mode))
 
+(use-package org-ts-mode          :ensure t   :commands org-ts-mode :disabled)
+
 (use-package paradox              :ensure t   :commands paradox-list-packages)
 
-(use-package perl-ts-mode         :ensure t   :commands perl-ts-mode)
+(use-package perl-ts-mode         :ensure t   :commands (perl-ts-mode cperl-mode perl-mode)
+  :config
+  (message "Config perl-ts-mode...done"))
 
 (use-package python               :ensure nil :commands python-mode :disabled
- :custom
+  :custom
   (python-indent-guess-indent-offset-verbose nil)
   :hook
   (python-mode . (lambda ()
@@ -1097,6 +1292,15 @@
 (use-package python-ts-mode       :ensure nil :commands python-ts-mode)
 
 (use-package rainbow-mode         :ensure nil :commands rainbow-mode)
+
+(use-package r-ts-mode            :ensure t   :commands r-ts-mode)
+
+(use-package ruby-ts-mode         :ensure nil :commands (ruby-ts-mode ruby-mode)
+  :config
+  (message "Config ruby-ts-mode...done")
+  )
+
+(use-package sql-ts-mode          :ensure t   :commands sql-ts-mode :disabled)
 
 (use-package tetris               :ensure nil :commands tetris
   :custom
@@ -1112,13 +1316,29 @@
 
 (use-package textsize             :ensure t   :commands textsize-mode)
 
+(use-package toml-ts-mode         :ensure t   :commands toml-ts-mode)
+
 (use-package tjf-c                :ensure nil :after tjf-cc
   :hook
   (c-ts-mode . tjf:c/hook)
   :config
   (tjf:c/config))
 
-(use-package tjf-cc               :ensure nil :after c-ts-mode)
+(use-package tjf-cc               :ensure nil :after c-ts-mode
+  :config
+  (add-to-list 'eglot-server-programs `((c-ts-mode c++-ts-mode c-mode c++-mode) .
+                                        (,tjf:cc/clangd
+                                         "-j=8"
+                                         "--compile-commands-dir=~/ide/cpp"
+                                         "--log=error"
+                                         "--malloc-trim"
+                                         "--background-index"
+                                         "--clang-tidy"
+                                         "--completion-style=detailed"
+                                         "--pch-storage=memory"
+                                         "--header-insertion=iwyu"
+                                         "--header-insertion-decorators=0")))
+  (message "Config tjf-cc...done"))
 
 (use-package tjf-clips            :ensure nil :after clips-mode :disabled
   :hook
@@ -1130,24 +1350,30 @@
   :config
   (tjf:cpp/config))
 
-(use-package tjf-csharp           :ensure nil :after csharp-mode
+(use-package tjf-csharp           :ensure nil :commands csharp-mode
   :hook
-  (csharp-mode 'tjf:csharp/setup))
+  (csharp-mode . tjf:csharp/setup))
 
-(use-package tjf-perl             :ensure nil :after perl-ts-mode
+(use-package tjf-grammar          :ensure nil :commands tjf:grammar/refresh-grammars)
+
+(use-package tjf-perl             :ensure nil :commands (perl-ts-mode tjf:perl/convert)
   :hook
-  (cperl-mode   . tjf:perl/hook)
   (perl-ts-mode . tjf:perl/hook)
   :config
-  (tjf:perl/config)
-  ;; (add-to-list 'eglot-server-programs '(cperl-mode . ("perl" "-MPerl::LanguageServer" "-e" "Perl::LanguageServer::run")))
-)
+  (tjf:perl/config))
 
-(use-package tjf-python           :ensure nil :after python
+(use-package tjf-python           :ensure nil :commands python
   :hook
   (python-mode . tjf:python/hook)
   :config
   (tjf:python/config))
+
+(use-package toml-ts-mode         :ensure nil :commands (toml-ts-mode toml-mode)
+  :config
+  (message "Config toml-ts-mode...done")
+  )
+
+(use-package typescript-ts-mode   :ensure t   :commands typescript-ts-mode)
 
 (use-package whitespace           :ensure nil :commands whitespace-mode
   :diminish whitespace-mode
@@ -1161,6 +1387,7 @@
 
 (use-package yaml-mode            :ensure t   :commands yaml-mode)
 
+(use-package yaml-ts-mode         :ensure nil :commands yaml-ts-mode)
 ;;
 (message "Configuring from default.el ...done")
 (emacs-init-time)
