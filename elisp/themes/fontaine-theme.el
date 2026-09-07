@@ -176,43 +176,6 @@
 ;; This face is used for the vertical divider between windows on text
 ;; terminals.
 
-;; Revision:    16-Nov-2016 added vhl/default-face
-;;              04-Jan-2017 added material colors
-;;              05-Jan-2017 converting from blue to Mint
-;;              25-Apr-2017 added flat  colors
-;;              19-Jun-2018 added multiple palettes
-;;              02-Apr-2019 changed font-family selection method
-;;                          added ‘Hack’ and made it the default font
-;;                          added ‘Source Code Pro’
-;;              04-Apr-2019 added ‘Cousine’
-;;                          added ‘CamingoCode’
-;;                          added ‘Fantasque’
-;;              09-Jun-2019 added ‘Nord’ colors
-;;                          added ‘Srcsery’ colors
-;;              09-Jul-2019 added ‘Victor’ font
-;;              21-Jan-2020 added ‘JetBrains’ font
-;;              28-Jan-2020 added ‘Iosevka’ and ‘IosevkaSlab’ font
-;;              23-Sep-2020 added ‘canva’ colors
-;;                          cleaned up mint definitions
-;;              05-Oct-2020 major overhaul
-;;              20-Oct-2020 added variable pitch fonts
-;;              26-Oct-2020 added ‘Segoe UI' font
-;;              14-Jan-2021 fixed copyright
-;;                          load colors programmatically
-;;                          rainbow-delimiters use wcag hue progression
-;;              09-Feb-2021 changed ‘variable-pitch’ font to Nimbus Sans
-;;                          fixed broken font lookups
-;;              29-Aug-2022 updated ‘sh-heredoc’ face
-;;              12-Sep-2022 added ‘fontaine/heredoc’
-;;              26-Oct-2022 added ‘eglot-highlight-symbol-face’
-;;              08-Jun-2023 added ‘blamer’ faces
-;;              09-Jun-2023 added ‘elpaca’ faces
-;;              10-Aug-2023 clean up
-;;              01-Jan-2024 added ‘Lilex’ font
-;;                          changed scrollbar colors
-;;                          Wayland adjustments
-;;
-
 ;;
 ;;; Code:
 (message "Loading fontaine-theme...")
@@ -240,7 +203,7 @@
 (let* ((theme/fixed-pitch-family    tjf:fonts/fixed)
        (theme/variable-pitch-family tjf:fonts/variable)
 
-       (theme/fixed-pitch-height    (if is-wsl? 112 184))
+       (theme/fixed-pitch-height    (if is-wsl? 192 176))
        (theme/variable-pitch-height (/ (* 3 theme/fixed-pitch-height) 4))
 
        (mint-y/green   "#8fa876")
@@ -360,7 +323,6 @@
        (theme/type              theme/fg-blue-dark)
        (theme/variable          theme/fg-blue-cyan)
        (theme/warning           theme/fg-red-yellow)
-
 
         ;; theme elements
 
