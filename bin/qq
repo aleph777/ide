@@ -1,0 +1,20 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+# =============================================================================
+#   Copyright © 2026 - 2026  Thomas Fontaine. All Rights Reserved.
+#
+#   Redistribution of this file, in original or modified form, without
+#   prior written consent is prohibited.
+#
+# -----------------------------------------------------------------------------
+#
+# =============================================================================
+
+use Modern::Perl;
+
+for (<>)
+{
+  chomp;
+
+  say join '','"',$_,'"';
+}

@@ -14,11 +14,40 @@ installPackage()
         if [[ "$?" == "0" ]]; then
             apt search $package | grep dev
         else
-            apt search $package
+            apt search $pa ckage
         fi
         exit 1
     fi
 }
+
+findPackage()
+{
+    local package=$1
+    local regexp=$2
+
+    local cmd="apt search ${package} 2>>/dev/null | grep '^[^\s]' | grep '${regexp}' | sort-revs"
+    local pkg=$($cmd)
+
+    echo "Found: $pkg"
+    exit 0
+}
+
+findPackage libgccjit '^libgccjit.+-dev'
+
+export LSB_CODENAME=$(lsb_release -cs | tr [:upper:] [:lower:])        # noble
+export LSB_DESCRIPTION=$(lsb_release -ds | tr [:upper:] [:lower:])     # ubuntu 24.04.4 lts
+export LSB_DISTRIBUTOR_ID=$(lsb_release -is | tr [:upper:] [:lower:])  # ubuntu
+export LSB_RELEASE=$(lsb_release -rs)                                  # 24.04
+export LSB_RELEASE_SHORT=$(echo $LSB_RELEASE | cut -d. -f1)            # 24
+export LSB_RELEASE_LONG=$(echo $LSB_DESCRIPTION | cut -d' ' -f2)       # 24.04.4
+
+# human friendly names
+#
+export OS_NAME=$LSB_CODENAME                       # noble
+export OS_DISTRO=$LSB_DISTRIBUTOR_ID               # ubuntu
+export OS_VERSION=$LSB_RELEASE_SHORT               # 24
+export OS_RELEASE=$LSB_RELEASE                     # 24.04
+export OS_DISTRO_VERSION=${OS_DISTRO}${OS_VERSION} # ubuntu24
 
 installPackage autoconf
 installPackage build-essential

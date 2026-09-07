@@ -1,0 +1,48 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+# =============================================================================
+#   Copyright © 2026 - 2026  Honeywell Technologies.
+#
+#   All Rights Reserved.
+#
+#   Redistribution of this file, in original or modified form, without
+#   prior written consent of Honeywell Technologies is prohibited.
+#
+# -----------------------------------------------------------------------------
+#
+# =============================================================================
+
+use Modern::Perl;
+use Text::Color;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my @cpp_info = qx(gcc -xc -E -v - < /dev/null 2>&1);
+
+my $flag;
+
+my @include_dirs;
+my @library_dirs;
+
+for (@cpp_info)
+{
+  $flag = 1 if !defined $flag && /^#include <...> search starts here:/;
+
+  if (defined $flag && $flag == 1)
+  {
+    push @include_dirs,$_ if /^ /;
+
+    $flag = 2 if /^End of search list/;
+  }
+  @library_dirs = split ':',(split '=',$_)[-1] if /^LIBRARY_PATH=/;
+}
+my $tc = Text::Color->new(bold => 1,underline => 1);
+
+chomp @include_dirs;
+chomp @library_dirs;
+
+$tc->put(cyan => 1,contents => ['INCLUDES:']);
+say $_ for @include_dirs;
+say '—' x 32;
+$tc->put(cyan => 1,contents => ['LIBRARIES:']);
+say $_ for @library_dirs;

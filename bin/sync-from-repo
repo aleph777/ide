@@ -1,0 +1,47 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+# =============================================================================
+#   Copyright © 2026 - 2026  Tom Fontaine.
+#
+#   All Rights Reserved.
+#
+#   Redistribution of this file, in original or modified form, without
+#   prior written consent of Honeywell Technologies is prohibited.
+#
+# -----------------------------------------------------------------------------
+#
+# =============================================================================
+use Modern::Perl;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+use Symbol qw(delete_package);
+
+chdir $ENV{HOME};
+
+my $dst = defined $ARGV[0] ? $ARGV[0] : 'ide/';
+
+$dst =~ s=/*$=/=;
+
+my $src = join '','shared/',$dst;
+
+system "rsync -av -s $src $dst";
+
+exit 1 unless $? == 0;
+{
+  my $cmd   = "pfind $dst -no-dir -no-name bin";
+  my @files = qx($cmd 2>>/dev/null);
+
+  system "$cmd | qq | xargs chmod 664" if @files;
+}
+{
+  my $cmd   = "pfind $dst -no-dir -name bin";
+  my @files = qx($cmd 2>>/dev/null);
+
+  system "$cmd | qq | xargs chmod 755" if @files;
+}
+{
+  my $cmd   = "pfind $dst -dir";
+  my @files = qx($cmd 2>>/dev/null);
+
+  system "$cmd | qq | xargs chmod 755" if @files;
+}

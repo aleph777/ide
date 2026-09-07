@@ -1,6 +1,6 @@
 #!/usr/bin/env -S perl   # -*-Perl-*-
 
-#         Copyright © 2000-2024 Tom Fontaine
+#         Copyright © 2000-2026 Tom Fontaine
 
 # Title:  pfind
 # Author: Tom Fontaine
@@ -68,7 +68,7 @@ if(@ARGV == 0 || exists $option{'help'})
   printf "%24s - execute shell command on found files\n\n",'-exec';
   printf "%17s regexp,\n%17s regexp - find files with (not) names matching perl regular expression\n",'-name','-no-name';
   printf "%17s regexp,\n%17s regexp - find files with (not) basenames matching perl regular expression\n",'-basename','-no-basename';
-  printf "%17s regexp,\n%17s regexp - find files with (not) suffixes matching perl regular expression\n",'-suffix','no-suffix';
+  printf "%17s regexp,\n%17s regexp - find files with (not) suffixes matching perl regular expression\n",'-suffix','-no-suffix';
   printf "%17s regexp,\n%17s regexp - find files with (not) dirnames matching perl regular expression\n\n",'-dirname','-no-dirname';
   printf "%24s,\n%24s - find files (not) readable by effective uid\n",'-read-effective','-no-read-effective';
   printf "%24s,\n%24s - find files (not) writable by effective uid\n",'-write-effective','-no-write-effective';

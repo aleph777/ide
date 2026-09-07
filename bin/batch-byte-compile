@@ -1,0 +1,32 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+# =============================================================================
+#   Copyright © 2026 - 2026  Honeywell Technologies.
+#
+#   All Rights Reserved.
+#
+#   Redistribution of this file, in original or modified form, without
+#   prior written consent of Honeywell Technologies is prohibited.
+#
+# -----------------------------------------------------------------------------
+#
+# =============================================================================
+use Modern::Perl;
+
+use constant _ME_    => $0 =~ m=([^/]+)$=;
+use constant _EMACS_ => "$ENV{HOME}/emacs/src/emacs";
+use constant _INIT_  => "$ENV{HOME}/elisp/batch.el";
+use constant _DIRS_  => "$ENV{HOME}/elisp/{ext,tjf}";
+
+# emacs -batch -f batch-byte-compile *.el
+
+my @dirs  = glob _DIRS_;
+my @files = qx(pfind @dirs -suffix el);
+
+chomp @files;
+
+my %no_byte = map { substr($_,0,-1) => 1 } qx(grep -l no-byte @files);
+
+@files = grep { !exists $no_byte{$_} } @files;
+
+system join ' ',_EMACS_,'-l',_INIT_,'-batch -f batch-byte-compile',@files;

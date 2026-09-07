@@ -1,0 +1,38 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+# =============================================================================
+#   Copyright © 2026 - 2026  Honeywell Technologies.
+#
+#   All Rights Reserved.
+#
+#   Redistribution of this file, in original or modified form, without
+#   prior written consent of Honeywell Technologies is prohibited.
+#
+# -----------------------------------------------------------------------------
+#
+# =============================================================================
+
+use Modern::Perl;
+
+use constant _ME_  => $0 =~ m=([^/]+)$=;
+use constant _DIR_ => join '/',$ENV{HOME},'.config/emacs/clang';
+
+my @styles = qw(chromium gnu google llvm microsoft mozilla webkit);
+
+my $version = shift @ARGV;
+
+die _ME_,': no version number supplied!!!' unless defined $version;
+
+my $clang_format = join '-','clang-format',$version;
+
+system "which $clang_format >> /dev/null";
+
+die _ME_,': ',"$clang_format does not exist" unless $? == 0;
+
+foreach my $style (@styles)
+{
+  my $s = join '=','--style',$style;
+  my $f = join '/',_DIR_,join('-',$clang_format,"$style.yml");
+
+  system "$clang_format --dump-config $s > $f";
+}

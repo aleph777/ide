@@ -1,0 +1,24 @@
+#!/usr/bin/env -S perl   # -*-Perl-*-
+
+# =============================================================================
+#   Copyright © 2026 - 2026  Honeywell Technologies.
+#
+#   All Rights Reserved.
+#
+#   Redistribution of this file, in original or modified form, without
+#   prior written consent of Honeywell Technologies is prohibited.
+#
+# -----------------------------------------------------------------------------
+#
+# =============================================================================
+
+use Modern::Perl;
+
+use constant _ME_ => $0 =~ m=([^/]+)$=;
+
+my $url = shift;
+
+# my ($tag) = map { substr((split '/', $_)[-1],0,-1) } qx(git ls-remote --tags --sort=version:refname "$url" | grep -v '\^' | tail -1);
+my ($tag) = map { substr((split '/', $_)[-1],0,-1) } qx(git ls-remote --tags --sort=version:refname "$url" | grep -v '\\^' | tail -1);
+
+say $tag;

@@ -1,6 +1,6 @@
 #!/usr/bin/env -S perl -w   # -*-Perl-*-
 
-#         Copyright © 2000-2024 Tom Fontaine
+#         Copyright © 2000-2026 Tom Fontaine
 
 # Title:  clean-path
 # Author: Tom Fontaine
@@ -34,19 +34,6 @@
 #            are removed
 #
 # Arguments: path1 [path2 … pathN]
-#
-# Revision:  06-Jul-2000 Updated version switch
-#                        Added -help switch
-#            23-May-2006 Added check for directory existence
-#            12-May-2008 use strict
-#            13-Apr-2015 use List::MoreUtils
-#                        Updated Usage
-#            27-May-2015 Changed over to say
-#            14-Jul-2019 use v5.10
-#            23-Aug-2020 List::Util (Core)
-#            12-Jun-2023 new shebang
-#                        use Modern::Perl
-#
 #
 use List::Util qw(uniq);
 use v5.10;

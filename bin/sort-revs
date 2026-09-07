@@ -1,9 +1,8 @@
 #!/usr/bin/env -S perl   # -*-Perl-*-
 
-#         Copyright © 2022-2026 Tom Fontaine
+#         Copyright © 2020-2024 Tom Fontaine
 
-# Title:  rgb
-# Date:   10-May-2022
+# Title:  sort-revs
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -27,18 +26,20 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
-# Purpose:   converts color triplet into hex RGB value
-#
-# Arguments: $1 is the red value
-#            $2 is the green value
-#            $3 is the blue value
-#
-# Revision:  12-Jun-2023 shebang
-#                        use Modern::Perl
-#
 use Modern::Perl;
 
 use constant _ME_ => $0 =~ m=([^/]+)$=;
 
-say sprintf '#%02x%02x%02x',map { /\./ ? int(255*$_ + 0.5) : $_ } @ARGV;
+sub rev
+{
+  return ($_[0] =~ /(\d+)/)[0];
+}
+
+if ((@ARGV))
+{
+  print $_ for sort { rev($a) <=> rev($b) } @ARGV;
+}
+else
+{
+  print $_ for sort { rev($a) <=> rev($b) } <>;
+}

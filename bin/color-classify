@@ -60,7 +60,6 @@ for (grep /^.defconst/,@{$io->contents})
   my $cb = $color->computeContrast(hex1 => $rgb,hex2 => "#000000");
   my $cw = $color->computeContrast(hex1 => $rgb,hex2 => "#ffffff");
 
-  # die "$rgb: $cb, $cw ",$cb > 1.95*$cw ? 'black' : 'white'," $luminosity" if $rgb eq "#1e90ff";
   s/$/join ' ',', text:',$cb > _RATIO_*$cw ? 'black' : 'white'/e;
 
 }
