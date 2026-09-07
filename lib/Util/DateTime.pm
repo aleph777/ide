@@ -1,6 +1,6 @@
 # Util::DateTime --- [OBSOLETE] Date/Time object -*-Perl-*-
 
-#         Copyright © 2015-2025 Tom Fontaine
+#         Copyright © 2015-2026 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   01-Jun-2015

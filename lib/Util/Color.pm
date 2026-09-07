@@ -27,10 +27,7 @@
 # from, out of or in connection with the software or the use or other
 # dealings in the software.
 
-#
-# Revision: 17-May-2020 use v5.10
-#           13-Jun-2023 use Modern::Perl
-#
+# Commentary:
 
 # Code:
 

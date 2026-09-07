@@ -1,6 +1,6 @@
 # Math::Genetic --- Differential Evolution Genetic Algorithm -*-Perl-*-
 
-#         Copyright © 2000-2025 Tom Fontaine
+#         Copyright © 2000-2026 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   02-Feb-2000

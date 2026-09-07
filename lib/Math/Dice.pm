@@ -1,6 +1,6 @@
 # Math::Dice --- Throws N dice of X number of sides -*-Perl-*-
 
-#         Copyright © 2008-2025 Tom Fontaine
+#         Copyright © 2008-2026 Tom Fontaine
 
 # Author: Tom Fontaine
 # Date:   18-May-2008
@@ -106,7 +106,6 @@ sub configure
 
   @{$this}{keys %parm} = values %parm;
 }
-
 sub get
 {
   my $this = shift;

@@ -1,9 +1,9 @@
-# Math::RandomWalk --- Implements a random walk object -*-Perl-*-
+# Text::Color --- [description] -*-Perl-*-
 
-#         Copyright © 2017-2026 Tom Fontaine
+#         Copyright © 2026-2026 Thomas Fontaine
 
-# Author: Tom Fontaine
-# Date:   14-Aug-2015
+# Author: Thomas Fontaine
+# Date:   06-Aug-2026
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software",
@@ -28,17 +28,17 @@
 # dealings in the software.
 
 #
-# Revision: 14-Jun-2023 use Modern::Perl
+# Revision:
 #
 
 # Code:
 
-package Math::RandomWalk;
+package Text::Color;
 
 use Carp;
 use Modern::Perl;
 
-use Math::Random::Secure qw(irand);
+# use Foo::Bar;
 
 use constant _ME_ => join '::',$0 =~ m=([^/]+)$=,__PACKAGE__;
 
@@ -47,19 +47,38 @@ our $AUTOLOAD;
 my @AREF = qw(contents);
 my @HREF = qw();
 
-my %fields = (contents => undef,
-
-              start => undef,
-              range => undef,
-              delta => undef,
-              min   => undef,
-              max   => undef,
-              count => undef,
+my %fields = (contents  => undef,
+              bold      => undef,
+              normal    => undef,
+              black     => undef,
+              red       => undef,
+              green     => undef,
+              yellow    => undef,
+              blue      => undef,
+              magenta   => undef,
+              cyan      => undef,
+              white     => undef,
+              underline => undef,
              );
 
-# BEGIN
-# {
-# }
+my %text;
+
+BEGIN
+{
+  $text{bold}      = qx(tput bold);
+  $text{normal}    = qx(tput sgr0);
+  $text{underline} = qx(tput smul);
+  $text{unormal}   = qx(tput rmul);
+  $text{black}     = qx(tput setaf 0);
+  $text{red}       = qx(tput setaf 1);
+  $text{green}     = qx(tput setaf 2);
+  $text{yellow}    = qx(tput setaf 3);
+  $text{blue}      = qx(tput setaf 4);
+  $text{magenta}   = qx(tput setaf 5);
+  $text{cyan}      = qx(tput setaf 6);
+  $text{white}     = qx(tput setaf 7);
+}
+
 
 # END
 # {
@@ -106,45 +125,29 @@ sub configure
   @{$this}{keys %parm} = values %parm;
 }
 
-sub get
+sub put
 {
   my $this = shift;
   my %parm = @_;
 
   my $_SELF_ = join '::',_ME_,(caller(0))[3];
 
-  my $contents = exists $parm{contents} ? $parm{contents} : $this->{contents};
-  my $start    = exists $parm{start}    ? $parm{start}    : $this->{start};
-  my $range    = exists $parm{range}    ? $parm{range}    : $this->{range};
-  my $delta    = exists $parm{delta}    ? $parm{delta}    : $this->{delta};
-  my $min      = exists $parm{min}      ? $parm{min}      : $this->{min};
-  my $max      = exists $parm{max}      ? $parm{max}      : $this->{max};
-  my $count    = exists $parm{count}    ? $parm{count}    : $this->{count};
+  my %c;
 
-  @{$contents} = ();
+  my $contents     = exists $parm{contents}  ? $parm{contents}  : $this->{contents};
+     $c{bold}      = exists $parm{bold}      ? $parm{bold}      : $this->{bold};
+     $c{black}     = exists $parm{black}     ? $parm{black}     : $this->{black};
+     $c{red}       = exists $parm{red}       ? $parm{red}       : $this->{red};
+     $c{green}     = exists $parm{green}     ? $parm{green}     : $this->{green};
+     $c{yellow}    = exists $parm{yellow}    ? $parm{yellow}    : $this->{yellow};
+     $c{blue}      = exists $parm{blue}      ? $parm{blue}      : $this->{blue};
+     $c{magenta}   = exists $parm{magenta}   ? $parm{magenta}   : $this->{magenta};
+     $c{cyan}      = exists $parm{cyan}      ? $parm{cyan}      : $this->{cyan};
+     $c{underline} = exists $parm{underline} ? $parm{underline} : $this->{underline};
 
-  die $__ME__,": no range defined!!!\n" unless defined $range;
-
-  $delta = 0 unless defined $delta;
-
-  my $n = defined $start ? $start : irand($max - $min) + $min;
-
-  for(1 .. $count)
-  {
-    push @{$contents},$n;
-
-    my $x  = irand($range) - $delta;
-    my $nn = $n + $x;
-
-    if((defined $max && $nn > $max) || (defined $min && $nn < $min))
-    {
-      $n -= $x;
-    }
-    else
-    {
-      $n = $nn;
-    }
-  }
+  print $_ for (map { $text{$_} } grep { defined $c{$_} } keys %c),@{$contents},$text{normal};
+  print $text{unormal} if defined $c{underline};
+  print "\n";
 }
 
 1;
